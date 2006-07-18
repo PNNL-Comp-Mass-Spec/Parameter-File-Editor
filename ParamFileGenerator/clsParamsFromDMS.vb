@@ -458,8 +458,8 @@ Namespace DownloadParams
                     "Param_File_Name AS Filename, " & _
                     "Param_File_Description as Diffs, " & _
                     "Param_File_Type_ID as Type_ID " & _
-                "FROM T_Param_Files" ' & _
-                '"WHERE Param_File_Type_ID = 1000 or Param_File_Type_ID = 1008"
+                "FROM T_Param_Files " & _
+                "WHERE Param_File_Type_ID = 1000 or Param_File_Type_ID = 1008"
 
             tmpIDTable = Me.GetTable(paramTableSQL)
 
