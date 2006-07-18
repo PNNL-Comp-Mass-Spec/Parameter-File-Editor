@@ -527,7 +527,18 @@ Namespace DownloadParams
 
                     For Each pField In pFields
                         If pField.Name = tmpSpec Then
-                            pField.SetValue(p, tmpValue, Nothing)
+                            tmpTypeName = pField.PropertyType.Name
+                            If tmpTypeName = "Int32" Then
+                                pField.SetValue(p, CType(tmpValue, Int32), Nothing)
+                            ElseIf tmpTypeName = "Single" Then
+                                pField.SetValue(p, CType(tmpValue, Single), Nothing)
+                            ElseIf tmpTypeName = "String" Then
+                                pField.SetValue(p, CType(tmpValue, String), Nothing)
+                            Else
+                                Console.WriteLine(pField.PropertyType.Name.ToString)
+                            End If
+
+                            Exit For
                         End If
                     Next
 
@@ -750,6 +761,9 @@ Namespace DownloadParams
                     tmpSpec = .Specifier
                     tmpValue = .Value
 
+
+                End With
+                If tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
                     If tmpValue > 0 Then
                         tmpSign = "+"
                     ElseIf tmpValue = 0 Then
@@ -758,23 +772,29 @@ Namespace DownloadParams
                         tmpSign = "-"
                     End If
 
-                End With
-                If tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
                     If tmpStatMods = "" Then
                         tmpStatMods = "Static Mods: "
                     End If
                     tmpStatMods = tmpStatMods & tmpSpec & " (" & tmpSign & tmpValue & "), "
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.DynamicModification Then
-                If tmpDynMods = "" Then
-                    tmpDynMods = "Dynamic Mods: "
-                End If
-                    tmpDynMods = tmpDynMods & tmpSpec & " (" & tmpSign & tmpValue & "), "
+                    If tmpValue > 0 Then
+                        tmpSign = "+"
+                    ElseIf tmpValue = 0 Then
+                        tmpSign = ""
                     Else
-                If tmpOtherParams = "" Then
-                    tmpOtherParams = "Other Parameters: "
-                End If
-                tmpOtherParams = tmpOtherParams & tmpSpec & "=" & tmpValue & ", "
+                        tmpSign = "-"
                     End If
+
+                    If tmpDynMods = "" Then
+                        tmpDynMods = "Dynamic Mods: "
+                    End If
+                    tmpDynMods = tmpDynMods & tmpSpec & " (" & tmpSign & tmpValue & "), "
+                Else
+                    If tmpOtherParams = "" Then
+                        tmpOtherParams = "Other Parameters: "
+                    End If
+                    tmpOtherParams = tmpOtherParams & tmpSpec & " = " & tmpValue & ", "
+                End If
             Next
 
             If Right(tmpDynMods, 2) <> ", " And Not tmpDynMods Is Nothing Then

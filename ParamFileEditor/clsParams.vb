@@ -457,8 +457,9 @@ Public Class clsParams
         Dim m_getEnzymeList As New clsGetEnzymeBlock(m_templateFilePath, DEF_ENZ_SECTION_NAME)
         m_enzymeDetailStorage = m_getEnzymeList.EnzymeList
         Dim m_enzymedetails As New clsEnzymeDetails
+        'Dim m_pDMS As DownloadParams.clsParamsFromDMS
 
-        m_desc = GetDescription()
+        'm_desc = GetDescription()
         m_type = Me.GetTemplateType
 
         If m_type = ParamFileTypes.BioWorks_20 Then

@@ -88,6 +88,7 @@ Friend Class clsBatchLoadTemplates
             ParamFileName = Mid(ParamFilePath, InStrRev(ParamFilePath, "\") + 1).ToString
             Console.WriteLine("Working on: " & ParamFileName)
             c.LoadTemplate(ParamFilePath)
+            c.Description = Me.GetDiffsBetweenSets(clsMainProcess.BaseLineParamSet, c)
             c.FileName = ParamFileName
             If Me.ParamSetNameExists(c.FileName) Then
                 ParamSetID = Me.GetParamSetIDFromName(c.FileName)

@@ -386,7 +386,7 @@ Public Class clsDynamicMods
         Dim tmpsplit() As String = DMString.Split(" ")
         Dim counter As Integer
         Dim maxCount As Integer = UBound(tmpsplit)
-        Dim sc As New StringCollection
+        Dim sc As StringCollection
         Dim tmpResString As String
         Dim tmpRes As String
         Dim resCounter As Integer
@@ -396,6 +396,7 @@ Public Class clsDynamicMods
             tmpMass = CSng(tmpsplit(counter))
             tmpResString = tmpsplit(counter + 1)
             If tmpMass > 0 Then
+                sc = New StringCollection
                 For resCounter = 1 To Len(tmpResString)
                     tmpRes = Mid(tmpResString, resCounter, 1)
                     sc.Add(tmpRes)
