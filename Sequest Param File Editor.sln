@@ -1,15 +1,26 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileEditor", "ParamFileEditor\ParamFileEditor.vbproj", "{DF84F4CE-B4B1-43B7-B169-84078341607F}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileGenerator", "ParamFileGenerator\ParamFileGenerator.vbproj", "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamGenTest", "..\ParamFileGenerator\ParamGenTest\ParamGenTest.vbproj", "{656C89E6-8FD5-4DB6-9B5A-BA8F75409586}"
+Project("{4F174C21-8C12-11D0-8340-0000F80270F8}") = "DMS_Params_Setup", "DMS_Params_Setup\DMS_Params_Setup.dbp", "{B7BED133-7353-41DC-BCF4-E21D5EACAC28}"
 	ProjectSection(ProjectDependencies) = postProject
-		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D} = {0E902ED7-5BCE-43F9-8F07-F195BCE7285D}
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileEditor", "ParamFileEditor\ParamFileEditor.vbproj", "{DF84F4CE-B4B1-43B7-B169-84078341607F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{4F174C21-8C12-11D0-8340-0000F80270F8}") = "DMS5_T3", "DMS5_T3\DMS5_T3.dbp", "{79106D25-E747-4D7D-A6B3-C55A17E91A67}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ParamFileEditorInstaller", "ParamFileEditorInstaller\ParamFileEditorInstaller.vdproj", "{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamGenTest", "ParamGenTest\ParamGenTest.vbproj", "{C99B2126-0B2B-4C48-A063-A5784C7C3774}"
+	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
@@ -18,18 +29,21 @@ Global
 		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug.ActiveCfg = Debug|.NET
-		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug.Build.0 = Debug|.NET
-		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release.ActiveCfg = Release|.NET
-		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release.Build.0 = Release|.NET
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Debug.ActiveCfg = Debug|.NET
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Debug.Build.0 = Debug|.NET
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release.ActiveCfg = Release|.NET
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release.Build.0 = Release|.NET
-		{656C89E6-8FD5-4DB6-9B5A-BA8F75409586}.Debug.ActiveCfg = Debug|.NET
-		{656C89E6-8FD5-4DB6-9B5A-BA8F75409586}.Debug.Build.0 = Debug|.NET
-		{656C89E6-8FD5-4DB6-9B5A-BA8F75409586}.Release.ActiveCfg = Release|.NET
-		{656C89E6-8FD5-4DB6-9B5A-BA8F75409586}.Release.Build.0 = Release|.NET
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug.ActiveCfg = Debug|.NET
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug.Build.0 = Debug|.NET
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release.ActiveCfg = Release|.NET
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release.Build.0 = Release|.NET
+		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Debug.ActiveCfg = Debug
+		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release.ActiveCfg = Release
+		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release.Build.0 = Release
+		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Debug.ActiveCfg = Debug|.NET
+		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Debug.Build.0 = Debug|.NET
+		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Release.ActiveCfg = Release|.NET
+		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

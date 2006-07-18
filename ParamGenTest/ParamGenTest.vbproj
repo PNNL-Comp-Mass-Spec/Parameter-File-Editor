@@ -3,25 +3,25 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
+        ProjectGuid = "{C99B2126-0B2B-4C48-A063-A5784C7C3774}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "ParamFileGenerator"
+                AssemblyName = "ParamGenTest"
                 AssemblyOriginatorKeyFile = ""
                 AssemblyOriginatorKeyMode = "None"
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Library"
+                OutputType = "WinExe"
                 OptionCompare = "Binary"
                 OptionExplicit = "On"
                 OptionStrict = "On"
-                RootNamespace = "ParamFileGenerator"
-                StartupObject = ""
+                RootNamespace = "ParamGenTest"
+                StartupObject = "ParamGenTest.frmMain"
             >
                 <Config
                     Name = "Debug"
@@ -66,8 +66,21 @@
                     AssemblyName = "System.Data"
                 />
                 <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                />
+                <Reference
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
+                />
+                <Reference
+                    Name = "ParamFileGenerator"
+                    Project = "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
+                    Package = "{F184B08F-C81C-45F6-A57F-5ABD9991F28F}"
                 />
             </References>
             <Imports>
@@ -75,7 +88,9 @@
                 <Import Namespace = "System" />
                 <Import Namespace = "System.Collections" />
                 <Import Namespace = "System.Data" />
+                <Import Namespace = "System.Drawing" />
                 <Import Namespace = "System.Diagnostics" />
+                <Import Namespace = "System.Windows.Forms" />
             </Imports>
         </Build>
         <Files>
@@ -86,64 +101,14 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "clsDBTask.vb"
-                    SubType = "Code"
+                    RelPath = "frmMain.vb"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "clsDMSParamStorage.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsGetResiduesList.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsMainProcess.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsMakeParameterFile.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsMods.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsParams.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsParamsFromDMS.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsReconstituteIsoMods.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsRetrieveParams.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsWriteOutput.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "INIFileReader.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
+                    RelPath = "frmMain.resx"
+                    DependentUpon = "frmMain.vb"
+                    BuildAction = "EmbeddedResource"
                 />
             </Include>
         </Files>
