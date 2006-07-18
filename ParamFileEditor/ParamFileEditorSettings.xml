@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<sections>
+  <section name="database">
+    <item key="connectionstring" value="Data Source=gigasax;Initial Catalog=DMS5;Integrated Security=SSPI;" />
+  </section>
+  <section name="programcontrol">
+    <item key="templatefilename" value="sequest_N14_NE_Template.params" />
+  </section>
+  <section name="commonmods">
+	<item key="phosphorylation" value="Phosphorylation [HPO3]" formula="HPO3" />
+	<item key="icat_d0" value="ICAT D0 [C20O5N4SHH34]" formula="C20O5N4SHH34" />
+	<item key="iodoacetamide" value="Iodoacetamide Alkylation [C2H4NO]" formula="C2H4NO" />
+	<item key="icat_d8" value="ICAT D8 [C20O5N4SHH26D8]" formula="C20O5N4SHH26D8" />
+  </section>
+  <section name="fieldmapping">
+	<item key="AminoAcidsAllUpperCase" value="Boolean" DMS_Name="SQ_AA_In_Uppercase" SQ_Name="residues_in_upper_case" />
+	<item key="CreateOutputFIles" value="Boolean" DMS_Name="SQ_Create_Output_Files" SQ_Name="create_output_files" />
+	<item key="DefaultFASTAPath" value="String" DMS_Name="SQ_Database_1" SQ_Name="first_database_name" />
+	<item key="DefaultFASTAPath2" value="String" DMS_Name="SQ_Database_2" SQ_Name="second_database_name" />
+	<item key="Dyn_Mod1_AAList" value="String" DMS_Name="SQ_Dyn_Mod1_AAList" SQ_Name="diff_search_options" />
+	<item key="Dyn_Mod1_MassDiff" value="Single" DMS_Name="SQ_Dyn_Mod1_Mass" SQ_Name="diff_search_options" />
+	<item key="Dyn_Mod2_AAList" value="String" DMS_Name="SQ_Dyn_Mod2_AAList" SQ_Name="diff_search_options" />
+	<item key="Dyn_Mod2_MassDiff" value="Single" DMS_Name="SQ_Dyn_Mod2_Mass" SQ_Name="diff_search_options" />
+	<item key="Dyn_Mod3_AAList" value="String" DMS_Name="SQ_Dyn_Mod3_AAList" SQ_Name="diff_search_options" />
+	<item key="Dyn_Mod3_MassDiff" value="Single" DMS_Name="SQ_Dyn_Mod3_Mass" SQ_Name="diff_search_options" />
+	<item key="SelectedEnzymeIndex" value="Integer" DMS_Name="SQ_Enzyme_Num" SQ_Name="enzyme_number" />
+	<item key="FragmentIonTolerance" value="Single" DMS_Name="SQ_Frag_Ion_Tolerance" SQ_Name="fragment_ion_tolerance" />
+	<item key="FragmentMassType" value="Integer" DMS_Name="SQ_Fragment_Mass_Type" SQ_Name="mass_type_fragment" />
+	<item key="IonCutoffPercentage" value="Single" DMS_Name="SQ_Ion_Cutoff_Value" SQ_Name="ion_cutoff_percentage" />
+	<item key="a_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_a_Weight" SQ_Name="ion_series" />
+	<item key="b_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_b_Weight" SQ_Name="ion_series" />
+	<item key="c_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_c_Weight" SQ_Name="ion_series" />
+	<item key="d_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_d_Weight" SQ_Name="ion_series" />
+	<item key="Use_a_Ions" value="Boolean" DMS_Name="SQ_Ions_Use_A" SQ_Name="ion_series" />
+	<item key="Use_b_Ions" value="Boolean" DMS_Name="SQ_Ions_Use_B" SQ_Name="ion_series" />
+	<item key="Use_y_Ions" value="Boolean" DMS_Name="SQ_Ions_Use_Y" SQ_Name="ion_series" />
+	<item key="v_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_v_Weight" SQ_Name="ion_series" />
+	<item key="w_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_w_Weight" SQ_Name="ion_series" />
+	<item key="x_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_x_Weight" SQ_Name="ion_series" />
+	<item key="y_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_y_Weight" SQ_Name="ion_series" />
+	<item key="z_Ion_Weighting" value="Single" DMS_Name="SQ_Ions_z_Weight" SQ_Name="ion_series" />
+	<item key="NumberOfDetectedPeaksToMatch" value="Integer" DMS_Name="SQ_Match_Peak_Count" SQ_Name="match_peak_count" />
+	<item key="NumberOfAllowedDetectedPeakErrors" value="Integer" DMS_Name="SQ_Match_Peak_Errors" SQ_Name="match_peak_allowed_error" />
+	<item key="MatchedPeakMassTolerance" value="Single" DMS_Name="SQ_Match_Peak_Tolerance" SQ_Name="match_peak_tolerance" />
+	<item key="MaximumNumAAPerDynMod" value="Integer" DMS_Name="SQ_Max_Dyn_Mods" SQ_Name="max_num_differential_AA_per_mod" />
+	<item key="MaximumProteinMassToSearch" value="Integer" DMS_Name="SQ_Max_Mass_To_Use" SQ_Name="protein_mass_filter" />
+	<item key="MaximumNumberMissedCleavages" value="Integer" DMS_Name="SQ_Max_Num_IC_Sites" SQ_Name="max_num_internal_cleavage_sites" />
+	<item key="MinimumProteinMassToSearch" value="Integer" DMS_Name="SQ_Min_Mass_To_Use" SQ_Name="protein_mass_filter" />
+	<item key="SelectedNucReadingFrame" value="Integer" DMS_Name="SQ_Nuc_Reading_Frame" SQ_Name="nucleotide_reading_frame" />
+	<item key="NumberOfDescriptionLines" value="Integer" DMS_Name="SQ_Num_Desc_Lines" SQ_Name="num_description_lines" />
+	<item key="NumberOfOutputLines" value="Integer" DMS_Name="SQ_Num_Output_Lines" SQ_Name="num_output_lines" />
+	<item key="NumberOfResultsToProcess" value="Integer" DMS_Name="SQ_Num_Results_Used" SQ_Name="num_results" />
+	<item key="Description" value="String" DMS_Name="SQ_Param_File_Desc" SQ_Name="DMS_Description" />
+	<item key="ParentMassType" value="Integer" DMS_Name="SQ_Parent_Mass_Type" SQ_Name="mass_type_parent" />
+	<item key="PartialSequenceToMatch" value="String" DMS_Name="SQ_Partial_Sequence" SQ_Name="partial_sequence" />
+	<item key="PeptideMassTolerance" value="Single" DMS_Name="SQ_Peptide_Mass_Tolerance" SQ_Name="peptide_mass_tolerance" />
+	<item key="PrintDuplicateReferences" value="Boolean" DMS_Name="SQ_Print_Dup_Refs" SQ_Name="print_duplicate_references" />
+	<item key="RemovePrecursorPeak" value="Boolean" DMS_Name="SQ_Rem_Precursor_Peak" SQ_Name="remove_precursor_peak" />
+	<item key="SequenceHeaderInfoToFilter" value="String" DMS_Name="SQ_Seq_Header_Filter" SQ_Name="sequence_header_filter" />
+	<item key="ShowFragmentIons" value="Boolean" DMS_Name="SQ_Show_Fragments" SQ_Name="show_fragment_ions" />
+	<item key="A_Alanine" value="Single" DMS_Name="SQ_Stat_A_Ala" SQ_Name="add_A_Alanine" />
+	<item key="B_avg_NandD" value="Single" DMS_Name="SQ_Stat_B_avgNandD" SQ_Name="add_B_avg_NandD" />
+	<item key="C_Cysteine" value="Single" DMS_Name="SQ_Stat_C_Cys" SQ_Name="add_C_Cysteine" />
+	<item key="CtermPeptide" value="Single" DMS_Name="SQ_Stat_CT_Pep" SQ_Name="add_Cterm_peptide" />
+	<item key="CtermProtein" value="Single" DMS_Name="SQ_Stat_CT_Prot" SQ_Name="add_Cterm_protein" />
+	<item key="D_Aspartic_Acid" value="Single" DMS_Name="SQ_Stat_D_Asp" SQ_Name="add_D_Aspartic_Acid" />
+	<item key="E_Glutamic_Acid" value="Single" DMS_Name="SQ_Stat_E_Glu" SQ_Name="add_E_Glutamic_Acid" />
+	<item key="F_Phenylalanine" value="Single" DMS_Name="SQ_Stat_F_Phe" SQ_Name="add_F_Phenylalanine" />
+	<item key="G_Glycine" value="Single" DMS_Name="SQ_Stat_G_Gly" SQ_Name="add_G_Glycine" />
+	<item key="H_Histidine" value="Single" DMS_Name="SQ_Stat_H_His" SQ_Name="add_H_Histidine" />
+	<item key="I_Isoleucine" value="Single" DMS_Name="SQ_Stat_I_Ile" SQ_Name="add_I_Isoleucine" />
+	<item key="L_Leucine" value="Single" DMS_Name="SQ_Stat_L_Leu" SQ_Name="add_L_Leucine" />
+	<item key="M_Methionine" value="Single" DMS_Name="SQ_Stat_M_Met" SQ_Name="add_M_Methionine" />
+	<item key="N_Asparagine" value="Single" DMS_Name="SQ_Stat_N_Asn" SQ_Name="add_N_Asparagine" />
+	<item key="NtermPeptide" value="Single" DMS_Name="SQ_Stat_NT_Pep" SQ_Name="add_Nterm_peptide" />
+	<item key="NtermProtein" value="Single" DMS_Name="SQ_Stat_NT_Prot" SQ_Name="add_Nterm_protein" />
+	<item key="O_Ornithine" value="Single" DMS_Name="SQ_Stat_O_Orn" SQ_Name="add_O_Ornithine" />
+	<item key="P_Proline" value="Single" DMS_Name="SQ_Stat_P_Pro" SQ_Name="add_P_Proline" />
+	<item key="Q_Glutamine" value="Single" DMS_Name="SQ_Stat_Q_Gln" SQ_Name="add_Q_Glutamine" />
+	<item key="R_Arginine" value="Single" DMS_Name="SQ_Stat_R_Arg" SQ_Name="add_R_Arginine" />
+	<item key="S_Serine" value="Single" DMS_Name="SQ_Stat_S_Ser" SQ_Name="add_S_Serine" />
+	<item key="T_Threonine" value="Single" DMS_Name="SQ_Stat_T_Thr" SQ_Name="add_T_Threonine" />
+	<item key="V_Valine" value="Single" DMS_Name="SQ_Stat_V_Val" SQ_Name="add_V_Valine" />
+	<item key="W_Tryptophan" value="Single" DMS_Name="SQ_Stat_W_Trp" SQ_Name="add_W_Tryptophan" />
+	<item key="X_LorI" value="Single" DMS_Name="SQ_Stat_X_LorI" SQ_Name="add_X_LorI" />
+	<item key="Y_Tyrosine" value="Single" DMS_Name="SQ_Stat_Y_Tyr" SQ_Name="add_Y_Tyrosine" />
+  </section>
+</sections>

@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileEditor", "ParamFileEditor\ParamFileEditor.vbproj", "{DF84F4CE-B4B1-43B7-B169-84078341607F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileGenerator", "ParamFileGenerator\ParamFileGenerator.vbproj", "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DF84F4CE-B4B1-43B7-B169-84078341607F} = {DF84F4CE-B4B1-43B7-B169-84078341607F}
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamsLibrary", "ParamsLibrary\ParamsLibrary.vbproj", "{4872F8D4-912E-4755-AD45-585BA3337A4C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug.ActiveCfg = Debug|.NET
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug.Build.0 = Debug|.NET
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release.ActiveCfg = Release|.NET
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release.Build.0 = Release|.NET
+		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Debug.ActiveCfg = Debug|.NET
+		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Debug.Build.0 = Debug|.NET
+		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release.ActiveCfg = Release|.NET
+		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release.Build.0 = Release|.NET
+		{4872F8D4-912E-4755-AD45-585BA3337A4C}.Debug.ActiveCfg = Debug|.NET
+		{4872F8D4-912E-4755-AD45-585BA3337A4C}.Debug.Build.0 = Debug|.NET
+		{4872F8D4-912E-4755-AD45-585BA3337A4C}.Release.ActiveCfg = Release|.NET
+		{4872F8D4-912E-4755-AD45-585BA3337A4C}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
