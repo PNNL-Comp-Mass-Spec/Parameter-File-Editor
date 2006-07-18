@@ -1,4 +1,4 @@
-Imports ParamFileEditor.DownloadParams
+Imports ParamFileGenerator
 Imports ParamFileEditor.ProgramSettings
 
 Public Class frmDMSPicker

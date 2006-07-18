@@ -1,5 +1,5 @@
 Imports ParamFileEditor.ProgramSettings
-Imports ParamFileEditor.clsMainProcess
+Imports ParamFileGenerator
 
 Public Class frmMassHelper
     Inherits System.Windows.Forms.Form
@@ -8,6 +8,7 @@ Public Class frmMassHelper
     Private m_FormulaToAdd As String
     Private m_FormulaToSubtract As String
     Private m_UseHyd As Boolean
+    Private m_mySettings As clsSettings
 
 #Region " Windows Form Designer generated code "
 
@@ -172,9 +173,18 @@ Public Class frmMassHelper
 
 #End Region
 
+    Public Property mySettings() As clsSettings
+        Get
+            Return m_mySettings
+        End Get
+        Set(ByVal Value As clsSettings)
+            m_mySettings = Value
+        End Set
+    End Property
+
     Private Sub frmMassHelper_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         'Load Combobox from settings file
-        LoadCommonModsComboBox(Me.cboCommonMods, ParamFileEditor.clsMainProcess.mySettings.CommonModsCollection)
+        LoadCommonModsComboBox(Me.cboCommonMods, mySettings.CommonModsCollection)
 
         AddHandler cboCommonMods.SelectedIndexChanged, AddressOf cboCommonMods_SelectedIndexChanged
         Me.cboCommonMods.SelectedIndex = 0

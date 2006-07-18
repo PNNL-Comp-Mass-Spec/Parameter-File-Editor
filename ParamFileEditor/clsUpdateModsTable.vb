@@ -1,5 +1,6 @@
 'Imports ParamFileEditor.SequestParams
 Imports ParamFileEditor.ProgramSettings
+Imports ParamFileGenerator
 Imports System.Data.SqlClient
 
 Public Class clsUpdateModsTable
@@ -39,11 +40,11 @@ Public Class clsUpdateModsTable
     '    Me.SetPrimaryKey(3, Me.m_ParamFileList)
 
     'End Sub
-    Private Sub LoadGlobalModListTable()
-        Dim SQL As String = "SELECT * FROM " & m_Settings.MT_GlobalModListTable
-        Me.m_GlobalModList = Me.GetTable(SQL, Me.m_GetGlobalMods_DA, Me.m_GetGlobalMods_CB)
-        Me.SetPrimaryKey(0, Me.m_GlobalModList)
-    End Sub
+    'Private Sub LoadGlobalModListTable()
+    '    Dim SQL As String = "SELECT * FROM " & m_Settings.MT_GlobalModListTable
+    '    Me.m_GlobalModList = Me.GetTable(SQL, Me.m_GetGlobalMods_DA, Me.m_GetGlobalMods_CB)
+    '    Me.SetPrimaryKey(0, Me.m_GlobalModList)
+    'End Sub
     'Private Sub CommitChanges()
     '    Me.UpdateSQLServerDB(Me.m_ParamFileList)
     '    Me.UpdateSQLServerDB(Me.m_GlobalModList)

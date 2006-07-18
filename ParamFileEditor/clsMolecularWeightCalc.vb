@@ -1,6 +1,6 @@
 Imports MwtWinDll.MolecularWeightCalculatorClass
 Imports ParamFileEditor.ProgramSettings
-Imports ParamFileEditor.clsMainProcess
+Imports ParamFileGenerator.clsMainProcess
 
 Public Class clsMolecularWeightCalc
 

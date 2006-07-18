@@ -1,10 +1,10 @@
 Imports System.Collections.Specialized
 Imports System.Reflection
-Imports ParamFileEditor.ProgramSettings
+Imports ParamFileGenerator
 
 
 Friend Class clsDMSParamUpload
-    Inherits DownloadParams.clsParamsFromDMS
+    Inherits ParamFileGenerator.DownloadParams.clsparamsfromdms
 
 #Region " Member Properties "
     Private m_clsUpdateModsTable As clsUpdateModsTable

@@ -1,4 +1,5 @@
-Imports ParamFileEditor.DownloadParams
+Imports ParamFileGenerator
+Imports ParamFileGenerator.DownloadParams
 Imports ParamFileEditor.ProgramSettings
 
 Public Class clsDMSPickerHandler

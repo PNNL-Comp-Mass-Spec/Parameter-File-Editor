@@ -1,4 +1,5 @@
 Imports ParamFileEditor.ProgramSettings
+Imports ParamFileGenerator
 Imports System.IO
 
 Namespace ProgramSettings

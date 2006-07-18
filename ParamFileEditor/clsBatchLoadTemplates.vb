@@ -1,5 +1,5 @@
 Imports System.Collections.Specialized
-Imports ParamFileEditor.DownloadParams
+Imports ParamFileGenerator
 
 'Framework to handle the batch upload and download of templates/parameters to and from DMS
 '
@@ -7,9 +7,9 @@ Imports ParamFileEditor.DownloadParams
 Friend Class clsBatchLoadTemplates
     Inherits clsDMSParamUpload
 
-    Public Sub New(ByVal MainCode As ParamFileEditor.clsMainProcess)
-        MyBase.New(MainCode.mySettings)
-        m_Main = MainCode
+    Public Sub New(ByVal CallingFrm As frmMainGUI)
+        MyBase.New(CallingFrm.mySettings)
+        'm_Main = MainCode
     End Sub
 
 #Region " Public Properties "
