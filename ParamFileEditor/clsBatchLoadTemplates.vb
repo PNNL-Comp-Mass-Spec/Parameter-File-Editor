@@ -102,14 +102,14 @@ Friend Class clsBatchLoadTemplates
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
                     If results = DialogResult.Yes Then
                         changed = changed + 1
-                        Me.WriteParamsToDMS(c, ParamSetID)
+                        Me.WriteParamsToDMS(c)
                     ElseIf results = DialogResult.No Then
 
                     End If
                 End If
             Else
-                ParamSetID = Me.GetNextParamSetID
-                Me.WriteParamsToLocalStructure(c, ParamSetID)
+                'ParamSetID = Me.GetNextParamSetID
+                'Me.WriteParamsToLocalStructure(c, ParamSetID)
                 added = added + 1
             End If
 
@@ -120,7 +120,7 @@ Friend Class clsBatchLoadTemplates
             Console.WriteLine("Finished")
         Next
 
-        Me.WriteLocalStructureToDMS()
+        'Me.WriteLocalStructureToDMS()
 
         m_added = added
         m_changed = changed

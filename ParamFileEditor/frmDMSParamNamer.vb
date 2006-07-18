@@ -45,18 +45,21 @@ Public Class frmDMSParamNamer
     Friend WithEvents lblDiffs As System.Windows.Forms.Label
     Friend WithEvents txtDiffs As System.Windows.Forms.TextBox
     Friend WithEvents cmdUpload As System.Windows.Forms.Button
+    Friend WithEvents NamingErrorProvider As System.Windows.Forms.ErrorProvider
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.txtSaveFileName = New System.Windows.Forms.TextBox
         Me.lblSaveFileName = New System.Windows.Forms.Label
         Me.lblDiffs = New System.Windows.Forms.Label
         Me.txtDiffs = New System.Windows.Forms.TextBox
         Me.cmdUpload = New System.Windows.Forms.Button
+        Me.NamingErrorProvider = New System.Windows.Forms.ErrorProvider
         Me.SuspendLayout()
         '
         'txtSaveFileName
         '
         Me.txtSaveFileName.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtSaveFileName.Location = New System.Drawing.Point(12, 24)
+        Me.txtSaveFileName.MaxLength = 64
         Me.txtSaveFileName.Name = "txtSaveFileName"
         Me.txtSaveFileName.Size = New System.Drawing.Size(376, 21)
         Me.txtSaveFileName.TabIndex = 0
@@ -90,11 +93,17 @@ Public Class frmDMSParamNamer
         '
         'cmdUpload
         '
+        Me.cmdUpload.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.cmdUpload.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.cmdUpload.Location = New System.Drawing.Point(280, 212)
         Me.cmdUpload.Name = "cmdUpload"
         Me.cmdUpload.Size = New System.Drawing.Size(108, 23)
         Me.cmdUpload.TabIndex = 4
         Me.cmdUpload.Text = "Upload to DMS..."
+        '
+        'NamingErrorProvider
+        '
+        Me.NamingErrorProvider.ContainerControl = Me
         '
         'frmDMSParamNamer
         '
@@ -102,9 +111,10 @@ Public Class frmDMSParamNamer
         Me.ClientSize = New System.Drawing.Size(400, 242)
         Me.Controls.Add(Me.cmdUpload)
         Me.Controls.Add(Me.txtDiffs)
+        Me.Controls.Add(Me.txtSaveFileName)
         Me.Controls.Add(Me.lblDiffs)
         Me.Controls.Add(Me.lblSaveFileName)
-        Me.Controls.Add(Me.txtSaveFileName)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmDMSParamNamer"
         Me.Text = "Save Param Set to T_Sequest_Params"
         Me.ResumeLayout(False)
@@ -145,8 +155,6 @@ Public Class frmDMSParamNamer
             If results = DialogResult.No Then
                 Exit Sub
             Else
-                ParamSetID = dms.GetParamSetIDFromName(m_SaveName)
-                m_Params.DMS_ID = ParamSetID
             End If
 
         Else
@@ -155,13 +163,11 @@ Public Class frmDMSParamNamer
             If results = DialogResult.No Then
                 Exit Sub
             Else
-                ParamSetID = dms.GetNextParamSetID
-                m_Params.DMS_ID = ParamSetID
 
             End If
         End If
 
-        dms.WriteParamsToDMS(m_Params, ParamSetID)
+        dms.WriteParamsToDMS(m_Params)
 
         Me.Close()
 
@@ -174,6 +180,22 @@ Public Class frmDMSParamNamer
     End Sub
 
     Private Sub txtSaveFileName_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtSaveFileName.TextChanged
-        m_SaveName = Me.txtSaveFileName.Text
+        If Me.txtSaveFileName.Text.Length < 64 Then
+            Me.m_SaveName = Me.txtSaveFileName.Text
+            Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "")
+        Else
+            Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "Parameter File names must be < 64 characters in length")
+        End If
+    End Sub
+
+    Private Sub txtSaveFileName_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles txtSaveFileName.Validating
+        Dim tb As TextBox = DirectCast(sender, TextBox)
+        If tb.Text.Length >= 64 Then
+            Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "Parameter File names must be < 64 characters in length")
+            e.Cancel = True
+        Else
+            Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "")
+        End If
+
     End Sub
 End Class

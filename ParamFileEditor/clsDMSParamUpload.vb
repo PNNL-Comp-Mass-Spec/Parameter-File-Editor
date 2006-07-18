@@ -7,32 +7,28 @@ Friend Class clsDMSParamUpload
     Inherits ParamFileGenerator.DownloadParams.clsparamsfromdms
 
 #Region " Member Properties "
-    Private m_clsUpdateModsTable As clsUpdateModsTable
-#End Region
-
-#Region " Friend Properties "
-
+    'Private m_clsUpdateModsTable As clsUpdateModsTable
+    Private m_SPError As String
+    Private m_mgrParams As ParamFileEditor.ProgramSettings.IProgramSettings
+    Private m_DynamicModCounter As Integer = 1
 #End Region
 
 #Region " Friend Procedures "
 
     Public Sub New(ByVal mgrParams As ParamFileEditor.ProgramSettings.IProgramSettings)
         MyBase.New(mgrParams.DMS_ConnectionString)
-        Me.m_clsUpdateModsTable = New clsUpdateModsTable(mgrParams)
+        Me.m_mgrParams = mgrParams
+        'Me.m_clsUpdateModsTable = New clsUpdateModsTable(mgrParams)
     End Sub
-    Friend Function WriteParamsToDMS(ByVal ParamSet As clsParams, ByVal ParamSetIDToUpdate As Integer) As Boolean
-        Dim success As Boolean = SaveParams(ParamSet, ParamSetIDToUpdate)
-        Call Me.Write_T_Param_File_Table()
+    Friend Function WriteParamsToDMS(ByVal ParamSet As clsParams) As Boolean
+        Dim success As Boolean = SaveParams(ParamSet)
         Return True
     End Function
 
     Friend Function WriteParamsToLocalStructure(ByVal Paramset As clsParams, ByVal ParamSetIDToUpdate As Integer) As Boolean
-        Return SaveParams(Paramset, ParamSetIDToUpdate)
+        Return SaveParams(Paramset)
     End Function
 
-    Friend Sub WriteLocalStructureToDMS()
-        Call Me.Write_T_Param_File_Table()
-    End Sub
     Friend Function GetDiffsFromTemplate(ByVal paramSetID As Integer) As String
         Return DistillFeaturesFromParamSet(paramSetID)
     End Function
@@ -45,129 +41,345 @@ Friend Class clsDMSParamUpload
         Return Me.CompareParamSets(templateSet, checkSet)
     End Function
 
-    Friend Function GetNextParamSetID() As Integer
-        Dim tmpTable As DataTable = Me.m_ParamsSet.Tables(Me.Param_File_Table)
-        Return Me.GetNextParamIDValue((tmpTable), tmpTable.Columns(0))
+    Friend Sub AddParamFileMappingEntry( _
+        ByVal paramFileID As Integer, _
+        ByVal entrySeqOrder As Integer, _
+        ByVal entryTypeString As String, _
+        ByVal entrySpecifier As String, _
+        ByVal entryValue As String)
+
+        Dim entryType As clsDMSParamStorage.ParamTypes
+
+        entryType = DirectCast(System.Enum.Parse(GetType(clsDMSParamStorage.ParamTypes), entryTypeString), ParamFileGenerator.clsDMSParamStorage.ParamTypes)
+
+
+        RunSP_AddUpdateParamEntry(paramFileID, entrySeqOrder, entryType, entrySpecifier, entryValue)
+
+    End Sub
+
+    Friend Function GetParamsSet(ByVal paramSetID As Integer, Optional ByVal DisableMassLookup As Boolean = False) As clsParams
+        Return Me.GetParamSetWithID(paramSetID, DisableMassLookup)
     End Function
 
 #End Region
 
 #Region " Protected & Private Functions "
 
-    Private Function GetNextParamIDValue(ByVal dt As DataTable, ByVal IDColumn As DataColumn) As Integer        'Upload
-        dt.DefaultView.Sort = IDColumn.ColumnName
-        Dim rowCount As Integer = dt.Rows.Count
-        If rowCount = 0 Then Return 1000
-        Dim maxIndex As Integer = rowCount - 1
-        Dim nextID As Integer = CInt(dt.Rows(maxIndex).Item(0)) + 1
-        Return nextID
-    End Function
-    'Private Function SaveParams(ByVal ParamSet As clsParams, ByVal ParamSetID As Integer) As Boolean        'Upload
-    '    Dim FileDR As DataRow
-    '    Dim idExists As Boolean = Me.ParamSetIDExists(ParamSetID)
-    '    If idExists Then
-    '        FileDR = Me.GetRowWithID(ParamSetID)
-    '        FileDR = Me.WriteDatarowFromParamSet(ParamSet, FileDR)
-    '        'dr.Item(0) = ParamSetID
-    '    ElseIf Not idExists Then
-    '        'dr = Me.m_ParamsTable.NewRow
-    '        'dr = Me.WriteDatarowFromParamSet(ParamSet, dr)
-    '        'dr.Item(0) = ParamSetID
-    '        'Me.m_ParamsTable.Rows.Add(dr)
-    '    End If
-    '    ' Me.VerifyChangeState(Me.m_ParamsTable, ParamSetID)
-
-    'End Function
-    Private Function SaveParams(ByRef ParamSet As clsParams, ByVal ParamSetID As Integer) As Boolean
-        'Check if current ID exists
-        Dim idExists As Boolean = Me.ParamSetIDExists(ParamSetID)
+    Protected Function SaveParams(ByRef ParamSet As clsParams) As Boolean
         Dim diff As clsDMSParamStorage.ParamsEntry
-        Dim diffCollection As clsDMSParamStorage
-        Dim FileRows As DataRow()
-        Dim FileRow As DataRow
-        Dim EntryRows As DataRow()
-        Dim EntryRow As DataRow
+        Dim diffcollection As clsDMSParamStorage
         Dim counter As Integer
 
-        FileRows = Me.m_ParamsSet.Tables(Me.Param_File_Table).Select("[Param_File_ID] = " & ParamSetID)
-        If FileRows.Length > 0 Then
-            FileRow = FileRows(0)
-        Else
-            FileRow = Me.m_ParamsSet.Tables(Me.Param_File_Table).NewRow
-            FileRow.Item("Date_Created") = System.DateTime.Now
-        End If
+        ParamSet.Description = Me.DistillFeaturesFromParamSet(ParamSet)
 
-        With FileRow
-            .Item("Param_File_ID") = ParamSetID
-            .Item("Param_File_Name") = ParamSet.FileName
-            .Item("Param_File_Description") = ParamSet.Description
-            .Item("Param_File_Type_ID") = 1000                 'Seqeuest Param File ID
-            .Item("Date_Modified") = System.DateTime.Now
-        End With
+        Me.RunSP_AddUpdateParamFile(ParamSet.FileName, ParamSet.Description)
 
-        With Me.m_ParamsSet.Tables(Me.Param_File_Table)
-            .Rows.Add(FileRow)
-            '.AcceptChanges()
-        End With
+        diffcollection = Me.GetDiffColl(clsMainProcess.BaseLineParamSet, ParamSet)
 
-        'Get differences from basic template params and Convert to storage class
-        diffCollection = Me.GetDiffColl(clsMainProcess.BaseLineParamSet, ParamSet)
+        Dim paramSetID As Integer = Me.RunSP_GetParamFileID(ParamSet.FileName)
 
-        'Get the affected records from the params table
-        EntryRows = Me.m_ParamsSet.Tables(Me.Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
+        Me.RunSP_DeleteParamEntries(ParamSet.FileName)
 
-        For Each EntryRow In EntryRows
-            EntryRow.Delete()
-        Next
-
-        'Write to storage class to local data table
         counter = 1
-        For Each diff In diffCollection
-            EntryRow = Me.m_ParamsSet.Tables(Me.Param_Entry_Table).NewRow
-            With EntryRow
-                .Item("Entry_Sequence_Order") = counter
-                .Item("Entry_Type") = diff.Type.ToString
-                .Item("Entry_Specifier") = diff.Specifier
-                .Item("Entry_Value") = diff.Value
-                .Item("Entry_Parent_Type") = 1000
-                .Item("Param_File_ID") = ParamSetID
-            End With
-            Me.m_ParamsSet.Tables(Me.Param_Entry_Table).Rows.Add(EntryRow)
+        For Each diff In diffcollection
+            RunSP_AddUpdateParamEntry(paramSetID, counter, diff.Type, diff.Specifier, diff.Value)
             counter += 1
-
         Next
-        'Me.m_ParamsSet.Tables(Me.Param_Entry_Table).AcceptChanges()
+
+        Me.RefreshParamsFromDMS()
 
     End Function
 
-    Private Sub Write_T_Param_File_Table()      'Upload
+    Protected Sub tmpSaveMods(ByRef ParamSet As clsParams, ByRef at As IMassTweaker)
+        Dim diff As clsDMSParamStorage.ParamsEntry
+        Dim diffcollection As clsDMSParamStorage
+        Dim counter As Integer
+        Dim tmpMass As Single
 
-        Dim dr As DataRow
-        For Each dr In Me.ParamFileTable.Rows
-            Console.WriteLine(dr.Item(0).ToString & " " & dr.Item(1).ToString & ": " & dr.RowState.ToString)
+        diffcollection = Me.GetDiffColl(clsMainProcess.BaseLineParamSet, ParamSet)
+
+        Dim paramSetID As Integer = Me.RunSP_GetParamFileID(ParamSet.FileName)
+
+        counter = 1
+        For Each diff In diffcollection
+            If InStr(diff.Type.ToString, "Param") = 0 Then
+                If diff.Type <> clsDMSParamStorage.ParamTypes.IsotopicModification Then
+                    tmpMass = at.GetTweakedMass(diff.Value)
+                Else
+                    tmpMass = CSng(diff.Value)
+                End If
+                Me.RunSP_AddUpdateParamEntry(paramSetID, counter, diff.Type, diff.Specifier, tmpMass)
+                counter += 1
+            End If
         Next
-
-        For Each dr In Me.m_ParamsSet.Tables(Me.Param_Entry_Table).Rows
-            Console.WriteLine(dr.Item(0).ToString & " - " & dr.Item(1).ToString & " - " & dr.Item(2).ToString & " - " _
-                & dr.Item(3).ToString & " - " & dr.Item(4).ToString & " - " & dr.Item(5).ToString & ": " & dr.RowState.ToString)
-        Next
-
-        Me.OpenConnection()
-        Me.m_GetID_DA.Update(Me.m_ParamsSet.Tables(Me.Param_File_Table))
-        Me.m_GetEntries_DA.Update(Me.m_ParamsSet.Tables(Me.Param_Entry_Table))
-
-        Me.CloseConnection()
 
     End Sub
 
-    'Private Sub VerifyChangeState(ByVal dt As DataTable, ByVal ParamSetID As Integer)       'upload
-    '    Dim dr As DataRow
-    '    For Each dr In dt.Rows
-    '        If dr.RowState <> DataRowState.Unchanged And CInt(dr.Item(0)) = 1000 Then
-    '            dr.RejectChanges()
-    '        End If
-    '    Next
-    'End Sub
+    Protected Sub RunSP_AddUpdateParamFile( _
+        ByVal paramFileName As String, _
+        ByVal paramFileDescription As String)
+
+        Dim sp_Save As SqlClient.SqlCommand
+
+        If Not Me.m_PersistConnection Then Me.OpenConnection()
+
+        sp_Save = New SqlClient.SqlCommand("AddUpdateParamFile", Me.m_DBCn)
+
+        sp_Save.CommandType = CommandType.StoredProcedure
+
+        'Define parameters
+        Dim myParam As SqlClient.SqlParameter
+
+        'Define parameter for sp's return value
+        myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.ReturnValue
+
+        'Define parameters for the sp's arguments
+        myParam = sp_Save.Parameters.Add("@paramFileName", SqlDbType.VarChar, 255)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = paramFileName
+
+        myParam = sp_Save.Parameters.Add("@paramFileDesc", SqlDbType.VarChar, 1024)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = paramFileDescription
+
+        myParam = sp_Save.Parameters.Add("@ParamFileTypeID", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = 1000
+
+        myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
+        myParam.Direction = ParameterDirection.Output
+
+
+        'Execute the sp
+        sp_Save.ExecuteNonQuery()
+
+        'Get return value
+        Dim ret As Integer = CInt(sp_Save.Parameters("@Return").Value)
+
+        If ret <> 0 Then
+            Me.m_SPError = CStr(sp_Save.Parameters("@message").Value)
+        End If
+
+        If Not Me.m_PersistConnection Then Me.CloseConnection()
+
+    End Sub
+
+    Protected Sub RunSP_AddUpdateParamEntry( _
+        ByVal paramFileID As Integer, _
+        ByVal entrySeqOrder As Integer, _
+        ByVal entryType As clsDMSParamStorage.ParamTypes, _
+        ByVal entrySpecifier As String, _
+        ByVal entryValue As String)
+
+        Dim sp_Save As SqlClient.SqlCommand
+
+        If Not Me.m_PersistConnection Then Me.OpenConnection()
+
+        sp_Save = New SqlClient.SqlCommand("AddUpdateParamFileEntry", Me.m_DBCn)
+
+        sp_Save.CommandType = CommandType.StoredProcedure
+
+        'Define parameters
+        Dim myParam As SqlClient.SqlParameter
+
+        'Define parameter for sp's return value
+        myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.ReturnValue
+
+        'Define parameters for the sp's arguments
+        myParam = sp_Save.Parameters.Add("@paramFileID", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = paramFileID
+
+        myParam = sp_Save.Parameters.Add("@entrySeqOrder", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = entrySeqOrder
+
+        myParam = sp_Save.Parameters.Add("@entryType", SqlDbType.VarChar, 32)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = entryType.ToString
+
+        myParam = sp_Save.Parameters.Add("@entrySpecifier", SqlDbType.VarChar, 32)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = entrySpecifier
+
+        myParam = sp_Save.Parameters.Add("@entryValue", SqlDbType.VarChar, 32)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = entryValue
+
+        myParam = sp_Save.Parameters.Add("@mode", SqlDbType.VarChar, 12)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = "Add"
+
+        myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
+        myParam.Direction = ParameterDirection.Output
+
+
+        'Execute the sp
+        sp_Save.ExecuteNonQuery()
+
+        'Get return value
+        Dim ret As Integer = CInt(sp_Save.Parameters("@Return").Value)
+
+        If ret <> 0 Then
+            Me.m_SPError = CStr(sp_Save.Parameters("@message").Value)
+        End If
+
+        If Not Me.m_PersistConnection Then Me.CloseConnection()
+
+    End Sub
+
+    Protected Sub RunSP_AddUpdateGlobalModModMappingEntry( _
+        ByVal paramFileID As Integer, _
+        ByVal localSymbolID As Integer, _
+        ByVal globalModID As Integer)
+
+        Dim sp_Save As SqlClient.SqlCommand
+
+        If Not Me.m_PersistConnection Then Me.OpenConnection()
+
+        sp_Save = New SqlClient.SqlCommand("AddUpdateGlobalModMappingEntry", Me.m_DBCn)
+
+        sp_Save.CommandType = CommandType.StoredProcedure
+
+        'Define parameters
+        Dim myParam As SqlClient.SqlParameter
+
+        'Define parameter for sp's return value
+        myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.ReturnValue
+
+        'Define parameters for the sp's arguments
+        myParam = sp_Save.Parameters.Add("@paramFileID", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = paramFileID
+
+        myParam = sp_Save.Parameters.Add("@globalModID", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = globalModID
+
+        myParam = sp_Save.Parameters.Add("@localSymbolID", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = localSymbolID
+
+        myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
+        myParam.Direction = ParameterDirection.Output
+
+
+        'Execute the sp
+        sp_Save.ExecuteNonQuery()
+
+        'Get return value
+        Dim ret As Integer = CInt(sp_Save.Parameters("@Return").Value)
+
+        If ret <> 0 Then
+            Me.m_SPError = CStr(sp_Save.Parameters("@message").Value)
+        End If
+
+        If Not Me.m_PersistConnection Then Me.CloseConnection()
+
+
+    End Sub
+
+    Protected Sub RunSP_DeleteParamFile(ByVal paramFileName As String)
+        Dim sp_Delete As SqlClient.SqlCommand
+        If Not Me.m_PersistConnection Then Me.OpenConnection()
+
+        sp_Delete = New SqlClient.SqlCommand("DeleteParamFile", Me.m_DBCn)
+        sp_Delete.CommandType = CommandType.StoredProcedure
+
+        Dim myParam As SqlClient.SqlParameter
+
+        myParam = sp_Delete.Parameters.Add("@Return", SqlDbType.Int)
+        myParam.Direction = ParameterDirection.ReturnValue
+
+        myParam = sp_Delete.Parameters.Add("@ParamFileName", SqlDbType.VarChar, 255)
+        myParam.Direction = ParameterDirection.Input
+        myParam.Value = paramFileName
+
+        myParam = sp_Delete.Parameters.Add("@message", SqlDbType.VarChar, 512)
+        myParam.Direction = ParameterDirection.Output
+
+        sp_Delete.ExecuteNonQuery()
+
+        Dim ret As Integer = CInt(sp_Delete.Parameters("@Return").Value)
+
+        If ret <> 0 Then
+            Me.m_SPError = CStr(sp_Delete.Parameters("@message").Value)
+
+        End If
+
+        If Not Me.m_PersistConnection Then Me.CloseConnection()
+    End Sub
+
+    Protected Sub RunSP_DeleteParamEntries(ByVal paramFileName As String)
+        Dim paramFileID As Integer
+
+        paramFileID = Me.RunSP_GetParamFileID(paramFileName)
+
+        Me.RunSP_DeleteParamEntries(paramFileID)
+
+    End Sub
+
+    Protected Sub RunSP_DeleteParamEntries(ByVal paramFileID As Integer)
+        Dim sp_Delete As SqlClient.SqlCommand
+
+
+        If Not Me.m_PersistConnection Then Me.OpenConnection()
+
+        sp_Delete = New SqlClient.SqlCommand("DeleteParamEntriesForID", Me.m_DBCn)
+        sp_Delete.CommandType = CommandType.StoredProcedure
+
+        Dim myparam As SqlClient.SqlParameter
+
+        myparam = sp_Delete.Parameters.Add("@Return", SqlDbType.Int)
+        myparam.Direction = ParameterDirection.ReturnValue
+
+        myparam = sp_Delete.Parameters.Add("@ParamFileID", SqlDbType.Int)
+        myparam.Direction = ParameterDirection.Input
+        myparam.Value = paramFileID
+
+        myparam = sp_Delete.Parameters.Add("@message", SqlDbType.VarChar, 512)
+        myparam.Direction = ParameterDirection.Output
+
+
+        sp_Delete.ExecuteNonQuery()
+
+        Dim ret As Integer = CInt(sp_Delete.Parameters("@Return").Value)
+
+        If ret <> 0 Then
+            Me.m_SPError = CStr(sp_Delete.Parameters("@message").Value)
+
+        End If
+
+        If Not Me.m_PersistConnection Then Me.CloseConnection()
+
+    End Sub
+
+    Protected Function RunSP_GetParamFileID(ByVal paramFileName As String) As Integer
+        Dim sp_Lookup As SqlClient.SqlCommand
+
+
+        If Not Me.m_PersistConnection Then Me.OpenConnection()
+
+        sp_Lookup = New SqlClient.SqlCommand("GetParamFileID", Me.m_DBCn)
+        sp_Lookup.CommandType = CommandType.StoredProcedure
+
+        Dim myparam As SqlClient.SqlParameter
+
+        myparam = sp_Lookup.Parameters.Add("@Return", SqlDbType.Int)
+        myparam.Direction = ParameterDirection.ReturnValue
+
+        myparam = sp_Lookup.Parameters.Add("@ParamFileName", SqlDbType.VarChar, 255)
+        myparam.Direction = ParameterDirection.Input
+        myparam.Value = paramFileName
+
+        sp_Lookup.ExecuteNonQuery()
+
+        If Not Me.m_PersistConnection Then Me.CloseConnection()
+        Return CInt(sp_Lookup.Parameters("@Return").Value)
+    End Function
 
 #End Region
 End Class

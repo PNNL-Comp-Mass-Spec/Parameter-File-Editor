@@ -21,7 +21,7 @@
                 OptionExplicit = "On"
                 OptionStrict = "Off"
                 RootNamespace = "ParamFileEditor"
-                StartupObject = "ParamFileEditor.frmMainGUI"
+                StartupObject = ""
             >
                 <Config
                     Name = "Debug"
@@ -78,14 +78,6 @@
                     AssemblyName = "System.Xml"
                 />
                 <Reference
-                    Name = "MwtWinDll"
-                    Guid = "{ED80B4C7-ABA3-414D-8450-C77D683A2BCA}"
-                    VersionMajor = "1"
-                    VersionMinor = "0"
-                    Lcid = "0"
-                    WrapperTool = "tlbimp"
-                />
-                <Reference
                     Name = "ParamFileGenerator"
                     Project = "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
                     Package = "{F184B08F-C81C-45F6-A57F-5ABD9991F28F}"
@@ -109,7 +101,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "clsAccessEmbeddedRsrc.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "clsBatchLoadTemplates.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "clsDeconvolveIsoMods.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -124,7 +126,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "clsMolecularWeightCalc.vb"
+                    RelPath = "clsMassTweaker.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -144,7 +146,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "clsUpdateModsTable.vb"
+                    RelPath = "clsTransferParamEntriesToMCList.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -179,8 +181,18 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "frmMainGUI.vb"
+                    RelPath = "frmGlobalModNamer.vb"
                     SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "frmGlobalModNamer.resx"
+                    DependentUpon = "frmGlobalModNamer.vb"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "frmMainGUI.vb"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -189,18 +201,27 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "frmMassHelper.vb"
+                    RelPath = "frmStreamlinedGUI.vb"
                     SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "frmMassHelper.resx"
-                    DependentUpon = "frmMassHelper.vb"
+                    RelPath = "frmStreamlinedGUI.resx"
+                    DependentUpon = "frmStreamlinedGUI.vb"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "ListViewItemComparer.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ParamFileEditorSettings.xml"
-                    BuildAction = "Content"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "sequest_N14_NE.params"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "SQ Win.ico"

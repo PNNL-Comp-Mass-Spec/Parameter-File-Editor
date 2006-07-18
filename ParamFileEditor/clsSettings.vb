@@ -205,52 +205,6 @@ Namespace ProgramSettings
 
             Me.m_aaMappingsTable = Me.LoadAAMappingsTable(programSettings)
 
-            'Get Field Mappings for DMS and SQ files
-            'm_fieldMappingsTable = SetupFieldMappingTable("T_Field_Mappings")
-
-            'Dim m_tmpFieldMappings As System.Collections.Specialized.StringCollection
-            'Dim m_tmpIntName As String
-            'Dim m_tmpSQName As String
-            'Dim m_tmpDMSName As String
-            'Dim m_tmpValueType As String
-            'Dim m_tmpDR As DataRow
-
-            'Try
-            '    m_tmpFieldMappings = programSettings.GetAllKeysInSection("fieldmappings")
-            'Catch ex As Exception
-            '    Me.m_tmp = Nothing
-            'End Try
-
-            'If m_tmpFieldMappings.Count > 0 Then
-            '    For Each s In m_tmpFieldMappings
-            '        With programSettings
-            '            m_tmpIntName = s
-            '            m_tmpValueType = .GetParam("fieldmappings", m_tmpIntName)
-            '            m_tmpDMSName = .GetParam("fieldmappings", m_tmpIntName, "DMS_Name")
-            '            m_tmpSQName = .GetParam("fieldmappings", m_tmpIntName, "SQ_Name")
-            '        End With
-
-            '        'workRow = workTable.NewRow
-            '        'For Each strField In tmpArray
-            '        '    If fieldCounter <> 0 Then
-            '        '        workRow(fieldCounter - 1) = strField
-            '        '    End If
-            '        '    fieldCounter = fieldCounter + 1
-            '        'Next
-            '        'fieldCounter = 0
-            '        'workTable.Rows.Add(workRow)
-
-            '        m_tmpDR = m_fieldMappingsTable.NewRow
-
-            '        m_tmpDR(0) = m_tmpIntName
-            '        m_tmpDR(1) = m_tmpSQName
-            '        m_tmpDR(2) = m_tmpDMSName
-            '        m_tmpDR(3) = m_tmpValueType
-
-            '        m_fieldMappingsTable.Rows.Add(m_tmpDR)
-            '    Next
-            'End If
-
         End Function
         Private Function GetFilePath(ByVal fileName As String) As String
             Dim fi As New FileInfo(Application.ExecutablePath)

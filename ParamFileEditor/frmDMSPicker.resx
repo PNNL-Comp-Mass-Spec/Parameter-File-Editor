@@ -133,6 +133,53 @@
   <data name="cmdLoadParam.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Assembly</value>
   </data>
+  <data name="txtLiveSearch.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Assembly</value>
+  </data>
+  <data name="txtLiveSearch.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="txtLiveSearch.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Assembly</value>
+  </data>
+  <data name="PictureBox1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
+  <data name="PictureBox1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Assembly</value>
+  </data>
+  <data name="PictureBox1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Assembly</value>
+  </data>
+  <data name="PictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        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
+        RU5ErkJggg==
+</value>
+  </data>
   <data name="$this.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
