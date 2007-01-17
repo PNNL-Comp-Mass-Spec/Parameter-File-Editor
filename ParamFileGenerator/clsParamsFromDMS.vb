@@ -19,6 +19,7 @@ Namespace DownloadParams
 #Region " Enums "
         Public Enum AcceptableParams
             SelectedEnzymeIndex
+            SelectedEnzymeCleavagePosition
             MaximumNumberMissedCleavages
             ParentMassType
             FragmentMassType
@@ -49,6 +50,7 @@ Namespace DownloadParams
         End Enum
         Public Enum BasicParams
             SelectedEnzymeIndex
+            SelectedEnzymeCleavagePosition
             MaximumNumberMissedCleavages
             ParentMassType
             FragmentMassType
@@ -299,6 +301,8 @@ Namespace DownloadParams
         End Function
         'Todo Adding mass mod grabber
         Protected Function GetMassModsFromDMS(ByVal ParamSetID As Integer, ByRef sc As clsDMSParamStorage) As clsDMSParamStorage
+            Const MaxDynMods As Integer = 6
+
             Dim foundRow As DataRow
             Dim foundRows() As DataRow
             Dim tmpSpec As String
@@ -324,7 +328,7 @@ Namespace DownloadParams
 
             'Dim dt As DataTable = GetTable(SQL)
 
-            For counter = 1 To 3
+            For counter = 1 To MaxDynMods
                 foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & counter, "[Local_Symbol_ID]")
                 If foundRows.Length > 0 Then
                     tmpSpec = GetDynModSpecifier(foundRows)

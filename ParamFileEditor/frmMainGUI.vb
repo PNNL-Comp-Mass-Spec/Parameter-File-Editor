@@ -183,7 +183,6 @@ Public Class frmMainGUI
     Friend WithEvents txtIonCutoff As System.Windows.Forms.TextBox
     Friend WithEvents txtMaxProtMass As System.Windows.Forms.TextBox
     Friend WithEvents txtMinProtMass As System.Windows.Forms.TextBox
-    Friend WithEvents MainMenu1 As System.Windows.Forms.MainMenu
     Friend WithEvents mnuFileNewFileFromTemp As System.Windows.Forms.MenuItem
     Friend WithEvents mnuFileSaveToFile As System.Windows.Forms.MenuItem
     Friend WithEvents mnuFileExit As System.Windows.Forms.MenuItem
@@ -194,7 +193,6 @@ Public Class frmMainGUI
     Friend WithEvents lblParamFileInfo As System.Windows.Forms.Label
     Friend WithEvents lblNumResults As System.Windows.Forms.Label
     Friend WithEvents txtNumResults As System.Windows.Forms.TextBox
-    Friend WithEvents MenuItem5 As System.Windows.Forms.MenuItem
     Friend WithEvents mnuFileSaveBW2 As System.Windows.Forms.MenuItem
     Friend WithEvents mnuFileSaveBW3 As System.Windows.Forms.MenuItem
     Friend WithEvents mnuFileUploadDMS As System.Windows.Forms.MenuItem
@@ -221,14 +219,19 @@ Public Class frmMainGUI
     Friend WithEvents mnuDebug As System.Windows.Forms.MenuItem
     Friend WithEvents mnuDebugSyncSingle As System.Windows.Forms.MenuItem
     Friend WithEvents mnuDebugSyncDesc As System.Windows.Forms.MenuItem
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
-    Friend WithEvents NumericTextBox1 As ParamFileEditor.NumericTextBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents TextBox2 As System.Windows.Forms.TextBox
-    Friend WithEvents NumericTextBox2 As ParamFileEditor.NumericTextBox
-    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents cboCleavagePosition As System.Windows.Forms.ComboBox
+    Friend WithEvents lblCleavagePosition As System.Windows.Forms.Label
+    Friend WithEvents txtDynMod4List As System.Windows.Forms.TextBox
+    Friend WithEvents txtDynMod4MassDiff As ParamFileEditor.NumericTextBox
+    Friend WithEvents lblDynMod4List As System.Windows.Forms.Label
+    Friend WithEvents txtDynMod5List As System.Windows.Forms.TextBox
+    Friend WithEvents txtDynMod5MassDiff As ParamFileEditor.NumericTextBox
+    Friend WithEvents lblDynMod5List As System.Windows.Forms.Label
+    Friend WithEvents mnuFileSaveBW32 As System.Windows.Forms.MenuItem
+    Friend WithEvents lblDynMod4MassDiff As System.Windows.Forms.Label
+    Friend WithEvents lblDynMod5MassDiff As System.Windows.Forms.Label
+    Friend WithEvents mnuMain As System.Windows.Forms.MainMenu
+    Friend WithEvents mnuDiv1 As System.Windows.Forms.MenuItem
 
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container
@@ -319,6 +322,8 @@ Public Class frmMainGUI
         Me.lblEnzymeSelect = New System.Windows.Forms.Label
         Me.lblMissedCleavages = New System.Windows.Forms.Label
         Me.lblFragmentMassType = New System.Windows.Forms.Label
+        Me.cboCleavagePosition = New System.Windows.Forms.ComboBox
+        Me.lblCleavagePosition = New System.Windows.Forms.Label
         Me.gbxDynMods = New System.Windows.Forms.GroupBox
         Me.txtDynMod1List = New System.Windows.Forms.TextBox
         Me.txtDynMod1MassDiff = New ParamFileEditor.NumericTextBox
@@ -332,14 +337,14 @@ Public Class frmMainGUI
         Me.lblDynMod1MassDiff = New System.Windows.Forms.Label
         Me.lblDynMod3MassDiff = New System.Windows.Forms.Label
         Me.lblDynMod2MassDiff = New System.Windows.Forms.Label
-        Me.TextBox1 = New System.Windows.Forms.TextBox
-        Me.NumericTextBox1 = New ParamFileEditor.NumericTextBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.TextBox2 = New System.Windows.Forms.TextBox
-        Me.NumericTextBox2 = New ParamFileEditor.NumericTextBox
-        Me.Label4 = New System.Windows.Forms.Label
+        Me.txtDynMod4List = New System.Windows.Forms.TextBox
+        Me.txtDynMod4MassDiff = New ParamFileEditor.NumericTextBox
+        Me.lblDynMod4List = New System.Windows.Forms.Label
+        Me.lblDynMod4MassDiff = New System.Windows.Forms.Label
+        Me.lblDynMod5MassDiff = New System.Windows.Forms.Label
+        Me.txtDynMod5List = New System.Windows.Forms.TextBox
+        Me.txtDynMod5MassDiff = New ParamFileEditor.NumericTextBox
+        Me.lblDynMod5List = New System.Windows.Forms.Label
         Me.tabAdvanced = New System.Windows.Forms.TabPage
         Me.gbxIonWeighting = New System.Windows.Forms.GroupBox
         Me.txtWWeight = New System.Windows.Forms.TextBox
@@ -399,7 +404,7 @@ Public Class frmMainGUI
         Me.chkRemovePrecursorPeaks = New System.Windows.Forms.CheckBox
         Me.chkShowFragmentIons = New System.Windows.Forms.CheckBox
         Me.chkCreateOutputFiles = New System.Windows.Forms.CheckBox
-        Me.MainMenu1 = New System.Windows.Forms.MainMenu
+        Me.mnuMain = New System.Windows.Forms.MainMenu
         Me.mnuFile = New System.Windows.Forms.MenuItem
         Me.mnuFileNewFileFromTemp = New System.Windows.Forms.MenuItem
         Me.mnuLoadFromFile = New System.Windows.Forms.MenuItem
@@ -407,9 +412,10 @@ Public Class frmMainGUI
         Me.mnuFileSaveToFile = New System.Windows.Forms.MenuItem
         Me.mnuFileSaveBW2 = New System.Windows.Forms.MenuItem
         Me.mnuFileSaveBW3 = New System.Windows.Forms.MenuItem
+        Me.mnuFileSaveBW32 = New System.Windows.Forms.MenuItem
         Me.mnuFileUploadDMS = New System.Windows.Forms.MenuItem
         Me.mnuBatchUploadDMS = New System.Windows.Forms.MenuItem
-        Me.MenuItem5 = New System.Windows.Forms.MenuItem
+        Me.mnuDiv1 = New System.Windows.Forms.MenuItem
         Me.mnuFileExit = New System.Windows.Forms.MenuItem
         Me.mnuHelp = New System.Windows.Forms.MenuItem
         Me.mnuHelpAbout = New System.Windows.Forms.MenuItem
@@ -1277,6 +1283,8 @@ Public Class frmMainGUI
         Me.gbxSearch.Controls.Add(Me.lblEnzymeSelect)
         Me.gbxSearch.Controls.Add(Me.lblMissedCleavages)
         Me.gbxSearch.Controls.Add(Me.lblFragmentMassType)
+        Me.gbxSearch.Controls.Add(Me.cboCleavagePosition)
+        Me.gbxSearch.Controls.Add(Me.lblCleavagePosition)
         Me.gbxSearch.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.gbxSearch.Location = New System.Drawing.Point(8, 104)
         Me.gbxSearch.Name = "gbxSearch"
@@ -1288,16 +1296,16 @@ Public Class frmMainGUI
         'txtPartialSeq
         '
         Me.txtPartialSeq.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPartialSeq.Location = New System.Drawing.Point(12, 110)
+        Me.txtPartialSeq.Location = New System.Drawing.Point(244, 110)
         Me.txtPartialSeq.Name = "txtPartialSeq"
-        Me.txtPartialSeq.Size = New System.Drawing.Size(428, 20)
+        Me.txtPartialSeq.Size = New System.Drawing.Size(196, 20)
         Me.txtPartialSeq.TabIndex = 5
         Me.txtPartialSeq.Text = ""
         '
         'lblPartialSeq
         '
         Me.lblPartialSeq.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblPartialSeq.Location = New System.Drawing.Point(12, 96)
+        Me.lblPartialSeq.Location = New System.Drawing.Point(244, 96)
         Me.lblPartialSeq.Name = "lblPartialSeq"
         Me.lblPartialSeq.Size = New System.Drawing.Size(160, 16)
         Me.lblPartialSeq.TabIndex = 11
@@ -1375,6 +1383,24 @@ Public Class frmMainGUI
         Me.lblFragmentMassType.TabIndex = 7
         Me.lblFragmentMassType.Text = "Fragment Ion Mass Type"
         '
+        'cboCleavagePosition
+        '
+        Me.cboCleavagePosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboCleavagePosition.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cboCleavagePosition.Location = New System.Drawing.Point(12, 110)
+        Me.cboCleavagePosition.Name = "cboCleavagePosition"
+        Me.cboCleavagePosition.Size = New System.Drawing.Size(200, 21)
+        Me.cboCleavagePosition.TabIndex = 3
+        '
+        'lblCleavagePosition
+        '
+        Me.lblCleavagePosition.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCleavagePosition.Location = New System.Drawing.Point(12, 96)
+        Me.lblCleavagePosition.Name = "lblCleavagePosition"
+        Me.lblCleavagePosition.Size = New System.Drawing.Size(148, 16)
+        Me.lblCleavagePosition.TabIndex = 0
+        Me.lblCleavagePosition.Text = "Enzyme Cleavage Positions"
+        '
         'gbxDynMods
         '
         Me.gbxDynMods.Controls.Add(Me.txtDynMod1List)
@@ -1389,14 +1415,14 @@ Public Class frmMainGUI
         Me.gbxDynMods.Controls.Add(Me.lblDynMod1MassDiff)
         Me.gbxDynMods.Controls.Add(Me.lblDynMod3MassDiff)
         Me.gbxDynMods.Controls.Add(Me.lblDynMod2MassDiff)
-        Me.gbxDynMods.Controls.Add(Me.TextBox1)
-        Me.gbxDynMods.Controls.Add(Me.NumericTextBox1)
-        Me.gbxDynMods.Controls.Add(Me.Label1)
-        Me.gbxDynMods.Controls.Add(Me.Label2)
-        Me.gbxDynMods.Controls.Add(Me.Label3)
-        Me.gbxDynMods.Controls.Add(Me.TextBox2)
-        Me.gbxDynMods.Controls.Add(Me.NumericTextBox2)
-        Me.gbxDynMods.Controls.Add(Me.Label4)
+        Me.gbxDynMods.Controls.Add(Me.txtDynMod4List)
+        Me.gbxDynMods.Controls.Add(Me.txtDynMod4MassDiff)
+        Me.gbxDynMods.Controls.Add(Me.lblDynMod4List)
+        Me.gbxDynMods.Controls.Add(Me.lblDynMod4MassDiff)
+        Me.gbxDynMods.Controls.Add(Me.lblDynMod5MassDiff)
+        Me.gbxDynMods.Controls.Add(Me.txtDynMod5List)
+        Me.gbxDynMods.Controls.Add(Me.txtDynMod5MassDiff)
+        Me.gbxDynMods.Controls.Add(Me.lblDynMod5List)
         Me.gbxDynMods.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.gbxDynMods.Location = New System.Drawing.Point(8, 248)
         Me.gbxDynMods.Name = "gbxDynMods"
@@ -1519,81 +1545,81 @@ Public Class frmMainGUI
         Me.lblDynMod2MassDiff.TabIndex = 5
         Me.lblDynMod2MassDiff.Text = "Mass Change 2"
         '
-        'TextBox1
+        'txtDynMod4List
         '
-        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(276, 36)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(73, 20)
-        Me.TextBox1.TabIndex = 10
-        Me.TextBox1.Text = ""
+        Me.txtDynMod4List.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod4List.Location = New System.Drawing.Point(276, 36)
+        Me.txtDynMod4List.Name = "txtDynMod4List"
+        Me.txtDynMod4List.Size = New System.Drawing.Size(73, 20)
+        Me.txtDynMod4List.TabIndex = 10
+        Me.txtDynMod4List.Text = ""
         '
-        'NumericTextBox1
+        'txtDynMod4MassDiff
         '
-        Me.NumericTextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.NumericTextBox1.ForceNewValue = False
-        Me.NumericTextBox1.Location = New System.Drawing.Point(276, 74)
-        Me.NumericTextBox1.Name = "NumericTextBox1"
-        Me.NumericTextBox1.Size = New System.Drawing.Size(76, 20)
-        Me.NumericTextBox1.TabIndex = 11
-        Me.NumericTextBox1.Tag = "0"
-        Me.NumericTextBox1.Text = ""
+        Me.txtDynMod4MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod4MassDiff.ForceNewValue = False
+        Me.txtDynMod4MassDiff.Location = New System.Drawing.Point(276, 74)
+        Me.txtDynMod4MassDiff.Name = "txtDynMod4MassDiff"
+        Me.txtDynMod4MassDiff.Size = New System.Drawing.Size(76, 20)
+        Me.txtDynMod4MassDiff.TabIndex = 11
+        Me.txtDynMod4MassDiff.Tag = "0"
+        Me.txtDynMod4MassDiff.Text = ""
         '
-        'Label1
+        'lblDynMod4List
         '
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(276, 20)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(84, 14)
-        Me.Label1.TabIndex = 3
-        Me.Label1.Text = "AA List 3"
+        Me.lblDynMod4List.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDynMod4List.Location = New System.Drawing.Point(276, 20)
+        Me.lblDynMod4List.Name = "lblDynMod4List"
+        Me.lblDynMod4List.Size = New System.Drawing.Size(84, 14)
+        Me.lblDynMod4List.TabIndex = 3
+        Me.lblDynMod4List.Text = "AA List 4"
         '
-        'Label2
+        'lblDynMod4MassDiff
         '
-        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(276, 60)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(84, 14)
-        Me.Label2.TabIndex = 6
-        Me.Label2.Text = "Mass Change 3"
+        Me.lblDynMod4MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDynMod4MassDiff.Location = New System.Drawing.Point(276, 60)
+        Me.lblDynMod4MassDiff.Name = "lblDynMod4MassDiff"
+        Me.lblDynMod4MassDiff.Size = New System.Drawing.Size(84, 14)
+        Me.lblDynMod4MassDiff.TabIndex = 6
+        Me.lblDynMod4MassDiff.Text = "Mass Change 4"
         '
-        'Label3
+        'lblDynMod5MassDiff
         '
-        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(364, 60)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(84, 14)
-        Me.Label3.TabIndex = 6
-        Me.Label3.Text = "Mass Change 3"
+        Me.lblDynMod5MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDynMod5MassDiff.Location = New System.Drawing.Point(364, 60)
+        Me.lblDynMod5MassDiff.Name = "lblDynMod5MassDiff"
+        Me.lblDynMod5MassDiff.Size = New System.Drawing.Size(84, 14)
+        Me.lblDynMod5MassDiff.TabIndex = 6
+        Me.lblDynMod5MassDiff.Text = "Mass Change 5"
         '
-        'TextBox2
+        'txtDynMod5List
         '
-        Me.TextBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox2.Location = New System.Drawing.Point(364, 36)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(76, 20)
-        Me.TextBox2.TabIndex = 10
-        Me.TextBox2.Text = ""
+        Me.txtDynMod5List.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod5List.Location = New System.Drawing.Point(364, 36)
+        Me.txtDynMod5List.Name = "txtDynMod5List"
+        Me.txtDynMod5List.Size = New System.Drawing.Size(76, 20)
+        Me.txtDynMod5List.TabIndex = 10
+        Me.txtDynMod5List.Text = ""
         '
-        'NumericTextBox2
+        'txtDynMod5MassDiff
         '
-        Me.NumericTextBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.NumericTextBox2.ForceNewValue = False
-        Me.NumericTextBox2.Location = New System.Drawing.Point(364, 74)
-        Me.NumericTextBox2.Name = "NumericTextBox2"
-        Me.NumericTextBox2.Size = New System.Drawing.Size(76, 20)
-        Me.NumericTextBox2.TabIndex = 11
-        Me.NumericTextBox2.Tag = "0"
-        Me.NumericTextBox2.Text = ""
+        Me.txtDynMod5MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod5MassDiff.ForceNewValue = False
+        Me.txtDynMod5MassDiff.Location = New System.Drawing.Point(364, 74)
+        Me.txtDynMod5MassDiff.Name = "txtDynMod5MassDiff"
+        Me.txtDynMod5MassDiff.Size = New System.Drawing.Size(76, 20)
+        Me.txtDynMod5MassDiff.TabIndex = 11
+        Me.txtDynMod5MassDiff.Tag = "0"
+        Me.txtDynMod5MassDiff.Text = ""
         '
-        'Label4
+        'lblDynMod5List
         '
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(364, 20)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(84, 14)
-        Me.Label4.TabIndex = 3
-        Me.Label4.Text = "AA List 3"
+        Me.lblDynMod5List.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDynMod5List.Location = New System.Drawing.Point(364, 20)
+        Me.lblDynMod5List.Name = "lblDynMod5List"
+        Me.lblDynMod5List.Size = New System.Drawing.Size(84, 14)
+        Me.lblDynMod5List.TabIndex = 3
+        Me.lblDynMod5List.Text = "AA List 5"
         '
         'tabAdvanced
         '
@@ -2205,14 +2231,14 @@ Public Class frmMainGUI
         Me.chkCreateOutputFiles.TabIndex = 26
         Me.chkCreateOutputFiles.Text = "Create Output Files?"
         '
-        'MainMenu1
+        'mnuMain
         '
-        Me.MainMenu1.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFile, Me.mnuHelp, Me.mnuDebug})
+        Me.mnuMain.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFile, Me.mnuHelp, Me.mnuDebug})
         '
         'mnuFile
         '
         Me.mnuFile.Index = 0
-        Me.mnuFile.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFileNewFileFromTemp, Me.mnuFileSaveToFile, Me.mnuFileUploadDMS, Me.mnuBatchUploadDMS, Me.MenuItem5, Me.mnuFileExit})
+        Me.mnuFile.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFileNewFileFromTemp, Me.mnuFileSaveToFile, Me.mnuFileUploadDMS, Me.mnuBatchUploadDMS, Me.mnuDiv1, Me.mnuFileExit})
         Me.mnuFile.Text = "File"
         '
         'mnuFileNewFileFromTemp
@@ -2235,7 +2261,7 @@ Public Class frmMainGUI
         'mnuFileSaveToFile
         '
         Me.mnuFileSaveToFile.Index = 1
-        Me.mnuFileSaveToFile.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFileSaveBW2, Me.mnuFileSaveBW3})
+        Me.mnuFileSaveToFile.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFileSaveBW2, Me.mnuFileSaveBW3, Me.mnuFileSaveBW32})
         Me.mnuFileSaveToFile.Shortcut = System.Windows.Forms.Shortcut.CtrlS
         Me.mnuFileSaveToFile.Text = "&Save Current Settings as New Param File"
         '
@@ -2249,6 +2275,11 @@ Public Class frmMainGUI
         Me.mnuFileSaveBW3.Index = 1
         Me.mnuFileSaveBW3.Text = "BioWorks 3.0 Format..."
         '
+        'mnuFileSaveBW32
+        '
+        Me.mnuFileSaveBW32.Index = 2
+        Me.mnuFileSaveBW32.Text = "BioWorks 3.2 Format..."
+        '
         'mnuFileUploadDMS
         '
         Me.mnuFileUploadDMS.Index = 2
@@ -2259,10 +2290,10 @@ Public Class frmMainGUI
         Me.mnuBatchUploadDMS.Index = 3
         Me.mnuBatchUploadDMS.Text = "Batch Upload Param Files to DMS (Restricted)"
         '
-        'MenuItem5
+        'mnuDiv1
         '
-        Me.MenuItem5.Index = 4
-        Me.MenuItem5.Text = "-"
+        Me.mnuDiv1.Index = 4
+        Me.mnuDiv1.Text = "-"
         '
         'mnuFileExit
         '
@@ -2286,6 +2317,7 @@ Public Class frmMainGUI
         Me.mnuDebug.Index = 2
         Me.mnuDebug.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuDebugSyncAll, Me.mnuDebugSyncSingle, Me.mnuDebugSyncDesc})
         Me.mnuDebug.Text = "Debug"
+        Me.mnuDebug.Visible = False
         '
         'mnuDebugSyncAll
         '
@@ -2324,7 +2356,7 @@ Public Class frmMainGUI
         Me.Controls.Add(Me.tcMain)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximumSize = New System.Drawing.Size(482, 744)
-        Me.Menu = Me.MainMenu1
+        Me.Menu = Me.mnuMain
         Me.MinimumSize = New System.Drawing.Size(482, 744)
         Me.Name = "frmMainGUI"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
@@ -2420,6 +2452,17 @@ Public Class frmMainGUI
             .EndUpdate()
         End With
 
+        With frm.cboCleavagePosition
+            .DisplayMember = "DisplayName"
+            .ValueMember = "Value"
+            .BeginUpdate()
+            .Items.Clear()
+            .Items.Add(New ComboBoxContents("No Enzyme", "0"))
+            .EndUpdate()
+            .Enabled = False
+            .Text = "No Enzyme"
+        End With
+
         Dim counter As Integer = 0
         With frm.cboMissedCleavages
             .BeginUpdate()
@@ -2439,6 +2482,7 @@ Public Class frmMainGUI
             frm.cboParentMassType.SelectedIndex = CType(.ParentMassType, Integer)
             frm.cboFragmentMassType.SelectedIndex = CType(.FragmentMassType, Integer)
             frm.cboEnzymeSelect.SelectedIndex = .SelectedEnzymeIndex()
+            frm.cboCleavagePosition.Text = "Full Cleavage"
             frm.cboMissedCleavages.SelectedIndex = .MaximumNumberMissedCleavages
             frm.txtPartialSeq.Text = .PartialSequenceToMatch
 
@@ -2446,9 +2490,13 @@ Public Class frmMainGUI
             frm.txtDynMod1List.Text = .DynamicMods.Dyn_Mod_n_AAList(1)
             frm.txtDynMod2List.Text = .DynamicMods.Dyn_Mod_n_AAList(2)
             frm.txtDynMod3List.Text = .DynamicMods.Dyn_Mod_n_AAList(3)
+            frm.txtDynMod4List.Text = .DynamicMods.Dyn_Mod_n_AAList(4)
+            frm.txtDynMod5List.Text = .DynamicMods.Dyn_Mod_n_AAList(5)
             frm.txtDynMod1MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(1), "0.0000").ToString
             frm.txtDynMod2MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(2), "0.0000").ToString
             frm.txtDynMod3MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(3), "0.0000").ToString
+            frm.txtDynMod4MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(4), "0.0000").ToString
+            frm.txtDynMod5MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(5), "0.0000").ToString
 
             'Static Mods
             frm.txtCTPep.Text = Format(.StaticModificationsList.CtermPeptide, "0.0000").ToString
@@ -2565,6 +2613,7 @@ Public Class frmMainGUI
         AddHandler cboParentMassType.SelectedIndexChanged, AddressOf cboParentMassType_SelectedIndexChanged
         AddHandler cboFragmentMassType.SelectedIndexChanged, AddressOf cboFragmentMassType_SelectedIndexChanged
         AddHandler cboEnzymeSelect.SelectedIndexChanged, AddressOf cboEnzymeSelect_SelectedIndexChanged
+        AddHandler cboCleavagePosition.SelectedIndexChanged, AddressOf cboCleavagePosition_SelectedIndexChanged
         AddHandler cboMissedCleavages.SelectedIndexChanged, AddressOf cboMissedCleavages_SelectedIndexChanged
         AddHandler txtPartialSeq.Validating, AddressOf AATextbox_Validating
         AddHandler txtPartialSeq.Validated, AddressOf txtPartialSeq_Validated
@@ -2580,14 +2629,20 @@ Public Class frmMainGUI
         AddHandler txtDynMod1MassDiff.Validating, AddressOf numericTextbox_Validating
         AddHandler txtDynMod2MassDiff.Validating, AddressOf numericTextbox_Validating
         AddHandler txtDynMod3MassDiff.Validating, AddressOf numericTextbox_Validating
+        AddHandler txtDynMod4MassDiff.Validating, AddressOf numericTextbox_Validating
+        AddHandler txtDynMod5MassDiff.Validating, AddressOf numericTextbox_Validating
 
         AddHandler txtDynMod1MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
         AddHandler txtDynMod2MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
         AddHandler txtDynMod3MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+        AddHandler txtDynMod4MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+        AddHandler txtDynMod5MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
 
         AddHandler txtDynMod1MassDiff.Validated, AddressOf txtDynMod1MassDiff_Validated
         AddHandler txtDynMod2MassDiff.Validated, AddressOf txtDynMod2MassDiff_Validated
         AddHandler txtDynMod3MassDiff.Validated, AddressOf txtDynMod3MassDiff_Validated
+        AddHandler txtDynMod4MassDiff.Validated, AddressOf txtDynMod4MassDiff_Validated
+        AddHandler txtDynMod5MassDiff.Validated, AddressOf txtDynMod5MassDiff_Validated
 
         AddHandler txtCTPep.Validating, AddressOf numericTextbox_Validating
         AddHandler txtCTProt.Validating, AddressOf numericTextbox_Validating
@@ -2822,12 +2877,49 @@ Public Class frmMainGUI
         newParams.SelectedEnzymeDetails = newParams.RetrieveEnzymeDetails(tmpIndex)
         Me.txtDescription.Text = Me.UpdateDescription(newParams)
 
+        If tmpIndex = 0 Then
+            With Me.cboCleavagePosition
+                .DisplayMember = "DisplayName"
+                .ValueMember = "Value"
+                .BeginUpdate()
+                .Items.Clear()
+                .Items.Add(New ComboBoxContents("No Enzyme", "0"))
+                .EndUpdate()
+            End With
+            Me.cboCleavagePosition.Text = "No Enzyme"
+            Me.cboCleavagePosition.Enabled = False
+        Else
+            With Me.cboCleavagePosition
+                .DisplayMember = "DisplayName"
+                .ValueMember = "Value"
+                .BeginUpdate()
+                .Items.Clear()
+                .Items.Add(New ComboBoxContents("Full Cleavage", "1"))
+                .Items.Add(New ComboBoxContents("Partial Cleavage", "2"))
+                .Items.Add(New ComboBoxContents("N-Term Partial Cleavage", "3"))
+                .Items.Add(New ComboBoxContents("C-Term Partial Cleavage", "4"))
+                .EndUpdate()
+            End With
+            Me.cboCleavagePosition.Text = "Full Cleavage"
+            Me.cboCleavagePosition.Enabled = True
+        End If
+
         Debug.WriteLine("")
     End Sub
     Private Sub cboMissedCleavages_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         newParams.MaximumNumberMissedCleavages = Me.cboMissedCleavages.SelectedIndex
         Me.txtDescription.Text = Me.UpdateDescription(newParams)
     End Sub
+    Private Sub cboCleavagePosition_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboCleavagePosition.SelectedIndexChanged
+        Dim cbc As ComboBoxContents = DirectCast(Me.cboCleavagePosition.SelectedItem, ComboBoxContents)
+        If Not cbc Is Nothing Then
+            newParams.SelectedEnzymeCleavagePosition = CInt(cbc.Value)
+        Else
+            newParams.SelectedEnzymeCleavagePosition = 0
+        End If
+        Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Sub
+
     Private Sub txtPartialSeq_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         newParams.PartialSequenceToMatch = Me.txtPartialSeq.Text
         Me.txtDescription.Text = Me.UpdateDescription(newParams)
@@ -2864,6 +2956,24 @@ Public Class frmMainGUI
             End If
         End If
     End Sub
+    Private Sub txtDynMod4List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If Me.txtDynMod4List.Text <> "C" Then
+            Me.StatModErrorProvider.SetError(sender, "")
+            Me.txtDynMod3List.Text = Me.txtDynMod3List.Text.ToUpper
+            If CSng(Me.txtDynMod4MassDiff.Text) <> 0.0 Then
+                newParams.DynamicMods.Dyn_Mod_n_AAList(4) = Me.txtDynMod4List.Text
+            End If
+        End If
+    End Sub
+    Private Sub txtDynMod5List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If Me.txtDynMod5List.Text <> "C" Then
+            Me.StatModErrorProvider.SetError(sender, "")
+            Me.txtDynMod5List.Text = Me.txtDynMod3List.Text.ToUpper
+            If CSng(Me.txtDynMod5MassDiff.Text) <> 0.0 Then
+                newParams.DynamicMods.Dyn_Mod_n_AAList(5) = Me.txtDynMod5List.Text
+            End If
+        End If
+    End Sub
     Private Sub txtDynMod1MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If CSng(Me.txtDynMod1MassDiff.Text) <> 0.0 Then
             newParams.DynamicMods.Dyn_Mod_n_AAList(1) = Me.txtDynMod1List.Text
@@ -2875,14 +2985,28 @@ Public Class frmMainGUI
         If CSng(Me.txtDynMod2MassDiff.Text) <> 0.0 Then
             newParams.DynamicMods.Dyn_Mod_n_AAList(2) = Me.txtDynMod2List.Text
         End If
-        newParams.DynamicMods.Dyn_Mod_n_MassDiff(1) = CSng(Me.txtDynMod2MassDiff.Text)
+        newParams.DynamicMods.Dyn_Mod_n_MassDiff(2) = CSng(Me.txtDynMod2MassDiff.Text)
         Me.txtDescription.Text = Me.UpdateDescription(newParams)
     End Sub
     Private Sub txtDynMod3MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         If CSng(Me.txtDynMod3MassDiff.Text) <> 0.0 Then
             newParams.DynamicMods.Dyn_Mod_n_AAList(3) = Me.txtDynMod3List.Text
         End If
-        newParams.DynamicMods.Dyn_Mod_n_MassDiff(1) = CSng(Me.txtDynMod3MassDiff.Text)
+        newParams.DynamicMods.Dyn_Mod_n_MassDiff(3) = CSng(Me.txtDynMod3MassDiff.Text)
+        Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Sub
+    Private Sub txtDynMod4MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If CSng(Me.txtDynMod4MassDiff.Text) <> 0.0 Then
+            newParams.DynamicMods.Dyn_Mod_n_AAList(4) = Me.txtDynMod3List.Text
+        End If
+        newParams.DynamicMods.Dyn_Mod_n_MassDiff(4) = CSng(Me.txtDynMod4MassDiff.Text)
+        Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Sub
+    Private Sub txtDynMod5MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If CSng(Me.txtDynMod3MassDiff.Text) <> 0.0 Then
+            newParams.DynamicMods.Dyn_Mod_n_AAList(5) = Me.txtDynMod3List.Text
+        End If
+        newParams.DynamicMods.Dyn_Mod_n_MassDiff(5) = CSng(Me.txtDynMod5MassDiff.Text)
         Me.txtDescription.Text = Me.UpdateDescription(newParams)
     End Sub
 
@@ -3370,8 +3494,28 @@ Public Class frmMainGUI
         If SaveDialog.ShowDialog = DialogResult.OK Then
             newFilePath = SaveDialog.FileName
         End If
-        Call FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_30)
+        FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_30)
     End Sub
+
+
+    Private Sub mnuFileSaveBW32_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW32.Click
+        Dim FileOutput As New clsWriteOutput
+        Dim newFilePath As String
+
+        Dim SaveDialog As New SaveFileDialog
+
+        With SaveDialog
+            .Title = "Save Sequest/BioWorks v3.2 Parameter File"
+
+        End With
+
+        If SaveDialog.ShowDialog = DialogResult.OK Then
+            newFilePath = SaveDialog.FileName
+        End If
+        FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_32)
+
+    End Sub
+
     Private Sub mnuHelpAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuHelpAbout.Click
         Dim AboutBox As New frmAboutBox
         AboutBox.Show()
@@ -3769,6 +3913,7 @@ Public Class frmMainGUI
 
     End Sub
 
+
 End Class
 
 Public Class NumericTextBox
@@ -3786,4 +3931,25 @@ Public Class NumericTextBox
     End Property
 
 
+End Class
+
+Class ComboBoxContents
+    Private m_Name As String
+    Private m_Value As String
+
+    Sub New(ByVal name As String, ByVal value As String)
+        Me.m_Value = value
+        Me.m_Name = name
+    End Sub
+
+    ReadOnly Property DisplayName() As String
+        Get
+            Return Me.m_Name
+        End Get
+    End Property
+    ReadOnly Property Value() As String
+        Get
+            Return Me.m_Value
+        End Get
+    End Property
 End Class

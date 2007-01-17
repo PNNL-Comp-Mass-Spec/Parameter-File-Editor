@@ -64,38 +64,62 @@ Public Class clsWriteOutput
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_20 Then
                 .Add("[Sequest]")
                 maxDynMods = 3
-            ElseIf type = MakeParams.IGenerateFile.ParamFileType.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Then
+            ElseIf type = MakeParams.IGenerateFile.ParamFileType.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("[Sequest]")
                 maxDynMods = 6
             End If
             .Add(";DMS_Description = " & p.Description)
             If type = clsParams.ParamFileTypes.BioWorks_20 Then
                 .Add("database_name = " & p.DefaultFASTAPath)
-            ElseIf type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Then
+            ElseIf type = clsParams.ParamFileTypes.BioWorks_30 Or _
+                    type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or _
+                    type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("first_database_name = " & p.DefaultFASTAPath)
                 .Add("second_database_name = " & p.DefaultFASTAPath2)
             End If
             .Add("peptide_mass_tolerance = " & Format(p.PeptideMassTolerance, "0.0000").ToString)
-            .Add("create_output_files = " & ConvertBoolToInteger(p.CreateOutputFiles).ToString)
+            If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                .Add("peptide_mass_units = 0")
+            End If
             .Add("ion_series = " & p.IonSeries.ReturnIonString)
-            .Add("diff_search_options = " & p.DynamicMods.ReturnDynModString(maxDynMods))
-            .Add("max_num_differential_AA_per_mod = " & p.MaximumNumAAPerDynMod.ToString)
             .Add("fragment_ion_tolerance = " & Format(p.FragmentIonTolerance, "0.0000").ToString)
             .Add("num_output_lines = " & p.NumberOfOutputLines.ToString)
-            .Add("num_description_lines = " & p.NumberOfDescriptionLines.ToString)
-            If type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Then
+            If type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("num_results = " & p.NumberOfResultsToProcess)
             End If
-            If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_30 Then
+            .Add("num_description_lines = " & p.NumberOfDescriptionLines.ToString)
+            If type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("show_fragment_ions = 0")
             Else
                 .Add("show_fragment_ions = " & ConvertBoolToInteger(p.ShowFragmentIons).ToString)
             End If
             .Add("print_duplicate_references = " & ConvertBoolToInteger(p.PrintDuplicateReferences).ToString)
-            .Add("enzyme_number = " & p.SelectedEnzymeIndex.ToString)
+            If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                .Add("enzyme_number = " & p.SelectedEnzymeIndex.ToString)
+            Else
+                enz = p.EnzymeList(p.SelectedEnzymeIndex)
+                .Add("enzyme_info = " + enz.ReturnBW32EnzymeInfoString(p.SelectedEnzymeCleavagePosition))
+            End If
+            If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                .Add("max_num_differential_per_peptide = " + p.MaximumNumDifferentialPerPeptide.ToString)
+            Else
+                .Add("max_num_differential_AA_per_mod = " & p.MaximumNumAAPerDynMod.ToString)
+            End If
+
+            .Add("diff_search_options = " & p.DynamicMods.ReturnDynModString(maxDynMods))
+
+            .Add("term_diff_search_options = " + p.DynamicMods.ReturnDynTermModString)
+
+            If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                .Add("use_phospho_fragmentation = " + p.UsePhosphoFragmentation.ToString)
+            End If
+
             .Add("nucleotide_reading_frame = " & CType(p.SelectedNucReadingFrame, Integer).ToString)
             .Add("mass_type_parent = " & CType(p.ParentMassType, Integer).ToString)
             .Add("mass_type_fragment = " & CType(p.FragmentMassType, Integer).ToString)
+            If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                .Add("normalize_xcorr = " + "0")
+            End If
             .Add("remove_precursor_peak = " & ConvertBoolToInteger(p.RemovePrecursorPeak).ToString)
             .Add("ion_cutoff_percentage = " & Format(p.IonCutoffPercentage, "0.0000").ToString)
             .Add("max_num_internal_cleavage_sites = " & p.MaximumNumberMissedCleavages.ToString)
@@ -103,7 +127,9 @@ Public Class clsWriteOutput
             .Add("match_peak_count = " & p.NumberOfDetectedPeaksToMatch.ToString)
             .Add("match_peak_allowed_error = " & p.NumberOfAllowedDetectedPeakErrors.ToString)
             .Add("match_peak_tolerance = " & Format(p.MatchedPeakMassTolerance, "0.0000").ToString)
-            .Add("residues_in_upper_case = " & ConvertBoolToInteger(p.AminoAcidsAllUpperCase).ToString)
+            .Add("create_output_files = " & ConvertBoolToInteger(p.CreateOutputFiles).ToString)
+
+            '.Add("residues_in_upper_case = " & ConvertBoolToInteger(p.AminoAcidsAllUpperCase).ToString)
             .Add("partial_sequence = " & p.PartialSequenceToMatch)
             .Add("sequence_header_filter = " & p.SequenceHeaderInfoToFilter)
             .Add("")
@@ -135,11 +161,18 @@ Public Class clsWriteOutput
             .Add("add_R_Arginine = " & Format(p.StaticModificationsList.R_Arginine, "0.0000").ToString)
             .Add("add_Y_Tyrosine = " & Format(p.StaticModificationsList.Y_Tyrosine, "0.0000").ToString)
             .Add("add_W_Tryptophan = " & Format(p.StaticModificationsList.W_Tryptophan, "0.0000").ToString)
+            If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                .Add("add_J_user_amino_acid = 0.0000")
+                .Add("add_U_user_amino_acid = 0.0000")
+            End If
             .Add("")
-            .Add("[SEQUEST_ENZYME_INFO]")
-            For Each enz In p.EnzymeList
-                .Add(enz.ReturnEnzymeString)
-            Next
+
+            If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                .Add("[SEQUEST_ENZYME_INFO]")
+                For Each enz In p.EnzymeList
+                    .Add(enz.ReturnEnzymeString)
+                Next
+            End If
         End With
 
         Return sc

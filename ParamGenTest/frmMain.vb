@@ -38,10 +38,6 @@ Public Class frmMain
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents txtOutputPath As System.Windows.Forms.TextBox
     Friend WithEvents txtDMSConnectionString As System.Windows.Forms.TextBox
     Friend WithEvents cboFileTypes As System.Windows.Forms.ComboBox
@@ -49,14 +45,18 @@ Public Class frmMain
     Friend WithEvents txtResults As System.Windows.Forms.TextBox
     Friend WithEvents cmdDoIt As System.Windows.Forms.Button
     Friend WithEvents txtFASTAPath As System.Windows.Forms.TextBox
+    Friend WithEvents lblOutputPath As System.Windows.Forms.Label
+    Friend WithEvents lblPickList As System.Windows.Forms.Label
+    Friend WithEvents lblConnectionString As System.Windows.Forms.Label
+    Friend WithEvents lblParamFileType As System.Windows.Forms.Label
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.txtOutputPath = New System.Windows.Forms.TextBox
         Me.txtDMSConnectionString = New System.Windows.Forms.TextBox
         Me.cboFileTypes = New System.Windows.Forms.ComboBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.Label4 = New System.Windows.Forms.Label
+        Me.lblOutputPath = New System.Windows.Forms.Label
+        Me.lblPickList = New System.Windows.Forms.Label
+        Me.lblConnectionString = New System.Windows.Forms.Label
+        Me.lblParamFileType = New System.Windows.Forms.Label
         Me.cboAvailableParams = New System.Windows.Forms.ComboBox
         Me.txtResults = New System.Windows.Forms.TextBox
         Me.cmdDoIt = New System.Windows.Forms.Button
@@ -87,37 +87,37 @@ Public Class frmMain
         Me.cboFileTypes.Size = New System.Drawing.Size(400, 21)
         Me.cboFileTypes.TabIndex = 3
         '
-        'Label1
+        'lblOutputPath
         '
-        Me.Label1.Location = New System.Drawing.Point(16, 24)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(120, 23)
-        Me.Label1.TabIndex = 4
-        Me.Label1.Text = "Output Path"
+        Me.lblOutputPath.Location = New System.Drawing.Point(16, 24)
+        Me.lblOutputPath.Name = "lblOutputPath"
+        Me.lblOutputPath.Size = New System.Drawing.Size(120, 23)
+        Me.lblOutputPath.TabIndex = 4
+        Me.lblOutputPath.Text = "Output Path"
         '
-        'Label2
+        'lblPickList
         '
-        Me.Label2.Location = New System.Drawing.Point(16, 64)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(120, 23)
-        Me.Label2.TabIndex = 5
-        Me.Label2.Text = "Param File Pick List"
+        Me.lblPickList.Location = New System.Drawing.Point(16, 64)
+        Me.lblPickList.Name = "lblPickList"
+        Me.lblPickList.Size = New System.Drawing.Size(120, 23)
+        Me.lblPickList.TabIndex = 5
+        Me.lblPickList.Text = "Param File Pick List"
         '
-        'Label3
+        'lblConnectionString
         '
-        Me.Label3.Location = New System.Drawing.Point(16, 100)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(120, 23)
-        Me.Label3.TabIndex = 6
-        Me.Label3.Text = "Connect String"
+        Me.lblConnectionString.Location = New System.Drawing.Point(16, 100)
+        Me.lblConnectionString.Name = "lblConnectionString"
+        Me.lblConnectionString.Size = New System.Drawing.Size(120, 23)
+        Me.lblConnectionString.TabIndex = 6
+        Me.lblConnectionString.Text = "Connect String"
         '
-        'Label4
+        'lblParamFileType
         '
-        Me.Label4.Location = New System.Drawing.Point(16, 144)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(120, 23)
-        Me.Label4.TabIndex = 7
-        Me.Label4.Text = "Param File Type"
+        Me.lblParamFileType.Location = New System.Drawing.Point(16, 144)
+        Me.lblParamFileType.Name = "lblParamFileType"
+        Me.lblParamFileType.Size = New System.Drawing.Size(120, 23)
+        Me.lblParamFileType.TabIndex = 7
+        Me.lblParamFileType.Text = "Param File Type"
         '
         'cboAvailableParams
         '
@@ -125,6 +125,7 @@ Public Class frmMain
         Me.cboAvailableParams.Location = New System.Drawing.Point(156, 60)
         Me.cboAvailableParams.Name = "cboAvailableParams"
         Me.cboAvailableParams.Size = New System.Drawing.Size(400, 21)
+        Me.cboAvailableParams.Sorted = True
         Me.cboAvailableParams.TabIndex = 8
         '
         'txtResults
@@ -157,16 +158,16 @@ Public Class frmMain
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(576, 346)
         Me.Controls.Add(Me.txtFASTAPath)
-        Me.Controls.Add(Me.cmdDoIt)
         Me.Controls.Add(Me.txtResults)
-        Me.Controls.Add(Me.cboAvailableParams)
-        Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.cboFileTypes)
         Me.Controls.Add(Me.txtDMSConnectionString)
         Me.Controls.Add(Me.txtOutputPath)
+        Me.Controls.Add(Me.cmdDoIt)
+        Me.Controls.Add(Me.cboAvailableParams)
+        Me.Controls.Add(Me.lblParamFileType)
+        Me.Controls.Add(Me.lblConnectionString)
+        Me.Controls.Add(Me.lblPickList)
+        Me.Controls.Add(Me.lblOutputPath)
+        Me.Controls.Add(Me.cboFileTypes)
         Me.Name = "frmMain"
         Me.Text = "Form1"
         Me.ResumeLayout(False)
@@ -218,7 +219,7 @@ Public Class frmMain
 
         Select Case Me.m_ParamTypeID
             Case 1000
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.BioWorks_31
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.BioWorks_32
             Case 1008
                 Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.X_Tandem
             Case Else
@@ -284,7 +285,10 @@ Public Class frmMain
             .DisplayMember = "Type"
             .ValueMember = "ID"
             .DataSource = paramFileTypes
+            .Text = "Sequest"
         End With
+
+
 
         'Me.cboFileTypes.DataSource = System.Enum.GetValues(GetType(ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType))
 

@@ -486,6 +486,11 @@ Public Class clsDynamicMods
         '    Return ""
         'End If
     End Function
+    'TODO replace with real function for term dyn mods
+    'Just a placeholder for now
+    Public Function ReturnDynTermModString() As String
+        Return "0.0000 0.0000"
+    End Function
     Public Overloads Sub Add( _
         ByVal AffectedResidueString As String, _
         ByVal MassDifference As Single, _

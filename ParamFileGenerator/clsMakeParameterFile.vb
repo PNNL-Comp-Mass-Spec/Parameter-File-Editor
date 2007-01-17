@@ -6,6 +6,7 @@ Namespace MakeParams
             BioWorks_20  'Normal BioWorks 2.0 Sequest
             BioWorks_30  'BioWorks 3.0+ TurboSequest
             BioWorks_31  'BioWorks 3.1 ClusterQuest
+            BioWorks_32  'Bioworks 3.2 ClusterF***
             X_Tandem     'X!Tandem XML file
             Invalid      'Other stuff not currently handled
         End Enum
@@ -59,6 +60,8 @@ Namespace MakeParams
             ByVal OutputFilePath As String, _
             ByVal DMSConnectionString As String) As Boolean Implements IGenerateFile.MakeFile
 
+
+
             Try
                 Select Case ParamFileType
                     Case IGenerateFile.ParamFileType.X_Tandem
@@ -68,7 +71,9 @@ Namespace MakeParams
                             DMSConnectionString)
                     Case IGenerateFile.ParamFileType.Invalid
                         Exit Function
+
                     Case Else
+                        ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
                         Return Me.MakeFileSQ( _
                             ParamFileName, _
                             ParamFileType, _

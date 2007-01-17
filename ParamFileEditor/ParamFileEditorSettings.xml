@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <sections>
   <section name="dms_database">
-    <item key="connectionstring" value="Data Source=gigasax;Initial Catalog=DMS5_T3;Integrated Security=SSPI;" />
+    <item key="connectionstring" value="Data Source=gigasax;Initial Catalog=DMS5;Integrated Security=SSPI;" />
     <item key="paramstablename" value="T_Sequest_Params" />
   </section>
   <section name="mt_database">

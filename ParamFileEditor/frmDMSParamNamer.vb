@@ -180,18 +180,18 @@ Public Class frmDMSParamNamer
     End Sub
 
     Private Sub txtSaveFileName_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtSaveFileName.TextChanged
-        If Me.txtSaveFileName.Text.Length < 64 Then
+        If Me.txtSaveFileName.Text.Length < 255 Then
             Me.m_SaveName = Me.txtSaveFileName.Text
             Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "")
         Else
-            Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "Parameter File names must be < 64 characters in length")
+            Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "Parameter File names must be < 255 characters in length")
         End If
     End Sub
 
     Private Sub txtSaveFileName_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles txtSaveFileName.Validating
         Dim tb As TextBox = DirectCast(sender, TextBox)
-        If tb.Text.Length >= 64 Then
-            Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "Parameter File names must be < 64 characters in length")
+        If tb.Text.Length >= 255 Then
+            Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "Parameter File names must be < 255 characters in length")
             e.Cancel = True
         Else
             Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "")

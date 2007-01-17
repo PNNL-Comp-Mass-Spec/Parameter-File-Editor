@@ -14,6 +14,7 @@ Public Interface IBasicParams
     Property Description() As String
     Property SelectedEnzymeDetails() As clsEnzymeDetails
     Property SelectedEnzymeIndex() As Integer
+    Property SelectedEnzymeCleavagePosition() As Integer
     Property MaximumNumberMissedCleavages() As Integer
     Property ParentMassType() As MassTypeList
     Property FragmentMassType() As MassTypeList
@@ -44,6 +45,7 @@ Public Interface IAdvancedParams
     Property IonSeries() As clsIonSeries
     Property NumberOfResultsToProcess() As Integer
     Property MaximumNumAAPerDynMod() As Integer
+    Property MaximumDifferentialPerPeptide() As Integer
     Property PeptideMassTolerance() As Single
     Property FragmentIonTolerance() As Single
     Property NumberOfOutputLines() As Integer
@@ -61,6 +63,7 @@ Public Interface IAdvancedParams
     Property MatchedPeakMassTolerance() As Single
     Property AminoAcidsAllUpperCase() As Boolean
     Property SequenceHeaderInfoToFilter() As String
+    Property UsePhosphoFragmentation() As Integer
 End Interface
 
 Public Class clsParams
@@ -71,6 +74,7 @@ Public Class clsParams
         BioWorks_20  'Normal BioWorks 2.0 Sequest
         BioWorks_30  'BioWorks 3.0+ TurboSequest
         BioWorks_31  'BioWorks 3.1 ClusterQuest
+        BioWorks_32  'BioWorks 3.2 ClusterF***
     End Enum
 
     Const DEF_DB_NAME As String = "C:\Xcalibur\database\nr.fasta"     'Not really used, just a placeholder
@@ -85,6 +89,7 @@ Public Class clsParams
     Private m_type As ParamFileTypes
     Private m_typeIndex As Integer
     Private m_enzymeNumber As Integer
+    Private m_enzymeCleavagePosition As Integer
     Private m_enzymeDetails As clsEnzymeDetails
     Private m_maxICSites As Integer
     Private m_parentMassType As IBasicParams.MassTypeList
@@ -105,6 +110,7 @@ Public Class clsParams
     Private m_ionSeriesString As String         'A
     Private m_ionSeries As clsIonSeries         'A
     Private m_maxAAPerDynMod As Integer         'A
+    Private m_maxDiffPerPeptide As Integer = 3  'A
     Private m_fragIonTol As Single              'A
     Private m_numOutLines As Integer            'A
     Private m_numDescLines As Integer           'A
@@ -122,6 +128,7 @@ Public Class clsParams
     Private m_matchPeakTol As Single
     Private m_upperCase As Boolean              'A
     Private m_seqHdrFilter As String            'A
+    Private m_usePhosphoFragmentation As Integer = 0
     Private m_enzymeDetailStorage As clsEnzymeCollection
 
     Private m_fullTemplate As clsRetrieveParams
@@ -245,6 +252,22 @@ Public Class clsParams
             m_maxAAPerDynMod = Value
         End Set
     End Property
+    Public Property MaximumNumDifferentialPerPeptide() As Integer Implements IAdvancedParams.MaximumDifferentialPerPeptide
+        Get
+            Return m_maxDiffPerPeptide
+        End Get
+        Set(ByVal Value As Integer)
+            m_maxDiffPerPeptide = Value
+        End Set
+    End Property
+    Public Property UsePhosphoFragmentation() As Integer Implements IAdvancedParams.UsePhosphoFragmentation
+        Get
+            Return m_usePhosphoFragmentation
+        End Get
+        Set(ByVal Value As Integer)
+            m_usephosphofragmentation = Value
+        End Set
+    End Property
     Public Property FragmentIonTolerance() As Single Implements IAdvancedParams.FragmentIonTolerance
         Get
             Return m_fragIonTol
@@ -302,6 +325,14 @@ Public Class clsParams
         End Get
         Set(ByVal Value As Integer)
             m_enzymeNumber = Value
+        End Set
+    End Property
+    Public Property SelectedEnzymeCleavagePosition() As Integer Implements IBasicParams.SelectedEnzymeCleavagePosition
+        Get
+            Return Me.m_enzymeCleavagePosition
+        End Get
+        Set(ByVal Value As Integer)
+            Me.m_enzymeCleavagePosition = Value
         End Set
     End Property
     Public Property SelectedNucReadingFrame() As IAdvancedParams.FrameList Implements IAdvancedParams.SelectedNucReadingFrame
@@ -486,11 +517,11 @@ Public Class clsParams
         'm_desc = GetDescription()
         m_type = Me.GetTemplateType
 
-        If m_type = ParamFileTypes.BioWorks_20 Then
-            SectionName = "SEQUEST"
-        ElseIf m_type = ParamFileTypes.BioWorks_30 Then
-            SectionName = "SEQUEST"
-        End If
+        'If m_type = ParamFileTypes.BioWorks_20 Then
+        SectionName = "SEQUEST"
+        'ElseIf m_type = ParamFileTypes.BioWorks_30 Or m_type = ParamFileTypes.BioWorks_31 Then
+        '    SectionName = "SEQUEST"
+        'End If
 
         m_fullTemplate = New clsRetrieveParams(m_templateFilePath)
         'Retrieve Basic Parameters
@@ -499,6 +530,7 @@ Public Class clsParams
             Me.FileName = System.IO.Path.GetFileName(Me.m_templateFilePath)
             Me.SelectedEnzymeIndex = CInt(.GetParam("enzyme_number"))
             Me.SelectedEnzymeDetails = m_enzymeDetailStorage(m_enzymeNumber)
+            Me.SelectedEnzymeCleavagePosition = 1
             Me.MaximumNumberMissedCleavages = CInt(.GetParam("max_num_internal_cleavage_sites"))
             Me.ParentMassType = CType(CInt(.GetParam("mass_type_parent")), IBasicParams.MassTypeList)
             Me.FragmentMassType = CType(CInt(.GetParam("mass_type_fragment")), IBasicParams.MassTypeList)
@@ -573,7 +605,7 @@ Public Class clsParams
             Me.NumberOfDetectedPeaksToMatch = CInt(.GetParam("match_peak_count"))
             Me.NumberOfAllowedDetectedPeakErrors = CInt(.GetParam("match_peak_allowed_error"))
             Me.MatchedPeakMassTolerance = CSng(.GetParam("match_peak_tolerance"))
-            Me.AminoAcidsAllUpperCase = CBool(.GetParam("residues_in_upper_case"))
+            Me.AminoAcidsAllUpperCase = True
             Me.SequenceHeaderInfoToFilter = .GetParam("sequence_header_filter")
             Me.DMS_ID = -1
         End With
@@ -937,7 +969,7 @@ Public Class clsEnzymeDetails
 
     Private m_Number As Integer         'Enzyme ID Number
     Private m_Name As String            'Descriptive Name
-    Private m_Offset As Integer         '?????
+    Private m_Offset As Integer         'Cut position --> 0 = N-terminal, 1 = C-Terminal
     Private m_CleavePoints As String    'Amino Acids at which to cleave
     Private m_NoCleavePoints As String  'Amino Acids to skip cleavage
 
@@ -1035,6 +1067,29 @@ Public Class clsEnzymeDetails
 
     End Function
 
+    Public Function ReturnBW32EnzymeInfoString(ByVal cleavagePosition As Integer) As String
+        Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
+
+        sb.Append(EnzymeName)
+        sb.Append("(")
+        sb.Append(Me.EnzymeCleavePoints)
+        If Me.EnzymeNoCleavePoints.Length > 0 And Me.EnzymeNoCleavePoints <> "-" Then
+            sb.Append("/")
+            sb.Append(Me.EnzymeNoCleavePoints)
+        End If
+        sb.Append(")")
+        sb.Append(" ")
+        sb.Append(cleavagePosition.ToString)
+        sb.Append(" ")
+        sb.Append(Me.EnzymeCleaveOffset.ToString)
+        sb.Append(" ")
+        sb.Append(Me.EnzymeCleavePoints)
+        sb.Append(" ")
+        sb.Append(Me.EnzymeNoCleavePoints)
+
+        Return sb.ToString
+    End Function
+
 End Class
 
 Public Class clsEnzymeCollection
@@ -1105,10 +1160,41 @@ Public Class clsGetEnzymeBlock
                     sc.Add(s)
                     s = tr.ReadLine
                 Loop
-                Return sc
+                Exit Do
             End If
             s = tr.ReadLine
         Loop
+
+        If sc.Count = 0 Then
+            sc = LoadDefaultEnzymes()
+        End If
+
+        Return sc
+
+    End Function
+
+    Private Function LoadDefaultEnzymes() As System.Collections.Specialized.StringCollection
+        Dim sc As New System.Collections.Specialized.StringCollection
+
+        sc.Add("0.  No_Enzyme              0      -           -")
+        sc.Add("1.  Trypsin                1      KR          -")
+        sc.Add("2.  Trypsin_modified       1      KRLNH       -")
+        sc.Add("3.  Chymotrypsin           1      FWYL        -")
+        sc.Add("4.  Chymotrypsin__modified 1      FWY         -")
+        sc.Add("5.  Clostripain            1      R           -")
+        sc.Add("6.  Cyanogen_Bromide       1      M           -")
+        sc.Add("7.  IodosoBenzoate         1      W           -")
+        sc.Add("8.  Proline_Endopept       1      P           -")
+        sc.Add("9.  Staph_Protease         1      E           -")
+        sc.Add("10. Trypsin_K              1      K           P")
+        sc.Add("11. Trypsin_R              1      R           P")
+        sc.Add("12. GluC                   1      ED          -")
+        sc.Add("13. LysC                   1      K           -")
+        sc.Add("14. AspN                   0      D           -")
+        sc.Add("15. Elastase               1      ALIV        P")
+        sc.Add("16. Elastase/Tryp/Chymo    1      ALIVKRWFY   P")
+
+        Return sc
 
     End Function
 
