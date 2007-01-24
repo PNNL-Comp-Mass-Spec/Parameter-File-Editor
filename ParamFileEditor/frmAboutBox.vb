@@ -3,6 +3,8 @@ Imports System.Reflection
 Public Class frmAboutBox
     Inherits System.Windows.Forms.Form
 
+    Private m_ConnectionString As String
+
 #Region " Windows Form Designer generated code "
 
     Public Sub New()
@@ -37,7 +39,9 @@ Public Class frmAboutBox
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel2 As System.Windows.Forms.LinkLabel
     Friend WithEvents lblVersionString As System.Windows.Forms.Label
+    Friend WithEvents ttProviderAboutBox As System.Windows.Forms.ToolTip
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container
         Dim resources As System.Resources.ResourceManager = New System.Resources.ResourceManager(GetType(frmAboutBox))
         Me.PictureBox1 = New System.Windows.Forms.PictureBox
         Me.Label1 = New System.Windows.Forms.Label
@@ -45,6 +49,7 @@ Public Class frmAboutBox
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel
         Me.LinkLabel2 = New System.Windows.Forms.LinkLabel
         Me.lblVersionString = New System.Windows.Forms.Label
+        Me.ttProviderAboutBox = New System.Windows.Forms.ToolTip(Me.components)
         Me.SuspendLayout()
         '
         'PictureBox1
@@ -143,5 +148,16 @@ Public Class frmAboutBox
         Dim compileTime As String = Format(fi.LastWriteTime, "Medium Time")
 
         Me.lblVersionString.Text = "Version " & compileVersion & vbCrLf & compileDate & ", " & compileTime
+        Me.ttProviderAboutBox.SetToolTip(Me.Label1, Me.m_ConnectionString)
     End Sub
+
+    Property ConnectionStringInUse() As String
+        Get
+            Return Me.m_ConnectionString
+        End Get
+        Set(ByVal Value As String)
+            Me.m_ConnectionString = Value
+        End Set
+    End Property
+
 End Class

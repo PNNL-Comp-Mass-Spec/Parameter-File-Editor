@@ -3518,6 +3518,7 @@ Public Class frmMainGUI
 
     Private Sub mnuHelpAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuHelpAbout.Click
         Dim AboutBox As New frmAboutBox
+        AboutBox.ConnectionStringInUse = mySettings.DMS_ConnectionString
         AboutBox.Show()
     End Sub
 

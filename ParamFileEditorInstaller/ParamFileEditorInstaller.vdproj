@@ -15,26 +15,26 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0B1A4BA09D7C49CDB4A605ABE9F390FA"
-        "OwnerKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0B1A4BA09D7C49CDB4A605ABE9F390FA"
-        "OwnerKey" = "8:_15FC55D23E2AD4ED236E80FD27ABF2FF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_15FC55D23E2AD4ED236E80FD27ABF2FF"
+        "MsmKey" = "8:_12B30826B1611F4DE09D0007C917A4D2"
         "OwnerKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D4F94BC28CB54C04B1C068F2B671FC59"
+        "OwnerKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D4F94BC28CB54C04B1C068F2B671FC59"
+        "OwnerKey" = "8:_12B30826B1611F4DE09D0007C917A4D2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -102,14 +102,14 @@
         }
         "File"
         {
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_15FC55D23E2AD4ED236E80FD27ABF2FF"
+            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_12B30826B1611F4DE09D0007C917A4D2"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.0.2572.28856, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.0.2579.27704, Culture=neutral"
                 "ScatterAssemblies"
                 {
-                    "_15FC55D23E2AD4ED236E80FD27ABF2FF"
+                    "_12B30826B1611F4DE09D0007C917A4D2"
                     {
                     "Name" = "8:ParamFileGenerator.dll"
                     "Attributes" = "3:512"
@@ -188,13 +188,13 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sequest Param File Editor"
-        "ProductCode" = "8:{AD5E3D69-924C-4946-ABC5-720886760D4A}"
-        "PackageCode" = "8:{F4583590-9045-4B0C-B232-5C4E7992F1D9}"
+        "ProductCode" = "8:{FBA8B1C4-99B2-4DC9-A76C-B65BA2C4A6D9}"
+        "PackageCode" = "8:{D2BBD601-5231-40A4-8FA6-EC1B10991F7E}"
         "UpgradeCode" = "8:{6B68153E-0FA1-4B77-9B01-C246BE805CD8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "ProductVersion" = "8:1.0.4"
+        "ProductVersion" = "8:1.0.5"
         "Manufacturer" = "8:PRISM Tools"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -700,7 +700,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_0B1A4BA09D7C49CDB4A605ABE9F390FA"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_D4F94BC28CB54C04B1C068F2B671FC59"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"

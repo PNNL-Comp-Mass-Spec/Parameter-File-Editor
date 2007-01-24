@@ -79,7 +79,7 @@ Public Class clsWriteOutput
             End If
             .Add("peptide_mass_tolerance = " & Format(p.PeptideMassTolerance, "0.0000").ToString)
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
-                .Add("peptide_mass_units = 0")
+                .Add("peptide_mass_units = " + p.PeptideMassUnits.ToString)
             End If
             .Add("ion_series = " & p.IonSeries.ReturnIonString)
             .Add("fragment_ion_tolerance = " & Format(p.FragmentIonTolerance, "0.0000").ToString)

@@ -64,6 +64,7 @@ Public Interface IAdvancedParams
     Property AminoAcidsAllUpperCase() As Boolean
     Property SequenceHeaderInfoToFilter() As String
     Property UsePhosphoFragmentation() As Integer
+    Property PeptideMassUnits() As Integer
 End Interface
 
 Public Class clsParams
@@ -128,6 +129,7 @@ Public Class clsParams
     Private m_matchPeakTol As Single
     Private m_upperCase As Boolean              'A
     Private m_seqHdrFilter As String            'A
+    Private m_peptideMassUnits As Integer = 0   'A
     Private m_usePhosphoFragmentation As Integer = 0
     Private m_enzymeDetailStorage As clsEnzymeCollection
 
@@ -455,6 +457,14 @@ Public Class clsParams
             m_seqHdrFilter = Value
         End Set
     End Property
+    Public Property PeptideMassUnits() As Integer Implements IAdvancedParams.PeptideMassUnits
+        Get
+            Return Me.m_peptideMassUnits
+        End Get
+        Set(ByVal Value As Integer)
+            Me.m_peptideMassUnits = Value
+        End Set
+    End Property
     Public Property StaticModificationsList() As clsStaticMods Implements IBasicParams.StaticModificationsList
         Get
             Return m_staticModsList
@@ -537,6 +547,7 @@ Public Class clsParams
             Me.PartialSequenceToMatch = .GetParam("partial_sequence")
             Me.DynamicMods = New clsDynamicMods(.GetParam("diff_search_options"))
             Me.StaticModificationsList = New clsStaticMods
+
 
             'Get Static Mods
             Me.StaticModificationsList.CtermPeptide = CSng(.GetParam("add_Cterm_peptide"))

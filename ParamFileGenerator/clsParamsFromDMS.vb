@@ -47,6 +47,7 @@ Namespace DownloadParams
             MatchedPeakMassTolerance
             AminoAcidsAllUpperCase
             SequenceHeaderInfoToFilter
+            PeptideMassUnits
         End Enum
         Public Enum BasicParams
             SelectedEnzymeIndex
@@ -77,6 +78,7 @@ Namespace DownloadParams
             MatchedPeakMassTolerance
             AminoAcidsAllUpperCase
             SequenceHeaderInfoToFilter
+            PeptideMassUnits
         End Enum
 
         Public Enum IonSeriesParams
