@@ -2460,7 +2460,6 @@ Public Class frmMainGUI
             .Items.Add(New ComboBoxContents("No Enzyme", "0"))
             .EndUpdate()
             .Enabled = False
-            .Text = "No Enzyme"
         End With
 
         Dim counter As Integer = 0
@@ -2482,7 +2481,7 @@ Public Class frmMainGUI
             frm.cboParentMassType.SelectedIndex = CType(.ParentMassType, Integer)
             frm.cboFragmentMassType.SelectedIndex = CType(.FragmentMassType, Integer)
             frm.cboEnzymeSelect.SelectedIndex = .SelectedEnzymeIndex()
-            frm.cboCleavagePosition.Text = "Full Cleavage"
+            frm.cboCleavagePosition.SelectedValue = .SelectedEnzymeCleavagePosition
             frm.cboMissedCleavages.SelectedIndex = .MaximumNumberMissedCleavages
             frm.txtPartialSeq.Text = .PartialSequenceToMatch
 
@@ -2900,7 +2899,14 @@ Public Class frmMainGUI
                 .Items.Add(New ComboBoxContents("C-Term Partial Cleavage", "4"))
                 .EndUpdate()
             End With
-            Me.cboCleavagePosition.Text = "Full Cleavage"
+
+            Dim cItem As ComboBoxContents
+            For Each cItem In Me.cboCleavagePosition.Items
+                If CInt(cItem.Value) = Me.newParams.SelectedEnzymeCleavagePosition Then
+                    Me.cboCleavagePosition.Text = cItem.DisplayName
+                End If
+            Next
+
             Me.cboCleavagePosition.Enabled = True
         End If
 
