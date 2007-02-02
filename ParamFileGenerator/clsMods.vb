@@ -406,7 +406,88 @@ Public Class clsModEntry
 End Class
 
 
+Public Class clsTermDynamicMods
+    Inherits clsDynamicMods
 
+#Region " Public Procedures "
+    Sub New(ByVal TermDynModString As String)
+        MyBase.New()
+        Me.m_OrigDynModString = TermDynModString
+        ParseDynModString(Me.m_OrigDynModString)
+
+    End Sub
+
+    Protected Overrides Sub ParseDynModString(ByVal DMString As String)
+        Dim tmpCTMass As Single
+        Dim tmpNTMass As Single
+        Dim tmpRes As String
+        Dim resCollection As StringCollection
+
+        Dim splitRE As System.Text.RegularExpressions.Regex = _
+            New System.Text.RegularExpressions.Regex("(?<ctmodmass>\d+\.\d+)\s+(?<ntmodmass>\d+\.\d+)")
+        Dim m As System.Text.RegularExpressions.Match
+
+        If DMString Is Nothing Then
+            Exit Sub
+        End If
+
+
+        If splitRE.IsMatch(DMString) Then
+            m = splitRE.Match(DMString)
+
+            tmpCTMass = CSng(m.Groups("ctmodmass").Value)
+            tmpNTMass = CSng(m.Groups("ntmodmass").Value)
+
+            resCollection = New StringCollection
+            resCollection.Add("<")
+            Me.Add(New clsModEntry(resCollection, tmpNTMass, clsModEntry.ModificationTypes.Dynamic))
+
+            resCollection = New StringCollection
+            resCollection.Add(">")
+            Me.Add(New clsModEntry(resCollection, tmpCTMass, clsModEntry.ModificationTypes.Dynamic))
+        End If
+
+    End Sub
+
+    Protected Overrides Function AssembleModString(ByVal counter As Integer) As String
+        Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
+
+        Dim tmpModString As String
+        Dim ctRes As String = ">"
+        Dim ntRes As String = "<"
+
+        Dim ctModMass As Single = 0.0
+        Dim ntModMass As Single = 0.0
+
+        Dim tmpModMass As Single
+
+        Dim dynMod As clsModEntry
+        ' Dim counter As Integer = 2
+        Dim padCount As Integer
+
+        For Each dynMod In Me.List
+            tmpModMass = dynMod.MassDifference
+            tmpModString = dynMod.ReturnAllAffectedResiduesString
+            If tmpModString = ">" Then
+                ctModMass = tmpModMass
+                ctRes = tmpModString
+            ElseIf tmpModString = "<" Then
+                ntModMass = tmpModMass
+                ntRes = tmpModString
+            End If
+        Next
+
+        sb.Append(Format(ctModMass, "0.000000"))
+        sb.Append(" ")
+        sb.Append(Format(ntModMass, "0.000000"))
+
+        Return sb.ToString.Trim()
+    End Function
+
+
+#End Region
+
+End Class
 
 
 
@@ -577,7 +658,7 @@ Public Class clsDynamicMods
 #End Region
 
 #Region " Member Procedures "
-    Private Function AssembleModString(ByVal counter As Integer) As String
+    Protected Overridable Function AssembleModString(ByVal counter As Integer) As String
         Dim s As String
         Dim tmpModString As String
         Dim tmpModRes As String
@@ -603,19 +684,38 @@ Public Class clsDynamicMods
 
         Return s.Trim()
     End Function
-    Private Sub ParseDynModString(ByVal DMString As String)
-        Dim tmpsplit() As String = DMString.Split(System.Convert.ToChar(" "))
-        Dim counter As Integer
-        Dim maxCount As Integer = UBound(tmpsplit)
+    Protected Overridable Sub ParseDynModString(ByVal DMString As String)
+        'Dim tmpsplit() As String = DMString.Split(System.Convert.ToChar(" "))
+        'Dim counter As Integer
+        'Dim maxCount As Integer = UBound(tmpsplit)
         Dim sc As StringCollection
         Dim tmpResString As String
         Dim tmpRes As String
         Dim resCounter As Integer
         Dim tmpMass As Single
 
-        For counter = 0 To maxCount Step 2
-            tmpMass = CSng(tmpsplit(counter))
-            tmpResString = tmpsplit(counter + 1)
+        'For counter = 0 To maxCount Step 2
+        '    tmpMass = CSng(tmpsplit(counter))
+        '    tmpResString = tmpsplit(counter + 1)
+        '    If tmpMass <> 0 Then
+        '        sc = New StringCollection
+        '        For resCounter = 1 To Len(tmpResString)
+        '            tmpRes = Mid(tmpResString, resCounter, 1)
+        '            sc.Add(tmpRes)
+        '        Next
+        '        Dim modEntry As New clsModEntry(sc, tmpMass, clsModEntry.ModificationTypes.Dynamic)
+        '        Me.Add(modEntry)
+        '    End If
+        'Next
+        Dim splitRE As System.Text.RegularExpressions.Regex = _
+            New System.Text.RegularExpressions.Regex("(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)")
+        Dim matches As System.Text.RegularExpressions.MatchCollection
+        matches = splitRE.Matches(DMString)
+        Dim m As System.Text.RegularExpressions.Match
+
+        For Each m In matches
+            tmpMass = CSng(m.Groups("modmass").Value)
+            tmpResString = m.Groups("residues").ToString
             If tmpMass <> 0 Then
                 sc = New StringCollection
                 For resCounter = 1 To Len(tmpResString)
@@ -632,7 +732,7 @@ Public Class clsDynamicMods
 #End Region
 
 #Region " Member Properties "
-    Private m_OrigDynModString As String
+    Protected m_OrigDynModString As String
     'private m_EmptyMod as New clsModEntry(
 #End Region
 

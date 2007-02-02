@@ -19,6 +19,7 @@ Public Interface IBasicParams
     Property ParentMassType() As MassTypeList
     Property FragmentMassType() As MassTypeList
     Property DynamicMods() As clsDynamicMods
+    Property TermDynamicMods() As clsTermDynamicMods
     Property StaticModificationsList() As clsStaticMods
     Property IsotopicModificationsList() As clsIsoMods
     Property PartialSequenceToMatch() As String
@@ -96,6 +97,7 @@ Public Class clsParams
     Private m_parentMassType As IBasicParams.MassTypeList
     Private m_fragMassType As IBasicParams.MassTypeList
     Private m_dynMods As clsDynamicMods
+    Private m_termDynMods As clsTermDynamicMods
     Private m_staticModsList As clsStaticMods
     Private m_partialSeq As String
 
@@ -238,6 +240,14 @@ Public Class clsParams
             m_dynMods = Value
         End Set
     End Property
+    Public Property TermDynamicMods() As clsTermDynamicMods Implements IBasicParams.TermDynamicMods
+        Get
+            Return Me.m_termDynMods
+        End Get
+        Set(ByVal Value As clsTermDynamicMods)
+            Me.m_termDynMods = Value
+        End Set
+    End Property
     Public Property IsotopicMods() As clsIsoMods Implements IBasicParams.IsotopicModificationsList
         Get
             Return Me.m_isoMods
@@ -267,7 +277,7 @@ Public Class clsParams
             Return m_usePhosphoFragmentation
         End Get
         Set(ByVal Value As Integer)
-            m_usephosphofragmentation = Value
+            m_usePhosphoFragmentation = Value
         End Set
     End Property
     Public Property FragmentIonTolerance() As Single Implements IAdvancedParams.FragmentIonTolerance
@@ -546,6 +556,7 @@ Public Class clsParams
             Me.FragmentMassType = CType(CInt(.GetParam("mass_type_fragment")), IBasicParams.MassTypeList)
             Me.PartialSequenceToMatch = .GetParam("partial_sequence")
             Me.DynamicMods = New clsDynamicMods(.GetParam("diff_search_options"))
+            Me.TermDynamicMods = New clsTermDynamicMods(.GetParam("term_diff_search_options"))
             Me.StaticModificationsList = New clsStaticMods
 
 
@@ -597,7 +608,11 @@ Public Class clsParams
                 Me.NumberOfResultsToProcess = DirectCast(.GetParam("num_results"), Integer)
             End If
             Me.PeptideMassTolerance = CSng(.GetParam("peptide_mass_tolerance"))
-            Me.CreateOutputFiles = CBool(.GetParam("create_output_files"))
+            If Not .GetParam("create_output_files") Is Nothing Then
+                Me.CreateOutputFiles = CBool(.GetParam("create_output_files"))
+            Else
+                Me.CreateOutputFiles = True
+            End If
             m_ionSeriesString = .GetParam("ion_series")
             Me.IonSeries = New clsIonSeries(m_ionSeriesString)
             Me.MaximumNumAAPerDynMod = CInt(.GetParam("max_num_differential_AA_per_mod"))

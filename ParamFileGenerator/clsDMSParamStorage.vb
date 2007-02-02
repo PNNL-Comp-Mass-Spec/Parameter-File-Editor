@@ -4,6 +4,7 @@ Public Class clsDMSParamStorage
     Public Enum ParamTypes
         BasicParam
         AdvancedParam
+        TermDynamicModification
         DynamicModification
         StaticModification
         IsotopicModification

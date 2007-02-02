@@ -108,7 +108,7 @@ Public Class clsWriteOutput
 
             .Add("diff_search_options = " & p.DynamicMods.ReturnDynModString(maxDynMods))
 
-            .Add("term_diff_search_options = " + p.DynamicMods.ReturnDynTermModString)
+            .Add("term_diff_search_options = " + p.TermDynamicMods.ReturnDynModString(0))
 
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("use_phospho_fragmentation = " + p.UsePhosphoFragmentation.ToString)

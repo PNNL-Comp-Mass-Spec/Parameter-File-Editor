@@ -341,6 +341,17 @@ Namespace DownloadParams
 
             Next
 
+            'Find N-Term Dyn Mods
+            foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND ([Residue_Symbol] = '<' OR [Residue_Symbol] = '>')")
+            If foundRows.Length > 0 Then
+                For Each foundRow In foundRows
+                    tmpSpec = GetDynModSpecifier(foundRows)
+                    tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
+                    tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
+                    sc.Add(tmpSpec, tmpValue, tmpType)
+                Next
+            End If
+
             'Look for Static and terminal mods
 
             foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'S' OR [Mod_Type_Symbol] = 'P' or [Mod_Type_Symbol] = 'T'")
@@ -533,7 +544,8 @@ Namespace DownloadParams
         Protected Function DistillFeaturesFromParamSet(ByVal ParamSetID As Integer) As String         'Common
             Dim p As clsParams = Me.GetParamSetWithID(ParamSetID)
 
-            Return DistillFeaturesFromParamSet(p)
+            'Return DistillFeaturesFromParamSet(p)
+            Return p.Description
 
         End Function
 
@@ -566,6 +578,8 @@ Namespace DownloadParams
                         c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.AdvancedParam)
                     ElseIf tmpType.Name = "clsDynamicMods" Then
                         c = ExpandDynamicMods(ParamSet.DynamicMods, c)
+                    ElseIf tmpType.Name = "clsTermDynamicMods" Then
+                        c = ExpandDynamicMods(ParamSet.TermDynamicMods, c)
                     ElseIf (tmpType.Name = "clsStaticMods") Then
                         c = ExpandStaticMods(ParamSet.StaticModificationsList, c)
                     End If
@@ -687,6 +701,8 @@ Namespace DownloadParams
                     p.StaticModificationsList.Add(tmpSpec.ToString, CSng(Val(tmpValue.ToString)))
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
                     p.IsotopicMods.Add(tmpSpec.ToString, CSng(Val(tmpValue)))
+                ElseIf tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification Then
+
                 End If
             Next
 
@@ -811,6 +827,7 @@ Namespace DownloadParams
             Dim tmpString As String
 
             Dim tmpDynMods As String
+            Dim tmpTermDynMods As String
             Dim tmpStatMods As String
             Dim tmpIsoMods As String
             Dim tmpOtherParams As String
@@ -854,6 +871,27 @@ Namespace DownloadParams
                         tmpDynMods = "Dynamic Mods: "
                     End If
                     tmpDynMods = tmpDynMods & tmpSpec & " (" & tmpSign & tmpValue & "), "
+                ElseIf tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification Then
+
+                    If tmpSpec = "<" Then
+                        tmpSpec = "N-Terminal"
+                    ElseIf tmpSpec = ">" Then
+                        tmpSpec = "C-Terminal"
+                    End If
+
+                    If CSng(tmpValue) > 0 Then
+                        tmpSign = "+"
+                    ElseIf CSng(tmpValue) = 0 Then
+                        tmpSign = ""
+                    Else
+                        tmpSign = ""
+                    End If
+
+                    If tmpTermDynMods = "" Then
+                        tmpTermDynMods = "Terminal Dynamic Mods: "
+                    End If
+
+                    tmpTermDynMods = tmpTermDynMods + tmpSpec + " (" + tmpSign + Format(tmpValue, "0.0000") + "), "
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
                     If CSng(tmpValue) > 0 Then
                         tmpSign = "+"
@@ -891,7 +929,7 @@ Namespace DownloadParams
                 tmpOtherParams = Left(tmpOtherParams, Len(tmpOtherParams) - 2)
             End If
 
-            tmpString = tmpDynMods & tmpStatMods & tmpIsoMods & tmpOtherParams
+            tmpString = tmpDynMods & tmpStatMods & tmpTermDynMods & tmpIsoMods & tmpOtherParams
 
             If Right(tmpString, 2) = ", " Then
                 tmpString = Left(tmpString, Len(tmpString) - 2)
