@@ -702,7 +702,7 @@ Namespace DownloadParams
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
                     p.IsotopicMods.Add(tmpSpec.ToString, CSng(Val(tmpValue)))
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification Then
-
+                    p.TermDynamicMods.Add(tmpSpec.ToString, CSng(Val(tmpValue)))
                 End If
             Next
 
