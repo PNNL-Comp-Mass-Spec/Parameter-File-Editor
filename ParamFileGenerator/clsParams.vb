@@ -616,6 +616,9 @@ Public Class clsParams
             m_ionSeriesString = .GetParam("ion_series")
             Me.IonSeries = New clsIonSeries(m_ionSeriesString)
             Me.MaximumNumAAPerDynMod = CInt(.GetParam("max_num_differential_AA_per_mod"))
+            If Me.m_type = ParamFileTypes.BioWorks_32 Then
+                Me.MaximumNumDifferentialPerPeptide = CInt(.GetParam("max_num_differential_per_peptide"))
+            End If
             Me.FragmentIonTolerance = CSng(.GetParam("fragment_ion_tolerance"))
             Me.NumberOfOutputLines = CInt(.GetParam("num_output_lines"))
             Me.NumberOfDescriptionLines = CInt(.GetParam("num_description_lines"))

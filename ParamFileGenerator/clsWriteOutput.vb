@@ -102,9 +102,9 @@ Public Class clsWriteOutput
             End If
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("max_num_differential_per_peptide = " + p.MaximumNumDifferentialPerPeptide.ToString)
-            Else
-                .Add("max_num_differential_AA_per_mod = " & p.MaximumNumAAPerDynMod.ToString)
             End If
+            .Add("max_num_differential_AA_per_mod = " & p.MaximumNumAAPerDynMod.ToString)
+
 
             .Add("diff_search_options = " & p.DynamicMods.ReturnDynModString(maxDynMods))
 

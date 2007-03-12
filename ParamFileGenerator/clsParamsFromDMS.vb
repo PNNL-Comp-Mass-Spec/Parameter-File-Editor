@@ -30,6 +30,7 @@ Namespace DownloadParams
             CreateOutputFiles
             NumberOfResultsToProcess
             MaximumNumAAPerDynMod
+            MaximumNumDifferentialPerPeptide
             PeptideMassTolerance
             FragmentIonTolerance
             NumberOfOutputLines
@@ -61,6 +62,7 @@ Namespace DownloadParams
             CreateOutputFiles
             NumberOfResultsToProcess
             MaximumNumAAPerDynMod
+            MaximumNumDifferentialPerPeptide
             PeptideMassTolerance
             FragmentIonTolerance
             NumberOfOutputLines

@@ -153,7 +153,6 @@ Public Class frmMainGUI
     Friend WithEvents lblMatchPeakCount As System.Windows.Forms.Label
     Friend WithEvents txtMatchPeakCount As System.Windows.Forms.TextBox
     Friend WithEvents lblSeqHdrFilter As System.Windows.Forms.Label
-    Friend WithEvents txtSeqHdrFilter As System.Windows.Forms.TextBox
     Friend WithEvents lblMaxAAPerDynMod As System.Windows.Forms.Label
     Friend WithEvents txtMaxAAPerDynMod As System.Windows.Forms.TextBox
     Friend WithEvents cboNucReadingFrame As System.Windows.Forms.ComboBox
@@ -232,6 +231,7 @@ Public Class frmMainGUI
     Friend WithEvents lblDynMod5MassDiff As System.Windows.Forms.Label
     Friend WithEvents mnuMain As System.Windows.Forms.MainMenu
     Friend WithEvents mnuDiv1 As System.Windows.Forms.MenuItem
+    Friend WithEvents txtMaxDiffPerPeptide As System.Windows.Forms.TextBox
 
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container
@@ -381,7 +381,7 @@ Public Class frmMainGUI
         Me.lblMatchPeakCount = New System.Windows.Forms.Label
         Me.txtMatchPeakCount = New System.Windows.Forms.TextBox
         Me.lblSeqHdrFilter = New System.Windows.Forms.Label
-        Me.txtSeqHdrFilter = New System.Windows.Forms.TextBox
+        Me.txtMaxDiffPerPeptide = New System.Windows.Forms.TextBox
         Me.lblMaxAAPerDynMod = New System.Windows.Forms.Label
         Me.txtMaxAAPerDynMod = New System.Windows.Forms.TextBox
         Me.lblNucReadingFrame = New System.Windows.Forms.Label
@@ -1878,11 +1878,11 @@ Public Class frmMainGUI
         Me.gbxMiscParams.Controls.Add(Me.lblMatchPeakCountErrors)
         Me.gbxMiscParams.Controls.Add(Me.lblMatchPeakCount)
         Me.gbxMiscParams.Controls.Add(Me.txtMatchPeakCount)
-        Me.gbxMiscParams.Controls.Add(Me.lblSeqHdrFilter)
-        Me.gbxMiscParams.Controls.Add(Me.txtSeqHdrFilter)
+        Me.gbxMiscParams.Controls.Add(Me.txtMaxDiffPerPeptide)
         Me.gbxMiscParams.Controls.Add(Me.lblMaxAAPerDynMod)
         Me.gbxMiscParams.Controls.Add(Me.txtMaxAAPerDynMod)
         Me.gbxMiscParams.Controls.Add(Me.lblNucReadingFrame)
+        Me.gbxMiscParams.Controls.Add(Me.lblSeqHdrFilter)
         Me.gbxMiscParams.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.gbxMiscParams.Location = New System.Drawing.Point(8, 172)
         Me.gbxMiscParams.Name = "gbxMiscParams"
@@ -1996,18 +1996,18 @@ Public Class frmMainGUI
         Me.lblSeqHdrFilter.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSeqHdrFilter.Location = New System.Drawing.Point(244, 108)
         Me.lblSeqHdrFilter.Name = "lblSeqHdrFilter"
-        Me.lblSeqHdrFilter.Size = New System.Drawing.Size(188, 16)
+        Me.lblSeqHdrFilter.Size = New System.Drawing.Size(204, 16)
         Me.lblSeqHdrFilter.TabIndex = 15
-        Me.lblSeqHdrFilter.Text = "Sequence Header Filter String"
+        Me.lblSeqHdrFilter.Text = "Maximum Differential Mods Per Peptide"
         '
-        'txtSeqHdrFilter
+        'txtMaxDiffPerPeptide
         '
-        Me.txtSeqHdrFilter.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSeqHdrFilter.Location = New System.Drawing.Point(244, 124)
-        Me.txtSeqHdrFilter.Name = "txtSeqHdrFilter"
-        Me.txtSeqHdrFilter.Size = New System.Drawing.Size(196, 20)
-        Me.txtSeqHdrFilter.TabIndex = 11
-        Me.txtSeqHdrFilter.Text = ""
+        Me.txtMaxDiffPerPeptide.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtMaxDiffPerPeptide.Location = New System.Drawing.Point(244, 124)
+        Me.txtMaxDiffPerPeptide.Name = "txtMaxDiffPerPeptide"
+        Me.txtMaxDiffPerPeptide.Size = New System.Drawing.Size(196, 20)
+        Me.txtMaxDiffPerPeptide.TabIndex = 11
+        Me.txtMaxDiffPerPeptide.Text = ""
         '
         'lblMaxAAPerDynMod
         '
@@ -2589,7 +2589,7 @@ Public Class frmMainGUI
             frm.txtMatchPeakCount.Text = Format(.NumberOfDetectedPeaksToMatch, "0").ToString
             frm.txtMatchPeakCountErrors.Text = Format(.NumberOfAllowedDetectedPeakErrors, "0").ToString
             frm.txtMaxAAPerDynMod.Text = Format(.MaximumNumAAPerDynMod, "0").ToString
-            frm.txtSeqHdrFilter.Text = .SequenceHeaderInfoToFilter
+            frm.txtMaxDiffPerPeptide.Text = .MaximumDifferentialPerPeptide
 
             'Setup Ion Weighting
             frm.txtAWeight.Text = Format(.IonSeries.a_Ion_Weighting, "0.0").ToString
@@ -2761,7 +2761,7 @@ Public Class frmMainGUI
         AddHandler txtMatchPeakCount.Leave, AddressOf txtMatchPeakCount_Leave
         AddHandler txtMatchPeakCountErrors.Leave, AddressOf txtMatchPeakCountErrors_Leave
         AddHandler txtMaxAAPerDynMod.Leave, AddressOf txtMaxAAPerDynMod_Leave
-        AddHandler txtSeqHdrFilter.Leave, AddressOf txtSeqHdrFilter_Leave
+        AddHandler txtMaxDiffPerPeptide.Leave, AddressOf txtMaxDiffPerPeptide_Leave
         AddHandler cboNucReadingFrame.SelectedIndexChanged, AddressOf cboNucReadingFrame_SelectedIndexChanged
 
         AddHandler chkUseAIons.CheckedChanged, AddressOf chkUseAIons_CheckedChanged
@@ -2949,7 +2949,7 @@ Public Class frmMainGUI
             Me.StatModErrorProvider.SetError(sender, "")
             Me.txtDynMod2List.Text = Me.txtDynMod2List.Text.ToUpper
             If CSng(Me.txtDynMod2MassDiff.Text) <> 0.0 Then
-                newParams.DynamicMods.Dyn_Mod_n_AAList(1) = Me.txtDynMod2List.Text
+                newParams.DynamicMods.Dyn_Mod_n_AAList(2) = Me.txtDynMod2List.Text
             End If
         End If
     End Sub
@@ -3362,8 +3362,8 @@ Public Class frmMainGUI
         Me.txtDescription.Text = Me.UpdateDescription(newParams)
     End Sub
 
-    Private Sub txtSeqHdrFilter_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.SequenceHeaderInfoToFilter = Me.txtSeqHdrFilter.Text
+    Private Sub txtMaxDiffPerPeptide_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        newParams.MaximumNumDifferentialPerPeptide = Me.txtMaxDiffPerPeptide.Text
         Me.txtDescription.Text = Me.UpdateDescription(newParams)
     End Sub
 
