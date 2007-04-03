@@ -76,6 +76,10 @@ Public Class clsDBTask
                     retryCount = 0
                 Catch e As SqlException
                     retryCount -= 1
+                    If retryCount = 0 Then
+                        Throw New Exception("could not open database connection after three tries")
+                    End If
+                    System.Threading.Thread.Sleep(3000)
                     m_DBCn.Close()
                 End Try
             End While
@@ -128,12 +132,16 @@ Public Class clsDBTask
         ByRef SQLDataAdapter As SqlClient.SqlDataAdapter, _
         ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable Implements IGetSQLData.GetTable
 
-        If Not Me.Connected Then Me.OpenConnection()
-
+        Dim tmpIDTable As New DataTable
         Dim GetID_CMD As SqlClient.SqlCommand = New SqlClient.SqlCommand(SelectSQL)
+
+        Dim numTries As Integer = 3
+        Dim tryCount As Integer
+        'Try
+        If Not Me.m_PersistConnection Then Me.OpenConnection()
+
         GetID_CMD.CommandTimeout = 30
         GetID_CMD.Connection = Me.m_DBCn
-        Dim tmpIDTable As New DataTable
 
         If Me.Connected = True Then
 
@@ -141,9 +149,19 @@ Public Class clsDBTask
             SQLCommandBuilder = New SqlClient.SqlCommandBuilder(SQLDataAdapter)
             SQLDataAdapter.SelectCommand = GetID_CMD
 
+            While numTries > 0
+                Try
+                    SQLDataAdapter.Fill(tmpIDTable)
+                    Exit While
+                Catch ex As Exception
+                    numTries -= 1
+                    If numTries = 0 Then
+                        Throw New Exception("could not get records after three tries")
+                    End If
+                    System.Threading.Thread.Sleep(3000)
+                End Try
 
-            SQLDataAdapter.Fill(tmpIDTable)
-
+            End While
             If Not Me.m_PersistConnection Then Me.CloseConnection()
         Else
             tmpIDTable = Nothing

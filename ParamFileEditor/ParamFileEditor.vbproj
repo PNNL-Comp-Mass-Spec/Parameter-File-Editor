@@ -192,7 +192,7 @@
                 />
                 <File
                     RelPath = "frmMainGUI.vb"
-                    SubType = "Form"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
