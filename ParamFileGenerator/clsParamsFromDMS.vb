@@ -313,6 +313,7 @@ Namespace DownloadParams
             Dim tmpValue As String
             Dim tmpTypeString As String
             Dim tmpType As clsDMSParamStorage.ParamTypes
+            Dim tmpRes As String
             Dim counter As Integer
 
             'If Me.m_MassMods Is Nothing Or Me.m_MassMods.Rows.Count = 0 Then
@@ -331,13 +332,14 @@ Namespace DownloadParams
             'Look for Dynamic mods
 
             'Dim dt As DataTable = GetTable(SQL)
-
+            
             For counter = 1 To MaxDynMods
-                foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & counter, "[Local_Symbol_ID]")
+                foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & counter & " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]")
                 If foundRows.Length > 0 Then
                     tmpSpec = GetDynModSpecifier(foundRows)
                     tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
                     tmpType = clsDMSParamStorage.ParamTypes.DynamicModification
+                    tmpRes = foundRows(0).Item("Residue_Symbol").ToString
                     sc.Add(tmpSpec, tmpValue, tmpType)
                 End If
 
