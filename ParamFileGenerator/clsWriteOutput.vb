@@ -88,11 +88,11 @@ Public Class clsWriteOutput
                 .Add("num_results = " & p.NumberOfResultsToProcess)
             End If
             .Add("num_description_lines = " & p.NumberOfDescriptionLines.ToString)
-            If type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
-                .Add("show_fragment_ions = 0")
-            Else
-                .Add("show_fragment_ions = " & ConvertBoolToInteger(p.ShowFragmentIons).ToString)
-            End If
+            'If type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+            '.Add("show_fragment_ions = 0")
+            'Else
+            .Add("show_fragment_ions = " & ConvertBoolToInteger(p.ShowFragmentIons).ToString)
+            'End If
             .Add("print_duplicate_references = " & ConvertBoolToInteger(p.PrintDuplicateReferences).ToString)
             If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("enzyme_number = " & p.SelectedEnzymeIndex.ToString)

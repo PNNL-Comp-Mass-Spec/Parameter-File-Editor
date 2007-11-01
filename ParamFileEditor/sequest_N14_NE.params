@@ -9,7 +9,7 @@ max_num_differential_AA_per_mod = 4 ; max # of modified AA per diff. mod in a pe
 fragment_ion_tolerance = 0.0000     ; leave at 0.0 unless you have real poor data
 num_output_lines = 10               ; # peptide results to show
 num_description_lines = 3           ; # full protein descriptions to show for top N peptides
-show_fragment_ions = 1              ; 0=no, 1=yes
+show_fragment_ions = 0              ; 0=no, 1=yes
 print_duplicate_references = 1      ; 0=no, 1=yes
 enzyme_number = 0		    ; 0 = No Enzyme Selectecd
 nucleotide_reading_frame = 0        ; 0=protein db, 1-6, 7 = forward three, 8-reverse three, 9=all six
