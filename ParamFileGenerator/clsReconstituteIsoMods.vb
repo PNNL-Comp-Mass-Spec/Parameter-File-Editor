@@ -61,7 +61,6 @@ Public Class clsReconstitueIsoMods
         ByVal IsoMods As ParamFileGenerator.clsIsoMods) As ParamFileGenerator.clsParams
 
         Dim im As ParamFileGenerator.clsModEntry
-        Dim sm As ParamFileGenerator.clsModEntry
 
         Dim tmpAtom As String
         Dim tmpIsoMass As Single

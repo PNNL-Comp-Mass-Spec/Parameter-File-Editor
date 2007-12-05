@@ -36,13 +36,13 @@ Public Class clsMainProcess
 
     Public Sub New()
 
-        m_TemplateFileName = System.IO.Path.Combine(DEF_TEMPLATE_FILEPATH, Me.DEF_TEMPLATE_FILENAME)
-        Me.m_BaseLineParams = New clsParams
+        m_TemplateFileName = System.IO.Path.Combine(DEF_TEMPLATE_FILEPATH, clsMainProcess.DEF_TEMPLATE_FILENAME)
+        clsMainProcess.m_BaseLineParams = New clsParams
         m_TemplateFilePath = DEF_TEMPLATE_FILEPATH
 
 
-        With Me.m_BaseLineParams
-            .FileName = Me.DEF_TEMPLATE_FILENAME
+        With clsMainProcess.m_BaseLineParams
+            .FileName = clsMainProcess.DEF_TEMPLATE_FILENAME
             .LoadTemplate(m_TemplateFileName)
         End With
 
@@ -50,10 +50,10 @@ Public Class clsMainProcess
 
     Public Sub New(ByVal templateFilePath As String)
         m_TemplateFileName = templateFilePath
-        Me.m_BaseLineParams = New clsParams
+        clsMainProcess.m_BaseLineParams = New clsParams
         m_TemplateFilePath = System.IO.Path.GetDirectoryName(templateFilePath)
 
-        With Me.m_BaseLineParams
+        With clsMainProcess.m_BaseLineParams
             .FileName = System.IO.Path.GetFileName(templateFilePath)
             .LoadTemplate(templateFilePath)
 

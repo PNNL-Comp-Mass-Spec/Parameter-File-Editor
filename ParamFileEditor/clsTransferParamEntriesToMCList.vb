@@ -43,14 +43,6 @@ Friend Class clsTransferParamEntriesToMassModList
 
         Dim currParamFileID As Integer
 
-        Dim entryRow As DataRow
-        Dim entryRows() As DataRow
-
-        Dim tmpEntryType As String
-        Dim tmpSpecifier As String
-        Dim tmpValue As String
-
-
         fileRows = AffectedParamFiles.Select("", "[Param_File_ID]")
         For Each fileRow In fileRows        'Loop through the affected param files and get the appropriate mods
             currParamFileID = CInt(fileRow.Item(0))
@@ -79,8 +71,8 @@ Friend Class clsTransferParamEntriesToMassModList
         Dim ParamFileTable As DataTable
         Dim PFSQL As String = "SELECT * FROM T_Param_Files WHERE [Param_File_Type_ID] = 1000"
 
-        Dim tmpDA As SqlClient.SqlDataAdapter
-        Dim tmpCB As SqlClient.SqlCommandBuilder
+        Dim tmpDA As SqlClient.SqlDataAdapter = Nothing
+        Dim tmpCB As SqlClient.SqlCommandBuilder = Nothing
 
         ParamFileTable = Me.GetTable(PFSQL, tmpDA, tmpCB)
 

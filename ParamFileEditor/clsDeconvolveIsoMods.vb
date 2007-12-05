@@ -36,7 +36,7 @@ Public Class clsDeconvolveIsoMods
         Dim tmpIsoMod As Single
         Dim matchCount As Integer
         Dim maxMatchcount As Integer
-        Dim isoMatch As Boolean
+        'Dim isoMatch As Boolean
         Dim maxIsoAtom As AvailableAtoms
         Dim usedIsoMod As Single
         Dim maxIsoMod As Single
@@ -116,20 +116,16 @@ Public Class clsDeconvolveIsoMods
 
     End Function
 
-    Private Function StripStaticIsoMod( _
-        ByVal Paramsclass As ParamFileGenerator.clsParams, _
+    Private Sub StripStaticIsoMod( _
+        ByRef Paramsclass As ParamFileGenerator.clsParams, _
         ByVal ModMassToRemove As Single, _
-        ByVal Atom As String) As ParamFileGenerator.clsParams
+        ByVal Atom As String)
 
         Dim entry As ParamFileGenerator.clsModEntry
-        'Dim sm As ParamFileGenerator.clsStaticMods = Paramsclass.StaticModificationsList
 
         Dim AA As String
-        Dim ModMass As Single
         Dim NumAtoms As Integer
 
-        Dim resRow As DataRow
-        Dim resRows() As DataRow
 
         For Each entry In Paramsclass.StaticModificationsList
             AA = entry.ReturnResidueAffected(0)
@@ -137,12 +133,12 @@ Public Class clsDeconvolveIsoMods
             If entry.MassDifference > 0.0 Then
                 entry.MassDifference = CSng(Math.Round(entry.MassDifference - (ModMassToRemove * NumAtoms), 4))
             End If
-            If (Math.Abs(entry.MassDifference) < Me.allowedDifference) Or (entry.MassDifference < 0) Then
+            If (Math.Abs(entry.MassDifference) < clsDeconvolveIsoMods.allowedDifference) Or (entry.MassDifference < 0) Then
                 entry.MassDifference = 0
             End If
         Next
         Paramsclass.StaticModificationsList.EradicateEmptyMods()
 
-    End Function
+    End Sub
 
 End Class

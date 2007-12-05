@@ -3470,7 +3470,7 @@ Public Class frmMainGUI
 #Region " Menu Handlers "
     Private Sub mnuFileSaveBW2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW2.Click
         Dim FileOutput As New clsWriteOutput
-        Dim newFilePath As String
+        Dim newFilePath As String = ""
 
         Dim SaveDialog As New SaveFileDialog
 
@@ -3488,7 +3488,7 @@ Public Class frmMainGUI
     End Sub
     Private Sub mnuFileSaveBW3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW3.Click
         Dim FileOutput As New clsWriteOutput
-        Dim newFilePath As String
+        Dim newFilePath As String = ""
 
         Dim SaveDialog As New SaveFileDialog
 
@@ -3506,7 +3506,7 @@ Public Class frmMainGUI
 
     Private Sub mnuFileSaveBW32_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW32.Click
         Dim FileOutput As New clsWriteOutput
-        Dim newFilePath As String
+        Dim newFilePath As String = ""
 
         Dim SaveDialog As New SaveFileDialog
 
@@ -3657,11 +3657,11 @@ Public Class frmMainGUI
 
             If Me.m_UseAutoTweak Then
                 Dim tmpModType As IMassTweaker.ModTypes = Me.GetModTypeFromControlName(sender)
-                Dim tmpAtom As String
-                Dim tmpAA As String
-                Dim tmpSymbol As String
-                Dim tmpDesc As String
-                Dim tmpGMID As Integer
+                Dim tmpAtom As String = ""
+                Dim tmpAA As String = ""
+                Dim tmpSymbol As String = ""
+                Dim tmpDesc As String = ""
+                Dim tmpGMID As Integer = 0
                 Dim dr As DialogResult
 
                 If tmpModType = IMassTweaker.ModTypes.IsotopicMod Then
@@ -3916,7 +3916,7 @@ Public Class frmMainGUI
 
     Private Sub mnuDebugSyncDesc_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDebugSyncDesc.Click
         Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
-        sync.SyncDescriptions(Me.m_sharedMain.BaseLineParamSet)
+        sync.SyncDescriptions(clsMainProcess.BaseLineParamSet)
 
     End Sub
 

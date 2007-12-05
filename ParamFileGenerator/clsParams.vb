@@ -138,6 +138,7 @@ Public Class clsParams
     Private m_fullTemplate As clsRetrieveParams
     Private m_templateFilePath As String
     'Shared s_BaseLineParamSet As clsParams
+    Private m_loadedParamEntryNames As Hashtable = New Hashtable
 #End Region
 
 #Region " clsParams Properties "
@@ -494,6 +495,22 @@ Public Class clsParams
             m_enzymeDetailStorage = Value
         End Set
     End Property
+
+    Public ReadOnly Property LoadedParamNames() As Hashtable
+        Get
+            Return Me.m_loadedParamEntryNames
+        End Get
+    End Property
+
+    Public Sub AddLoadedParamName(ByVal ParameterName As String, ByVal ParameterValue As String)
+        If Me.m_loadedParamEntryNames Is Nothing Then
+            Me.m_loadedParamEntryNames = New Hashtable
+        End If
+        If Not Me.m_loadedParamEntryNames.ContainsKey(ParameterName) Then
+            Me.m_loadedParamEntryNames.Add(ParameterName, ParameterValue)
+        End If
+    End Sub
+
     Public Function RetrieveEnzymeDetails(ByVal EnzymeListIndex As Integer) As clsEnzymeDetails Implements IBasicParams.RetrieveEnzymeDetails
         Return m_enzymeDetailStorage.Item(EnzymeListIndex)
     End Function
@@ -506,11 +523,6 @@ Public Class clsParams
         m_dynMods = New clsDynamicMods
         m_staticModsList = New clsStaticMods
         m_isoMods = New clsIsoMods
-        'If s_BaseLineParamSet Is Nothing Then
-        '    s_BaseLineParamSet = New clsParams
-        '    s_BaseLineParamSet.LoadTemplate(Me.DEF_TEMPLATE_FILEPATH)
-        'End If
-
 
     End Sub
 
@@ -605,7 +617,7 @@ Public Class clsParams
             ElseIf m_type = ParamFileTypes.BioWorks_30 Then
                 Me.DefaultFASTAPath = .GetParam("first_database_name")
                 Me.DefaultFASTAPath2 = .GetParam("second_database_name")
-                Me.NumberOfResultsToProcess = DirectCast(.GetParam("num_results"), Integer)
+                Me.NumberOfResultsToProcess = CInt(.GetParam("num_results"))
             End If
             Me.PeptideMassTolerance = CSng(.GetParam("peptide_mass_tolerance"))
             If Not .GetParam("create_output_files") Is Nothing Then
@@ -690,12 +702,12 @@ Public Class clsParams
     End Function
 
     Private Function InterpretMassFilterString(ByVal massFilterString As String) As String()
-        Dim s() As String
-        Dim counter As Integer
+        Dim s() As String = Nothing
+        Dim counter As Integer = 0
         Dim placeCounter As Integer = 0
-        Dim currChar As String
-        Dim prevChar As String
-        Dim tmpString As String
+        Dim currChar As String = ""
+        Dim prevChar As String = ""
+        Dim tmpString As String = ""
 
         For counter = 1 To Len(massFilterString)
             currChar = Mid(massFilterString, counter, 1)
@@ -722,93 +734,15 @@ Public Class clsParams
         ByVal minMass As Single, _
         ByVal maxMass As Single) As String
 
-        Return minMass.ToString.Format("0") & " " & maxMass.ToString.Format("0")
+        Return Format(minMass.ToString, "0") & " " & Format(maxMass.ToString, "0")
 
     End Function
 
     Private Function GetFilePath(ByVal templateFileName As String) As String
-        'Dim fi As New FileInfo(Application.ExecutablePath)
-        'Return Path.Combine(fi.DirectoryName, templateFileName)
         Return templateFileName
     End Function
 
-    'Private Function DumpToSequestParamFile(ByVal outputPath As String) As Boolean
-    '    Dim enz As New clsEnzymeDetails
-    '    Dim sc As New System.Collections.Specialized.StringCollection
 
-    '    With sc
-    '        .Add("[Sequest]")
-    '        .Add(";DMS_Description = " & m_desc)
-    '        .Add("database_name = " & m_defDBPath)
-    '        .Add("peptide_mass_tolerance = " & m_pepMassTol.ToString.Format("0.0000"))
-    '        .Add("create_output_files = " & CType(m_createOutputFiles, Integer).ToString)
-    '        .Add("ion_series = " & m_ionSeries.ReturnIonString)
-    '        .Add("diff_search_options = " & m_dynMods.ReturnDynModString)
-    '        .Add("max_num_differential_AA_per_mod = " & m_maxAAPerDynMod.ToString)
-    '        .Add("fragment_ion_tolerance = " & m_fragIonTol.ToString.Format("0.0000"))
-    '        ("num_output_lines = " & m_numOutLines.ToString)
-    '        ("num_description_lines = " & m_numDescLines.ToString)
-    '        ("show_fragment_ions = " & CType(m_showFragIons, Integer).ToString)
-    '        ("print_duplicate_references = " & CType(m_printDupRef, Integer).ToString)
-    '        ("enzyme_number = " & m_enzymeDetails.EnzymeID.ToString)
-    '        ("nucleotide_reading_frame = " & CType(m_readingFrame, Integer).ToString)
-    '        ("mass_type_parent = " & CType(m_parentMassType, Integer).ToString)
-    '        ("mass_type_fragment = " & CType(m_fragMassType, Integer).ToString)
-    '        ("remove_precursor_peak = " & CType(m_removePrecursorPeak, Integer).ToString)
-    '        ("ion_cutoff_percentage = " & m_ionCutoffPer.ToString.Format("0.0000"))
-    '        ("max_num_internal_cleavage_sites = " & m_maxICSites.ToString)
-    '        ("protein_mass_filter = " & ReturnMassFilterString(m_minProtMassFilter, m_maxProtMassFilter))
-    '        ("match_peak_count = " & m_matchPeakCount.ToString)
-    '        .Add("match_peak_allowed_error = " & m_matchPeakCountErrors)
-    '        .Add("residues_in_upper_case = " & CType(m_upperCase, Integer))
-    '        .Add("partial_sequence = " & m_partialSeq)
-    '        .Add("sequence_header_filter = " & m_seqHdrFilter)
-    '        .Add("")
-    '        .Add("add_Cterm_peptide = " & m_staticModsList.CtermPeptide.ToString.Format("0.0000"))
-    '        .Add("add_Cterm_protein = " & m_staticModsList.CtermProtein.ToString.Format("0.0000"))
-    '        .Add("add_Nterm_peptide = " & m_staticModsList.NtermPeptide.ToString.Format("0.0000"))
-    '        .Add("add_Nterm_protein = " & m_staticModsList.NtermProtein.ToString.Format("0.0000"))
-    '        .Add("add_G_Glycine = " & m_staticModsList.G_Glycine.ToString.Format("0.0000"))
-    '        .Add("add_A_Alanine = " & m_staticModsList.A_Alanine.ToString.Format("0.0000"))
-    '        .Add("add_S_Serine = " & m_staticModsList.S_Serine.ToString.Format("0.0000"))
-    '        .Add("add_P_Proline = " & m_staticModsList.P_Proline.ToString.Format("0.0000"))
-    '        .Add("add_V_Valine = " & m_staticModsList.V_Valine.ToString.Format("0.0000"))
-    '        .Add("add_T_Threonine = " & m_staticModsList.T_Threonine.ToString.Format("0.0000"))
-    '        .Add("add_C_Cysteine = " & m_staticModsList.C_Cysteine.ToString.Format("0.0000"))
-    '        .Add("add_L_Leucine = " & m_staticModsList.L_Leucine.ToString.Format("0.0000"))
-    '        .Add("add_I_Isoleucine = " & m_staticModsList.I_Isoleucine.ToString.Format("0.0000"))
-    '        .Add("add_X_LorI = " & m_staticModsList.X_LorI.ToString.Format("0.0000"))
-    '        .Add("add_N_Asparagine = " & m_staticModsList.N_Asparagine.ToString.Format("0.0000"))
-    '        .Add("add_O_Ornithine = " & m_staticModsList.O_Ornithine.ToString.Format("0.0000"))
-    '        .Add("add_B_avg_NandD = " & m_staticModsList.B_avg_NandD.ToString.Format("0.0000"))
-    '        .Add("add_D_Aspartic_Acid = " & m_staticModsList.D_Aspartic_Acid.ToString.Format("0.0000"))
-    '        .Add("add_Q_Glutamine = " & m_staticModsList.Q_Glutamine.ToString.Format("0.0000"))
-    '        .Add("add_K_Lysine = " & m_staticModsList.K_Lysine.ToString.Format("0.0000"))
-    '        .Add("add_Z_avg_QandE = " & m_staticModsList.Z_avg_QandE.ToString.Format("0.0000"))
-    '        .Add("add_E_Glutamic_Acid = " & m_staticModsList.E_Glutamic_Acid.ToString.Format("0.0000"))
-    '        .Add("add_M_Methionine = " & m_staticModsList.M_Methionine.ToString.Format("0.0000"))
-    '        .Add("add_H_Histidine = " & m_staticModsList.H_Histidine.ToString.Format("0.0000"))
-    '        .Add("add_F_Phenylalanine = " & m_staticModsList.F_Phenylalanine.ToString.Format("0.0000"))
-    '        .Add("add_R_Arginine = " & m_staticModsList.R_Arginine.ToString.Format("0.0000"))
-    '        .Add("add_Y_Tyrosine = " & m_staticModsList.Y_Tyrosine.ToString.Format("0.0000"))
-    '        .Add("add_W_Tryptophan = " & m_staticModsList.W_Tryptophan.ToString.Format("0.0000"))
-    '        .Add("")
-    '        .Add("[SEQUEST_ENZYME_INFO]")
-    '        For Each enz In m_enzymeDetailStorage
-    '            .Add(enz.ReturnEnzymeString)
-    '        Next
-    '    End With
-
-    '    Dim sw As New StreamWriter(outputPath)
-    '    Dim s As String
-
-    '    For Each s In sc
-    '        sw.WriteLine(s)
-    '    Next
-
-    '    sw.Close()
-
-    'End Function
 End Class
 
 Public Class clsIonSeries
@@ -1012,12 +946,12 @@ Public Class clsEnzymeDetails
     End Sub
 
     Private Sub ParseEnzymeString(ByVal enzStr As String)
-        Dim s() As String
-        Dim counter As Integer
+        Dim s() As String = Nothing
+        Dim counter As Integer = 0
         Dim placeCounter As Integer = 0
-        Dim currChar As String
-        Dim prevChar As String
-        Dim tmpString As String
+        Dim currChar As String = ""
+        Dim prevChar As String = ""
+        Dim tmpString As String = ""
 
         For counter = 1 To Len(enzStr) + 1
             currChar = Mid(enzStr, counter, 1)
@@ -1234,7 +1168,7 @@ Public Class clsGetEnzymeBlock
         Dim tempStorage As clsEnzymeCollection = New clsEnzymeCollection
         Dim s As String
         Dim sTmp As String
-        Dim counter As Integer
+        'Dim counter As Integer
 
         For Each s In enzymeBlock
             sTmp = s.Substring(0, InStr(s, " "))

@@ -136,7 +136,7 @@ Public Class clsDBTask
         Dim GetID_CMD As SqlClient.SqlCommand = New SqlClient.SqlCommand(SelectSQL)
 
         Dim numTries As Integer = 3
-        Dim tryCount As Integer
+        'Dim tryCount As Integer
         'Try
         If Not Me.m_PersistConnection Then Me.OpenConnection()
 
@@ -172,8 +172,8 @@ Public Class clsDBTask
     End Function
 
     Protected Function GetTable(ByVal SelectSQL As String) As DataTable Implements IGetSQLData.GetTable
-        Dim tmpDA As SqlClient.SqlDataAdapter
-        Dim tmpCB As SqlClient.SqlCommandBuilder
+        Dim tmpDA As SqlClient.SqlDataAdapter = Nothing
+        Dim tmpCB As SqlClient.SqlCommandBuilder = Nothing
 
         Return GetTable(SelectSQL, tmpDA, tmpCB)
 

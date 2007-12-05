@@ -9,7 +9,7 @@ Friend Class clsAccessEmbeddedRsrc
 
     Friend Sub New()
         Me.m_EmbeddedRsrcList = Me.GetListOfEmbeddedResources
-        Me.executingAssembly = Me.GetType.Assembly.GetExecutingAssembly
+        Me.executingAssembly = Reflection.Assembly.GetExecutingAssembly
         Me.myNameSpace = Me.executingAssembly.GetName().Name.ToString
         Me.myExecutingDirectory = System.IO.Path.GetDirectoryName(Me.executingAssembly.Location)
     End Sub
@@ -20,7 +20,7 @@ Friend Class clsAccessEmbeddedRsrc
     End Function
 
     Private Function GetEmbeddedTextStream(ByVal streamName As String) As System.IO.Stream
-        Dim executingAssembly As System.Reflection.Assembly = Me.GetType.Assembly.GetEntryAssembly()
+        Dim executingAssembly As System.Reflection.Assembly = Reflection.Assembly.GetEntryAssembly()
         Dim myNameSpace As String = executingAssembly.GetName().Name.ToString
         'Me.printDebugList()
         Dim streamLocation As String = Me.myNameSpace + "." + streamName

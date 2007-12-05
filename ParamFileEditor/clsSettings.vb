@@ -34,7 +34,7 @@ Namespace ProgramSettings
         Private Const DEF_MT_CONNSTR As String = "Data Source=pogo;Initial Catalog=MT_Main;Integrated Security=SSPI;"
         Private Const DEF_MT_MOD_PARAM_TABLE_NAME As String = "T_Peptide_Mod_Param_File_List"
         Private Const DEF_MT_GLOBAL_MOD_TABLE_NAME As String = "T_Peptide_Global_Mod_List"
-        Private Const DEF_TEMPLATEFILENAME = "sequest_N14_NE_Template.params"
+        Private Const DEF_TEMPLATEFILENAME As String = "sequest_N14_NE_Template.params"
 
 #Region " Public Properties and Functions "
 
@@ -124,39 +124,39 @@ Namespace ProgramSettings
             Try
                 Me.m_DMSconnectionString = programSettings.GetParam("dms_database", "connectionstring")
             Catch ex As Exception
-                programSettings.SetParam("dms_database", "connectionstring", Me.DEF_DMS_CONNSTR)
-                Me.m_DMSconnectionString = Me.DEF_DMS_CONNSTR
+                programSettings.SetParam("dms_database", "connectionstring", clsSettings.DEF_DMS_CONNSTR)
+                Me.m_DMSconnectionString = clsSettings.DEF_DMS_CONNSTR
                 programSettings.SaveSettings()
             End Try
 
             Try
                 Me.m_DMSParamFileTableName = programSettings.GetParam("dms_database", "paramstablename")
             Catch ex As Exception
-                programSettings.SetParam("dms_database", "paramstablename", Me.DEF_DMS_PARAM_TABLE_NAME)
-                Me.m_DMSParamFileTableName = Me.DEF_DMS_PARAM_TABLE_NAME
+                programSettings.SetParam("dms_database", "paramstablename", clsSettings.DEF_DMS_PARAM_TABLE_NAME)
+                Me.m_DMSParamFileTableName = clsSettings.DEF_DMS_PARAM_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
 
             Try
                 Me.m_MTConnectionString = programSettings.GetParam("mt_database", "connectionstring")
             Catch ex As Exception
-                programSettings.SetParam("mt_database", "connectionstring", Me.DEF_MT_CONNSTR)
-                Me.m_MTConnectionString = Me.DEF_MT_CONNSTR
+                programSettings.SetParam("mt_database", "connectionstring", clsSettings.DEF_MT_CONNSTR)
+                Me.m_MTConnectionString = clsSettings.DEF_MT_CONNSTR
                 programSettings.SaveSettings()
             End Try
 
             Try
                 Me.m_MTModParamFileTable = programSettings.GetParam("mt_database", "modsparamfiletable")
             Catch ex As Exception
-                programSettings.SetParam("mt_database", "modsparamfiletable", Me.DEF_MT_MOD_PARAM_TABLE_NAME)
-                Me.m_MTModParamFileTable = Me.DEF_MT_MOD_PARAM_TABLE_NAME
+                programSettings.SetParam("mt_database", "modsparamfiletable", clsSettings.DEF_MT_MOD_PARAM_TABLE_NAME)
+                Me.m_MTModParamFileTable = clsSettings.DEF_MT_MOD_PARAM_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
             Try
                 Me.m_MTGlobalModListTable = programSettings.GetParam("mt_database", "globalmodstable")
             Catch ex As Exception
-                programSettings.SetParam("mt_database", "globalmodstable", Me.DEF_MT_GLOBAL_MOD_TABLE_NAME)
-                Me.m_MTGlobalModListTable = Me.DEF_MT_GLOBAL_MOD_TABLE_NAME
+                programSettings.SetParam("mt_database", "globalmodstable", clsSettings.DEF_MT_GLOBAL_MOD_TABLE_NAME)
+                Me.m_MTGlobalModListTable = clsSettings.DEF_MT_GLOBAL_MOD_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
 

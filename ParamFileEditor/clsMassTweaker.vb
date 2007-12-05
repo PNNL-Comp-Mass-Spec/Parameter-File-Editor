@@ -108,13 +108,13 @@ Public Class clsMassTweaker
     End Sub
 
     Private Function GetMassCorrectionsTable(ByVal connectionString As String) As DataTable
-        Dim m_GetGlobalMods_DA As SqlClient.SqlDataAdapter
-        Dim m_GetGlobalMods_CB As SqlClient.SqlCommandBuilder
+        Dim m_GetGlobalMods_DA As SqlClient.SqlDataAdapter = Nothing
+        Dim m_GetGlobalMods_CB As SqlClient.SqlCommandBuilder = Nothing
 
-        Dim sql As String = "SELECT * FROM " & Me.Mass_Corrections_Table_Name
+        Dim sql As String = "SELECT * FROM " & clsMassTweaker.Mass_Corrections_Table_Name
 
         Dim tmpTable As DataTable = GetTable(sql, m_GetGlobalMods_DA, m_GetGlobalMods_CB)
-        tmpTable.TableName = Me.Mass_Corrections_Table_Name
+        tmpTable.TableName = clsMassTweaker.Mass_Corrections_Table_Name
         setprimarykey(0, tmpTable)
 
         Return tmpTable
@@ -126,11 +126,6 @@ Public Class clsMassTweaker
 
     Private Function GetTweakedMass(ByVal ModMass As Single, Optional ByVal AffectedAtom As String = "-") As Single Implements IMassTweaker.GetTweakedMass
 
-
-        Dim sql As String
-
-        Dim modTypeSymbol As String
-
         Dim row As DataRow
         Dim rows() As DataRow
 
@@ -139,11 +134,6 @@ Public Class clsMassTweaker
         Dim smallestDiff As Single = Me.m_MaxTweakDiff
         Dim newMass As Single
 
-        'If ModType = IMassTweaker.ModTypes.StaticMod Then
-        '    modTypeSymbol = "S"
-        'ElseIf ModType = IMassTweaker.ModTypes.DynamicMod Then
-        '    modTypeSymbol = "D"
-        'End If
         rows = Me.MassCorrectionsTable.Select("[Monoisotopic_Mass_Correction] > " & ModMass - smallestDiff & _
                 " AND [Monoisotopic_Mass_Correction] < " & ModMass + smallestDiff & " AND [Affected_Atom] = '" & AffectedAtom & "'")
 

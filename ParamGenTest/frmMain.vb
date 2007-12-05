@@ -48,6 +48,8 @@ Public Class frmMain
     Friend WithEvents lblOutputPath As System.Windows.Forms.Label
     Friend WithEvents lblPickList As System.Windows.Forms.Label
     Friend WithEvents lblConnectionString As System.Windows.Forms.Label
+    Friend WithEvents txtDatasetID As System.Windows.Forms.TextBox
+    Friend WithEvents lblDatasetID As System.Windows.Forms.Label
     Friend WithEvents lblParamFileType As System.Windows.Forms.Label
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.txtOutputPath = New System.Windows.Forms.TextBox
@@ -61,6 +63,8 @@ Public Class frmMain
         Me.txtResults = New System.Windows.Forms.TextBox
         Me.cmdDoIt = New System.Windows.Forms.Button
         Me.txtFASTAPath = New System.Windows.Forms.TextBox
+        Me.txtDatasetID = New System.Windows.Forms.TextBox
+        Me.lblDatasetID = New System.Windows.Forms.Label
         Me.SuspendLayout()
         '
         'txtOutputPath
@@ -135,7 +139,6 @@ Public Class frmMain
         Me.txtResults.Name = "txtResults"
         Me.txtResults.Size = New System.Drawing.Size(384, 84)
         Me.txtResults.TabIndex = 9
-        Me.txtResults.Text = ""
         '
         'cmdDoIt
         '
@@ -153,10 +156,30 @@ Public Class frmMain
         Me.txtFASTAPath.TabIndex = 11
         Me.txtFASTAPath.Text = "D:\Org_DB\Bovine\FASTA\bsa.fasta"
         '
+        'txtDatasetID
+        '
+        Me.txtDatasetID.Location = New System.Drawing.Point(436, 254)
+        Me.txtDatasetID.Name = "txtDatasetID"
+        Me.txtDatasetID.Size = New System.Drawing.Size(120, 20)
+        Me.txtDatasetID.TabIndex = 12
+        Me.txtDatasetID.Text = "101986"
+        Me.txtDatasetID.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'lblDatasetID
+        '
+        Me.lblDatasetID.AutoSize = True
+        Me.lblDatasetID.Location = New System.Drawing.Point(436, 235)
+        Me.lblDatasetID.Name = "lblDatasetID"
+        Me.lblDatasetID.Size = New System.Drawing.Size(106, 13)
+        Me.lblDatasetID.TabIndex = 13
+        Me.lblDatasetID.Text = "(Optional) Dataset ID"
+        '
         'frmMain
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(576, 346)
+        Me.Controls.Add(Me.lblDatasetID)
+        Me.Controls.Add(Me.txtDatasetID)
         Me.Controls.Add(Me.txtFASTAPath)
         Me.Controls.Add(Me.txtResults)
         Me.Controls.Add(Me.txtDMSConnectionString)
@@ -171,6 +194,7 @@ Public Class frmMain
         Me.Name = "frmMain"
         Me.Text = "Form1"
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -191,7 +215,13 @@ Public Class frmMain
         'If m_DMS Is Nothing Then
         '    Me.m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile
         'End If
-        Dim success As Boolean = Me.m_DMS.MakeFile(m_ParamFileName, m_ParamFileType, m_FASTAPath, m_OutputPath, m_DMSConnectString)
+        Dim datasetID As Integer = 0
+        If Not Me.txtDatasetID.Text = "" Then
+            datasetID = CInt(Me.txtDatasetID.Text)
+        Else
+            datasetID = -1
+        End If
+        Dim success As Boolean = Me.m_DMS.MakeFile(m_ParamFileName, m_ParamFileType, m_FASTAPath, m_OutputPath, m_DMSConnectString, datasetID)
         If success = True Then
             Me.txtResults.Text = "File successfully written to: " & m_OutputPath & m_ParamFileName
         Else
@@ -234,12 +264,9 @@ Public Class frmMain
     End Sub
 
     Private Sub LoadParamNames(Optional ByVal TypeID As Integer = 0)
-        'Dim l_ParamColl As System.Collections.Specialized.StringCollection = m_DMS.GetAvailableParamSetNames(m_DMSConnectString)
-        'Dim l_ParamTable As DataTable = Me.m_DMS.GetAvailableParamSetTable(Me.m_DMSConnectString)
         If Me.m_AvailableParamFiles Is Nothing Then
             Me.m_AvailableParamFiles = Me.m_DMS.GetAvailableParamSetTable(Me.m_DMSConnectString)
         End If
-        Dim Name As String
 
         Dim dr As DataRow
         Dim foundrows() As DataRow
@@ -263,17 +290,6 @@ Public Class frmMain
 
         Me.cboAvailableParams.EndUpdate()
 
-        'With Me.cboAvailableParams
-        '    .DisplayMember = l_ParamTable.Columns(1).ColumnName
-        '    .ValueMember = l_ParamTable.Columns(0).ColumnName
-        '    .DataSource = l_ParamTable.Select(filterstring)
-        'End With
-
-        'For Each Name In l_ParamColl
-        '    Me.cboAvailableParams.Items.Add(Name)
-        'Next
-
-        'Me.cboAvailableParams.SelectedIndex = 0
     End Sub
 
     Private Sub LoadParamFileTypes()

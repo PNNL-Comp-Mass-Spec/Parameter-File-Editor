@@ -21,7 +21,7 @@ Public Class frmDMSParamNamer
         'Add any initialization after the InitializeComponent() call
         m_MainForm = CallingFrm
         m_Params = ParamSetToSave
-        m_clsDMSParams = New clsDMSParamUpload(CallingFrm.mySettings)
+        m_clsDMSParams = New clsDMSParamUpload(frmMainGUI.mySettings)
     End Sub
 
     'Form overrides dispose to clean up the component list.
@@ -125,7 +125,7 @@ Public Class frmDMSParamNamer
 
     Private Sub frmDMSParamNamer_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.txtSaveFileName.Text = m_Params.FileName
-        m_clsDMSParams = New clsDMSParamUpload(Me.m_MainForm.mySettings)
+        m_clsDMSParams = New clsDMSParamUpload(frmMainGUI.mySettings)
         LoadParamDiffs(m_Params)
 
     End Sub

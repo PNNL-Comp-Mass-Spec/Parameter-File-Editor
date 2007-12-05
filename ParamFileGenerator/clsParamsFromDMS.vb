@@ -122,12 +122,12 @@ Namespace DownloadParams
 #Region " public Properties "
         Public ReadOnly Property ParamFileTable() As DataTable
             Get
-                Return Me.m_ParamsSet.Tables(Me.Param_File_Table)
+                Return Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_File_Table)
             End Get
         End Property
         Public ReadOnly Property ParamEntryTable() As DataTable
             Get
-                Return Me.m_ParamsSet.Tables(Me.Param_Entry_Table)
+                Return Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_Entry_Table)
             End Get
         End Property
 
@@ -239,19 +239,19 @@ Namespace DownloadParams
             Dim tmpSet As New DataSet
 
             'SQL to grab param file table
-            SQL = "SELECT * FROM " & Me.Param_File_Table ' & " WHERE [Param_File_Type_ID] = 1000"
+            SQL = "SELECT * FROM " & clsParamsFromDMS.Param_File_Table ' & " WHERE [Param_File_Type_ID] = 1000"
 
             tmpFileTable = GetTable(SQL, Me.m_GetID_DA, Me.m_GetID_DB)
-            tmpFileTable.TableName = Me.Param_File_Table
+            tmpFileTable.TableName = clsParamsFromDMS.Param_File_Table
             setprimarykey(0, tmpFileTable)
 
             tmpSet.Tables.Add(tmpFileTable)
 
             'SQL to grab param entry table
-            SQL = "SELECT * FROM " & Me.Param_Entry_Table & " WHERE [Entry_Type] not like '%Modification'"
+            SQL = "SELECT * FROM " & clsParamsFromDMS.Param_Entry_Table & " WHERE [Entry_Type] not like '%Modification'"
 
             tmpEntryTable = GetTable(SQL, Me.m_GetEntries_DA, Me.m_GetEntries_CB)
-            tmpEntryTable.TableName = Me.Param_Entry_Table
+            tmpEntryTable.TableName = clsParamsFromDMS.Param_Entry_Table
 
             tmpSet.Tables.Add(tmpEntryTable)
 
@@ -271,7 +271,7 @@ Namespace DownloadParams
         'TODO Fix this function for new mod handling
         Protected Function GetParamSetWithID(ByVal ParamSetID As Integer, Optional ByVal DisableMassLookup As Boolean = False) As clsParams  'Download
             Dim dr As DataRow = GetFileRowWithID(ParamSetID)
-            Dim foundrows As DataRow() = Me.m_ParamsSet.Tables(Me.Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
+            Dim foundrows As DataRow() = Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
             Dim storageSet As clsDMSParamStorage = Me.MakeStorageClassFromTableRowSet(foundrows)
             If Not DisableMassLookup Then
                 storageSet = GetMassModsFromDMS(ParamSetID, storageSet)
@@ -279,6 +279,9 @@ Namespace DownloadParams
             Dim p As clsParams = Me.UpdateParamSetFromDataCollection(storageSet)
             p.FileName = DirectCast(dr.Item("Param_File_Name"), String)
             p.Description = Me.SummarizeDiffColl(storageSet)
+            For Each paramRow As DataRow In foundrows
+                p.AddLoadedParamName(paramRow.Item("Entry_Specifier").ToString, paramRow.Item("Entry_Value").ToString)
+            Next
 
             Return p
         End Function
@@ -288,7 +291,7 @@ Namespace DownloadParams
             Dim storageClass As New clsDMSParamStorage
             Dim tmpSpec As String
             Dim tmpValue As String
-            Dim tmpTypeString As String
+            'Dim tmpTypeString As String
             Dim tmpType As clsDMSParamStorage.ParamTypes
 
             For Each foundRow In foundRows
@@ -311,7 +314,7 @@ Namespace DownloadParams
             Dim foundRows() As DataRow
             Dim tmpSpec As String
             Dim tmpValue As String
-            Dim tmpTypeString As String
+            'Dim tmpTypeString As String
             Dim tmpType As clsDMSParamStorage.ParamTypes
             Dim tmpRes As String
             Dim counter As Integer
@@ -322,9 +325,9 @@ Namespace DownloadParams
             SQL = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " & _
                     "mc.Monoisotopic_Mass_Correction as Monoisotopic_Mass_Correction, " & _
                     "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " & _
-                    "FROM " & Me.Param_Mass_Mods_Table & " mm INNER JOIN " & _
-                    Me.Mass_Corr_Factors & " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " & _
-                    Me.Residues_Table & " r ON mm.Residue_ID = r.Residue_ID " & _
+                    "FROM " & clsParamsFromDMS.Param_Mass_Mods_Table & " mm INNER JOIN " & _
+                    clsParamsFromDMS.Mass_Corr_Factors & " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " & _
+                    clsParamsFromDMS.Residues_Table & " r ON mm.Residue_ID = r.Residue_ID " & _
                     "WHERE mm.Param_File_ID = " & ParamSetID
 
             Me.m_MassMods = GetTable(SQL)
@@ -396,7 +399,7 @@ Namespace DownloadParams
         Protected Function GetDynModSpecifier(ByVal rowSet As DataRow()) As String
             Dim foundrow As DataRow
 
-            Dim tmpSpec As String
+            Dim tmpSpec As String = ""
 
             If rowSet.Length > 0 Then               'We have dynamic mods
                 For Each foundrow In rowSet
@@ -485,21 +488,12 @@ Namespace DownloadParams
             tmpIDTable = Me.GetTable(paramTableSQL)
 
             ''Load tmpIDTable
-            'Dim tmpRow As DataRow
-
             Dim tmpID As Integer
-            'Dim tmpFileName As String
             Dim tmpDiffs As String
             Dim tmpType As Integer
-            'Dim index As Integer
-            'Dim maxIndex As Integer
-
-            ''maxIndex = Me.ParamFileTable.Rows.Count - 1
 
             Dim dr As DataRow
-            Dim rows() As DataRow
 
-            'rows = Me.ParamFileTable.Select("", "[Param_File_Name]")
 
             For Each dr In tmpIDTable.Rows
 
@@ -507,7 +501,6 @@ Namespace DownloadParams
                 If tmpType = 1000 Then
 
                     tmpID = DirectCast(dr.Item("ID"), Integer)
-                    '        tmpFileName = DirectCast(dr.Item("Param_File_Name"), String)
                     tmpDiffs = DirectCast(dr.Item("Diffs"), String)
                     If tmpDiffs Is Nothing Then
                         tmpDiffs = DistillFeaturesFromParamSet(tmpID)
@@ -548,15 +541,12 @@ Namespace DownloadParams
         Protected Function DistillFeaturesFromParamSet(ByVal ParamSetID As Integer) As String         'Common
             Dim p As clsParams = Me.GetParamSetWithID(ParamSetID)
 
-            'Return DistillFeaturesFromParamSet(p)
             Return p.Description
 
         End Function
 
         Protected Function WriteDataCollectionFromParamSet(ByVal ParamSet As clsParams) As clsDMSParamStorage        'Upload
             Dim c As clsDMSParamStorage = New clsDMSParamStorage
-
-            Dim o As Object
 
             Dim pType As Type = ParamSet.GetType
             Dim tmpType As Type
@@ -606,7 +596,7 @@ Namespace DownloadParams
             p.LoadTemplate(clsMainProcess.TemplateFileName)
             Dim pType As Type = GetType(clsParams)
             Dim pFields As PropertyInfo() = pType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
-            Dim pField As PropertyInfo
+            Dim pField As PropertyInfo = Nothing
 
             Dim ionType As Type = GetType(clsIonSeries)
             Dim ionFields As PropertyInfo() = ionType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
@@ -830,16 +820,16 @@ Namespace DownloadParams
             Dim index As Integer
             Dim tmpString As String
 
-            Dim tmpDynMods As String
-            Dim tmpTermDynMods As String
-            Dim tmpStatMods As String
-            Dim tmpIsoMods As String
-            Dim tmpOtherParams As String
+            Dim tmpDynMods As String = ""
+            Dim tmpTermDynMods As String = ""
+            Dim tmpStatMods As String = ""
+            Dim tmpIsoMods As String = ""
+            Dim tmpOtherParams As String = ""
 
             Dim tmpType As clsDMSParamStorage.ParamTypes
-            Dim tmpSpec As String
-            Dim tmpValue As String
-            Dim tmpSign As String
+            Dim tmpSpec As String = ""
+            Dim tmpValue As String = ""
+            Dim tmpSign As String = ""
 
             For index = 0 To maxIndex
                 With diffColl.Item(index)
@@ -949,20 +939,19 @@ Namespace DownloadParams
         Protected Function CompareDataCollections(ByVal templateColl As clsDMSParamStorage, ByVal checkColl As clsDMSParamStorage) As clsDMSParamStorage        'Neither
             Dim diffColl As New clsDMSParamStorage
             Dim maxIndex As Integer = checkColl.Count - 1
-            Dim templateIndex As Integer
-            Dim checkIndex As Integer
+            Dim templateIndex As Integer = 0
+            Dim checkIndex As Integer = 0
 
-            Dim tmpString As String
-            Dim tmpTemp As String
-            Dim tmpCheck As String
+            Dim tmpTemp As String = ""
+            Dim tmpCheck As String = ""
 
             Dim tmpCType As clsDMSParamStorage.ParamTypes
-            Dim tmpCSpec As String
-            Dim tmpCVal As String
+            Dim tmpCSpec As String = ""
+            Dim tmpCVal As String = ""
 
             Dim tmpTType As clsDMSParamStorage.ParamTypes
-            Dim tmpTSpec As String
-            Dim tmpTVal As String
+            Dim tmpTSpec As String = ""
+            Dim tmpTVal As String = ""
 
             For checkIndex = 0 To maxIndex
                 With checkColl.Item(checkIndex)

@@ -46,7 +46,7 @@ Public Class IniFileReader
     Private Sub InitIniFileReader(ByVal IniFileName As String, ByVal IsCaseSensitive As Boolean)
         Dim fi As FileInfo
         Dim s As String
-        Dim tr As TextReader
+        Dim tr As TextReader = Nothing
         m_CaseSensitive = IsCaseSensitive
         m_XmlDoc = New XmlDocument
 

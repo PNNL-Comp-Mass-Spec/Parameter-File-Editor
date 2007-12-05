@@ -1,234 +1,195 @@
-<VisualStudioProject>
-    <VisualBasic
-        ProjectType = "Local"
-        ProductVersion = "7.10.3077"
-        SchemaVersion = "2.0"
-        ProjectGuid = "{DF84F4CE-B4B1-43B7-B169-84078341607F}"
-    >
-        <Build>
-            <Settings
-                ApplicationIcon = "SQ Win.ico"
-                AssemblyKeyContainerName = ""
-                AssemblyName = "ParamFileEditor"
-                AssemblyOriginatorKeyFile = ""
-                AssemblyOriginatorKeyMode = "None"
-                DefaultClientScript = "JScript"
-                DefaultHTMLPageLayout = "Grid"
-                DefaultTargetSchema = "IE50"
-                DelaySign = "false"
-                OutputType = "WinExe"
-                OptionCompare = "Binary"
-                OptionExplicit = "On"
-                OptionStrict = "Off"
-                RootNamespace = "ParamFileEditor"
-                StartupObject = ""
-            >
-                <Config
-                    Name = "Debug"
-                    BaseAddress = "285212672"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = ""
-                    DefineDebug = "true"
-                    DefineTrace = "true"
-                    DebugSymbols = "true"
-                    IncrementalBuild = "true"
-                    Optimize = "false"
-                    OutputPath = "bin\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "1"
-                />
-                <Config
-                    Name = "Release"
-                    BaseAddress = "285212672"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = ""
-                    DefineDebug = "false"
-                    DefineTrace = "true"
-                    DebugSymbols = "false"
-                    IncrementalBuild = "false"
-                    Optimize = "true"
-                    OutputPath = "..\Release_Code\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "1"
-                />
-            </Settings>
-            <References>
-                <Reference
-                    Name = "System"
-                    AssemblyName = "System"
-                />
-                <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                />
-                <Reference
-                    Name = "System.Drawing"
-                    AssemblyName = "System.Drawing"
-                />
-                <Reference
-                    Name = "System.Windows.Forms"
-                    AssemblyName = "System.Windows.Forms"
-                />
-                <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                />
-                <Reference
-                    Name = "ParamFileGenerator"
-                    Project = "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
-                    Package = "{F184B08F-C81C-45F6-A57F-5ABD9991F28F}"
-                />
-            </References>
-            <Imports>
-                <Import Namespace = "Microsoft.VisualBasic" />
-                <Import Namespace = "System" />
-                <Import Namespace = "System.Collections" />
-                <Import Namespace = "System.Data" />
-                <Import Namespace = "System.Drawing" />
-                <Import Namespace = "System.Diagnostics" />
-                <Import Namespace = "System.Windows.Forms" />
-            </Imports>
-        </Build>
-        <Files>
-            <Include>
-                <File
-                    RelPath = "AssemblyInfo.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsAccessEmbeddedRsrc.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsBatchLoadTemplates.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsDeconvolveIsoMods.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsDMSParamUpload.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsDMSPickerHandler.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsMassTweaker.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsSecurityStuff.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsSettings.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsSimpleComparer.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "clsTransferParamEntriesToMCList.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "frmAboutBox.vb"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "frmAboutBox.resx"
-                    DependentUpon = "frmAboutBox.vb"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "frmDMSParamNamer.vb"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "frmDMSParamNamer.resx"
-                    DependentUpon = "frmDMSParamNamer.vb"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "frmDMSPicker.vb"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "frmDMSPicker.resx"
-                    DependentUpon = "frmDMSPicker.vb"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "frmGlobalModNamer.vb"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "frmGlobalModNamer.resx"
-                    DependentUpon = "frmGlobalModNamer.vb"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "frmMainGUI.vb"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "frmMainGUI.resx"
-                    DependentUpon = "frmMainGUI.vb"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "frmStreamlinedGUI.vb"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "frmStreamlinedGUI.resx"
-                    DependentUpon = "frmStreamlinedGUI.vb"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "ListViewItemComparer.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ParamFileEditorSettings.xml"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "sequest_N14_NE.params"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "SQ Win.ico"
-                    BuildAction = "Content"
-                />
-            </Include>
-        </Files>
-    </VisualBasic>
-</VisualStudioProject>
-
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DF84F4CE-B4B1-43B7-B169-84078341607F}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>SQ Win.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>ParamFileEditor</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyMode>None</AssemblyOriginatorKeyMode>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionStrict>Off</OptionStrict>
+    <RootNamespace>ParamFileEditor</RootNamespace>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>ParamFileEditor.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\Release_Code\</OutputPath>
+    <DocumentationFile>ParamFileEditor.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <ProjectReference Include="..\ParamFileGenerator\ParamFileGenerator.vbproj">
+      <Name>ParamFileGenerator</Name>
+      <Project>{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}</Project>
+      <Package>{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</Package>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsAccessEmbeddedRsrc.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsBatchLoadTemplates.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsDeconvolveIsoMods.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsDMSParamUpload.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsDMSPickerHandler.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsMassTweaker.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsSecurityStuff.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsSettings.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsSimpleComparer.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="clsTransferParamEntriesToMCList.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="frmAboutBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDMSParamNamer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDMSPicker.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmGlobalModNamer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMainGUI.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmStreamlinedGUI.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ListViewItemComparer.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="frmAboutBox.resx">
+      <DependentUpon>frmAboutBox.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDMSParamNamer.resx">
+      <DependentUpon>frmDMSParamNamer.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDMSPicker.resx">
+      <DependentUpon>frmDMSPicker.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmGlobalModNamer.resx">
+      <DependentUpon>frmGlobalModNamer.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMainGUI.resx">
+      <DependentUpon>frmMainGUI.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStreamlinedGUI.resx">
+      <DependentUpon>frmStreamlinedGUI.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ParamFileEditorSettings.xml" />
+    <EmbeddedResource Include="sequest_N14_NE.params" />
+    <Content Include="SQ Win.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="My Project\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

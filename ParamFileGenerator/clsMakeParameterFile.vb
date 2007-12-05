@@ -15,6 +15,13 @@ Namespace MakeParams
              ByVal FASTAFilePath As String, _
              ByVal OutputFilePath As String, _
              ByVal DMSConnectionString As String) As Boolean
+
+        Function MakeFile(ByVal ParamFileName As String, _
+             ByVal ParamFileType As ParamFileType, _
+             ByVal FASTAFilePath As String, _
+             ByVal OutputFilePath As String, _
+             ByVal DMSConnectionString As String, _
+             ByVal DatasetID As Integer) As Boolean
         Function GetAvailableParamSetNames(ByVal DMSConnectionString As String) As System.Collections.Specialized.StringCollection
         Function GetAvailableParamSetTable(ByVal DMSConnectionString As String) As DataTable
 
@@ -60,6 +67,18 @@ Namespace MakeParams
             ByVal OutputFilePath As String, _
             ByVal DMSConnectionString As String) As Boolean Implements IGenerateFile.MakeFile
 
+            Return Me.MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, -1)
+
+        End Function
+
+        Protected Function MakeFile( _
+            ByVal ParamFileName As String, _
+            ByVal ParamFileType As IGenerateFile.ParamFileType, _
+            ByVal FASTAFilePath As String, _
+            ByVal OutputFilePath As String, _
+            ByVal DMSConnectionString As String, _
+            ByVal DatasetID As Integer) As Boolean Implements IGenerateFile.MakeFile
+
 
 
             Try
@@ -79,7 +98,8 @@ Namespace MakeParams
                             ParamFileType, _
                             FASTAFilePath, _
                             OutputFilePath, _
-                            DMSConnectionString)
+                            DMSConnectionString, _
+                            DatasetID)
                 End Select
                 Return True
 
@@ -97,7 +117,33 @@ Namespace MakeParams
             ByVal ParamFileType As IGenerateFile.ParamFileType, _
             ByVal FASTAFilePath As String, _
             ByVal OutputFilePath As String, _
-            ByVal DMSConnectionString As String) As Boolean
+            ByVal DMSConnectionString As String, _
+            ByVal DatasetID As Integer) As Boolean
+
+            If Me.m_TableGetter Is Nothing Then
+                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
+            End If
+
+            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_ID = " + DatasetID.ToString
+            Dim TypeCheckTable As DataTable
+
+            Dim UseMonoMass As Boolean
+            Dim UseMonoMassInt As Integer
+
+            If DatasetID > 0 Then
+                TypeCheckTable = Me.m_TableGetter.GetTable(TypeCheckSQL)
+
+                If TypeCheckTable.Rows.Count > 0 Then
+                    UseMonoMassInt = CInt(TypeCheckTable.Rows(0).Item(0))
+                    If UseMonoMassInt > 0 Then
+                        UseMonoMass = True
+                    Else
+                        UseMonoMass = False
+                    End If
+                End If
+            Else
+                UseMonoMass = False
+            End If
 
             Const DEF_TEMPLATE_FILEPATH As String = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
 
@@ -138,6 +184,9 @@ Namespace MakeParams
             l_LoadedParams = l_DMS.ReadParamsFromDMS(ParamFileName)
             l_LoadedParams = l_ReconIsoMods.ReconstitueIsoMods(l_LoadedParams)
 
+            If UseMonoMass And Not l_LoadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
+                l_LoadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic
+            End If
 
             l_LoadedParams.DefaultFASTAPath = FASTAFilePath
 
@@ -152,10 +201,6 @@ Namespace MakeParams
             successExtra = Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
 
             Return success
-            'Catch ex As Exception
-            '    m_LastError = ex.Message
-            '    Return False
-            'End Try
 
         End Function
 
@@ -171,7 +216,7 @@ Namespace MakeParams
             Dim paramFilePathTable As DataTable
             Dim paramFilePath As String
 
-            Dim fi As System.IO.FileInfo
+            'Dim fi As System.IO.FileInfo
             Dim fullOutputFilePath As String
 
 

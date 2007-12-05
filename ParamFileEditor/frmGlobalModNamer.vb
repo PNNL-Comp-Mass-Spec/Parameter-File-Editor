@@ -346,14 +346,12 @@ Public Class frmGlobalModNamer
 
     Private Sub txtSymbolName_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles txtSymbolName.Validating
         Dim chk As String = sender.Text
-        Dim tmpModSymbol As String
 
         If Len(chk) > 8 Then
             e.Cancel = True
             Me.m_SymbolValid = False
             Me.errorProvider.SetError(sender, "Modification Name must be < 8 characters")
         ElseIf CheckSymbolNameExists(chk) Then
-            'e.Cancel = True
             Me.m_SymbolValid = False
             Me.errorProvider.SetError(sender, "Modification Name already exists in database")
         Else
@@ -503,7 +501,6 @@ Public Class frmGlobalModNamer
             Me.errorProvider.SetError(Me.lblMessages, "")
             Me.lblMessages.Text = ""
         Else
-            Dim msgText As String
 
         End If
     End Sub

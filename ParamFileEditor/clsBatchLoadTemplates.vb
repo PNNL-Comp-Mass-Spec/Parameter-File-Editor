@@ -8,7 +8,7 @@ Friend Class clsBatchLoadTemplates
     Inherits clsDMSParamUpload
 
     Public Sub New(ByVal CallingFrm As frmMainGUI)
-        MyBase.New(CallingFrm.mySettings)
+        MyBase.New(frmMainGUI.mySettings)
         'm_Main = MainCode
     End Sub
 

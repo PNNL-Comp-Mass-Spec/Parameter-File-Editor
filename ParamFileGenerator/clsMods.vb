@@ -357,7 +357,7 @@ Public Class clsModEntry
     End Sub
     Private Function ConvertSCToAAString(ByVal resCollection As StringCollection) As String
         Dim s As String
-        Dim returnString As String
+        Dim returnString As String = ""
         For Each s In resCollection
             s = Left(s, 1)
             returnString = returnString & s
@@ -377,6 +377,8 @@ Public Class clsModEntry
                 Return "T"
             Case ModificationTypes.TermProt
                 Return "P"
+            Case Else
+                Return Nothing
         End Select
     End Function
 
@@ -420,7 +422,7 @@ Public Class clsTermDynamicMods
     Protected Overrides Sub ParseDynModString(ByVal DMString As String)
         Dim tmpCTMass As Single
         Dim tmpNTMass As Single
-        Dim tmpRes As String
+        'Dim tmpRes As String
         Dim resCollection As StringCollection
 
         Dim splitRE As System.Text.RegularExpressions.Regex = _
@@ -462,8 +464,6 @@ Public Class clsTermDynamicMods
         Dim tmpModMass As Single
 
         Dim dynMod As clsModEntry
-        ' Dim counter As Integer = 2
-        Dim padCount As Integer
 
         For Each dynMod In Me.List
             tmpModMass = dynMod.MassDifference
@@ -659,12 +659,10 @@ Public Class clsDynamicMods
 
 #Region " Member Procedures "
     Protected Overridable Function AssembleModString(ByVal counter As Integer) As String
-        Dim s As String
+        Dim s As String = ""
         Dim tmpModString As String
-        Dim tmpModRes As String
         Dim tmpModMass As Single
         Dim dynMod As clsModEntry
-        ' Dim counter As Integer = 2
         Dim padCount As Integer
 
         For Each dynMod In Me.List
@@ -685,28 +683,12 @@ Public Class clsDynamicMods
         Return s.Trim()
     End Function
     Protected Overridable Sub ParseDynModString(ByVal DMString As String)
-        'Dim tmpsplit() As String = DMString.Split(System.Convert.ToChar(" "))
-        'Dim counter As Integer
-        'Dim maxCount As Integer = UBound(tmpsplit)
         Dim sc As StringCollection
         Dim tmpResString As String
         Dim tmpRes As String
         Dim resCounter As Integer
         Dim tmpMass As Single
 
-        'For counter = 0 To maxCount Step 2
-        '    tmpMass = CSng(tmpsplit(counter))
-        '    tmpResString = tmpsplit(counter + 1)
-        '    If tmpMass <> 0 Then
-        '        sc = New StringCollection
-        '        For resCounter = 1 To Len(tmpResString)
-        '            tmpRes = Mid(tmpResString, resCounter, 1)
-        '            sc.Add(tmpRes)
-        '        Next
-        '        Dim modEntry As New clsModEntry(sc, tmpMass, clsModEntry.ModificationTypes.Dynamic)
-        '        Me.Add(modEntry)
-        '    End If
-        'Next
         Dim splitRE As System.Text.RegularExpressions.Regex = _
             New System.Text.RegularExpressions.Regex("(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)")
         Dim matches As System.Text.RegularExpressions.MatchCollection
@@ -727,7 +709,6 @@ Public Class clsDynamicMods
             End If
         Next
 
-        'Console.WriteLine(AssembleModString())
     End Sub
 #End Region
 
@@ -749,7 +730,7 @@ Public Class clsStaticMods
             Return Me.FindAAMod(clsMods.ResidueCode.C_Term_Peptide).MassDifference
         End Get
         Set(ByVal Value As Single)
-            ChangeAAMod(Me.ResidueCode.C_Term_Peptide, Value)
+            ChangeAAMod(clsStaticMods.ResidueCode.C_Term_Peptide, Value)
         End Set
     End Property
     Public Property CtermProtein() As Single
