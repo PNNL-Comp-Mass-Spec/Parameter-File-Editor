@@ -22,6 +22,14 @@ Namespace MakeParams
              ByVal OutputFilePath As String, _
              ByVal DMSConnectionString As String, _
              ByVal DatasetID As Integer) As Boolean
+
+        Function MakeFile(ByVal ParamFileName As String, _
+             ByVal ParamFileType As ParamFileType, _
+             ByVal FASTAFilePath As String, _
+             ByVal OutputFilePath As String, _
+             ByVal DMSConnectionString As String, _
+             ByVal DatasetName As String) As Boolean
+
         Function GetAvailableParamSetNames(ByVal DMSConnectionString As String) As System.Collections.Specialized.StringCollection
         Function GetAvailableParamSetTable(ByVal DMSConnectionString As String) As DataTable
 
@@ -67,7 +75,21 @@ Namespace MakeParams
             ByVal OutputFilePath As String, _
             ByVal DMSConnectionString As String) As Boolean Implements IGenerateFile.MakeFile
 
-            Return Me.MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, -1)
+            Return Me.MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, False)
+
+        End Function
+
+        Protected Function MakeFile( _
+            ByVal ParamFileName As String, _
+            ByVal ParamFileType As IGenerateFile.ParamFileType, _
+            ByVal FASTAFilePath As String, _
+            ByVal OutputFilePath As String, _
+            ByVal DMSConnectionString As String, _
+            ByVal DatasetName As String) As Boolean Implements IGenerateFile.MakeFile
+
+            Dim ForceMonoStatus As Boolean = Me.GetMonoMassStatus(DatasetName)
+
+            Return Me.MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, ForceMonoStatus)
 
         End Function
 
@@ -78,6 +100,19 @@ Namespace MakeParams
             ByVal OutputFilePath As String, _
             ByVal DMSConnectionString As String, _
             ByVal DatasetID As Integer) As Boolean Implements IGenerateFile.MakeFile
+
+            Dim ForceMonoStatus As Boolean = Me.GetMonoMassStatus(DatasetID)
+
+            Return Me.MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, ForceMonoStatus)
+
+        End Function
+        Protected Function MakeFile( _
+            ByVal ParamFileName As String, _
+            ByVal ParamFileType As IGenerateFile.ParamFileType, _
+            ByVal FASTAFilePath As String, _
+            ByVal OutputFilePath As String, _
+            ByVal DMSConnectionString As String, _
+            ByVal ForceMonoParentMass As Boolean) As Boolean
 
 
 
@@ -92,6 +127,7 @@ Namespace MakeParams
                         Exit Function
 
                     Case Else
+
                         ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
                         Return Me.MakeFileSQ( _
                             ParamFileName, _
@@ -99,7 +135,7 @@ Namespace MakeParams
                             FASTAFilePath, _
                             OutputFilePath, _
                             DMSConnectionString, _
-                            DatasetID)
+                            ForceMonoParentMass)
                 End Select
                 Return True
 
@@ -112,38 +148,49 @@ Namespace MakeParams
 
         End Function
 
+        Protected Function GetMonoMassStatus(ByVal DatasetID As Integer) As Boolean
+            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_ID = " + DatasetID.ToString
+            Return Me.GetMonoParentStatusWorker(TypeCheckSQL)
+        End Function
+
+        Protected Function GetMonoMassStatus(ByVal DatasetName As String) As Boolean
+            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = " + DatasetName
+            Return Me.GetMonoParentStatusWorker(TypeCheckSQL)
+        End Function
+
+        Private Function GetMonoParentStatusWorker(ByVal LookupSQL As String) As Boolean
+            Dim TypeCheckTable As DataTable
+
+            Dim UseMonoMass As Boolean
+            Dim UseMonoMassInt As Integer
+
+            TypeCheckTable = Me.m_TableGetter.GetTable(LookupSQL)
+
+            If TypeCheckTable.Rows.Count > 0 Then
+                UseMonoMassInt = CInt(TypeCheckTable.Rows(0).Item(0))
+                If UseMonoMassInt > 0 Then
+                    UseMonoMass = True
+                Else
+                    UseMonoMass = False
+                End If
+            End If
+            Return UseMonoMass
+        End Function
+
         Protected Function MakeFileSQ( _
             ByVal ParamFileName As String, _
             ByVal ParamFileType As IGenerateFile.ParamFileType, _
             ByVal FASTAFilePath As String, _
             ByVal OutputFilePath As String, _
             ByVal DMSConnectionString As String, _
-            ByVal DatasetID As Integer) As Boolean
+            ByVal forceMonoParentMass As Boolean) As Boolean
 
             If Me.m_TableGetter Is Nothing Then
                 Me.m_TableGetter = New clsDBTask(DMSConnectionString)
             End If
 
-            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_ID = " + DatasetID.ToString
-            Dim TypeCheckTable As DataTable
 
-            Dim UseMonoMass As Boolean
-            Dim UseMonoMassInt As Integer
 
-            If DatasetID > 0 Then
-                TypeCheckTable = Me.m_TableGetter.GetTable(TypeCheckSQL)
-
-                If TypeCheckTable.Rows.Count > 0 Then
-                    UseMonoMassInt = CInt(TypeCheckTable.Rows(0).Item(0))
-                    If UseMonoMassInt > 0 Then
-                        UseMonoMass = True
-                    Else
-                        UseMonoMass = False
-                    End If
-                End If
-            Else
-                UseMonoMass = False
-            End If
 
             Const DEF_TEMPLATE_FILEPATH As String = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
 
@@ -184,13 +231,11 @@ Namespace MakeParams
             l_LoadedParams = l_DMS.ReadParamsFromDMS(ParamFileName)
             l_LoadedParams = l_ReconIsoMods.ReconstitueIsoMods(l_LoadedParams)
 
-            If UseMonoMass And Not l_LoadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
+            If forceMonoParentMass And Not l_LoadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
                 l_LoadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic
             End If
 
             l_LoadedParams.DefaultFASTAPath = FASTAFilePath
-
-            'Dim l_Writer As New clsWriteOutput
 
             If Me.m_FileWriter Is Nothing Then
                 Me.m_FileWriter = New clsWriteOutput
@@ -211,12 +256,9 @@ Namespace MakeParams
 
             Dim paramFilePathSQL As String
 
-            'Dim mctTable As DataTable
-            'Dim mdTable As DataTable
             Dim paramFilePathTable As DataTable
             Dim paramFilePath As String
 
-            'Dim fi As System.IO.FileInfo
             Dim fullOutputFilePath As String
 
 
@@ -258,9 +300,6 @@ Namespace MakeParams
 
             Dim mctTable As DataTable
             Dim mdTable As DataTable
-
-            'Dim tableGetter As ParamFileGenerator.IGetSQLData
-            'tableGetter = New ParamFileGenerator.clsDBTask(DMSConnectionString)
 
             If Me.m_TableGetter Is Nothing Then
                 Me.m_TableGetter = New ParamFileGenerator.clsDBTask(DMSConnectionString)
