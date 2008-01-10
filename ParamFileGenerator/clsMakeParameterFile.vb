@@ -7,6 +7,7 @@ Namespace MakeParams
             BioWorks_30  'BioWorks 3.0+ TurboSequest
             BioWorks_31  'BioWorks 3.1 ClusterQuest
             BioWorks_32  'Bioworks 3.2 ClusterF***
+            BioWorks_Current
             X_Tandem     'X!Tandem XML file
             Invalid      'Other stuff not currently handled
         End Enum
