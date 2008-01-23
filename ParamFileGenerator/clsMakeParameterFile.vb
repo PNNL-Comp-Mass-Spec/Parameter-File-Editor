@@ -88,7 +88,7 @@ Namespace MakeParams
             ByVal DMSConnectionString As String, _
             ByVal DatasetName As String) As Boolean Implements IGenerateFile.MakeFile
 
-            Dim ForceMonoStatus As Boolean = Me.GetMonoMassStatus(DatasetName)
+            Dim ForceMonoStatus As Boolean = Me.GetMonoMassStatus(DatasetName, DMSConnectionString)
 
             Return Me.MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, ForceMonoStatus)
 
@@ -102,7 +102,7 @@ Namespace MakeParams
             ByVal DMSConnectionString As String, _
             ByVal DatasetID As Integer) As Boolean Implements IGenerateFile.MakeFile
 
-            Dim ForceMonoStatus As Boolean = Me.GetMonoMassStatus(DatasetID)
+            Dim ForceMonoStatus As Boolean = Me.GetMonoMassStatus(DatasetID, DMSConnectionString)
 
             Return Me.MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, ForceMonoStatus)
 
@@ -149,21 +149,25 @@ Namespace MakeParams
 
         End Function
 
-        Protected Function GetMonoMassStatus(ByVal DatasetID As Integer) As Boolean
+        Protected Function GetMonoMassStatus(ByVal DatasetID As Integer, ByVal DMSConnectionString As String) As Boolean
             Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_ID = " + DatasetID.ToString
-            Return Me.GetMonoParentStatusWorker(TypeCheckSQL)
+            Return Me.GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
         End Function
 
-        Protected Function GetMonoMassStatus(ByVal DatasetName As String) As Boolean
+        Protected Function GetMonoMassStatus(ByVal DatasetName As String, ByVal DMSConnectionString As String) As Boolean
             Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = " + DatasetName
-            Return Me.GetMonoParentStatusWorker(TypeCheckSQL)
+            Return Me.GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
         End Function
 
-        Private Function GetMonoParentStatusWorker(ByVal LookupSQL As String) As Boolean
+        Private Function GetMonoParentStatusWorker(ByVal LookupSQL As String, ByVal DMSConnectionString As String) As Boolean
             Dim TypeCheckTable As DataTable
 
             Dim UseMonoMass As Boolean
             Dim UseMonoMassInt As Integer
+
+            If Me.m_TableGetter Is Nothing Then
+                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
+            End If
 
             TypeCheckTable = Me.m_TableGetter.GetTable(LookupSQL)
 
