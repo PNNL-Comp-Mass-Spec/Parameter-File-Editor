@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_19DE5DB72163454713A98D87794948E7"
+        "MsmKey" = "8:_478D39188F6286DE704E61D17582CE8A"
         "OwnerKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_19DE5DB72163454713A98D87794948E7"
+        "OwnerKey" = "8:_478D39188F6286DE704E61D17582CE8A"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -45,7 +45,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\ParamFileEditorInstaller.msi"
+        "OutputFilename" = "8:..\\Debug\\Installer\\Install Sequest Param File Editor.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -72,7 +72,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\Install Sequest Param File Editor.msi"
+        "OutputFilename" = "8:..\\Release\\Installer\\Install Sequest Param File Editor.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -128,14 +128,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_19DE5DB72163454713A98D87794948E7"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_478D39188F6286DE704E61D17582CE8A"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.0.2894.30193, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.0.2944.19121, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_19DE5DB72163454713A98D87794948E7"
+                    "_478D39188F6286DE704E61D17582CE8A"
                     {
                     "Name" = "8:ParamFileGenerator.dll"
                     "Attributes" = "3:512"
@@ -215,7 +215,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sequest Param File Editor"
         "ProductCode" = "8:{527C1BD5-9F06-4D73-A7B7-DC358146E1B9}"
-        "PackageCode" = "8:{5372B36F-CDBE-4D4A-AFE9-7269D23A8B91}"
+        "PackageCode" = "8:{98AB77BE-0A00-4752-ADD6-A9DA56FCD93E}"
         "UpgradeCode" = "8:{6B68153E-0FA1-4B77-9B01-C246BE805CD8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -749,7 +749,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0F10E22C419D46FBB014DB3CAF8DF84C"
             {
-            "SourcePath" = "8:..\\ParamFileEditor\\obj\\Release\\ParamFileEditor.exe"
+            "SourcePath" = "8:..\\ParamFileEditor\\obj\\Debug\\ParamFileEditor.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5759332D077946498DE3A33F3B95A837"

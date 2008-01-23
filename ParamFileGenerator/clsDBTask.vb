@@ -140,7 +140,7 @@ Public Class clsDBTask
         'Try
         If Not Me.m_PersistConnection Then Me.OpenConnection()
 
-        GetID_CMD.CommandTimeout = 30
+        GetID_CMD.CommandTimeout = 120
         GetID_CMD.Connection = Me.m_DBCn
 
         If Me.Connected = True Then
@@ -158,7 +158,7 @@ Public Class clsDBTask
                     If numTries = 0 Then
                         Throw New Exception("could not get records after three tries")
                     End If
-                    System.Threading.Thread.Sleep(3000)
+                    System.Threading.Thread.Sleep(10000)
                 End Try
 
             End While
