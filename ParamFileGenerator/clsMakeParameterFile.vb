@@ -155,7 +155,7 @@ Namespace MakeParams
         End Function
 
         Protected Function GetMonoMassStatus(ByVal DatasetName As String, ByVal DMSConnectionString As String) As Boolean
-            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = " + DatasetName
+            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = '" + DatasetName + "'"
             Return Me.GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
         End Function
 
