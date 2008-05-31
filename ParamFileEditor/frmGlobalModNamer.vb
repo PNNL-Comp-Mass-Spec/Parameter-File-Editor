@@ -43,6 +43,7 @@ Public Class frmGlobalModNamer
     Friend WithEvents txtDescription As System.Windows.Forms.TextBox
     Friend WithEvents lblDescription As System.Windows.Forms.Label
     Friend WithEvents toolTipProvider As System.Windows.Forms.ToolTip
+    Friend WithEvents cmdUseSelectedMod As System.Windows.Forms.Button
     Friend WithEvents lblMessages As System.Windows.Forms.Label
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container
@@ -59,11 +60,13 @@ Public Class frmGlobalModNamer
         Me.colSymbol = New System.Windows.Forms.ColumnHeader
         Me.colDescription = New System.Windows.Forms.ColumnHeader
         Me.colModMass = New System.Windows.Forms.ColumnHeader
-        Me.errorProvider = New System.Windows.Forms.ErrorProvider
+        Me.errorProvider = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.toolTipProvider = New System.Windows.Forms.ToolTip(Me.components)
         Me.lblMessages = New System.Windows.Forms.Label
+        Me.cmdUseSelectedMod = New System.Windows.Forms.Button
         Me.gbxNewMod.SuspendLayout()
         Me.gbxExistingMods.SuspendLayout()
+        CType(Me.errorProvider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'gbxNewMod
@@ -97,7 +100,6 @@ Public Class frmGlobalModNamer
         Me.txtDescription.Name = "txtDescription"
         Me.txtDescription.Size = New System.Drawing.Size(364, 100)
         Me.txtDescription.TabIndex = 5
-        Me.txtDescription.Text = ""
         '
         'cmdAddNew
         '
@@ -116,7 +118,6 @@ Public Class frmGlobalModNamer
         Me.txtModMass.Name = "txtModMass"
         Me.txtModMass.Size = New System.Drawing.Size(104, 20)
         Me.txtModMass.TabIndex = 3
-        Me.txtModMass.Text = ""
         '
         'lblModMass
         '
@@ -133,7 +134,6 @@ Public Class frmGlobalModNamer
         Me.txtSymbolName.Name = "txtSymbolName"
         Me.txtSymbolName.Size = New System.Drawing.Size(104, 20)
         Me.txtSymbolName.TabIndex = 1
-        Me.txtSymbolName.Text = ""
         '
         'lblSymbolName
         '
@@ -164,6 +164,7 @@ Public Class frmGlobalModNamer
         Me.lvwExistingMods.Name = "lvwExistingMods"
         Me.lvwExistingMods.Size = New System.Drawing.Size(396, 272)
         Me.lvwExistingMods.TabIndex = 0
+        Me.lvwExistingMods.UseCompatibleStateImageBehavior = False
         Me.lvwExistingMods.View = System.Windows.Forms.View.Details
         '
         'colSymbol
@@ -194,11 +195,21 @@ Public Class frmGlobalModNamer
         Me.lblMessages.TabIndex = 3
         Me.lblMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'cmdUseSelectedMod
+        '
+        Me.cmdUseSelectedMod.Location = New System.Drawing.Point(272, 553)
+        Me.cmdUseSelectedMod.Name = "cmdUseSelectedMod"
+        Me.cmdUseSelectedMod.Size = New System.Drawing.Size(160, 23)
+        Me.cmdUseSelectedMod.TabIndex = 4
+        Me.cmdUseSelectedMod.Text = "Use Selected Mod Mass"
+        Me.cmdUseSelectedMod.UseVisualStyleBackColor = True
+        '
         'frmGlobalModNamer
         '
         Me.AcceptButton = Me.cmdAddNew
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(444, 586)
+        Me.Controls.Add(Me.cmdUseSelectedMod)
         Me.Controls.Add(Me.gbxExistingMods)
         Me.Controls.Add(Me.gbxNewMod)
         Me.Controls.Add(Me.lblMessages)
@@ -207,7 +218,9 @@ Public Class frmGlobalModNamer
         Me.Name = "frmGlobalModNamer"
         Me.Text = "Add New Global Modification"
         Me.gbxNewMod.ResumeLayout(False)
+        Me.gbxNewMod.PerformLayout()
         Me.gbxExistingMods.ResumeLayout(False)
+        CType(Me.errorProvider, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -300,7 +313,7 @@ Public Class frmGlobalModNamer
 
             filterString = "([Monoisotopic_Mass_Correction] >= " & ModMass - MassVariance * counter & " AND " & _
                             "[Monoisotopic_Mass_Correction] <= " & ModMass + MassVariance * counter & ") AND " & _
-                            "([Affected_Atom] = '" & affectedAtom & "')"
+                            "([Affected_Atom] = '" & AffectedAtom & "')"
 
             modRows = Me.MassCorrectionsTable.Select(filterString, "[Monoisotopic_Mass_Correction]")
 
@@ -486,15 +499,7 @@ Public Class frmGlobalModNamer
 
     Private Sub lvwExistingMods_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles lvwExistingMods.DoubleClick
 
-        Dim tmpNewSymbol As String = Me.lvwExistingMods.SelectedItems(0).Text
-        Dim tmpNewDesc As String = Me.lvwExistingMods.SelectedItems(0).SubItems(1).Text
-        Dim tmpNewMass As Single = CSng(Me.lvwExistingMods.SelectedItems(0).SubItems(2).Text)
-
-        Me.NewSymbol = tmpNewSymbol
-        Me.NewDescription = tmpNewDesc
-        Me.NewModMass = tmpNewMass
-
-        Dim modExists As Boolean = SelectedModExists(tmpNewMass)
+        Dim modExists As Boolean = UseSelectedMod()
 
         If modExists Then
             DialogResult = DialogResult.Yes
@@ -505,4 +510,29 @@ Public Class frmGlobalModNamer
         End If
     End Sub
 
+    Private Sub cmdUseSelectedMod_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdUseSelectedMod.Click
+        Dim modExists As Boolean = UseSelectedMod()
+        If modExists Then
+            DialogResult = DialogResult.Yes
+            Me.errorProvider.SetError(Me.lblMessages, "")
+            Me.lblMessages.Text = ""
+        End If
+    End Sub
+
+    Private Function UseSelectedMod() As Boolean
+
+        Dim lvw As ListView = Me.lvwExistingMods
+        Dim tmpNewSymbol As String = lvw.SelectedItems(0).Text
+        Dim tmpNewDesc As String = lvw.SelectedItems(0).SubItems(1).Text
+        Dim tmpNewMass As Single = CSng(lvw.SelectedItems(0).SubItems(2).Text)
+
+        Me.NewSymbol = tmpNewSymbol
+        Me.NewDescription = tmpNewDesc
+        Me.NewModMass = tmpNewMass
+
+        Dim modExists As Boolean = SelectedModExists(tmpNewMass)
+
+        Return modExists
+
+    End Function
 End Class

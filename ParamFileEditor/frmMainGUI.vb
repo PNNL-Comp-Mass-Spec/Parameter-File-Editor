@@ -10,6 +10,8 @@ Public Class frmMainGUI
     Private m_clsMassTweaker As IMassTweaker
 
     Private m_DMSUpload As clsDMSParamUpload
+    Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuOptionsAutoTweakParams As System.Windows.Forms.MenuItem
     Private m_sharedMain As clsMainProcess
 #Region " Windows Form Designer generated code "
 
@@ -235,7 +237,7 @@ Public Class frmMainGUI
 
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container
-        Dim resources As System.Resources.ResourceManager = New System.Resources.ResourceManager(GetType(frmMainGUI))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMainGUI))
         Me.tcMain = New System.Windows.Forms.TabControl
         Me.tabBasic = New System.Windows.Forms.TabPage
         Me.gbxIsoMods = New System.Windows.Forms.GroupBox
@@ -380,11 +382,11 @@ Public Class frmMainGUI
         Me.lblMatchPeakCountErrors = New System.Windows.Forms.Label
         Me.lblMatchPeakCount = New System.Windows.Forms.Label
         Me.txtMatchPeakCount = New System.Windows.Forms.TextBox
-        Me.lblSeqHdrFilter = New System.Windows.Forms.Label
         Me.txtMaxDiffPerPeptide = New System.Windows.Forms.TextBox
         Me.lblMaxAAPerDynMod = New System.Windows.Forms.Label
         Me.txtMaxAAPerDynMod = New System.Windows.Forms.TextBox
         Me.lblNucReadingFrame = New System.Windows.Forms.Label
+        Me.lblSeqHdrFilter = New System.Windows.Forms.Label
         Me.gbxToleranceValues = New System.Windows.Forms.GroupBox
         Me.txtFragMassTol = New System.Windows.Forms.TextBox
         Me.lblPepMassTol = New System.Windows.Forms.Label
@@ -404,7 +406,7 @@ Public Class frmMainGUI
         Me.chkRemovePrecursorPeaks = New System.Windows.Forms.CheckBox
         Me.chkShowFragmentIons = New System.Windows.Forms.CheckBox
         Me.chkCreateOutputFiles = New System.Windows.Forms.CheckBox
-        Me.mnuMain = New System.Windows.Forms.MainMenu
+        Me.mnuMain = New System.Windows.Forms.MainMenu(Me.components)
         Me.mnuFile = New System.Windows.Forms.MenuItem
         Me.mnuFileNewFileFromTemp = New System.Windows.Forms.MenuItem
         Me.mnuLoadFromFile = New System.Windows.Forms.MenuItem
@@ -417,6 +419,8 @@ Public Class frmMainGUI
         Me.mnuBatchUploadDMS = New System.Windows.Forms.MenuItem
         Me.mnuDiv1 = New System.Windows.Forms.MenuItem
         Me.mnuFileExit = New System.Windows.Forms.MenuItem
+        Me.MenuItem1 = New System.Windows.Forms.MenuItem
+        Me.mnuOptionsAutoTweakParams = New System.Windows.Forms.MenuItem
         Me.mnuHelp = New System.Windows.Forms.MenuItem
         Me.mnuHelpAbout = New System.Windows.Forms.MenuItem
         Me.mnuDebug = New System.Windows.Forms.MenuItem
@@ -424,7 +428,7 @@ Public Class frmMainGUI
         Me.mnuDebugSyncSingle = New System.Windows.Forms.MenuItem
         Me.mnuDebugSyncDesc = New System.Windows.Forms.MenuItem
         Me.lblParamFileInfo = New System.Windows.Forms.Label
-        Me.StatModErrorProvider = New System.Windows.Forms.ErrorProvider
+        Me.StatModErrorProvider = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.tooltipProvider = New System.Windows.Forms.ToolTip(Me.components)
         Me.tcMain.SuspendLayout()
         Me.tabBasic.SuspendLayout()
@@ -438,6 +442,7 @@ Public Class frmMainGUI
         Me.gbxMiscParams.SuspendLayout()
         Me.gbxToleranceValues.SuspendLayout()
         Me.gbxSwitches.SuspendLayout()
+        CType(Me.StatModErrorProvider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'tcMain
@@ -496,7 +501,6 @@ Public Class frmMainGUI
         Me.txtIsoS.Name = "txtIsoS"
         Me.txtIsoS.Size = New System.Drawing.Size(64, 20)
         Me.txtIsoS.TabIndex = 9
-        Me.txtIsoS.Text = ""
         '
         'txtIsoH
         '
@@ -506,7 +510,6 @@ Public Class frmMainGUI
         Me.txtIsoH.Name = "txtIsoH"
         Me.txtIsoH.Size = New System.Drawing.Size(64, 20)
         Me.txtIsoH.TabIndex = 8
-        Me.txtIsoH.Text = ""
         '
         'txtIsoN
         '
@@ -516,7 +519,6 @@ Public Class frmMainGUI
         Me.txtIsoN.Name = "txtIsoN"
         Me.txtIsoN.Size = New System.Drawing.Size(64, 20)
         Me.txtIsoN.TabIndex = 6
-        Me.txtIsoN.Text = ""
         '
         'txtIsoO
         '
@@ -526,7 +528,6 @@ Public Class frmMainGUI
         Me.txtIsoO.Name = "txtIsoO"
         Me.txtIsoO.Size = New System.Drawing.Size(64, 20)
         Me.txtIsoO.TabIndex = 5
-        Me.txtIsoO.Text = ""
         '
         'txtIsoC
         '
@@ -536,7 +537,6 @@ Public Class frmMainGUI
         Me.txtIsoC.Name = "txtIsoC"
         Me.txtIsoC.Size = New System.Drawing.Size(64, 20)
         Me.txtIsoC.TabIndex = 4
-        Me.txtIsoC.Text = ""
         '
         'lblIsoS
         '
@@ -693,7 +693,6 @@ Public Class frmMainGUI
         Me.txtCTPep.Name = "txtCTPep"
         Me.txtCTPep.Size = New System.Drawing.Size(55, 20)
         Me.txtCTPep.TabIndex = 12
-        Me.txtCTPep.Text = ""
         '
         'txtAla
         '
@@ -703,7 +702,6 @@ Public Class frmMainGUI
         Me.txtAla.Name = "txtAla"
         Me.txtAla.Size = New System.Drawing.Size(55, 20)
         Me.txtAla.TabIndex = 17
-        Me.txtAla.Text = ""
         '
         'txtCTProt
         '
@@ -713,7 +711,6 @@ Public Class frmMainGUI
         Me.txtCTProt.Name = "txtCTProt"
         Me.txtCTProt.Size = New System.Drawing.Size(55, 20)
         Me.txtCTProt.TabIndex = 13
-        Me.txtCTProt.Text = ""
         '
         'txtNTPep
         '
@@ -724,7 +721,6 @@ Public Class frmMainGUI
         Me.txtNTPep.Name = "txtNTPep"
         Me.txtNTPep.Size = New System.Drawing.Size(55, 20)
         Me.txtNTPep.TabIndex = 14
-        Me.txtNTPep.Text = ""
         '
         'txtNTProt
         '
@@ -735,7 +731,6 @@ Public Class frmMainGUI
         Me.txtNTProt.Name = "txtNTProt"
         Me.txtNTProt.Size = New System.Drawing.Size(55, 20)
         Me.txtNTProt.TabIndex = 15
-        Me.txtNTProt.Text = ""
         '
         'txtGly
         '
@@ -745,7 +740,6 @@ Public Class frmMainGUI
         Me.txtGly.Name = "txtGly"
         Me.txtGly.Size = New System.Drawing.Size(55, 20)
         Me.txtGly.TabIndex = 16
-        Me.txtGly.Text = ""
         '
         'txtSer
         '
@@ -755,7 +749,6 @@ Public Class frmMainGUI
         Me.txtSer.Name = "txtSer"
         Me.txtSer.Size = New System.Drawing.Size(55, 20)
         Me.txtSer.TabIndex = 18
-        Me.txtSer.Text = ""
         '
         'txtCys
         '
@@ -765,7 +758,6 @@ Public Class frmMainGUI
         Me.txtCys.Name = "txtCys"
         Me.txtCys.Size = New System.Drawing.Size(55, 20)
         Me.txtCys.TabIndex = 22
-        Me.txtCys.Text = ""
         '
         'txtPro
         '
@@ -775,7 +767,6 @@ Public Class frmMainGUI
         Me.txtPro.Name = "txtPro"
         Me.txtPro.Size = New System.Drawing.Size(55, 20)
         Me.txtPro.TabIndex = 19
-        Me.txtPro.Text = ""
         '
         'TxtLorI
         '
@@ -785,7 +776,6 @@ Public Class frmMainGUI
         Me.TxtLorI.Name = "TxtLorI"
         Me.TxtLorI.Size = New System.Drawing.Size(55, 20)
         Me.TxtLorI.TabIndex = 25
-        Me.TxtLorI.Text = ""
         '
         'txtThr
         '
@@ -795,7 +785,6 @@ Public Class frmMainGUI
         Me.txtThr.Name = "txtThr"
         Me.txtThr.Size = New System.Drawing.Size(55, 20)
         Me.txtThr.TabIndex = 21
-        Me.txtThr.Text = ""
         '
         'txtIle
         '
@@ -805,7 +794,6 @@ Public Class frmMainGUI
         Me.txtIle.Name = "txtIle"
         Me.txtIle.Size = New System.Drawing.Size(55, 20)
         Me.txtIle.TabIndex = 24
-        Me.txtIle.Text = ""
         '
         'txtVal
         '
@@ -815,7 +803,6 @@ Public Class frmMainGUI
         Me.txtVal.Name = "txtVal"
         Me.txtVal.Size = New System.Drawing.Size(55, 20)
         Me.txtVal.TabIndex = 20
-        Me.txtVal.Text = ""
         '
         'txtLeu
         '
@@ -825,7 +812,6 @@ Public Class frmMainGUI
         Me.txtLeu.Name = "txtLeu"
         Me.txtLeu.Size = New System.Drawing.Size(55, 20)
         Me.txtLeu.TabIndex = 23
-        Me.txtLeu.Text = ""
         '
         'txtNandD
         '
@@ -835,7 +821,6 @@ Public Class frmMainGUI
         Me.txtNandD.Name = "txtNandD"
         Me.txtNandD.Size = New System.Drawing.Size(55, 20)
         Me.txtNandD.TabIndex = 28
-        Me.txtNandD.Text = ""
         '
         'txtQandE
         '
@@ -845,7 +830,6 @@ Public Class frmMainGUI
         Me.txtQandE.Name = "txtQandE"
         Me.txtQandE.Size = New System.Drawing.Size(55, 20)
         Me.txtQandE.TabIndex = 32
-        Me.txtQandE.Text = ""
         '
         'txtAsn
         '
@@ -855,7 +839,6 @@ Public Class frmMainGUI
         Me.txtAsn.Name = "txtAsn"
         Me.txtAsn.Size = New System.Drawing.Size(55, 20)
         Me.txtAsn.TabIndex = 26
-        Me.txtAsn.Text = ""
         '
         'txtLys
         '
@@ -865,7 +848,6 @@ Public Class frmMainGUI
         Me.txtLys.Name = "txtLys"
         Me.txtLys.Size = New System.Drawing.Size(55, 20)
         Me.txtLys.TabIndex = 31
-        Me.txtLys.Text = ""
         '
         'txtOrn
         '
@@ -875,7 +857,6 @@ Public Class frmMainGUI
         Me.txtOrn.Name = "txtOrn"
         Me.txtOrn.Size = New System.Drawing.Size(55, 20)
         Me.txtOrn.TabIndex = 27
-        Me.txtOrn.Text = ""
         '
         'txtGln
         '
@@ -885,7 +866,6 @@ Public Class frmMainGUI
         Me.txtGln.Name = "txtGln"
         Me.txtGln.Size = New System.Drawing.Size(55, 20)
         Me.txtGln.TabIndex = 30
-        Me.txtGln.Text = ""
         '
         'txtAsp
         '
@@ -895,7 +875,6 @@ Public Class frmMainGUI
         Me.txtAsp.Name = "txtAsp"
         Me.txtAsp.Size = New System.Drawing.Size(55, 20)
         Me.txtAsp.TabIndex = 29
-        Me.txtAsp.Text = ""
         '
         'txtArg
         '
@@ -905,7 +884,6 @@ Public Class frmMainGUI
         Me.txtArg.Name = "txtArg"
         Me.txtArg.Size = New System.Drawing.Size(55, 20)
         Me.txtArg.TabIndex = 37
-        Me.txtArg.Text = ""
         '
         'txtTrp
         '
@@ -915,7 +893,6 @@ Public Class frmMainGUI
         Me.txtTrp.Name = "txtTrp"
         Me.txtTrp.Size = New System.Drawing.Size(55, 20)
         Me.txtTrp.TabIndex = 39
-        Me.txtTrp.Text = ""
         '
         'txtGlu
         '
@@ -925,7 +902,6 @@ Public Class frmMainGUI
         Me.txtGlu.Name = "txtGlu"
         Me.txtGlu.Size = New System.Drawing.Size(55, 20)
         Me.txtGlu.TabIndex = 33
-        Me.txtGlu.Text = ""
         '
         'txtHis
         '
@@ -935,7 +911,6 @@ Public Class frmMainGUI
         Me.txtHis.Name = "txtHis"
         Me.txtHis.Size = New System.Drawing.Size(55, 20)
         Me.txtHis.TabIndex = 35
-        Me.txtHis.Text = ""
         '
         'txtPhe
         '
@@ -945,7 +920,6 @@ Public Class frmMainGUI
         Me.txtPhe.Name = "txtPhe"
         Me.txtPhe.Size = New System.Drawing.Size(55, 20)
         Me.txtPhe.TabIndex = 36
-        Me.txtPhe.Text = ""
         '
         'txtTyr
         '
@@ -955,7 +929,6 @@ Public Class frmMainGUI
         Me.txtTyr.Name = "txtTyr"
         Me.txtTyr.Size = New System.Drawing.Size(55, 20)
         Me.txtTyr.TabIndex = 38
-        Me.txtTyr.Text = ""
         '
         'txtMet
         '
@@ -965,7 +938,6 @@ Public Class frmMainGUI
         Me.txtMet.Name = "txtMet"
         Me.txtMet.Size = New System.Drawing.Size(55, 20)
         Me.txtMet.TabIndex = 34
-        Me.txtMet.Text = ""
         '
         'lblCTProt
         '
@@ -1260,7 +1232,6 @@ Public Class frmMainGUI
         Me.txtDescription.ReadOnly = True
         Me.txtDescription.Size = New System.Drawing.Size(428, 50)
         Me.txtDescription.TabIndex = 0
-        Me.txtDescription.Text = ""
         '
         'lblDescription
         '
@@ -1300,7 +1271,6 @@ Public Class frmMainGUI
         Me.txtPartialSeq.Name = "txtPartialSeq"
         Me.txtPartialSeq.Size = New System.Drawing.Size(196, 20)
         Me.txtPartialSeq.TabIndex = 5
-        Me.txtPartialSeq.Text = ""
         '
         'lblPartialSeq
         '
@@ -1438,7 +1408,6 @@ Public Class frmMainGUI
         Me.txtDynMod1List.Name = "txtDynMod1List"
         Me.txtDynMod1List.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod1List.TabIndex = 6
-        Me.txtDynMod1List.Text = ""
         '
         'txtDynMod1MassDiff
         '
@@ -1449,7 +1418,6 @@ Public Class frmMainGUI
         Me.txtDynMod1MassDiff.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod1MassDiff.TabIndex = 7
         Me.txtDynMod1MassDiff.Tag = "0"
-        Me.txtDynMod1MassDiff.Text = ""
         '
         'txtDynMod2List
         '
@@ -1458,7 +1426,6 @@ Public Class frmMainGUI
         Me.txtDynMod2List.Name = "txtDynMod2List"
         Me.txtDynMod2List.Size = New System.Drawing.Size(75, 20)
         Me.txtDynMod2List.TabIndex = 8
-        Me.txtDynMod2List.Text = ""
         '
         'txtDynMod2MassDiff
         '
@@ -1469,7 +1436,6 @@ Public Class frmMainGUI
         Me.txtDynMod2MassDiff.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod2MassDiff.TabIndex = 9
         Me.txtDynMod2MassDiff.Tag = "0"
-        Me.txtDynMod2MassDiff.Text = ""
         '
         'txtDynMod3List
         '
@@ -1478,7 +1444,6 @@ Public Class frmMainGUI
         Me.txtDynMod3List.Name = "txtDynMod3List"
         Me.txtDynMod3List.Size = New System.Drawing.Size(74, 20)
         Me.txtDynMod3List.TabIndex = 10
-        Me.txtDynMod3List.Text = ""
         '
         'txtDynMod3MassDiff
         '
@@ -1489,7 +1454,6 @@ Public Class frmMainGUI
         Me.txtDynMod3MassDiff.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod3MassDiff.TabIndex = 11
         Me.txtDynMod3MassDiff.Tag = "0"
-        Me.txtDynMod3MassDiff.Text = ""
         '
         'lblDynMod1List
         '
@@ -1552,7 +1516,6 @@ Public Class frmMainGUI
         Me.txtDynMod4List.Name = "txtDynMod4List"
         Me.txtDynMod4List.Size = New System.Drawing.Size(73, 20)
         Me.txtDynMod4List.TabIndex = 10
-        Me.txtDynMod4List.Text = ""
         '
         'txtDynMod4MassDiff
         '
@@ -1563,7 +1526,6 @@ Public Class frmMainGUI
         Me.txtDynMod4MassDiff.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod4MassDiff.TabIndex = 11
         Me.txtDynMod4MassDiff.Tag = "0"
-        Me.txtDynMod4MassDiff.Text = ""
         '
         'lblDynMod4List
         '
@@ -1599,7 +1561,6 @@ Public Class frmMainGUI
         Me.txtDynMod5List.Name = "txtDynMod5List"
         Me.txtDynMod5List.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod5List.TabIndex = 10
-        Me.txtDynMod5List.Text = ""
         '
         'txtDynMod5MassDiff
         '
@@ -1610,7 +1571,6 @@ Public Class frmMainGUI
         Me.txtDynMod5MassDiff.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod5MassDiff.TabIndex = 11
         Me.txtDynMod5MassDiff.Tag = "0"
-        Me.txtDynMod5MassDiff.Text = ""
         '
         'lblDynMod5List
         '
@@ -1671,7 +1631,6 @@ Public Class frmMainGUI
         Me.txtWWeight.Name = "txtWWeight"
         Me.txtWWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtWWeight.TabIndex = 19
-        Me.txtWWeight.Text = ""
         '
         'lblWWeight
         '
@@ -1690,7 +1649,6 @@ Public Class frmMainGUI
         Me.txtXWeight.Name = "txtXWeight"
         Me.txtXWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtXWeight.TabIndex = 20
-        Me.txtXWeight.Text = ""
         '
         'lblXWeight
         '
@@ -1709,7 +1667,6 @@ Public Class frmMainGUI
         Me.txtDWeight.Name = "txtDWeight"
         Me.txtDWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtDWeight.TabIndex = 17
-        Me.txtDWeight.Text = ""
         '
         'lblDWeight
         '
@@ -1728,7 +1685,6 @@ Public Class frmMainGUI
         Me.txtCWeight.Name = "txtCWeight"
         Me.txtCWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtCWeight.TabIndex = 16
-        Me.txtCWeight.Text = ""
         '
         'lblCWeight
         '
@@ -1747,7 +1703,6 @@ Public Class frmMainGUI
         Me.txtBWeight.Name = "txtBWeight"
         Me.txtBWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtBWeight.TabIndex = 15
-        Me.txtBWeight.Text = ""
         '
         'lblBWeight
         '
@@ -1776,7 +1731,6 @@ Public Class frmMainGUI
         Me.txtVWeight.Name = "txtVWeight"
         Me.txtVWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtVWeight.TabIndex = 18
-        Me.txtVWeight.Text = ""
         '
         'txtYWeight
         '
@@ -1785,7 +1739,6 @@ Public Class frmMainGUI
         Me.txtYWeight.Name = "txtYWeight"
         Me.txtYWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtYWeight.TabIndex = 21
-        Me.txtYWeight.Text = ""
         '
         'lblYWeight
         '
@@ -1804,7 +1757,6 @@ Public Class frmMainGUI
         Me.txtZWeight.Name = "txtZWeight"
         Me.txtZWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtZWeight.TabIndex = 22
-        Me.txtZWeight.Text = ""
         '
         'lblZWeight
         '
@@ -1823,7 +1775,6 @@ Public Class frmMainGUI
         Me.txtAWeight.Name = "txtAWeight"
         Me.txtAWeight.Size = New System.Drawing.Size(55, 20)
         Me.txtAWeight.TabIndex = 14
-        Me.txtAWeight.Text = ""
         '
         'lblAWeight
         '
@@ -1908,7 +1859,6 @@ Public Class frmMainGUI
         Me.txtNumResults.Name = "txtNumResults"
         Me.txtNumResults.Size = New System.Drawing.Size(196, 20)
         Me.txtNumResults.TabIndex = 13
-        Me.txtNumResults.Text = ""
         '
         'cboNucReadingFrame
         '
@@ -1926,7 +1876,6 @@ Public Class frmMainGUI
         Me.txtNumDescLines.Name = "txtNumDescLines"
         Me.txtNumDescLines.Size = New System.Drawing.Size(196, 20)
         Me.txtNumDescLines.TabIndex = 7
-        Me.txtNumDescLines.Text = ""
         '
         'lblOutputLines
         '
@@ -1944,7 +1893,6 @@ Public Class frmMainGUI
         Me.txtNumOutputLines.Name = "txtNumOutputLines"
         Me.txtNumOutputLines.Size = New System.Drawing.Size(196, 20)
         Me.txtNumOutputLines.TabIndex = 6
-        Me.txtNumOutputLines.Text = ""
         '
         'lblNumDescLines
         '
@@ -1962,7 +1910,6 @@ Public Class frmMainGUI
         Me.txtMatchPeakCountErrors.Name = "txtMatchPeakCountErrors"
         Me.txtMatchPeakCountErrors.Size = New System.Drawing.Size(196, 20)
         Me.txtMatchPeakCountErrors.TabIndex = 9
-        Me.txtMatchPeakCountErrors.Text = ""
         '
         'lblMatchPeakCountErrors
         '
@@ -1989,16 +1936,6 @@ Public Class frmMainGUI
         Me.txtMatchPeakCount.Name = "txtMatchPeakCount"
         Me.txtMatchPeakCount.Size = New System.Drawing.Size(196, 20)
         Me.txtMatchPeakCount.TabIndex = 8
-        Me.txtMatchPeakCount.Text = ""
-        '
-        'lblSeqHdrFilter
-        '
-        Me.lblSeqHdrFilter.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSeqHdrFilter.Location = New System.Drawing.Point(244, 108)
-        Me.lblSeqHdrFilter.Name = "lblSeqHdrFilter"
-        Me.lblSeqHdrFilter.Size = New System.Drawing.Size(204, 16)
-        Me.lblSeqHdrFilter.TabIndex = 15
-        Me.lblSeqHdrFilter.Text = "Maximum Differential Mods Per Peptide"
         '
         'txtMaxDiffPerPeptide
         '
@@ -2007,7 +1944,6 @@ Public Class frmMainGUI
         Me.txtMaxDiffPerPeptide.Name = "txtMaxDiffPerPeptide"
         Me.txtMaxDiffPerPeptide.Size = New System.Drawing.Size(196, 20)
         Me.txtMaxDiffPerPeptide.TabIndex = 11
-        Me.txtMaxDiffPerPeptide.Text = ""
         '
         'lblMaxAAPerDynMod
         '
@@ -2025,7 +1961,6 @@ Public Class frmMainGUI
         Me.txtMaxAAPerDynMod.Name = "txtMaxAAPerDynMod"
         Me.txtMaxAAPerDynMod.Size = New System.Drawing.Size(196, 20)
         Me.txtMaxAAPerDynMod.TabIndex = 10
-        Me.txtMaxAAPerDynMod.Text = ""
         '
         'lblNucReadingFrame
         '
@@ -2035,6 +1970,15 @@ Public Class frmMainGUI
         Me.lblNucReadingFrame.Size = New System.Drawing.Size(188, 16)
         Me.lblNucReadingFrame.TabIndex = 7
         Me.lblNucReadingFrame.Text = "Nucleotide Reading Frame"
+        '
+        'lblSeqHdrFilter
+        '
+        Me.lblSeqHdrFilter.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSeqHdrFilter.Location = New System.Drawing.Point(244, 108)
+        Me.lblSeqHdrFilter.Name = "lblSeqHdrFilter"
+        Me.lblSeqHdrFilter.Size = New System.Drawing.Size(204, 16)
+        Me.lblSeqHdrFilter.TabIndex = 15
+        Me.lblSeqHdrFilter.Text = "Maximum Differential Mods Per Peptide"
         '
         'gbxToleranceValues
         '
@@ -2065,7 +2009,6 @@ Public Class frmMainGUI
         Me.txtFragMassTol.Name = "txtFragMassTol"
         Me.txtFragMassTol.Size = New System.Drawing.Size(196, 20)
         Me.txtFragMassTol.TabIndex = 1
-        Me.txtFragMassTol.Text = ""
         '
         'lblPepMassTol
         '
@@ -2083,7 +2026,6 @@ Public Class frmMainGUI
         Me.txtPepMassTol.Name = "txtPepMassTol"
         Me.txtPepMassTol.Size = New System.Drawing.Size(196, 20)
         Me.txtPepMassTol.TabIndex = 0
-        Me.txtPepMassTol.Text = ""
         '
         'lblFragMassTol
         '
@@ -2101,7 +2043,6 @@ Public Class frmMainGUI
         Me.txtIonCutoff.Name = "txtIonCutoff"
         Me.txtIonCutoff.Size = New System.Drawing.Size(196, 20)
         Me.txtIonCutoff.TabIndex = 3
-        Me.txtIonCutoff.Text = ""
         '
         'lblIonCutoff
         '
@@ -2128,7 +2069,6 @@ Public Class frmMainGUI
         Me.txtPeakMatchingTol.Name = "txtPeakMatchingTol"
         Me.txtPeakMatchingTol.Size = New System.Drawing.Size(196, 20)
         Me.txtPeakMatchingTol.TabIndex = 2
-        Me.txtPeakMatchingTol.Text = ""
         '
         'lblMaxProtMass
         '
@@ -2146,7 +2086,6 @@ Public Class frmMainGUI
         Me.txtMaxProtMass.Name = "txtMaxProtMass"
         Me.txtMaxProtMass.Size = New System.Drawing.Size(196, 20)
         Me.txtMaxProtMass.TabIndex = 5
-        Me.txtMaxProtMass.Text = ""
         '
         'lblMinProtMass
         '
@@ -2164,7 +2103,6 @@ Public Class frmMainGUI
         Me.txtMinProtMass.Name = "txtMinProtMass"
         Me.txtMinProtMass.Size = New System.Drawing.Size(196, 20)
         Me.txtMinProtMass.TabIndex = 4
-        Me.txtMinProtMass.Text = ""
         '
         'gbxSwitches
         '
@@ -2233,7 +2171,7 @@ Public Class frmMainGUI
         '
         'mnuMain
         '
-        Me.mnuMain.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFile, Me.mnuHelp, Me.mnuDebug})
+        Me.mnuMain.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFile, Me.MenuItem1, Me.mnuHelp, Me.mnuDebug})
         '
         'mnuFile
         '
@@ -2301,9 +2239,22 @@ Public Class frmMainGUI
         Me.mnuFileExit.Shortcut = System.Windows.Forms.Shortcut.CtrlX
         Me.mnuFileExit.Text = "E&xit"
         '
+        'MenuItem1
+        '
+        Me.MenuItem1.Enabled = False
+        Me.MenuItem1.Index = 1
+        Me.MenuItem1.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuOptionsAutoTweakParams})
+        Me.MenuItem1.Text = "Options"
+        Me.MenuItem1.Visible = False
+        '
+        'mnuOptionsAutoTweakParams
+        '
+        Me.mnuOptionsAutoTweakParams.Index = 0
+        Me.mnuOptionsAutoTweakParams.Text = "Change Auto Tweak Parameters..."
+        '
         'mnuHelp
         '
-        Me.mnuHelp.Index = 1
+        Me.mnuHelp.Index = 2
         Me.mnuHelp.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuHelpAbout})
         Me.mnuHelp.Text = "Help"
         '
@@ -2314,7 +2265,7 @@ Public Class frmMainGUI
         '
         'mnuDebug
         '
-        Me.mnuDebug.Index = 2
+        Me.mnuDebug.Index = 3
         Me.mnuDebug.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuDebugSyncAll, Me.mnuDebugSyncSingle, Me.mnuDebugSyncDesc})
         Me.mnuDebug.Text = "Debug"
         Me.mnuDebug.Visible = False
@@ -2364,15 +2315,24 @@ Public Class frmMainGUI
         Me.tcMain.ResumeLayout(False)
         Me.tabBasic.ResumeLayout(False)
         Me.gbxIsoMods.ResumeLayout(False)
+        Me.gbxIsoMods.PerformLayout()
         Me.gbxStaticMods.ResumeLayout(False)
+        Me.gbxStaticMods.PerformLayout()
         Me.gbxDesc.ResumeLayout(False)
+        Me.gbxDesc.PerformLayout()
         Me.gbxSearch.ResumeLayout(False)
+        Me.gbxSearch.PerformLayout()
         Me.gbxDynMods.ResumeLayout(False)
+        Me.gbxDynMods.PerformLayout()
         Me.tabAdvanced.ResumeLayout(False)
         Me.gbxIonWeighting.ResumeLayout(False)
+        Me.gbxIonWeighting.PerformLayout()
         Me.gbxMiscParams.ResumeLayout(False)
+        Me.gbxMiscParams.PerformLayout()
         Me.gbxToleranceValues.ResumeLayout(False)
+        Me.gbxToleranceValues.PerformLayout()
         Me.gbxSwitches.ResumeLayout(False)
+        CType(Me.StatModErrorProvider, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -3607,7 +3567,7 @@ Public Class frmMainGUI
 
     End Sub
 
-    Private Function ConvertStringArrayToSC(ByVal stringArray As String()) As System.collections.specialized.StringCollection
+    Private Function ConvertStringArrayToSC(ByVal stringArray As String()) As System.Collections.Specialized.StringCollection
         Dim maxCount As Integer = UBound(stringArray)
         Dim sc As New System.Collections.Specialized.StringCollection
         Dim count As Integer
@@ -3921,6 +3881,9 @@ Public Class frmMainGUI
     End Sub
 
 
+    Private Sub mnuOptionsAutoTweakParams_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuOptionsAutoTweakParams.Click
+
+    End Sub
 End Class
 
 Public Class NumericTextBox

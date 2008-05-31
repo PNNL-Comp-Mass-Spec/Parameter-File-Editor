@@ -30,7 +30,7 @@ Public Class clsMassTweaker
 
 #Region " Constants "
     Protected Const Mass_Corrections_Table_Name As String = "T_Mass_Correction_Factors"
-    Protected Const Max_Tweak_Difference As Single = 0.15
+    Protected Const Max_Tweak_Difference As Single = 0.005
 #End Region
 
     Private m_SPError As String

@@ -154,6 +154,11 @@
     <Compile Include="ListViewItemComparer.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="frmAboutBox.resx">
       <DependentUpon>frmAboutBox.vb</DependentUpon>
       <SubType>Designer</SubType>
@@ -183,7 +188,12 @@
     <Content Include="SQ Win.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="My Project\" />
+    <None Include="app.config" />
+    <None Include="My Project\Settings.settings">
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
