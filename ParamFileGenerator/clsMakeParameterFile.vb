@@ -9,6 +9,7 @@ Namespace MakeParams
             BioWorks_32  'Bioworks 3.2 ClusterF***
             BioWorks_Current
             X_Tandem     'X!Tandem XML file
+            Inspect      'InSpect
             Invalid      'Other stuff not currently handled
         End Enum
         Function MakeFile(ByVal ParamFileName As String, _
@@ -124,11 +125,14 @@ Namespace MakeParams
                             ParamFileName, _
                             OutputFilePath, _
                             DMSConnectionString)
+                    Case IGenerateFile.ParamFileType.Inspect
+                        Return Me.MakeFileInspect( _
+                            ParamFileName, _
+                            OutputFilePath, _
+                            DMSConnectionString)
                     Case IGenerateFile.ParamFileType.Invalid
                         Exit Function
-
                     Case Else
-
                         ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
                         Return Me.MakeFileSQ( _
                             ParamFileName, _
@@ -194,9 +198,6 @@ Namespace MakeParams
                 Me.m_TableGetter = New clsDBTask(DMSConnectionString)
             End If
 
-
-
-
             Const DEF_TEMPLATE_FILEPATH As String = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
 
             If Me.m_TemplateFilePathString = "" Then
@@ -251,6 +252,48 @@ Namespace MakeParams
             successExtra = Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
 
             Return success
+
+        End Function
+
+
+        Protected Function MakeFileInspect( _
+            ByVal ParamFileName As String, _
+            ByVal OutputFilePath As String, _
+            ByVal DMSConnectionString As String) As Boolean
+
+            Dim paramFilePathSQL As String
+
+            Dim paramFilePathTable As DataTable
+            Dim paramFilePath As String
+
+            Dim fullOutputFilePath As String
+
+
+            If Me.m_TableGetter Is Nothing Then
+                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
+            End If
+
+            paramFilePathSQL = _
+                "SELECT TOP 1 AJT_parmFileStoragePath " & _
+                "FROM T_Analysis_Tool " & _
+                "WHERE AJT_Toolname = 'Inspect'"
+
+            paramFilePathTable = Me.m_TableGetter.GetTable(paramFilePathSQL)
+
+            paramFilePath = System.IO.Path.Combine(paramFilePathTable.Rows(0).Item(0).ToString, ParamFileName)
+            fullOutputFilePath = System.IO.Path.Combine(OutputFilePath, ParamFileName)
+
+            'Make sure that the paramfile doesn't already exist
+            If System.IO.File.Exists(fullOutputFilePath) Then
+                System.IO.File.Delete(fullOutputFilePath)
+            End If
+
+            'Copy the param file from gigasax to the working directory
+            System.IO.File.Copy(paramFilePath, System.IO.Path.Combine(OutputFilePath, ParamFileName))
+
+            Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
+
+            Return True
 
         End Function
 
