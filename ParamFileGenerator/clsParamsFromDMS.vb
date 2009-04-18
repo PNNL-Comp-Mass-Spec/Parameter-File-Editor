@@ -49,6 +49,7 @@ Namespace DownloadParams
             AminoAcidsAllUpperCase
             SequenceHeaderInfoToFilter
             PeptideMassUnits
+            FragmentMassUnits
         End Enum
         Public Enum BasicParams
             SelectedEnzymeIndex
@@ -81,6 +82,7 @@ Namespace DownloadParams
             AminoAcidsAllUpperCase
             SequenceHeaderInfoToFilter
             PeptideMassUnits
+            FragmentMassUnits
         End Enum
 
         Public Enum IonSeriesParams
@@ -630,6 +632,8 @@ Namespace DownloadParams
                             ElseIf tmpTypeName = "MassTypeList" Then
                                 pField.SetValue(p, CType([Enum].Parse(GetType(IBasicParams.MassTypeList), CStr(tmpValue), True), IBasicParams.MassTypeList), Nothing)
                                 Exit For
+                            ElseIf tmpTypeName = "MassUnitList" Then
+                                pField.SetValue(p, CType([Enum].Parse(GetType(IAdvancedParams.MassUnitList), CStr(tmpValue), True), IAdvancedParams.MassUnitList), Nothing)
                             Else
                                 Console.WriteLine(pField.PropertyType.Name.ToString)
                             End If

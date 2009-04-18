@@ -8,6 +8,7 @@ Public Interface IBasicParams
         Average = 0
         Monoisotopic = 1
     End Enum
+
     ReadOnly Property FileType() As clsParams.ParamFileTypes
     Property DMS_ID() As Integer
     Property FileName() As String
@@ -38,7 +39,11 @@ Public Interface IAdvancedParams
         All_3_Forward = 7
         All_3_Reverse = 8
         All_Six = 9
-
+    End Enum
+    Enum MassUnitList As Integer
+        amu = 0
+        mmu = 1
+        ppm = 2
     End Enum
     Property DefaultFASTAPath() As String
     Property DefaultFASTAPath2() As String
@@ -66,6 +71,7 @@ Public Interface IAdvancedParams
     Property SequenceHeaderInfoToFilter() As String
     Property UsePhosphoFragmentation() As Integer
     Property PeptideMassUnits() As Integer
+    Property FragmentMassUnits() As Integer
 End Interface
 
 Public Class clsParams
@@ -96,6 +102,8 @@ Public Class clsParams
     Private m_maxICSites As Integer
     Private m_parentMassType As IBasicParams.MassTypeList
     Private m_fragMassType As IBasicParams.MassTypeList
+    Private m_parentMassUnits As Integer
+    Private m_fragMassUnits As Integer
     Private m_dynMods As clsDynamicMods
     Private m_termDynMods As clsTermDynamicMods
     Private m_staticModsList As clsStaticMods
@@ -131,7 +139,8 @@ Public Class clsParams
     Private m_matchPeakTol As Single
     Private m_upperCase As Boolean              'A
     Private m_seqHdrFilter As String            'A
-    Private m_peptideMassUnits As Integer = 0   'A
+    Private m_peptideMassUnits As Integer = IAdvancedParams.MassUnitList.amu   'A
+    Private m_fragmentMassUnits As Integer = IAdvancedParams.MassUnitList.amu
     Private m_usePhosphoFragmentation As Integer = 0
     Private m_enzymeDetailStorage As clsEnzymeCollection
 
@@ -474,6 +483,14 @@ Public Class clsParams
         End Get
         Set(ByVal Value As Integer)
             Me.m_peptideMassUnits = Value
+        End Set
+    End Property
+    Public Property FragmentMassUnits() As Integer Implements IAdvancedParams.FragmentMassUnits
+        Get
+            Return m_fragMassUnits
+        End Get
+        Set(ByVal value As Integer)
+            m_fragMassUnits = value
         End Set
     End Property
     Public Property StaticModificationsList() As clsStaticMods Implements IBasicParams.StaticModificationsList

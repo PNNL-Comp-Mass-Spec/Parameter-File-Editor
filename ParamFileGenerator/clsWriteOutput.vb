@@ -83,6 +83,10 @@ Public Class clsWriteOutput
             End If
             .Add("ion_series = " & p.IonSeries.ReturnIonString)
             .Add("fragment_ion_tolerance = " & Format(p.FragmentIonTolerance, "0.0000").ToString)
+            If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                .Add("fragment_ion_units = " + p.FragmentMassUnits.ToString)
+            End If
+
             .Add("num_output_lines = " & p.NumberOfOutputLines.ToString)
             If type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("num_results = " & p.NumberOfResultsToProcess)

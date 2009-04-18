@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_478D39188F6286DE704E61D17582CE8A"
+        "MsmKey" = "8:_7AD865FD518D3592BA04AFDFF4645383"
         "OwnerKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_478D39188F6286DE704E61D17582CE8A"
+        "OwnerKey" = "8:_7AD865FD518D3592BA04AFDFF4645383"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -128,14 +128,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_478D39188F6286DE704E61D17582CE8A"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7AD865FD518D3592BA04AFDFF4645383"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.0.2944.19121, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.0.3394.21093, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_478D39188F6286DE704E61D17582CE8A"
+                    "_7AD865FD518D3592BA04AFDFF4645383"
                     {
                     "Name" = "8:ParamFileGenerator.dll"
                     "Attributes" = "3:512"
@@ -215,7 +215,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sequest Param File Editor"
         "ProductCode" = "8:{527C1BD5-9F06-4D73-A7B7-DC358146E1B9}"
-        "PackageCode" = "8:{98AB77BE-0A00-4752-ADD6-A9DA56FCD93E}"
+        "PackageCode" = "8:{E72A2180-FD41-4AE5-A9F6-013EE9530333}"
         "UpgradeCode" = "8:{6B68153E-0FA1-4B77-9B01-C246BE805CD8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -749,7 +749,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0F10E22C419D46FBB014DB3CAF8DF84C"
             {
-            "SourcePath" = "8:..\\ParamFileEditor\\obj\\Debug\\ParamFileEditor.exe"
+            "SourcePath" = "8:..\\ParamFileEditor\\obj\\Release\\ParamFileEditor.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5759332D077946498DE3A33F3B95A837"
@@ -803,9 +803,6 @@
                 {
                 }
             }
-        }
-        "VJSharpPlugin"
-        {
         }
     }
 }

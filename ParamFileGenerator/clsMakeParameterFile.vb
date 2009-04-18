@@ -241,6 +241,14 @@ Namespace MakeParams
                 l_LoadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic
             End If
 
+            If Not l_LoadedParams.LoadedParamNames.ContainsKey("PeptideMassUnits") Then
+                l_LoadedParams.PeptideMassUnits = IAdvancedParams.MassUnitList.amu
+            End If
+
+            If Not l_LoadedParams.LoadedParamNames.ContainsKey("FragmentMassUnits") Then
+                l_LoadedParams.FragmentMassUnits = IAdvancedParams.MassUnitList.amu
+            End If
+
             l_LoadedParams.DefaultFASTAPath = FASTAFilePath
 
             If Me.m_FileWriter Is Nothing Then
