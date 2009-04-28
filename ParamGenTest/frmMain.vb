@@ -50,6 +50,8 @@ Public Class frmMain
     Friend WithEvents lblConnectionString As System.Windows.Forms.Label
     Friend WithEvents txtDatasetID As System.Windows.Forms.TextBox
     Friend WithEvents lblDatasetID As System.Windows.Forms.Label
+    Friend WithEvents txtParamFileName As System.Windows.Forms.TextBox
+    Friend WithEvents lblParamFileName As System.Windows.Forms.Label
     Friend WithEvents lblParamFileType As System.Windows.Forms.Label
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.txtOutputPath = New System.Windows.Forms.TextBox
@@ -65,6 +67,8 @@ Public Class frmMain
         Me.txtFASTAPath = New System.Windows.Forms.TextBox
         Me.txtDatasetID = New System.Windows.Forms.TextBox
         Me.lblDatasetID = New System.Windows.Forms.Label
+        Me.txtParamFileName = New System.Windows.Forms.TextBox
+        Me.lblParamFileName = New System.Windows.Forms.Label
         Me.SuspendLayout()
         '
         'txtOutputPath
@@ -77,7 +81,7 @@ Public Class frmMain
         '
         'txtDMSConnectionString
         '
-        Me.txtDMSConnectionString.Location = New System.Drawing.Point(156, 100)
+        Me.txtDMSConnectionString.Location = New System.Drawing.Point(156, 125)
         Me.txtDMSConnectionString.Name = "txtDMSConnectionString"
         Me.txtDMSConnectionString.Size = New System.Drawing.Size(400, 20)
         Me.txtDMSConnectionString.TabIndex = 2
@@ -86,7 +90,7 @@ Public Class frmMain
         'cboFileTypes
         '
         Me.cboFileTypes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboFileTypes.Location = New System.Drawing.Point(156, 140)
+        Me.cboFileTypes.Location = New System.Drawing.Point(156, 165)
         Me.cboFileTypes.Name = "cboFileTypes"
         Me.cboFileTypes.Size = New System.Drawing.Size(400, 21)
         Me.cboFileTypes.TabIndex = 3
@@ -103,13 +107,13 @@ Public Class frmMain
         '
         Me.lblPickList.Location = New System.Drawing.Point(16, 64)
         Me.lblPickList.Name = "lblPickList"
-        Me.lblPickList.Size = New System.Drawing.Size(120, 23)
+        Me.lblPickList.Size = New System.Drawing.Size(120, 17)
         Me.lblPickList.TabIndex = 5
         Me.lblPickList.Text = "Param File Pick List"
         '
         'lblConnectionString
         '
-        Me.lblConnectionString.Location = New System.Drawing.Point(16, 100)
+        Me.lblConnectionString.Location = New System.Drawing.Point(16, 125)
         Me.lblConnectionString.Name = "lblConnectionString"
         Me.lblConnectionString.Size = New System.Drawing.Size(120, 23)
         Me.lblConnectionString.TabIndex = 6
@@ -117,7 +121,7 @@ Public Class frmMain
         '
         'lblParamFileType
         '
-        Me.lblParamFileType.Location = New System.Drawing.Point(16, 144)
+        Me.lblParamFileType.Location = New System.Drawing.Point(16, 169)
         Me.lblParamFileType.Name = "lblParamFileType"
         Me.lblParamFileType.Size = New System.Drawing.Size(120, 23)
         Me.lblParamFileType.TabIndex = 7
@@ -134,7 +138,7 @@ Public Class frmMain
         '
         'txtResults
         '
-        Me.txtResults.Location = New System.Drawing.Point(24, 228)
+        Me.txtResults.Location = New System.Drawing.Point(24, 253)
         Me.txtResults.Multiline = True
         Me.txtResults.Name = "txtResults"
         Me.txtResults.Size = New System.Drawing.Size(384, 84)
@@ -142,7 +146,7 @@ Public Class frmMain
         '
         'cmdDoIt
         '
-        Me.cmdDoIt.Location = New System.Drawing.Point(436, 280)
+        Me.cmdDoIt.Location = New System.Drawing.Point(436, 305)
         Me.cmdDoIt.Name = "cmdDoIt"
         Me.cmdDoIt.Size = New System.Drawing.Size(124, 32)
         Me.cmdDoIt.TabIndex = 10
@@ -150,7 +154,7 @@ Public Class frmMain
         '
         'txtFASTAPath
         '
-        Me.txtFASTAPath.Location = New System.Drawing.Point(160, 184)
+        Me.txtFASTAPath.Location = New System.Drawing.Point(160, 209)
         Me.txtFASTAPath.Name = "txtFASTAPath"
         Me.txtFASTAPath.Size = New System.Drawing.Size(396, 20)
         Me.txtFASTAPath.TabIndex = 11
@@ -158,7 +162,7 @@ Public Class frmMain
         '
         'txtDatasetID
         '
-        Me.txtDatasetID.Location = New System.Drawing.Point(436, 254)
+        Me.txtDatasetID.Location = New System.Drawing.Point(436, 279)
         Me.txtDatasetID.Name = "txtDatasetID"
         Me.txtDatasetID.Size = New System.Drawing.Size(120, 20)
         Me.txtDatasetID.TabIndex = 12
@@ -168,16 +172,33 @@ Public Class frmMain
         'lblDatasetID
         '
         Me.lblDatasetID.AutoSize = True
-        Me.lblDatasetID.Location = New System.Drawing.Point(436, 235)
+        Me.lblDatasetID.Location = New System.Drawing.Point(436, 260)
         Me.lblDatasetID.Name = "lblDatasetID"
         Me.lblDatasetID.Size = New System.Drawing.Size(106, 13)
         Me.lblDatasetID.TabIndex = 13
         Me.lblDatasetID.Text = "(Optional) Dataset ID"
         '
+        'txtParamFileName
+        '
+        Me.txtParamFileName.Location = New System.Drawing.Point(156, 87)
+        Me.txtParamFileName.Name = "txtParamFileName"
+        Me.txtParamFileName.Size = New System.Drawing.Size(400, 20)
+        Me.txtParamFileName.TabIndex = 14
+        '
+        'lblParamFileName
+        '
+        Me.lblParamFileName.Location = New System.Drawing.Point(16, 87)
+        Me.lblParamFileName.Name = "lblParamFileName"
+        Me.lblParamFileName.Size = New System.Drawing.Size(120, 20)
+        Me.lblParamFileName.TabIndex = 15
+        Me.lblParamFileName.Text = "Param File Name"
+        '
         'frmMain
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(576, 346)
+        Me.Controls.Add(Me.lblParamFileName)
+        Me.Controls.Add(Me.txtParamFileName)
         Me.Controls.Add(Me.lblDatasetID)
         Me.Controls.Add(Me.txtDatasetID)
         Me.Controls.Add(Me.txtFASTAPath)
@@ -215,6 +236,13 @@ Public Class frmMain
         'If m_DMS Is Nothing Then
         '    Me.m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile
         'End If
+
+        If txtParamFileName.TextLength > 0 Then
+            Me.m_ParamFileName = txtParamFileName.Text
+        Else
+            PopulateParamFileNameTextbox()
+        End If
+
         Dim datasetID As Integer = 0
         If Not Me.txtDatasetID.Text = "" Then
             datasetID = CInt(Me.txtDatasetID.Text)
@@ -223,7 +251,7 @@ Public Class frmMain
         End If
         Dim success As Boolean = Me.m_DMS.MakeFile(m_ParamFileName, m_ParamFileType, m_FASTAPath, m_OutputPath, m_DMSConnectString, datasetID)
         If success = True Then
-            Me.txtResults.Text = "File successfully written to: " & m_OutputPath & m_ParamFileName
+            Me.txtResults.Text = "File successfully written to: " & System.IO.Path.Combine(m_OutputPath, m_ParamFileName)
         Else
             Me.txtResults.Text = "Error!"
         End If
@@ -234,10 +262,7 @@ Public Class frmMain
     End Sub
 
     Private Sub cboAvailableParams_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboAvailableParams.SelectedIndexChanged
-        Dim entry As ParamFileEntry
-        entry = DirectCast(Me.cboAvailableParams.SelectedItem, ParamFileEntry)
-
-        Me.m_ParamFileName = entry.Description
+        PopulateParamFileNameTextbox()
     End Sub
 
     Private Sub txtDMSConnectionString_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtDMSConnectionString.TextChanged
@@ -279,6 +304,7 @@ Public Class frmMain
 
         Me.cboAvailableParams.BeginUpdate()
         Me.cboAvailableParams.Items.Clear()
+        txtParamFileName.Text = String.Empty
 
         For Each dr In foundrows
             Me.cboAvailableParams.Items.Add(New ParamFileEntry( _
@@ -308,6 +334,14 @@ Public Class frmMain
 
         'Me.cboFileTypes.DataSource = System.Enum.GetValues(GetType(ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType))
 
+    End Sub
+
+    Private Sub PopulateParamFileNameTextbox()
+        Dim entry As ParamFileEntry
+        entry = DirectCast(Me.cboAvailableParams.SelectedItem, ParamFileEntry)
+
+        txtParamFileName.Text = entry.Description
+        Me.m_ParamFileName = txtParamFileName.Text
     End Sub
 
     Private Sub txtFASTAPath_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtFASTAPath.TextChanged
