@@ -160,11 +160,14 @@ Public Class clsMods
             sc.Add(AA)
         Else
             For counter = 1 To Len(AffectedResidueString)
-                tmpAA = Mid(AffectedResidueString, counter, 1)
-                sc.Add(tmpAA)
-            Next
-        End If
-        Return sc
+        tmpAA = Mid(AffectedResidueString, counter, 1)
+        'If InStr("><[]",tmpAA) = 0 Then
+        sc.Add(tmpAA)
+        'End If
+
+      Next
+    End If
+    Return sc
     End Function
     Protected Function ConvertResidueCodeToSLC(ByVal Residue As ResidueCode) As String
         Dim tmpRes As String = Residue.ToString
@@ -449,40 +452,40 @@ Public Class clsTermDynamicMods
             Me.Add(New clsModEntry(resCollection, tmpCTMass, clsModEntry.ModificationTypes.Dynamic))
         End If
 
-    End Sub
+  End Sub
 
-    Protected Overrides Function AssembleModString(ByVal counter As Integer) As String
-        Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
+  Protected Overrides Function AssembleModString(ByVal counter As Integer) As String
+    Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
 
-        Dim tmpModString As String
-        Dim ctRes As String = ">"
-        Dim ntRes As String = "<"
+    Dim tmpModString As String
+    Dim ctRes As String = ">"
+    Dim ntRes As String = "<"
 
-        Dim ctModMass As Single = 0.0
-        Dim ntModMass As Single = 0.0
+    Dim ctModMass As Single = 0.0
+    Dim ntModMass As Single = 0.0
 
-        Dim tmpModMass As Single
+    Dim tmpModMass As Single
 
-        Dim dynMod As clsModEntry
+    Dim dynMod As clsModEntry
 
-        For Each dynMod In Me.List
-            tmpModMass = dynMod.MassDifference
-            tmpModString = dynMod.ReturnAllAffectedResiduesString
-            If tmpModString = ">" Then
-                ctModMass = tmpModMass
-                ctRes = tmpModString
-            ElseIf tmpModString = "<" Then
-                ntModMass = tmpModMass
-                ntRes = tmpModString
-            End If
-        Next
+    For Each dynMod In Me.List
+      tmpModMass = dynMod.MassDifference
+      tmpModString = dynMod.ReturnAllAffectedResiduesString
+      If tmpModString = ">" Then
+        ctModMass = tmpModMass
+        ctRes = tmpModString
+      ElseIf tmpModString = "<" Then
+        ntModMass = tmpModMass
+        ntRes = tmpModString
+      End If
+    Next
 
-        sb.Append(Format(ctModMass, "0.000000"))
-        sb.Append(" ")
-        sb.Append(Format(ntModMass, "0.000000"))
+    sb.Append(Format(ctModMass, "0.000000"))
+    sb.Append(" ")
+    sb.Append(Format(ntModMass, "0.000000"))
 
-        Return sb.ToString.Trim()
-    End Function
+    Return sb.ToString.Trim()
+  End Function
 
 
 #End Region

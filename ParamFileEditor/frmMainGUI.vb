@@ -4,242 +4,242 @@ Imports ParamFileGenerator.DownloadParams
 Imports System.IO
 
 Public Class frmMainGUI
-    Inherits System.Windows.Forms.Form
+  Inherits System.Windows.Forms.Form
 
-    Private m_clsParamsFromDMS As clsParamsFromDMS
-    Private m_clsMassTweaker As IMassTweaker
+  Private m_clsParamsFromDMS As clsParamsFromDMS
+  Private m_clsMassTweaker As IMassTweaker
 
-    Private m_DMSUpload As clsDMSParamUpload
-    Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
+  Private m_DMSUpload As clsDMSParamUpload
+  Friend WithEvents MenuItem1 As System.Windows.Forms.MenuItem
   Friend WithEvents mnuOptionsAutoTweakParams As System.Windows.Forms.MenuItem
   Friend WithEvents cboParentMassUnits As System.Windows.Forms.ComboBox
   Friend WithEvents cboFragmentMassUnits As System.Windows.Forms.ComboBox
   Friend WithEvents lblFragmentMassUnits As System.Windows.Forms.Label
   Friend WithEvents lblParentMassUnits As System.Windows.Forms.Label
-    Private m_sharedMain As clsMainProcess
+  Private m_sharedMain As clsMainProcess
 #Region " Windows Form Designer generated code "
 
-    Public Sub New()
-        MyBase.New()
+  Public Sub New()
+    MyBase.New()
 
-        'This call is required by the Windows Form Designer.
-        InitializeComponent()
+    'This call is required by the Windows Form Designer.
+    InitializeComponent()
 
-        'Add any initialization after the InitializeComponent() call
-        Me.CheckForSettingsFileExistence()
-        Me.CheckForParamFileExistence()
-        Me.m_sharedMain = New clsMainProcess
+    'Add any initialization after the InitializeComponent() call
+    Me.CheckForSettingsFileExistence()
+    Me.CheckForParamFileExistence()
+    Me.m_sharedMain = New clsMainProcess
 
-    End Sub
+  End Sub
 
-    'Form overrides dispose to clean up the component list.
-    Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
-        If disposing Then
-            If Not (components Is Nothing) Then
-                components.Dispose()
-            End If
-        End If
-        MyBase.Dispose(disposing)
-    End Sub
+  'Form overrides dispose to clean up the component list.
+  Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+    If disposing Then
+      If Not (components Is Nothing) Then
+        components.Dispose()
+      End If
+    End If
+    MyBase.Dispose(disposing)
+  End Sub
 
-    'Required by the Windows Form Designer
-    Private components As System.ComponentModel.IContainer
+  'Required by the Windows Form Designer
+  Private components As System.ComponentModel.IContainer
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    Friend WithEvents tcMain As System.Windows.Forms.TabControl
-    Friend WithEvents tabAdvanced As System.Windows.Forms.TabPage
-    Friend WithEvents txtDescription As System.Windows.Forms.TextBox
-    Friend WithEvents lblEnzymeSelect As System.Windows.Forms.Label
-    Friend WithEvents cboEnzymeSelect As System.Windows.Forms.ComboBox
-    Friend WithEvents gbxDynMods As System.Windows.Forms.GroupBox
-    Friend WithEvents lblParentMassType As System.Windows.Forms.Label
-    Friend WithEvents cboParentMassType As System.Windows.Forms.ComboBox
-    Friend WithEvents cboMissedCleavages As System.Windows.Forms.ComboBox
-    Friend WithEvents cboFragmentMassType As System.Windows.Forms.ComboBox
-    Friend WithEvents txtPartialSeq As System.Windows.Forms.TextBox
-    Friend WithEvents lblPartialSeq As System.Windows.Forms.Label
-    Friend WithEvents txtDynMod1List As System.Windows.Forms.TextBox
-    Friend WithEvents txtDynMod1MassDiff As NumericTextBox
-    Friend WithEvents txtDynMod2List As System.Windows.Forms.TextBox
-    Friend WithEvents txtDynMod2MassDiff As NumericTextBox
-    Friend WithEvents lblDynMod1List As System.Windows.Forms.Label
-    Friend WithEvents lblDynMod2List As System.Windows.Forms.Label
-    Friend WithEvents lblDynMod1MassDiff As System.Windows.Forms.Label
-    Friend WithEvents lblDynMod2MassDiff As System.Windows.Forms.Label
-    Friend WithEvents lblDynMod3MassDiff As System.Windows.Forms.Label
-    Friend WithEvents gbxStaticMods As System.Windows.Forms.GroupBox
-    Friend WithEvents txtCTPep As NumericTextBox
-    Friend WithEvents txtAla As NumericTextBox
-    Friend WithEvents txtCTProt As NumericTextBox
-    Friend WithEvents txtNTPep As NumericTextBox
-    Friend WithEvents txtNTProt As NumericTextBox
-    Friend WithEvents txtGly As NumericTextBox
-    Friend WithEvents txtSer As NumericTextBox
-    Friend WithEvents txtCys As NumericTextBox
-    Friend WithEvents txtPro As NumericTextBox
-    Friend WithEvents txtThr As NumericTextBox
-    Friend WithEvents txtIle As NumericTextBox
-    Friend WithEvents txtVal As NumericTextBox
-    Friend WithEvents txtLeu As NumericTextBox
-    Friend WithEvents txtNandD As NumericTextBox
-    Friend WithEvents txtQandE As NumericTextBox
-    Friend WithEvents txtAsn As NumericTextBox
-    Friend WithEvents txtLys As NumericTextBox
-    Friend WithEvents txtOrn As NumericTextBox
-    Friend WithEvents txtGln As NumericTextBox
-    Friend WithEvents txtAsp As NumericTextBox
-    Friend WithEvents txtArg As NumericTextBox
-    Friend WithEvents txtTrp As NumericTextBox
-    Friend WithEvents txtGlu As NumericTextBox
-    Friend WithEvents txtHis As NumericTextBox
-    Friend WithEvents txtPhe As NumericTextBox
-    Friend WithEvents txtTyr As NumericTextBox
-    Friend WithEvents txtMet As NumericTextBox
-    Friend WithEvents lblCTPep As System.Windows.Forms.Label
-    Friend WithEvents lblCTProt As System.Windows.Forms.Label
-    Friend WithEvents lblNTPep As System.Windows.Forms.Label
-    Friend WithEvents lblNTProt As System.Windows.Forms.Label
-    Friend WithEvents lblGly As System.Windows.Forms.Label
-    Friend WithEvents lblAla As System.Windows.Forms.Label
-    Friend WithEvents lblSer As System.Windows.Forms.Label
-    Friend WithEvents lblCys As System.Windows.Forms.Label
-    Friend WithEvents lblLorI As System.Windows.Forms.Label
-    Friend WithEvents lblThr As System.Windows.Forms.Label
-    Friend WithEvents lblVal As System.Windows.Forms.Label
-    Friend WithEvents lblLeu As System.Windows.Forms.Label
-    Friend WithEvents lblIle As System.Windows.Forms.Label
-    Friend WithEvents lblPro As System.Windows.Forms.Label
-    Friend WithEvents lblAsn As System.Windows.Forms.Label
-    Friend WithEvents lblGln As System.Windows.Forms.Label
-    Friend WithEvents lblQandE As System.Windows.Forms.Label
-    Friend WithEvents lblNandD As System.Windows.Forms.Label
-    Friend WithEvents lblOrn As System.Windows.Forms.Label
-    Friend WithEvents lblAsp As System.Windows.Forms.Label
-    Friend WithEvents lblLys As System.Windows.Forms.Label
-    Friend WithEvents lblArg As System.Windows.Forms.Label
-    Friend WithEvents lblTrp As System.Windows.Forms.Label
-    Friend WithEvents lblHis As System.Windows.Forms.Label
-    Friend WithEvents lblMet As System.Windows.Forms.Label
-    Friend WithEvents lblPhe As System.Windows.Forms.Label
-    Friend WithEvents lblTyr As System.Windows.Forms.Label
-    Friend WithEvents lblGlu As System.Windows.Forms.Label
-    Friend WithEvents txtDynMod3MassDiff As NumericTextBox
-    Friend WithEvents txtDynMod3List As System.Windows.Forms.TextBox
-    Friend WithEvents lblDynMod3List As System.Windows.Forms.Label
-    Friend WithEvents lblMissedCleavages As System.Windows.Forms.Label
-    Friend WithEvents lblFragmentMassType As System.Windows.Forms.Label
-    Friend WithEvents lblDescription As System.Windows.Forms.Label
-    Friend WithEvents gbxSearch As System.Windows.Forms.GroupBox
-    Friend WithEvents gbxDesc As System.Windows.Forms.GroupBox
-    Friend WithEvents tabBasic As System.Windows.Forms.TabPage
-    Friend WithEvents gbxSwitches As System.Windows.Forms.GroupBox
-    Friend WithEvents chkCreateOutputFiles As System.Windows.Forms.CheckBox
-    Friend WithEvents chkShowFragmentIons As System.Windows.Forms.CheckBox
-    Friend WithEvents chkRemovePrecursorPeaks As System.Windows.Forms.CheckBox
-    Friend WithEvents chkPrintDupRefs As System.Windows.Forms.CheckBox
-    Friend WithEvents chkResiduesInUpperCase As System.Windows.Forms.CheckBox
-    Friend WithEvents gbxToleranceValues As System.Windows.Forms.GroupBox
-    Friend WithEvents txtPepMassTol As System.Windows.Forms.TextBox
-    Friend WithEvents lblPepMassTol As System.Windows.Forms.Label
-    Friend WithEvents txtFragMassTol As System.Windows.Forms.TextBox
-    Friend WithEvents lblFragMassTol As System.Windows.Forms.Label
-    Friend WithEvents lblIonCutoff As System.Windows.Forms.Label
-    Friend WithEvents lblPeakMatchingTol As System.Windows.Forms.Label
-    Friend WithEvents lblMaxProtMass As System.Windows.Forms.Label
-    Friend WithEvents lblMinProtMass As System.Windows.Forms.Label
-    Friend WithEvents gbxMiscParams As System.Windows.Forms.GroupBox
-    Friend WithEvents txtNumDescLines As System.Windows.Forms.TextBox
-    Friend WithEvents lblOutputLines As System.Windows.Forms.Label
-    Friend WithEvents txtNumOutputLines As System.Windows.Forms.TextBox
-    Friend WithEvents lblNumDescLines As System.Windows.Forms.Label
-    Friend WithEvents txtMatchPeakCountErrors As System.Windows.Forms.TextBox
-    Friend WithEvents lblMatchPeakCountErrors As System.Windows.Forms.Label
-    Friend WithEvents lblMatchPeakCount As System.Windows.Forms.Label
-    Friend WithEvents txtMatchPeakCount As System.Windows.Forms.TextBox
-    Friend WithEvents lblSeqHdrFilter As System.Windows.Forms.Label
-    Friend WithEvents lblMaxAAPerDynMod As System.Windows.Forms.Label
-    Friend WithEvents txtMaxAAPerDynMod As System.Windows.Forms.TextBox
-    Friend WithEvents cboNucReadingFrame As System.Windows.Forms.ComboBox
-    Friend WithEvents lblVWeight As System.Windows.Forms.Label
-    Friend WithEvents txtVWeight As System.Windows.Forms.TextBox
-    Friend WithEvents chkUseAIons As System.Windows.Forms.CheckBox
-    Friend WithEvents chkUseBIons As System.Windows.Forms.CheckBox
-    Friend WithEvents chkUseYIons As System.Windows.Forms.CheckBox
-    Friend WithEvents txtYWeight As System.Windows.Forms.TextBox
-    Friend WithEvents lblYWeight As System.Windows.Forms.Label
-    Friend WithEvents txtZWeight As System.Windows.Forms.TextBox
-    Friend WithEvents lblZWeight As System.Windows.Forms.Label
-    Friend WithEvents txtAWeight As System.Windows.Forms.TextBox
-    Friend WithEvents lblAWeight As System.Windows.Forms.Label
-    Friend WithEvents txtBWeight As System.Windows.Forms.TextBox
-    Friend WithEvents lblBWeight As System.Windows.Forms.Label
-    Friend WithEvents txtCWeight As System.Windows.Forms.TextBox
-    Friend WithEvents lblCWeight As System.Windows.Forms.Label
-    Friend WithEvents txtDWeight As System.Windows.Forms.TextBox
-    Friend WithEvents lblDWeight As System.Windows.Forms.Label
-    Friend WithEvents txtXWeight As System.Windows.Forms.TextBox
-    Friend WithEvents lblXWeight As System.Windows.Forms.Label
-    Friend WithEvents txtWWeight As System.Windows.Forms.TextBox
-    Friend WithEvents lblWWeight As System.Windows.Forms.Label
-    Friend WithEvents gbxIonWeighting As System.Windows.Forms.GroupBox
-    Friend WithEvents txtPeakMatchingTol As System.Windows.Forms.TextBox
-    Friend WithEvents txtIonCutoff As System.Windows.Forms.TextBox
-    Friend WithEvents txtMaxProtMass As System.Windows.Forms.TextBox
-    Friend WithEvents txtMinProtMass As System.Windows.Forms.TextBox
-    Friend WithEvents mnuFileNewFileFromTemp As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuFileSaveToFile As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuFileExit As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuHelpAbout As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuLoadFromFile As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuFileLoadFromDMS As System.Windows.Forms.MenuItem
-    Friend WithEvents lblNucReadingFrame As System.Windows.Forms.Label
-    Friend WithEvents lblParamFileInfo As System.Windows.Forms.Label
-    Friend WithEvents lblNumResults As System.Windows.Forms.Label
-    Friend WithEvents txtNumResults As System.Windows.Forms.TextBox
-    Friend WithEvents mnuFileSaveBW2 As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuFileSaveBW3 As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuFileUploadDMS As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuFile As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuBatchUploadDMS As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuHelp As System.Windows.Forms.MenuItem
-    Friend WithEvents StatModErrorProvider As System.Windows.Forms.ErrorProvider
-    Friend WithEvents chkAutoTweak As System.Windows.Forms.CheckBox
-    Friend WithEvents cmdReTweak As System.Windows.Forms.Button
-    Friend WithEvents TxtLorI As NumericTextBox
-    Friend WithEvents tooltipProvider As System.Windows.Forms.ToolTip
-    Friend WithEvents gbxIsoMods As System.Windows.Forms.GroupBox
-    Friend WithEvents lblIsoH As System.Windows.Forms.Label
-    Friend WithEvents txtIsoH As NumericTextBox
-    Friend WithEvents txtIsoN As NumericTextBox
-    Friend WithEvents txtIsoO As NumericTextBox
-    Friend WithEvents txtIsoC As NumericTextBox
-    Friend WithEvents lblIsoC As System.Windows.Forms.Label
-    Friend WithEvents lblIsoO As System.Windows.Forms.Label
-    Friend WithEvents lblIsoN As System.Windows.Forms.Label
-    Friend WithEvents lblIsoS As System.Windows.Forms.Label
-    Friend WithEvents txtIsoS As NumericTextBox
-    Friend WithEvents mnuDebugSyncAll As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuDebug As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuDebugSyncSingle As System.Windows.Forms.MenuItem
-    Friend WithEvents mnuDebugSyncDesc As System.Windows.Forms.MenuItem
-    Friend WithEvents cboCleavagePosition As System.Windows.Forms.ComboBox
-    Friend WithEvents lblCleavagePosition As System.Windows.Forms.Label
-    Friend WithEvents txtDynMod4List As System.Windows.Forms.TextBox
-    Friend WithEvents txtDynMod4MassDiff As ParamFileEditor.NumericTextBox
-    Friend WithEvents lblDynMod4List As System.Windows.Forms.Label
-    Friend WithEvents txtDynMod5List As System.Windows.Forms.TextBox
-    Friend WithEvents txtDynMod5MassDiff As ParamFileEditor.NumericTextBox
-    Friend WithEvents lblDynMod5List As System.Windows.Forms.Label
-    Friend WithEvents mnuFileSaveBW32 As System.Windows.Forms.MenuItem
-    Friend WithEvents lblDynMod4MassDiff As System.Windows.Forms.Label
-    Friend WithEvents lblDynMod5MassDiff As System.Windows.Forms.Label
-    Friend WithEvents mnuMain As System.Windows.Forms.MainMenu
-    Friend WithEvents mnuDiv1 As System.Windows.Forms.MenuItem
-    Friend WithEvents txtMaxDiffPerPeptide As System.Windows.Forms.TextBox
+  'NOTE: The following procedure is required by the Windows Form Designer
+  'It can be modified using the Windows Form Designer.  
+  'Do not modify it using the code editor.
+  Friend WithEvents tcMain As System.Windows.Forms.TabControl
+  Friend WithEvents tabAdvanced As System.Windows.Forms.TabPage
+  Friend WithEvents txtDescription As System.Windows.Forms.TextBox
+  Friend WithEvents lblEnzymeSelect As System.Windows.Forms.Label
+  Friend WithEvents cboEnzymeSelect As System.Windows.Forms.ComboBox
+  Friend WithEvents gbxDynMods As System.Windows.Forms.GroupBox
+  Friend WithEvents lblParentMassType As System.Windows.Forms.Label
+  Friend WithEvents cboParentMassType As System.Windows.Forms.ComboBox
+  Friend WithEvents cboMissedCleavages As System.Windows.Forms.ComboBox
+  Friend WithEvents cboFragmentMassType As System.Windows.Forms.ComboBox
+  Friend WithEvents txtPartialSeq As System.Windows.Forms.TextBox
+  Friend WithEvents lblPartialSeq As System.Windows.Forms.Label
+  Friend WithEvents txtDynMod1List As System.Windows.Forms.TextBox
+  Friend WithEvents txtDynMod1MassDiff As NumericTextBox
+  Friend WithEvents txtDynMod2List As System.Windows.Forms.TextBox
+  Friend WithEvents txtDynMod2MassDiff As NumericTextBox
+  Friend WithEvents lblDynMod1List As System.Windows.Forms.Label
+  Friend WithEvents lblDynMod2List As System.Windows.Forms.Label
+  Friend WithEvents lblDynMod1MassDiff As System.Windows.Forms.Label
+  Friend WithEvents lblDynMod2MassDiff As System.Windows.Forms.Label
+  Friend WithEvents lblDynMod3MassDiff As System.Windows.Forms.Label
+  Friend WithEvents gbxStaticMods As System.Windows.Forms.GroupBox
+  Friend WithEvents txtCTPep As NumericTextBox
+  Friend WithEvents txtAla As NumericTextBox
+  Friend WithEvents txtCTProt As NumericTextBox
+  Friend WithEvents txtNTPep As NumericTextBox
+  Friend WithEvents txtNTProt As NumericTextBox
+  Friend WithEvents txtGly As NumericTextBox
+  Friend WithEvents txtSer As NumericTextBox
+  Friend WithEvents txtCys As NumericTextBox
+  Friend WithEvents txtPro As NumericTextBox
+  Friend WithEvents txtThr As NumericTextBox
+  Friend WithEvents txtIle As NumericTextBox
+  Friend WithEvents txtVal As NumericTextBox
+  Friend WithEvents txtLeu As NumericTextBox
+  Friend WithEvents txtNandD As NumericTextBox
+  Friend WithEvents txtQandE As NumericTextBox
+  Friend WithEvents txtAsn As NumericTextBox
+  Friend WithEvents txtLys As NumericTextBox
+  Friend WithEvents txtOrn As NumericTextBox
+  Friend WithEvents txtGln As NumericTextBox
+  Friend WithEvents txtAsp As NumericTextBox
+  Friend WithEvents txtArg As NumericTextBox
+  Friend WithEvents txtTrp As NumericTextBox
+  Friend WithEvents txtGlu As NumericTextBox
+  Friend WithEvents txtHis As NumericTextBox
+  Friend WithEvents txtPhe As NumericTextBox
+  Friend WithEvents txtTyr As NumericTextBox
+  Friend WithEvents txtMet As NumericTextBox
+  Friend WithEvents lblCTPep As System.Windows.Forms.Label
+  Friend WithEvents lblCTProt As System.Windows.Forms.Label
+  Friend WithEvents lblNTPep As System.Windows.Forms.Label
+  Friend WithEvents lblNTProt As System.Windows.Forms.Label
+  Friend WithEvents lblGly As System.Windows.Forms.Label
+  Friend WithEvents lblAla As System.Windows.Forms.Label
+  Friend WithEvents lblSer As System.Windows.Forms.Label
+  Friend WithEvents lblCys As System.Windows.Forms.Label
+  Friend WithEvents lblLorI As System.Windows.Forms.Label
+  Friend WithEvents lblThr As System.Windows.Forms.Label
+  Friend WithEvents lblVal As System.Windows.Forms.Label
+  Friend WithEvents lblLeu As System.Windows.Forms.Label
+  Friend WithEvents lblIle As System.Windows.Forms.Label
+  Friend WithEvents lblPro As System.Windows.Forms.Label
+  Friend WithEvents lblAsn As System.Windows.Forms.Label
+  Friend WithEvents lblGln As System.Windows.Forms.Label
+  Friend WithEvents lblQandE As System.Windows.Forms.Label
+  Friend WithEvents lblNandD As System.Windows.Forms.Label
+  Friend WithEvents lblOrn As System.Windows.Forms.Label
+  Friend WithEvents lblAsp As System.Windows.Forms.Label
+  Friend WithEvents lblLys As System.Windows.Forms.Label
+  Friend WithEvents lblArg As System.Windows.Forms.Label
+  Friend WithEvents lblTrp As System.Windows.Forms.Label
+  Friend WithEvents lblHis As System.Windows.Forms.Label
+  Friend WithEvents lblMet As System.Windows.Forms.Label
+  Friend WithEvents lblPhe As System.Windows.Forms.Label
+  Friend WithEvents lblTyr As System.Windows.Forms.Label
+  Friend WithEvents lblGlu As System.Windows.Forms.Label
+  Friend WithEvents txtDynMod3MassDiff As NumericTextBox
+  Friend WithEvents txtDynMod3List As System.Windows.Forms.TextBox
+  Friend WithEvents lblDynMod3List As System.Windows.Forms.Label
+  Friend WithEvents lblMissedCleavages As System.Windows.Forms.Label
+  Friend WithEvents lblFragmentMassType As System.Windows.Forms.Label
+  Friend WithEvents lblDescription As System.Windows.Forms.Label
+  Friend WithEvents gbxSearch As System.Windows.Forms.GroupBox
+  Friend WithEvents gbxDesc As System.Windows.Forms.GroupBox
+  Friend WithEvents tabBasic As System.Windows.Forms.TabPage
+  Friend WithEvents gbxSwitches As System.Windows.Forms.GroupBox
+  Friend WithEvents chkCreateOutputFiles As System.Windows.Forms.CheckBox
+  Friend WithEvents chkShowFragmentIons As System.Windows.Forms.CheckBox
+  Friend WithEvents chkRemovePrecursorPeaks As System.Windows.Forms.CheckBox
+  Friend WithEvents chkPrintDupRefs As System.Windows.Forms.CheckBox
+  Friend WithEvents chkResiduesInUpperCase As System.Windows.Forms.CheckBox
+  Friend WithEvents gbxToleranceValues As System.Windows.Forms.GroupBox
+  Friend WithEvents txtPepMassTol As System.Windows.Forms.TextBox
+  Friend WithEvents lblPepMassTol As System.Windows.Forms.Label
+  Friend WithEvents txtFragMassTol As System.Windows.Forms.TextBox
+  Friend WithEvents lblFragMassTol As System.Windows.Forms.Label
+  Friend WithEvents lblIonCutoff As System.Windows.Forms.Label
+  Friend WithEvents lblPeakMatchingTol As System.Windows.Forms.Label
+  Friend WithEvents lblMaxProtMass As System.Windows.Forms.Label
+  Friend WithEvents lblMinProtMass As System.Windows.Forms.Label
+  Friend WithEvents gbxMiscParams As System.Windows.Forms.GroupBox
+  Friend WithEvents txtNumDescLines As System.Windows.Forms.TextBox
+  Friend WithEvents lblOutputLines As System.Windows.Forms.Label
+  Friend WithEvents txtNumOutputLines As System.Windows.Forms.TextBox
+  Friend WithEvents lblNumDescLines As System.Windows.Forms.Label
+  Friend WithEvents txtMatchPeakCountErrors As System.Windows.Forms.TextBox
+  Friend WithEvents lblMatchPeakCountErrors As System.Windows.Forms.Label
+  Friend WithEvents lblMatchPeakCount As System.Windows.Forms.Label
+  Friend WithEvents txtMatchPeakCount As System.Windows.Forms.TextBox
+  Friend WithEvents lblSeqHdrFilter As System.Windows.Forms.Label
+  Friend WithEvents lblMaxAAPerDynMod As System.Windows.Forms.Label
+  Friend WithEvents txtMaxAAPerDynMod As System.Windows.Forms.TextBox
+  Friend WithEvents cboNucReadingFrame As System.Windows.Forms.ComboBox
+  Friend WithEvents lblVWeight As System.Windows.Forms.Label
+  Friend WithEvents txtVWeight As System.Windows.Forms.TextBox
+  Friend WithEvents chkUseAIons As System.Windows.Forms.CheckBox
+  Friend WithEvents chkUseBIons As System.Windows.Forms.CheckBox
+  Friend WithEvents chkUseYIons As System.Windows.Forms.CheckBox
+  Friend WithEvents txtYWeight As System.Windows.Forms.TextBox
+  Friend WithEvents lblYWeight As System.Windows.Forms.Label
+  Friend WithEvents txtZWeight As System.Windows.Forms.TextBox
+  Friend WithEvents lblZWeight As System.Windows.Forms.Label
+  Friend WithEvents txtAWeight As System.Windows.Forms.TextBox
+  Friend WithEvents lblAWeight As System.Windows.Forms.Label
+  Friend WithEvents txtBWeight As System.Windows.Forms.TextBox
+  Friend WithEvents lblBWeight As System.Windows.Forms.Label
+  Friend WithEvents txtCWeight As System.Windows.Forms.TextBox
+  Friend WithEvents lblCWeight As System.Windows.Forms.Label
+  Friend WithEvents txtDWeight As System.Windows.Forms.TextBox
+  Friend WithEvents lblDWeight As System.Windows.Forms.Label
+  Friend WithEvents txtXWeight As System.Windows.Forms.TextBox
+  Friend WithEvents lblXWeight As System.Windows.Forms.Label
+  Friend WithEvents txtWWeight As System.Windows.Forms.TextBox
+  Friend WithEvents lblWWeight As System.Windows.Forms.Label
+  Friend WithEvents gbxIonWeighting As System.Windows.Forms.GroupBox
+  Friend WithEvents txtPeakMatchingTol As System.Windows.Forms.TextBox
+  Friend WithEvents txtIonCutoff As System.Windows.Forms.TextBox
+  Friend WithEvents txtMaxProtMass As System.Windows.Forms.TextBox
+  Friend WithEvents txtMinProtMass As System.Windows.Forms.TextBox
+  Friend WithEvents mnuFileNewFileFromTemp As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuFileSaveToFile As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuFileExit As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuHelpAbout As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuLoadFromFile As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuFileLoadFromDMS As System.Windows.Forms.MenuItem
+  Friend WithEvents lblNucReadingFrame As System.Windows.Forms.Label
+  Friend WithEvents lblParamFileInfo As System.Windows.Forms.Label
+  Friend WithEvents lblNumResults As System.Windows.Forms.Label
+  Friend WithEvents txtNumResults As System.Windows.Forms.TextBox
+  Friend WithEvents mnuFileSaveBW2 As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuFileSaveBW3 As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuFileUploadDMS As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuFile As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuBatchUploadDMS As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuHelp As System.Windows.Forms.MenuItem
+  Friend WithEvents StatModErrorProvider As System.Windows.Forms.ErrorProvider
+  Friend WithEvents chkAutoTweak As System.Windows.Forms.CheckBox
+  Friend WithEvents cmdReTweak As System.Windows.Forms.Button
+  Friend WithEvents TxtLorI As NumericTextBox
+  Friend WithEvents tooltipProvider As System.Windows.Forms.ToolTip
+  Friend WithEvents gbxIsoMods As System.Windows.Forms.GroupBox
+  Friend WithEvents lblIsoH As System.Windows.Forms.Label
+  Friend WithEvents txtIsoH As NumericTextBox
+  Friend WithEvents txtIsoN As NumericTextBox
+  Friend WithEvents txtIsoO As NumericTextBox
+  Friend WithEvents txtIsoC As NumericTextBox
+  Friend WithEvents lblIsoC As System.Windows.Forms.Label
+  Friend WithEvents lblIsoO As System.Windows.Forms.Label
+  Friend WithEvents lblIsoN As System.Windows.Forms.Label
+  Friend WithEvents lblIsoS As System.Windows.Forms.Label
+  Friend WithEvents txtIsoS As NumericTextBox
+  Friend WithEvents mnuDebugSyncAll As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuDebug As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuDebugSyncSingle As System.Windows.Forms.MenuItem
+  Friend WithEvents mnuDebugSyncDesc As System.Windows.Forms.MenuItem
+  Friend WithEvents cboCleavagePosition As System.Windows.Forms.ComboBox
+  Friend WithEvents lblCleavagePosition As System.Windows.Forms.Label
+  Friend WithEvents txtDynMod4List As System.Windows.Forms.TextBox
+  Friend WithEvents txtDynMod4MassDiff As ParamFileEditor.NumericTextBox
+  Friend WithEvents lblDynMod4List As System.Windows.Forms.Label
+  Friend WithEvents txtDynMod5List As System.Windows.Forms.TextBox
+  Friend WithEvents txtDynMod5MassDiff As ParamFileEditor.NumericTextBox
+  Friend WithEvents lblDynMod5List As System.Windows.Forms.Label
+  Friend WithEvents mnuFileSaveBW32 As System.Windows.Forms.MenuItem
+  Friend WithEvents lblDynMod4MassDiff As System.Windows.Forms.Label
+  Friend WithEvents lblDynMod5MassDiff As System.Windows.Forms.Label
+  Friend WithEvents mnuMain As System.Windows.Forms.MainMenu
+  Friend WithEvents mnuDiv1 As System.Windows.Forms.MenuItem
+  Friend WithEvents txtMaxDiffPerPeptide As System.Windows.Forms.TextBox
 
-    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+  <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
     Me.components = New System.ComponentModel.Container
     Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMainGUI))
     Me.tcMain = New System.Windows.Forms.TabControl
@@ -2385,1616 +2385,1811 @@ Public Class frmMainGUI
 
   End Sub
 
-    <System.STAThread()> Public Shared Sub Main()
-        System.Windows.Forms.Application.EnableVisualStyles()
-        System.Windows.Forms.Application.DoEvents()
-        System.Windows.Forms.Application.Run(New frmMainGUI)  ' replace frmDecode by the name of your form!!!
-    End Sub
+  <System.STAThread()> Public Shared Sub Main()
+    System.Windows.Forms.Application.EnableVisualStyles()
+    System.Windows.Forms.Application.DoEvents()
+    System.Windows.Forms.Application.Run(New frmMainGUI)  ' replace frmDecode by the name of your form!!!
+  End Sub
 
 #End Region
 
-    Public Shared mySettings As clsSettings
-
-    Private basicTemplate As IBasicParams
-    Private advTemplate As IAdvancedParams
-    Public newParams As clsParams
-    Private newBasic As IBasicParams
-    Private newAdv As IAdvancedParams
-    Private m_SettingsFileName As String = "ParamFileEditorSettings.xml"
-    Const DEF_TEMPLATE_LABEL_TEXT As String = "Currently Loaded Template: "
-    Private embeddedResource As New clsAccessEmbeddedRsrc
-    Private m_UseAutoTweak As Boolean
-
-    Private Sub RefreshTabs(ByVal frm As frmMainGUI, ByVal ParamsClass As clsParams)
-        SetupBasicTab(frm, ParamsClass)
-        SetupAdvancedTab(frm, ParamsClass)
-        Me.RetweakMasses()
-    End Sub
-
-    Private Sub frmMainGUI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
-        mySettings = New clsSettings
-        mySettings.LoadSettings(m_SettingsFileName)
-        Me.newParams = New clsParams
-        Me.m_DMSUpload = New clsDMSParamUpload(mySettings)
-
-
-        With Me.newParams
-            .FileName = Mid(clsMainProcess.TemplateFileName, InStrRev(clsMainProcess.TemplateFileName, "\") + 1)
-            .LoadTemplate(mySettings.TemplateFileName)
-        End With
-
-        RefreshTabs(Me, newParams)
-
-        AddBasicTabHandlers()
-        AddAdvTabHandlers()
-
-    End Sub
-    Private Sub SetupBasicTab(ByVal frm As frmMainGUI, ByVal bt As IBasicParams)
-
-        'Load comboboxes
-        With frm.cboParentMassType
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add("Average")
-            .Items.Add("Monoisotopic")
-            .EndUpdate()
-        End With
-
-        With frm.cboFragmentMassType
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add("Average")
-            .Items.Add("Monoisotopic")
-            .EndUpdate()
-        End With
-
-
-        With frm.cboParentMassUnits
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add("amu")
-            .Items.Add("mmu")
-            .Items.Add("ppm")
-            .EndUpdate()
-        End With
-
-        With frm.cboFragmentMassUnits
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add("amu")
-            .Items.Add("mmu")
-            .Items.Add("ppm")
-            .EndUpdate()
-        End With
-
-        Dim enz As New clsEnzymeDetails
-
-        With frm.cboEnzymeSelect
-            .BeginUpdate()
-            .Items.Clear()
-            For Each enz In frm.newParams.EnzymeList
-                .Items.Add(enz.EnzymeID & " - " & enz.EnzymeName & " [" & enz.EnzymeCleavePoints & "]")
-            Next
-            .EndUpdate()
-        End With
-
-        With frm.cboCleavagePosition
-            .DisplayMember = "DisplayName"
-            .ValueMember = "Value"
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add(New ComboBoxContents("No Enzyme", "0"))
-            .EndUpdate()
-            .Enabled = False
-        End With
-
-        Dim counter As Integer = 0
-        With frm.cboMissedCleavages
-            .BeginUpdate()
-            .Items.Clear()
-            For counter = 0 To 5
-                .Items.Add(counter.ToString)
-            Next
-            .EndUpdate()
-        End With
-
-        With bt
-            'Name and description info
-            frm.lblParamFileInfo.Text = DEF_TEMPLATE_LABEL_TEXT & .FileName
-            frm.txtDescription.Text = .Description
-
-            'Search settings
-            frm.cboParentMassType.SelectedIndex = CType(.ParentMassType, Integer)
-            frm.cboFragmentMassType.SelectedIndex = CType(.FragmentMassType, Integer)
-            frm.cboEnzymeSelect.SelectedIndex = .SelectedEnzymeIndex()
-            frm.cboCleavagePosition.SelectedValue = .SelectedEnzymeCleavagePosition
-            frm.cboMissedCleavages.SelectedIndex = .MaximumNumberMissedCleavages
-            frm.txtPartialSeq.Text = .PartialSequenceToMatch
-
-            'Dynamic Mods
-            frm.txtDynMod1List.Text = .DynamicMods.Dyn_Mod_n_AAList(1)
-            frm.txtDynMod2List.Text = .DynamicMods.Dyn_Mod_n_AAList(2)
-            frm.txtDynMod3List.Text = .DynamicMods.Dyn_Mod_n_AAList(3)
-            frm.txtDynMod4List.Text = .DynamicMods.Dyn_Mod_n_AAList(4)
-            frm.txtDynMod5List.Text = .DynamicMods.Dyn_Mod_n_AAList(5)
-            frm.txtDynMod1MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(1), "0.0000").ToString
-            frm.txtDynMod2MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(2), "0.0000").ToString
-            frm.txtDynMod3MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(3), "0.0000").ToString
-            frm.txtDynMod4MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(4), "0.0000").ToString
-            frm.txtDynMod5MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(5), "0.0000").ToString
-
-            'Static Mods
-            frm.txtCTPep.Text = Format(.StaticModificationsList.CtermPeptide, "0.0000").ToString
-            frm.txtCTProt.Text = Format(.StaticModificationsList.CtermProtein, "0.0000").ToString
-            frm.txtNTPep.Text = Format(.StaticModificationsList.NtermPeptide, "0.0000").ToString
-            frm.txtNTProt.Text = Format(.StaticModificationsList.NtermProtein, "0.0000").ToString
-            frm.txtGly.Text = Format(.StaticModificationsList.G_Glycine, "0.0000").ToString
-            frm.txtAla.Text = Format(.StaticModificationsList.A_Alanine, "0.0000").ToString
-            frm.txtSer.Text = Format(.StaticModificationsList.S_Serine, "0.0000").ToString
-
-            frm.txtPro.Text = Format(.StaticModificationsList.P_Proline, "0.0000").ToString
-            frm.txtVal.Text = Format(.StaticModificationsList.V_Valine, "0.0000").ToString
-            frm.txtThr.Text = Format(.StaticModificationsList.T_Threonine, "0.0000").ToString
-            frm.txtCys.Text = Format(.StaticModificationsList.C_Cysteine, "0.0000").ToString
-            frm.txtLeu.Text = Format(.StaticModificationsList.L_Leucine, "0.0000").ToString
-            frm.txtIle.Text = Format(.StaticModificationsList.I_Isoleucine, "0.0000").ToString
-            frm.TxtLorI.Text = Format(.StaticModificationsList.X_LorI, "0.0000").ToString
-
-            frm.txtAsn.Text = Format(.StaticModificationsList.N_Asparagine, "0.0000").ToString
-            frm.txtOrn.Text = Format(.StaticModificationsList.O_Ornithine, "0.0000").ToString
-            frm.txtNandD.Text = Format(.StaticModificationsList.B_avg_NandD, "0.0000").ToString
-            frm.txtAsp.Text = Format(.StaticModificationsList.D_Aspartic_Acid, "0.0000").ToString
-            frm.txtGln.Text = Format(.StaticModificationsList.Q_Glutamine, "0.0000").ToString
-            frm.txtLys.Text = Format(.StaticModificationsList.K_Lysine, "0.0000").ToString
-            frm.txtQandE.Text = Format(.StaticModificationsList.Z_avg_QandE, "0.0000").ToString
-
-            frm.txtGlu.Text = Format(.StaticModificationsList.E_Glutamic_Acid, "0.0000").ToString
-            frm.txtMet.Text = Format(.StaticModificationsList.M_Methionine, "0.0000").ToString
-            frm.txtHis.Text = Format(.StaticModificationsList.H_Histidine, "0.0000").ToString
-            frm.txtPhe.Text = Format(.StaticModificationsList.F_Phenylalanine, "0.0000").ToString
-            frm.txtArg.Text = Format(.StaticModificationsList.R_Arginine, "0.0000").ToString
-            frm.txtTyr.Text = Format(.StaticModificationsList.Y_Tyrosine, "0.0000").ToString
-            frm.txtTrp.Text = Format(.StaticModificationsList.W_Tryptophan, "0.0000").ToString
-
-            frm.txtIsoC.Text = Format(.IsotopicModificationsList.Iso_C, "0.0000").ToString
-            frm.txtIsoH.Text = Format(.IsotopicModificationsList.Iso_H, "0.0000").ToString
-            frm.txtIsoO.Text = Format(.IsotopicModificationsList.Iso_O, "0.0000").ToString
-            frm.txtIsoN.Text = Format(.IsotopicModificationsList.Iso_N, "0.0000").ToString
-            frm.txtIsoS.Text = Format(.IsotopicModificationsList.Iso_S, "0.0000").ToString
-
-        End With
-
-        'TODO Change code to check connection status/availability and set accordingly
-        frm.chkAutoTweak.Checked = True
-
-
-
-    End Sub
-    Private Sub SetupAdvancedTab(ByVal frm As frmMainGUI, ByVal at As IAdvancedParams)
-
-        'Load Combo Box
-        With frm.cboNucReadingFrame.Items
-            .Add("None - Protein Database Used")
-            .Add("Forward - Frame 1")
-            .Add("Forward - Frame 2")
-            .Add("Forward - Frame 3")
-            .Add("Reverse - Frame 1")
-            .Add("Reverse - Frame 2")
-            .Add("Reverse - Frame 3")
-            .Add("Forward - All 3 Frames")
-            .Add("Reverse - All 3 Frames")
-            .Add("All Six Frames")
-        End With
-
-        With at
-            'Setup checkboxes
-            frm.chkUseAIons.Checked = .IonSeries.Use_a_Ions
-            frm.chkUseBIons.Checked = .IonSeries.Use_b_Ions
-            frm.chkUseYIons.Checked = .IonSeries.Use_y_Ions
-            frm.cboParentMassUnits.SelectedIndex = CType(.PeptideMassUnits, Integer)
-            frm.cboFragmentMassUnits.SelectedIndex = CType(.FragmentMassUnits, Integer)
-
-            frm.chkCreateOutputFiles.Checked = .CreateOutputFiles
-            frm.chkShowFragmentIons.Checked = .ShowFragmentIons
-            frm.chkRemovePrecursorPeaks.Checked = .RemovePrecursorPeak
-            frm.chkPrintDupRefs.Checked = .PrintDuplicateReferences
-            frm.chkResiduesInUpperCase.Checked = .AminoAcidsAllUpperCase
-
-            'Setup Search Tolerances
-            frm.txtPepMassTol.Text = Format(.PeptideMassTolerance, "0.0000").ToString
-            frm.txtFragMassTol.Text = Format(.FragmentIonTolerance, "0.0000").ToString
-            frm.txtPeakMatchingTol.Text = Format(.MatchedPeakMassTolerance, "0.0000").ToString
-            frm.txtIonCutoff.Text = Format(.IonCutoffPercentage, "0.0000").ToString
-            frm.txtMinProtMass.Text = Format(.MinimumProteinMassToSearch, "0.0000").ToString
-            frm.txtMaxProtMass.Text = Format(.MaximumProteinMassToSearch, "0.0000").ToString
-            frm.cboNucReadingFrame.SelectedIndex = .SelectedNucReadingFrame
-            frm.txtNumResults.Text = CInt(.NumberOfResultsToProcess)
-
-
-            'Setup Misc Options
-            frm.txtNumOutputLines.Text = Format(.NumberOfOutputLines, "0").ToString
-            frm.txtNumDescLines.Text = Format(.NumberOfDescriptionLines, "0").ToString
-            frm.txtMatchPeakCount.Text = Format(.NumberOfDetectedPeaksToMatch, "0").ToString
-            frm.txtMatchPeakCountErrors.Text = Format(.NumberOfAllowedDetectedPeakErrors, "0").ToString
-            frm.txtMaxAAPerDynMod.Text = Format(.MaximumNumAAPerDynMod, "0").ToString
-            frm.txtMaxDiffPerPeptide.Text = .MaximumDifferentialPerPeptide
-
-            'Setup Ion Weighting
-            frm.txtAWeight.Text = Format(.IonSeries.a_Ion_Weighting, "0.0").ToString
-            frm.txtBWeight.Text = Format(.IonSeries.b_Ion_Weighting, "0.0").ToString
-            frm.txtCWeight.Text = Format(.IonSeries.c_Ion_Weighting, "0.0").ToString
-            frm.txtDWeight.Text = Format(.IonSeries.d_Ion_Weighting, "0.0").ToString
-            frm.txtVWeight.Text = Format(.IonSeries.v_Ion_Weighting, "0.0").ToString
-            frm.txtWWeight.Text = Format(.IonSeries.w_Ion_Weighting, "0.0").ToString
-            frm.txtXWeight.Text = Format(.IonSeries.x_Ion_Weighting, "0.0").ToString
-            frm.txtYWeight.Text = Format(.IonSeries.y_Ion_Weighting, "0.0").ToString
-            frm.txtZWeight.Text = Format(.IonSeries.z_Ion_Weighting, "0.0").ToString
-        End With
-
-
-    End Sub
-
-    Private Sub AddBasicTabHandlers()
-        AddHandler txtDescription.Leave, AddressOf txtDescription_Leave
-
-        AddHandler cboParentMassType.SelectedIndexChanged, AddressOf cboParentMassType_SelectedIndexChanged
-        AddHandler cboFragmentMassType.SelectedIndexChanged, AddressOf cboFragmentMassType_SelectedIndexChanged
-        AddHandler cboParentMassUnits.SelectedIndexChanged, AddressOf cboParentMassUnits_SelectedIndexChanged
-        AddHandler cboFragmentMassUnits.SelectedIndexChanged, AddressOf cboFragmentMassUnits_SelectedIndexChanged
-        AddHandler cboEnzymeSelect.SelectedIndexChanged, AddressOf cboEnzymeSelect_SelectedIndexChanged
-        AddHandler cboCleavagePosition.SelectedIndexChanged, AddressOf cboCleavagePosition_SelectedIndexChanged
-        AddHandler cboMissedCleavages.SelectedIndexChanged, AddressOf cboMissedCleavages_SelectedIndexChanged
-        AddHandler txtPartialSeq.Validating, AddressOf AATextbox_Validating
-        AddHandler txtPartialSeq.Validated, AddressOf txtPartialSeq_Validated
-
-        AddHandler txtDynMod1List.Validating, AddressOf AATextbox_Validating
-        AddHandler txtDynMod2List.Validating, AddressOf AATextbox_Validating
-        AddHandler txtDynMod3List.Validating, AddressOf AATextbox_Validating
-
-        AddHandler txtDynMod1List.Validated, AddressOf txtDynMod1List_Validated
-        AddHandler txtDynMod2List.Validated, AddressOf txtDynMod2List_Validated
-        AddHandler txtDynMod3List.Validated, AddressOf txtDynMod3List_Validated
-
-        AddHandler txtDynMod1MassDiff.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtDynMod2MassDiff.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtDynMod3MassDiff.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtDynMod4MassDiff.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtDynMod5MassDiff.Validating, AddressOf numericTextbox_Validating
-
-        AddHandler txtDynMod1MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtDynMod2MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtDynMod3MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtDynMod4MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtDynMod5MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
-
-        AddHandler txtDynMod1MassDiff.Validated, AddressOf txtDynMod1MassDiff_Validated
-        AddHandler txtDynMod2MassDiff.Validated, AddressOf txtDynMod2MassDiff_Validated
-        AddHandler txtDynMod3MassDiff.Validated, AddressOf txtDynMod3MassDiff_Validated
-        AddHandler txtDynMod4MassDiff.Validated, AddressOf txtDynMod4MassDiff_Validated
-        AddHandler txtDynMod5MassDiff.Validated, AddressOf txtDynMod5MassDiff_Validated
-
-        AddHandler txtCTPep.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtCTProt.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtNTPep.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtNTProt.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtGly.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtAla.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtSer.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtPro.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtVal.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtThr.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtCys.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtLeu.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtIle.Validating, AddressOf numericTextbox_Validating
-        AddHandler TxtLorI.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtAsn.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtOrn.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtNandD.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtAsp.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtGln.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtLys.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtQandE.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtGlu.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtMet.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtHis.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtPhe.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtArg.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtTyr.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtTrp.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtIsoC.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtIsoH.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtIsoO.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtIsoN.Validating, AddressOf numericTextbox_Validating
-        AddHandler txtIsoS.Validating, AddressOf numericTextbox_Validating
-
-
-        AddHandler txtCTPep.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtCTProt.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtNTPep.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtNTProt.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtGly.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtAla.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtSer.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtPro.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtVal.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtThr.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtCys.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtLeu.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtIle.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler TxtLorI.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtAsn.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtOrn.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtNandD.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtAsp.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtGln.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtLys.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtQandE.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtGlu.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtMet.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtHis.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtPhe.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtArg.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtTyr.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtTrp.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtIsoC.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtIsoH.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtIsoO.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtIsoN.KeyDown, AddressOf numericTextBox_EscapeButton
-        AddHandler txtIsoS.KeyDown, AddressOf numericTextBox_EscapeButton
-
-
-        AddHandler txtCTPep.Validated, AddressOf txtCTPep_Validated
-        AddHandler txtCTProt.Validated, AddressOf txtCTProt_Validated
-        AddHandler txtNTPep.Validated, AddressOf txtNTPep_Validated
-        AddHandler txtNTProt.Validated, AddressOf txtNTProt_Validated
-        AddHandler txtGly.Validated, AddressOf txtGly_Validated
-        AddHandler txtAla.Validated, AddressOf txtAla_Validated
-        AddHandler txtSer.Validated, AddressOf txtSer_Validated
-        AddHandler txtPro.Validated, AddressOf txtPro_Validated
-        AddHandler txtVal.Validated, AddressOf txtVal_Validated
-        AddHandler txtThr.Validated, AddressOf txtThr_Validated
-        AddHandler txtCys.Validated, AddressOf txtCys_Validated
-        AddHandler txtLeu.Validated, AddressOf txtLeu_Validated
-        AddHandler txtIle.Validated, AddressOf txtIle_Validated
-        AddHandler TxtLorI.Validated, AddressOf TxtLorI_Validated
-        AddHandler txtAsn.Validated, AddressOf txtAsn_Validated
-        AddHandler txtOrn.Validated, AddressOf txtOrn_Validated
-        AddHandler txtNandD.Validated, AddressOf txtNandD_Validated
-        AddHandler txtAsp.Validated, AddressOf txtAsp_Validated
-        AddHandler txtGln.Validated, AddressOf txtGln_Validated
-        AddHandler txtLys.Validated, AddressOf txtLys_Validated
-        AddHandler txtQandE.Validated, AddressOf txtQandE_Validated
-        AddHandler txtGlu.Validated, AddressOf txtGlu_Validated
-        AddHandler txtMet.Validated, AddressOf txtMet_Validated
-        AddHandler txtHis.Validated, AddressOf txtHis_Validated
-        AddHandler txtPhe.Validated, AddressOf txtPhe_Validated
-        AddHandler txtArg.Validated, AddressOf txtArg_Validated
-        AddHandler txtTyr.Validated, AddressOf txtTyr_Validated
-        AddHandler txtTrp.Validated, AddressOf txtTrp_Validated
-        AddHandler txtIsoC.Validated, AddressOf txtIsoC_Validated
-        AddHandler txtIsoH.Validated, AddressOf txtIsoH_Validated
-        AddHandler txtIsoO.Validated, AddressOf txtIsoO_Validated
-        AddHandler txtIsoN.Validated, AddressOf txtIsoN_Validated
-        AddHandler txtIsoS.Validated, AddressOf txtIsoS_Validated
-    End Sub
-    Private Sub AddAdvTabHandlers()
-        AddHandler txtPepMassTol.Leave, AddressOf txtPepMassTol_Leave
-        AddHandler txtFragMassTol.Leave, AddressOf txtFragMassTol_Leave
-        AddHandler txtPeakMatchingTol.Leave, AddressOf txtPeakMatchingTol_Leave
-        AddHandler txtIonCutoff.Leave, AddressOf txtIonCutoff_Leave
-        AddHandler txtMinProtMass.Leave, AddressOf txtMinProtMass_Leave
-        AddHandler txtMaxProtMass.Leave, AddressOf txtMaxProtMass_Leave
-
-        AddHandler txtNumOutputLines.Leave, AddressOf txtNumOutputLines_Leave
-        AddHandler txtNumDescLines.Leave, AddressOf txtNumDescLines_Leave
-        AddHandler txtNumResults.Leave, AddressOf txtNumResults_Leave
-        AddHandler txtMatchPeakCount.Leave, AddressOf txtMatchPeakCount_Leave
-        AddHandler txtMatchPeakCountErrors.Leave, AddressOf txtMatchPeakCountErrors_Leave
-        AddHandler txtMaxAAPerDynMod.Leave, AddressOf txtMaxAAPerDynMod_Leave
-        AddHandler txtMaxDiffPerPeptide.Leave, AddressOf txtMaxDiffPerPeptide_Leave
-        AddHandler cboNucReadingFrame.SelectedIndexChanged, AddressOf cboNucReadingFrame_SelectedIndexChanged
-
-        AddHandler chkUseAIons.CheckedChanged, AddressOf chkUseAIons_CheckedChanged
-        AddHandler chkUseBIons.CheckedChanged, AddressOf chkUseBIons_CheckedChanged
-        AddHandler chkUseYIons.CheckedChanged, AddressOf chkUseYIons_CheckedChanged
-        AddHandler chkCreateOutputFiles.CheckedChanged, AddressOf chkCreateOutputFiles_CheckedChanged
-        AddHandler chkShowFragmentIons.CheckedChanged, AddressOf chkShowFragmentIons_CheckedChanged
-        AddHandler chkRemovePrecursorPeaks.CheckedChanged, AddressOf chkRemovePrecursorPeaks_CheckedChanged
-        AddHandler chkPrintDupRefs.CheckedChanged, AddressOf chkPrintDupRefs_CheckedChanged
-        AddHandler chkResiduesInUpperCase.CheckedChanged, AddressOf chkResiduesInUpperCase_CheckedChanged
-
-        AddHandler txtAWeight.Leave, AddressOf txtAWeight_Leave
-        AddHandler txtBWeight.Leave, AddressOf txtBWeight_Leave
-        AddHandler txtCWeight.Leave, AddressOf txtCWeight_Leave
-        AddHandler txtDWeight.Leave, AddressOf txtDWeight_Leave
-        AddHandler txtVWeight.Leave, AddressOf txtVWeight_Leave
-        AddHandler txtWWeight.Leave, AddressOf txtWWeight_Leave
-        AddHandler txtXWeight.Leave, AddressOf txtXWeight_Leave
-        AddHandler txtYWeight.Leave, AddressOf txtYWeight_Leave
-        AddHandler txtZWeight.Leave, AddressOf txtZWeight_Leave
-
-    End Sub
-
-    Private Sub LoadParamsetFromDMS(ByVal ParamSetID As Integer)
-        If m_clsParamsFromDMS Is Nothing Then
-            m_clsParamsFromDMS = LoadDMSParamsClass(mySettings)
-        End If
-        newParams = m_clsParamsFromDMS.ReadParamsFromDMS(ParamSetID)
-
-        Dim iso As New clsDeconvolveIsoMods(mySettings.DMS_ConnectionString)
-        newParams = iso.DeriveIsoMods(newParams)
-
-        RefreshTabs(Me, newParams)
-    End Sub
-
-    Private Sub LoadParamsetFromFile(ByVal FilePath As String)
-        newParams.LoadTemplate(FilePath)
-        Dim iso As New clsDeconvolveIsoMods(mySettings.DMS_ConnectionString)
-        newParams = iso.DeriveIsoMods(newParams)
-        RefreshTabs(Me, newParams)
-    End Sub
-
-    Private Function SetupAutoTweak(ByVal sender As System.Object) As Boolean
-        Dim successCode As Boolean
-        Try
-            If Me.m_clsMassTweaker Is Nothing Then
-                Me.m_clsMassTweaker = New clsMassTweaker(mySettings)
-                successCode = True
-                Me.StatModErrorProvider.SetError(sender, "")
-            End If
-        Catch ex As Exception
-            Me.StatModErrorProvider.SetError(sender, "Could not connect to DMS to retrieve Global Mod Info")
-            successCode = False
-        End Try
-
-        Return successCode
-
-    End Function
-
-    Private Function LoadDMSParamsClass(ByVal Settings As clsSettings) As clsParamsFromDMS
-        Dim dms As New clsParamsFromDMS(Settings.DMS_ConnectionString)
-        Return dms
-    End Function
-    Private Function LoadDMSParamUploadClass(ByVal Settings As clsSettings) As clsDMSParamUpload
-        Dim dms As New clsDMSParamUpload(Settings)
-        Return dms
-    End Function
-
-    Public Sub LoadDMSParamsFromID(ByVal ParamSetID As Integer)
-        LoadParamsetFromDMS(ParamSetID)
-    End Sub
-
-    Public Sub LoadParamsFromFile(ByVal FilePath As String)
-        LoadParamsetFromFile(FilePath)
-    End Sub
-
-    Private Sub chkAutoTweak_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkAutoTweak.CheckedChanged
-        Dim success As Boolean
-        If Me.chkAutoTweak.CheckState = CheckState.Checked Then
-            success = SetupAutoTweak(sender)
-            Me.m_UseAutoTweak = True
-            Me.cmdReTweak.Enabled = True
-        Else
-            Me.m_UseAutoTweak = False
-            Me.cmdReTweak.Enabled = False
-        End If
-
-    End Sub
+  Public Shared mySettings As clsSettings
+
+  Private basicTemplate As IBasicParams
+  Private advTemplate As IAdvancedParams
+  Public newParams As clsParams
+  Private newBasic As IBasicParams
+  Private newAdv As IAdvancedParams
+  Private m_SettingsFileName As String = "ParamFileEditorSettings.xml"
+  Const DEF_TEMPLATE_LABEL_TEXT As String = "Currently Loaded Template: "
+  Private embeddedResource As New clsAccessEmbeddedRsrc
+  Private m_UseAutoTweak As Boolean
+
+  Private Sub RefreshTabs(ByVal frm As frmMainGUI, ByVal ParamsClass As clsParams)
+    SetupBasicTab(frm, ParamsClass)
+    SetupAdvancedTab(frm, ParamsClass)
+    Me.RetweakMasses()
+  End Sub
+
+  Private Sub frmMainGUI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+    mySettings = New clsSettings
+    mySettings.LoadSettings(m_SettingsFileName)
+    Me.newParams = New clsParams
+    Me.m_DMSUpload = New clsDMSParamUpload(mySettings)
+
+
+    With Me.newParams
+      .FileName = Mid(clsMainProcess.TemplateFileName, InStrRev(clsMainProcess.TemplateFileName, "\") + 1)
+      .LoadTemplate(mySettings.TemplateFileName)
+    End With
+
+    RefreshTabs(Me, newParams)
+
+    'AddBasicTabHandlers()
+    'AddAdvTabHandlers()
+
+  End Sub
+  Private Sub SetupBasicTab(ByVal frm As frmMainGUI, ByVal bt As IBasicParams)
+    Me.RemoveBasicTabHandlers()
+    'Load comboboxes
+    With frm.cboParentMassType
+      .BeginUpdate()
+      .Items.Clear()
+      .Items.Add("Average")
+      .Items.Add("Monoisotopic")
+      .EndUpdate()
+    End With
+
+    With frm.cboFragmentMassType
+      .BeginUpdate()
+      .Items.Clear()
+      .Items.Add("Average")
+      .Items.Add("Monoisotopic")
+      .EndUpdate()
+    End With
+
+
+    With frm.cboParentMassUnits
+      .BeginUpdate()
+      .Items.Clear()
+      .Items.Add("amu")
+      .Items.Add("mmu")
+      .Items.Add("ppm")
+      .EndUpdate()
+    End With
+
+    With frm.cboFragmentMassUnits
+      .BeginUpdate()
+      .Items.Clear()
+      .Items.Add("amu")
+      .Items.Add("mmu")
+      .Items.Add("ppm")
+      .EndUpdate()
+    End With
+
+    Dim enz As New clsEnzymeDetails
+
+    With frm.cboEnzymeSelect
+      .BeginUpdate()
+      .Items.Clear()
+      For Each enz In frm.newParams.EnzymeList
+        .Items.Add(enz.EnzymeID & " - " & enz.EnzymeName & " [" & enz.EnzymeCleavePoints & "]")
+      Next
+      .EndUpdate()
+    End With
+
+    With frm.cboCleavagePosition
+      .DisplayMember = "DisplayName"
+      .ValueMember = "Value"
+      .BeginUpdate()
+      .Items.Clear()
+      .Items.Add(New ComboBoxContents("No Enzyme", "0"))
+      .EndUpdate()
+      .Enabled = False
+    End With
+
+    Dim counter As Integer = 0
+    With frm.cboMissedCleavages
+      .BeginUpdate()
+      .Items.Clear()
+      For counter = 0 To 5
+        .Items.Add(counter.ToString)
+      Next
+      .EndUpdate()
+    End With
+
+    With bt
+      'Name and description info
+      frm.lblParamFileInfo.Text = DEF_TEMPLATE_LABEL_TEXT & .FileName
+      frm.txtDescription.Text = .Description
+
+      'Search settings
+      frm.cboParentMassType.SelectedIndex = CType(.ParentMassType, Integer)
+      frm.cboFragmentMassType.SelectedIndex = CType(.FragmentMassType, Integer)
+      frm.cboEnzymeSelect.SelectedIndex = .SelectedEnzymeIndex()
+      frm.cboCleavagePosition.SelectedValue = .SelectedEnzymeCleavagePosition
+      frm.cboMissedCleavages.SelectedIndex = .MaximumNumberMissedCleavages
+      frm.txtPartialSeq.Text = .PartialSequenceToMatch
+
+      'Dynamic Mods
+      frm.txtDynMod1List.Text = .DynamicMods.Dyn_Mod_n_AAList(1)
+      frm.txtDynMod2List.Text = .DynamicMods.Dyn_Mod_n_AAList(2)
+      frm.txtDynMod3List.Text = .DynamicMods.Dyn_Mod_n_AAList(3)
+      frm.txtDynMod4List.Text = .DynamicMods.Dyn_Mod_n_AAList(4)
+      frm.txtDynMod5List.Text = .DynamicMods.Dyn_Mod_n_AAList(5)
+      frm.txtDynMod1MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(1), "0.0000").ToString
+      frm.txtDynMod2MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(2), "0.0000").ToString
+      frm.txtDynMod3MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(3), "0.0000").ToString
+      frm.txtDynMod4MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(4), "0.0000").ToString
+      frm.txtDynMod5MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(5), "0.0000").ToString
+
+      'Static Mods
+      frm.txtCTPep.Text = Format(.StaticModificationsList.CtermPeptide, "0.0000").ToString
+      frm.txtCTProt.Text = Format(.StaticModificationsList.CtermProtein, "0.0000").ToString
+      frm.txtNTPep.Text = Format(.StaticModificationsList.NtermPeptide, "0.0000").ToString
+      frm.txtNTProt.Text = Format(.StaticModificationsList.NtermProtein, "0.0000").ToString
+      frm.txtGly.Text = Format(.StaticModificationsList.G_Glycine, "0.0000").ToString
+      frm.txtAla.Text = Format(.StaticModificationsList.A_Alanine, "0.0000").ToString
+      frm.txtSer.Text = Format(.StaticModificationsList.S_Serine, "0.0000").ToString
+
+      frm.txtPro.Text = Format(.StaticModificationsList.P_Proline, "0.0000").ToString
+      frm.txtVal.Text = Format(.StaticModificationsList.V_Valine, "0.0000").ToString
+      frm.txtThr.Text = Format(.StaticModificationsList.T_Threonine, "0.0000").ToString
+      frm.txtCys.Text = Format(.StaticModificationsList.C_Cysteine, "0.0000").ToString
+      frm.txtLeu.Text = Format(.StaticModificationsList.L_Leucine, "0.0000").ToString
+      frm.txtIle.Text = Format(.StaticModificationsList.I_Isoleucine, "0.0000").ToString
+      frm.TxtLorI.Text = Format(.StaticModificationsList.X_LorI, "0.0000").ToString
+
+      frm.txtAsn.Text = Format(.StaticModificationsList.N_Asparagine, "0.0000").ToString
+      frm.txtOrn.Text = Format(.StaticModificationsList.O_Ornithine, "0.0000").ToString
+      frm.txtNandD.Text = Format(.StaticModificationsList.B_avg_NandD, "0.0000").ToString
+      frm.txtAsp.Text = Format(.StaticModificationsList.D_Aspartic_Acid, "0.0000").ToString
+      frm.txtGln.Text = Format(.StaticModificationsList.Q_Glutamine, "0.0000").ToString
+      frm.txtLys.Text = Format(.StaticModificationsList.K_Lysine, "0.0000").ToString
+      frm.txtQandE.Text = Format(.StaticModificationsList.Z_avg_QandE, "0.0000").ToString
+
+      frm.txtGlu.Text = Format(.StaticModificationsList.E_Glutamic_Acid, "0.0000").ToString
+      frm.txtMet.Text = Format(.StaticModificationsList.M_Methionine, "0.0000").ToString
+      frm.txtHis.Text = Format(.StaticModificationsList.H_Histidine, "0.0000").ToString
+      frm.txtPhe.Text = Format(.StaticModificationsList.F_Phenylalanine, "0.0000").ToString
+      frm.txtArg.Text = Format(.StaticModificationsList.R_Arginine, "0.0000").ToString
+      frm.txtTyr.Text = Format(.StaticModificationsList.Y_Tyrosine, "0.0000").ToString
+      frm.txtTrp.Text = Format(.StaticModificationsList.W_Tryptophan, "0.0000").ToString
+
+      frm.txtIsoC.Text = Format(.IsotopicModificationsList.Iso_C, "0.0000").ToString
+      frm.txtIsoH.Text = Format(.IsotopicModificationsList.Iso_H, "0.0000").ToString
+      frm.txtIsoO.Text = Format(.IsotopicModificationsList.Iso_O, "0.0000").ToString
+      frm.txtIsoN.Text = Format(.IsotopicModificationsList.Iso_N, "0.0000").ToString
+      frm.txtIsoS.Text = Format(.IsotopicModificationsList.Iso_S, "0.0000").ToString
+
+    End With
+
+    'TODO Change code to check connection status/availability and set accordingly
+    frm.chkAutoTweak.Checked = True
+
+    Me.AddBasicTabHandlers()
+
+  End Sub
+  Private Sub SetupAdvancedTab(ByVal frm As frmMainGUI, ByVal at As IAdvancedParams)
+    Me.RemoveAdvTabHandlers()
+    'Load Combo Box
+    With frm.cboNucReadingFrame.Items
+      .Add("None - Protein Database Used")
+      .Add("Forward - Frame 1")
+      .Add("Forward - Frame 2")
+      .Add("Forward - Frame 3")
+      .Add("Reverse - Frame 1")
+      .Add("Reverse - Frame 2")
+      .Add("Reverse - Frame 3")
+      .Add("Forward - All 3 Frames")
+      .Add("Reverse - All 3 Frames")
+      .Add("All Six Frames")
+    End With
+
+    With at
+      'Setup checkboxes
+      frm.chkUseAIons.Checked = .IonSeries.Use_a_Ions
+      frm.chkUseBIons.Checked = .IonSeries.Use_b_Ions
+      frm.chkUseYIons.Checked = .IonSeries.Use_y_Ions
+      frm.cboParentMassUnits.SelectedIndex = CType(.PeptideMassUnits, Integer)
+      frm.cboFragmentMassUnits.SelectedIndex = CType(.FragmentMassUnits, Integer)
+
+      frm.chkCreateOutputFiles.Checked = .CreateOutputFiles
+      frm.chkShowFragmentIons.Checked = .ShowFragmentIons
+      frm.chkRemovePrecursorPeaks.Checked = .RemovePrecursorPeak
+      frm.chkPrintDupRefs.Checked = .PrintDuplicateReferences
+      frm.chkResiduesInUpperCase.Checked = .AminoAcidsAllUpperCase
+
+      'Setup Search Tolerances
+      frm.txtPepMassTol.Text = Format(.PeptideMassTolerance, "0.0000").ToString
+      frm.txtFragMassTol.Text = Format(.FragmentIonTolerance, "0.0000").ToString
+      frm.txtPeakMatchingTol.Text = Format(.MatchedPeakMassTolerance, "0.0000").ToString
+      frm.txtIonCutoff.Text = Format(.IonCutoffPercentage, "0.0000").ToString
+      frm.txtMinProtMass.Text = Format(.MinimumProteinMassToSearch, "0.0000").ToString
+      frm.txtMaxProtMass.Text = Format(.MaximumProteinMassToSearch, "0.0000").ToString
+      frm.cboNucReadingFrame.SelectedIndex = .SelectedNucReadingFrame
+      frm.txtNumResults.Text = CInt(.NumberOfResultsToProcess)
+
+
+      'Setup Misc Options
+      frm.txtNumOutputLines.Text = Format(.NumberOfOutputLines, "0").ToString
+      frm.txtNumDescLines.Text = Format(.NumberOfDescriptionLines, "0").ToString
+      frm.txtMatchPeakCount.Text = Format(.NumberOfDetectedPeaksToMatch, "0").ToString
+      frm.txtMatchPeakCountErrors.Text = Format(.NumberOfAllowedDetectedPeakErrors, "0").ToString
+      frm.txtMaxAAPerDynMod.Text = Format(.MaximumNumAAPerDynMod, "0").ToString
+      frm.txtMaxDiffPerPeptide.Text = .MaximumDifferentialPerPeptide
+
+      'Setup Ion Weighting
+      frm.txtAWeight.Text = Format(.IonSeries.a_Ion_Weighting, "0.0").ToString
+      frm.txtBWeight.Text = Format(.IonSeries.b_Ion_Weighting, "0.0").ToString
+      frm.txtCWeight.Text = Format(.IonSeries.c_Ion_Weighting, "0.0").ToString
+      frm.txtDWeight.Text = Format(.IonSeries.d_Ion_Weighting, "0.0").ToString
+      frm.txtVWeight.Text = Format(.IonSeries.v_Ion_Weighting, "0.0").ToString
+      frm.txtWWeight.Text = Format(.IonSeries.w_Ion_Weighting, "0.0").ToString
+      frm.txtXWeight.Text = Format(.IonSeries.x_Ion_Weighting, "0.0").ToString
+      frm.txtYWeight.Text = Format(.IonSeries.y_Ion_Weighting, "0.0").ToString
+      frm.txtZWeight.Text = Format(.IonSeries.z_Ion_Weighting, "0.0").ToString
+    End With
+    Me.AddAdvTabHandlers()
+
+  End Sub
+
+  Private Sub AddBasicTabHandlers()
+    AddHandler txtDescription.Leave, AddressOf txtDescription_Leave
+
+    AddHandler cboParentMassType.SelectedIndexChanged, AddressOf cboParentMassType_SelectedIndexChanged
+    AddHandler cboFragmentMassType.SelectedIndexChanged, AddressOf cboFragmentMassType_SelectedIndexChanged
+
+    AddHandler cboEnzymeSelect.SelectedIndexChanged, AddressOf cboEnzymeSelect_SelectedIndexChanged
+    AddHandler cboCleavagePosition.SelectedIndexChanged, AddressOf cboCleavagePosition_SelectedIndexChanged
+    AddHandler cboMissedCleavages.SelectedIndexChanged, AddressOf cboMissedCleavages_SelectedIndexChanged
+    AddHandler txtPartialSeq.Validating, AddressOf AATextbox_Validating
+    AddHandler txtPartialSeq.Validated, AddressOf txtPartialSeq_Validated
+
+    AddHandler txtDynMod1List.Validating, AddressOf AATextbox_Validating
+    AddHandler txtDynMod2List.Validating, AddressOf AATextbox_Validating
+    AddHandler txtDynMod3List.Validating, AddressOf AATextbox_Validating
+    AddHandler txtDynMod4List.Validating, AddressOf AATextbox_Validating
+    AddHandler txtDynMod5List.Validating, AddressOf AATextbox_Validating
+
+    AddHandler txtDynMod1List.Validated, AddressOf txtDynMod1List_Validated
+    AddHandler txtDynMod2List.Validated, AddressOf txtDynMod2List_Validated
+    AddHandler txtDynMod3List.Validated, AddressOf txtDynMod3List_Validated
+    AddHandler txtDynMod4List.Validated, AddressOf txtDynMod4List_Validated
+    AddHandler txtDynMod5List.Validated, AddressOf txtDynMod5List_Validated
+
+    AddHandler txtDynMod1MassDiff.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtDynMod2MassDiff.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtDynMod3MassDiff.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtDynMod4MassDiff.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtDynMod5MassDiff.Validating, AddressOf numericTextbox_Validating
+
+    AddHandler txtDynMod1MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtDynMod2MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtDynMod3MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtDynMod4MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtDynMod5MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+
+    AddHandler txtDynMod1MassDiff.Validated, AddressOf txtDynMod1MassDiff_Validated
+    AddHandler txtDynMod2MassDiff.Validated, AddressOf txtDynMod2MassDiff_Validated
+    AddHandler txtDynMod3MassDiff.Validated, AddressOf txtDynMod3MassDiff_Validated
+    AddHandler txtDynMod4MassDiff.Validated, AddressOf txtDynMod4MassDiff_Validated
+    AddHandler txtDynMod5MassDiff.Validated, AddressOf txtDynMod5MassDiff_Validated
+
+    AddHandler txtCTPep.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtCTProt.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtNTPep.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtNTProt.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtGly.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtAla.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtSer.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtPro.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtVal.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtThr.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtCys.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtLeu.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtIle.Validating, AddressOf numericTextbox_Validating
+    AddHandler TxtLorI.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtAsn.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtOrn.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtNandD.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtAsp.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtGln.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtLys.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtQandE.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtGlu.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtMet.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtHis.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtPhe.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtArg.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtTyr.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtTrp.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtIsoC.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtIsoH.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtIsoO.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtIsoN.Validating, AddressOf numericTextbox_Validating
+    AddHandler txtIsoS.Validating, AddressOf numericTextbox_Validating
+
+
+    AddHandler txtCTPep.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtCTProt.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtNTPep.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtNTProt.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtGly.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtAla.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtSer.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtPro.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtVal.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtThr.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtCys.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtLeu.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtIle.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler TxtLorI.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtAsn.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtOrn.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtNandD.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtAsp.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtGln.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtLys.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtQandE.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtGlu.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtMet.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtHis.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtPhe.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtArg.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtTyr.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtTrp.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtIsoC.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtIsoH.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtIsoO.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtIsoN.KeyDown, AddressOf numericTextBox_EscapeButton
+    AddHandler txtIsoS.KeyDown, AddressOf numericTextBox_EscapeButton
+
+
+    AddHandler txtCTPep.Validated, AddressOf txtCTPep_Validated
+    AddHandler txtCTProt.Validated, AddressOf txtCTProt_Validated
+    AddHandler txtNTPep.Validated, AddressOf txtNTPep_Validated
+    AddHandler txtNTProt.Validated, AddressOf txtNTProt_Validated
+    AddHandler txtGly.Validated, AddressOf txtGly_Validated
+    AddHandler txtAla.Validated, AddressOf txtAla_Validated
+    AddHandler txtSer.Validated, AddressOf txtSer_Validated
+    AddHandler txtPro.Validated, AddressOf txtPro_Validated
+    AddHandler txtVal.Validated, AddressOf txtVal_Validated
+    AddHandler txtThr.Validated, AddressOf txtThr_Validated
+    AddHandler txtCys.Validated, AddressOf txtCys_Validated
+    AddHandler txtLeu.Validated, AddressOf txtLeu_Validated
+    AddHandler txtIle.Validated, AddressOf txtIle_Validated
+    AddHandler TxtLorI.Validated, AddressOf TxtLorI_Validated
+    AddHandler txtAsn.Validated, AddressOf txtAsn_Validated
+    AddHandler txtOrn.Validated, AddressOf txtOrn_Validated
+    AddHandler txtNandD.Validated, AddressOf txtNandD_Validated
+    AddHandler txtAsp.Validated, AddressOf txtAsp_Validated
+    AddHandler txtGln.Validated, AddressOf txtGln_Validated
+    AddHandler txtLys.Validated, AddressOf txtLys_Validated
+    AddHandler txtQandE.Validated, AddressOf txtQandE_Validated
+    AddHandler txtGlu.Validated, AddressOf txtGlu_Validated
+    AddHandler txtMet.Validated, AddressOf txtMet_Validated
+    AddHandler txtHis.Validated, AddressOf txtHis_Validated
+    AddHandler txtPhe.Validated, AddressOf txtPhe_Validated
+    AddHandler txtArg.Validated, AddressOf txtArg_Validated
+    AddHandler txtTyr.Validated, AddressOf txtTyr_Validated
+    AddHandler txtTrp.Validated, AddressOf txtTrp_Validated
+    AddHandler txtIsoC.Validated, AddressOf txtIsoC_Validated
+    AddHandler txtIsoH.Validated, AddressOf txtIsoH_Validated
+    AddHandler txtIsoO.Validated, AddressOf txtIsoO_Validated
+    AddHandler txtIsoN.Validated, AddressOf txtIsoN_Validated
+    AddHandler txtIsoS.Validated, AddressOf txtIsoS_Validated
+  End Sub
+  Private Sub AddAdvTabHandlers()
+    AddHandler txtPepMassTol.Leave, AddressOf txtPepMassTol_Leave
+    AddHandler txtFragMassTol.Leave, AddressOf txtFragMassTol_Leave
+    AddHandler txtPeakMatchingTol.Leave, AddressOf txtPeakMatchingTol_Leave
+    AddHandler txtIonCutoff.Leave, AddressOf txtIonCutoff_Leave
+    AddHandler txtMinProtMass.Leave, AddressOf txtMinProtMass_Leave
+    AddHandler cboFragmentMassUnits.SelectedIndexChanged, AddressOf cboFragmentMassUnits_SelectedIndexChanged
+    AddHandler cboParentMassUnits.SelectedIndexChanged, AddressOf cboParentMassUnits_SelectedIndexChanged
+    AddHandler txtMaxProtMass.Leave, AddressOf txtMaxProtMass_Leave
+
+    AddHandler txtNumOutputLines.Leave, AddressOf txtNumOutputLines_Leave
+    AddHandler txtNumDescLines.Leave, AddressOf txtNumDescLines_Leave
+    AddHandler txtNumResults.Leave, AddressOf txtNumResults_Leave
+    AddHandler txtMatchPeakCount.Leave, AddressOf txtMatchPeakCount_Leave
+    AddHandler txtMatchPeakCountErrors.Leave, AddressOf txtMatchPeakCountErrors_Leave
+    AddHandler txtMaxAAPerDynMod.Leave, AddressOf txtMaxAAPerDynMod_Leave
+    AddHandler txtMaxDiffPerPeptide.Leave, AddressOf txtMaxDiffPerPeptide_Leave
+    AddHandler cboNucReadingFrame.SelectedIndexChanged, AddressOf cboNucReadingFrame_SelectedIndexChanged
+
+    AddHandler chkUseAIons.CheckedChanged, AddressOf chkUseAIons_CheckedChanged
+    AddHandler chkUseBIons.CheckedChanged, AddressOf chkUseBIons_CheckedChanged
+    AddHandler chkUseYIons.CheckedChanged, AddressOf chkUseYIons_CheckedChanged
+    AddHandler chkCreateOutputFiles.CheckedChanged, AddressOf chkCreateOutputFiles_CheckedChanged
+    AddHandler chkShowFragmentIons.CheckedChanged, AddressOf chkShowFragmentIons_CheckedChanged
+    AddHandler chkRemovePrecursorPeaks.CheckedChanged, AddressOf chkRemovePrecursorPeaks_CheckedChanged
+    AddHandler chkPrintDupRefs.CheckedChanged, AddressOf chkPrintDupRefs_CheckedChanged
+    AddHandler chkResiduesInUpperCase.CheckedChanged, AddressOf chkResiduesInUpperCase_CheckedChanged
+
+    AddHandler txtAWeight.Leave, AddressOf txtAWeight_Leave
+    AddHandler txtBWeight.Leave, AddressOf txtBWeight_Leave
+    AddHandler txtCWeight.Leave, AddressOf txtCWeight_Leave
+    AddHandler txtDWeight.Leave, AddressOf txtDWeight_Leave
+    AddHandler txtVWeight.Leave, AddressOf txtVWeight_Leave
+    AddHandler txtWWeight.Leave, AddressOf txtWWeight_Leave
+    AddHandler txtXWeight.Leave, AddressOf txtXWeight_Leave
+    AddHandler txtYWeight.Leave, AddressOf txtYWeight_Leave
+    AddHandler txtZWeight.Leave, AddressOf txtZWeight_Leave
+
+  End Sub
+
+  Private Sub RemoveBasicTabHandlers()
+    RemoveHandler txtDescription.Leave, AddressOf txtDescription_Leave
+
+    RemoveHandler cboFragmentMassType.SelectedIndexChanged, AddressOf cboFragmentMassType_SelectedIndexChanged
+    RemoveHandler cboParentMassType.SelectedIndexChanged, AddressOf cboParentMassType_SelectedIndexChanged
+
+    RemoveHandler cboEnzymeSelect.SelectedIndexChanged, AddressOf cboEnzymeSelect_SelectedIndexChanged
+    RemoveHandler cboCleavagePosition.SelectedIndexChanged, AddressOf cboCleavagePosition_SelectedIndexChanged
+    RemoveHandler cboMissedCleavages.SelectedIndexChanged, AddressOf cboMissedCleavages_SelectedIndexChanged
+    RemoveHandler txtPartialSeq.Validating, AddressOf AATextbox_Validating
+    RemoveHandler txtPartialSeq.Validated, AddressOf txtPartialSeq_Validated
+
+    RemoveHandler txtDynMod1List.Validating, AddressOf AATextbox_Validating
+    RemoveHandler txtDynMod2List.Validating, AddressOf AATextbox_Validating
+    RemoveHandler txtDynMod3List.Validating, AddressOf AATextbox_Validating
+    RemoveHandler txtDynMod4List.Validating, AddressOf AATextbox_Validating
+    RemoveHandler txtDynMod5List.Validating, AddressOf AATextbox_Validating
+
+    RemoveHandler txtDynMod1List.Validated, AddressOf txtDynMod1List_Validated
+    RemoveHandler txtDynMod2List.Validated, AddressOf txtDynMod2List_Validated
+    RemoveHandler txtDynMod3List.Validated, AddressOf txtDynMod3List_Validated
+    RemoveHandler txtDynMod4List.Validated, AddressOf txtDynMod4List_Validated
+    RemoveHandler txtDynMod5List.Validated, AddressOf txtDynMod5List_Validated
+
+    RemoveHandler txtDynMod1MassDiff.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtDynMod2MassDiff.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtDynMod3MassDiff.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtDynMod4MassDiff.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtDynMod5MassDiff.Validating, AddressOf numericTextbox_Validating
+
+    RemoveHandler txtDynMod1MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtDynMod2MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtDynMod3MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtDynMod4MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtDynMod5MassDiff.KeyDown, AddressOf numericTextBox_EscapeButton
+
+    RemoveHandler txtDynMod1MassDiff.Validated, AddressOf txtDynMod1MassDiff_Validated
+    RemoveHandler txtDynMod2MassDiff.Validated, AddressOf txtDynMod2MassDiff_Validated
+    RemoveHandler txtDynMod3MassDiff.Validated, AddressOf txtDynMod3MassDiff_Validated
+    RemoveHandler txtDynMod4MassDiff.Validated, AddressOf txtDynMod4MassDiff_Validated
+    RemoveHandler txtDynMod5MassDiff.Validated, AddressOf txtDynMod5MassDiff_Validated
+
+    RemoveHandler txtCTPep.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtCTProt.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtNTPep.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtNTProt.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtGly.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtAla.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtSer.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtPro.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtVal.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtThr.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtCys.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtLeu.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtIle.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler TxtLorI.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtAsn.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtOrn.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtNandD.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtAsp.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtGln.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtLys.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtQandE.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtGlu.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtMet.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtHis.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtPhe.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtArg.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtTyr.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtTrp.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtIsoC.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtIsoH.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtIsoO.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtIsoN.Validating, AddressOf numericTextbox_Validating
+    RemoveHandler txtIsoS.Validating, AddressOf numericTextbox_Validating
+
+
+    RemoveHandler txtCTPep.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtCTProt.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtNTPep.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtNTProt.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtGly.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtAla.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtSer.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtPro.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtVal.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtThr.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtCys.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtLeu.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtIle.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler TxtLorI.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtAsn.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtOrn.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtNandD.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtAsp.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtGln.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtLys.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtQandE.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtGlu.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtMet.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtHis.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtPhe.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtArg.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtTyr.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtTrp.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtIsoC.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtIsoH.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtIsoO.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtIsoN.KeyDown, AddressOf numericTextBox_EscapeButton
+    RemoveHandler txtIsoS.KeyDown, AddressOf numericTextBox_EscapeButton
+
+
+    RemoveHandler txtCTPep.Validated, AddressOf txtCTPep_Validated
+    RemoveHandler txtCTProt.Validated, AddressOf txtCTProt_Validated
+    RemoveHandler txtNTPep.Validated, AddressOf txtNTPep_Validated
+    RemoveHandler txtNTProt.Validated, AddressOf txtNTProt_Validated
+    RemoveHandler txtGly.Validated, AddressOf txtGly_Validated
+    RemoveHandler txtAla.Validated, AddressOf txtAla_Validated
+    RemoveHandler txtSer.Validated, AddressOf txtSer_Validated
+    RemoveHandler txtPro.Validated, AddressOf txtPro_Validated
+    RemoveHandler txtVal.Validated, AddressOf txtVal_Validated
+    RemoveHandler txtThr.Validated, AddressOf txtThr_Validated
+    RemoveHandler txtCys.Validated, AddressOf txtCys_Validated
+    RemoveHandler txtLeu.Validated, AddressOf txtLeu_Validated
+    RemoveHandler txtIle.Validated, AddressOf txtIle_Validated
+    RemoveHandler TxtLorI.Validated, AddressOf TxtLorI_Validated
+    RemoveHandler txtAsn.Validated, AddressOf txtAsn_Validated
+    RemoveHandler txtOrn.Validated, AddressOf txtOrn_Validated
+    RemoveHandler txtNandD.Validated, AddressOf txtNandD_Validated
+    RemoveHandler txtAsp.Validated, AddressOf txtAsp_Validated
+    RemoveHandler txtGln.Validated, AddressOf txtGln_Validated
+    RemoveHandler txtLys.Validated, AddressOf txtLys_Validated
+    RemoveHandler txtQandE.Validated, AddressOf txtQandE_Validated
+    RemoveHandler txtGlu.Validated, AddressOf txtGlu_Validated
+    RemoveHandler txtMet.Validated, AddressOf txtMet_Validated
+    RemoveHandler txtHis.Validated, AddressOf txtHis_Validated
+    RemoveHandler txtPhe.Validated, AddressOf txtPhe_Validated
+    RemoveHandler txtArg.Validated, AddressOf txtArg_Validated
+    RemoveHandler txtTyr.Validated, AddressOf txtTyr_Validated
+    RemoveHandler txtTrp.Validated, AddressOf txtTrp_Validated
+    RemoveHandler txtIsoC.Validated, AddressOf txtIsoC_Validated
+    RemoveHandler txtIsoH.Validated, AddressOf txtIsoH_Validated
+    RemoveHandler txtIsoO.Validated, AddressOf txtIsoO_Validated
+    RemoveHandler txtIsoN.Validated, AddressOf txtIsoN_Validated
+    RemoveHandler txtIsoS.Validated, AddressOf txtIsoS_Validated
+  End Sub
+
+  Private Sub RemoveAdvTabHandlers()
+    RemoveHandler txtPepMassTol.Leave, AddressOf txtPepMassTol_Leave
+    RemoveHandler txtFragMassTol.Leave, AddressOf txtFragMassTol_Leave
+    RemoveHandler txtPeakMatchingTol.Leave, AddressOf txtPeakMatchingTol_Leave
+    RemoveHandler txtIonCutoff.Leave, AddressOf txtIonCutoff_Leave
+    RemoveHandler txtMinProtMass.Leave, AddressOf txtMinProtMass_Leave
+    RemoveHandler txtMaxProtMass.Leave, AddressOf txtMaxProtMass_Leave
+    RemoveHandler cboParentMassUnits.SelectedIndexChanged, AddressOf cboParentMassUnits_SelectedIndexChanged
+    RemoveHandler cboFragmentMassUnits.SelectedIndexChanged, AddressOf cboFragmentMassUnits_SelectedIndexChanged
+
+    RemoveHandler txtNumOutputLines.Leave, AddressOf txtNumOutputLines_Leave
+    RemoveHandler txtNumDescLines.Leave, AddressOf txtNumDescLines_Leave
+    RemoveHandler txtNumResults.Leave, AddressOf txtNumResults_Leave
+    RemoveHandler txtMatchPeakCount.Leave, AddressOf txtMatchPeakCount_Leave
+    RemoveHandler txtMatchPeakCountErrors.Leave, AddressOf txtMatchPeakCountErrors_Leave
+    RemoveHandler txtMaxAAPerDynMod.Leave, AddressOf txtMaxAAPerDynMod_Leave
+    RemoveHandler txtMaxDiffPerPeptide.Leave, AddressOf txtMaxDiffPerPeptide_Leave
+    RemoveHandler cboNucReadingFrame.SelectedIndexChanged, AddressOf cboNucReadingFrame_SelectedIndexChanged
+
+    RemoveHandler chkUseAIons.CheckedChanged, AddressOf chkUseAIons_CheckedChanged
+    RemoveHandler chkUseBIons.CheckedChanged, AddressOf chkUseBIons_CheckedChanged
+    RemoveHandler chkUseYIons.CheckedChanged, AddressOf chkUseYIons_CheckedChanged
+    RemoveHandler chkCreateOutputFiles.CheckedChanged, AddressOf chkCreateOutputFiles_CheckedChanged
+    RemoveHandler chkShowFragmentIons.CheckedChanged, AddressOf chkShowFragmentIons_CheckedChanged
+    RemoveHandler chkRemovePrecursorPeaks.CheckedChanged, AddressOf chkRemovePrecursorPeaks_CheckedChanged
+    RemoveHandler chkPrintDupRefs.CheckedChanged, AddressOf chkPrintDupRefs_CheckedChanged
+    RemoveHandler chkResiduesInUpperCase.CheckedChanged, AddressOf chkResiduesInUpperCase_CheckedChanged
+
+    RemoveHandler txtAWeight.Leave, AddressOf txtAWeight_Leave
+    RemoveHandler txtBWeight.Leave, AddressOf txtBWeight_Leave
+    RemoveHandler txtCWeight.Leave, AddressOf txtCWeight_Leave
+    RemoveHandler txtDWeight.Leave, AddressOf txtDWeight_Leave
+    RemoveHandler txtVWeight.Leave, AddressOf txtVWeight_Leave
+    RemoveHandler txtWWeight.Leave, AddressOf txtWWeight_Leave
+    RemoveHandler txtXWeight.Leave, AddressOf txtXWeight_Leave
+    RemoveHandler txtYWeight.Leave, AddressOf txtYWeight_Leave
+    RemoveHandler txtZWeight.Leave, AddressOf txtZWeight_Leave
+
+  End Sub
+
+  Private Sub LoadParamsetFromDMS(ByVal ParamSetID As Integer)
+    If m_clsParamsFromDMS Is Nothing Then
+      m_clsParamsFromDMS = LoadDMSParamsClass(mySettings)
+    End If
+    newParams = m_clsParamsFromDMS.ReadParamsFromDMS(ParamSetID)
+
+    Dim iso As New clsDeconvolveIsoMods(mySettings.DMS_ConnectionString)
+    newParams = iso.DeriveIsoMods(newParams)
+
+    RefreshTabs(Me, newParams)
+  End Sub
+
+  Private Sub LoadParamsetFromFile(ByVal FilePath As String)
+    newParams.LoadTemplate(FilePath)
+    Dim iso As New clsDeconvolveIsoMods(mySettings.DMS_ConnectionString)
+    newParams = iso.DeriveIsoMods(newParams)
+    RefreshTabs(Me, newParams)
+  End Sub
+
+  Private Function SetupAutoTweak(ByVal sender As System.Object) As Boolean
+    Dim successCode As Boolean
+    Try
+      If Me.m_clsMassTweaker Is Nothing Then
+        Me.m_clsMassTweaker = New clsMassTweaker(mySettings)
+        successCode = True
+        Me.StatModErrorProvider.SetError(sender, "")
+      End If
+    Catch ex As Exception
+      Me.StatModErrorProvider.SetError(sender, "Could not connect to DMS to retrieve Global Mod Info")
+      successCode = False
+    End Try
+
+    Return successCode
+
+  End Function
+
+  Private Function LoadDMSParamsClass(ByVal Settings As clsSettings) As clsParamsFromDMS
+    Dim dms As New clsParamsFromDMS(Settings.DMS_ConnectionString)
+    Return dms
+  End Function
+  Private Function LoadDMSParamUploadClass(ByVal Settings As clsSettings) As clsDMSParamUpload
+    Dim dms As New clsDMSParamUpload(Settings)
+    Return dms
+  End Function
+
+  Public Sub LoadDMSParamsFromID(ByVal ParamSetID As Integer)
+    LoadParamsetFromDMS(ParamSetID)
+  End Sub
+
+  Public Sub LoadParamsFromFile(ByVal FilePath As String)
+    LoadParamsetFromFile(FilePath)
+  End Sub
+
+  Private Sub chkAutoTweak_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkAutoTweak.CheckedChanged
+    Dim success As Boolean
+    If Me.chkAutoTweak.CheckState = CheckState.Checked Then
+      success = SetupAutoTweak(sender)
+      Me.m_UseAutoTweak = True
+      Me.cmdReTweak.Enabled = True
+    Else
+      Me.m_UseAutoTweak = False
+      Me.cmdReTweak.Enabled = False
+    End If
+
+  End Sub
 
 #Region " [Basic] Name and Description Handlers "
 
-    Private Sub txtDescription_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.Description = Me.txtDescription.Text
-    End Sub
+  Private Sub txtDescription_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.Description = Me.txtDescription.Text
+  End Sub
 
 #End Region
 
 #Region " [Basic] Search Settings Handlers "
 
-    Private Sub cboParentMassType_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.ParentMassType = CType(Me.cboParentMassType.SelectedIndex, IBasicParams.MassTypeList)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub cboFragmentMassType_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.FragmentMassType = CType(Me.cboFragmentMassType.SelectedIndex, IBasicParams.MassTypeList)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub cboFragmentMassUnits_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.FragmentMassUnits = CType(Me.cboFragmentMassUnits.SelectedIndex, IAdvancedParams.MassUnitList)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub cboParentMassUnits_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.PeptideMassUnits = CType(Me.cboParentMassUnits.SelectedIndex, IAdvancedParams.MassUnitList)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub cboEnzymeSelect_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Dim tmpIndex As Integer
-        tmpIndex = Me.cboEnzymeSelect.SelectedIndex
-        newParams.SelectedEnzymeIndex = tmpIndex
-        newParams.SelectedEnzymeDetails = newParams.RetrieveEnzymeDetails(tmpIndex)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  Private Sub cboParentMassType_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.ParentMassType = CType(Me.cboParentMassType.SelectedIndex, IBasicParams.MassTypeList)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub cboFragmentMassType_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.FragmentMassType = CType(Me.cboFragmentMassType.SelectedIndex, IBasicParams.MassTypeList)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub cboFragmentMassUnits_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.FragmentMassUnits = CType(Me.cboFragmentMassUnits.SelectedIndex, IAdvancedParams.MassUnitList)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub cboParentMassUnits_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.PeptideMassUnits = CType(Me.cboParentMassUnits.SelectedIndex, IAdvancedParams.MassUnitList)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub cboEnzymeSelect_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Dim tmpIndex As Integer
+    tmpIndex = Me.cboEnzymeSelect.SelectedIndex
+    newParams.SelectedEnzymeIndex = tmpIndex
+    newParams.SelectedEnzymeDetails = newParams.RetrieveEnzymeDetails(tmpIndex)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
 
-        If tmpIndex = 0 Then
-            With Me.cboCleavagePosition
-                .DisplayMember = "DisplayName"
-                .ValueMember = "Value"
-                .BeginUpdate()
-                .Items.Clear()
-                .Items.Add(New ComboBoxContents("No Enzyme", "0"))
-                .EndUpdate()
-            End With
-            Me.cboCleavagePosition.Text = "No Enzyme"
-            Me.cboCleavagePosition.Enabled = False
-        Else
-            With Me.cboCleavagePosition
-                .DisplayMember = "DisplayName"
-                .ValueMember = "Value"
-                .BeginUpdate()
-                .Items.Clear()
-                .Items.Add(New ComboBoxContents("Full Cleavage", "1"))
-                .Items.Add(New ComboBoxContents("Partial Cleavage", "2"))
-                .Items.Add(New ComboBoxContents("N-Term Partial Cleavage", "3"))
-                .Items.Add(New ComboBoxContents("C-Term Partial Cleavage", "4"))
-                .EndUpdate()
-            End With
+    If tmpIndex = 0 Then
+      With Me.cboCleavagePosition
+        .DisplayMember = "DisplayName"
+        .ValueMember = "Value"
+        .BeginUpdate()
+        .Items.Clear()
+        .Items.Add(New ComboBoxContents("No Enzyme", "0"))
+        .EndUpdate()
+      End With
+      Me.cboCleavagePosition.Text = "No Enzyme"
+      Me.cboCleavagePosition.Enabled = False
+    Else
+      With Me.cboCleavagePosition
+        .DisplayMember = "DisplayName"
+        .ValueMember = "Value"
+        .BeginUpdate()
+        .Items.Clear()
+        .Items.Add(New ComboBoxContents("Full Cleavage", "1"))
+        .Items.Add(New ComboBoxContents("Partial Cleavage", "2"))
+        .Items.Add(New ComboBoxContents("N-Term Partial Cleavage", "3"))
+        .Items.Add(New ComboBoxContents("C-Term Partial Cleavage", "4"))
+        .EndUpdate()
+      End With
 
-            Dim cItem As ComboBoxContents
-            For Each cItem In Me.cboCleavagePosition.Items
-                If CInt(cItem.Value) = Me.newParams.SelectedEnzymeCleavagePosition Then
-                    Me.cboCleavagePosition.Text = cItem.DisplayName
-                End If
-            Next
-
-            Me.cboCleavagePosition.Enabled = True
+      Dim cItem As ComboBoxContents
+      For Each cItem In Me.cboCleavagePosition.Items
+        If CInt(cItem.Value) = Me.newParams.SelectedEnzymeCleavagePosition Then
+          Me.cboCleavagePosition.Text = cItem.DisplayName
         End If
+      Next
 
-        Debug.WriteLine("")
-    End Sub
-    Private Sub cboMissedCleavages_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.MaximumNumberMissedCleavages = Me.cboMissedCleavages.SelectedIndex
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub cboCleavagePosition_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboCleavagePosition.SelectedIndexChanged
-        Dim cbc As ComboBoxContents = DirectCast(Me.cboCleavagePosition.SelectedItem, ComboBoxContents)
-        If Not cbc Is Nothing Then
-            newParams.SelectedEnzymeCleavagePosition = CInt(cbc.Value)
-        Else
-            newParams.SelectedEnzymeCleavagePosition = 0
-        End If
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+      Me.cboCleavagePosition.Enabled = True
+    End If
 
-    Private Sub txtPartialSeq_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.PartialSequenceToMatch = Me.txtPartialSeq.Text
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+    Debug.WriteLine("")
+  End Sub
+  Private Sub cboMissedCleavages_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.MaximumNumberMissedCleavages = Me.cboMissedCleavages.SelectedIndex
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub cboCleavagePosition_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboCleavagePosition.SelectedIndexChanged
+    Dim cbc As ComboBoxContents = DirectCast(Me.cboCleavagePosition.SelectedItem, ComboBoxContents)
+    If Not cbc Is Nothing Then
+      newParams.SelectedEnzymeCleavagePosition = CInt(cbc.Value)
+    Else
+      newParams.SelectedEnzymeCleavagePosition = 0
+    End If
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+
+  Private Sub txtPartialSeq_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.PartialSequenceToMatch = Me.txtPartialSeq.Text
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
 #End Region
 
 #Region " [Basic] Dynamic Modification Handlers "
 
-    Private Sub txtDynMod1List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Me.txtDynMod1List.Text <> "C" Then
-            Me.StatModErrorProvider.SetError(sender, "")
-            Me.txtDynMod1List.Text = Me.txtDynMod1List.Text.ToUpper
-            If CSng(Me.txtDynMod1MassDiff.Text) <> 0.0 Then
-                newParams.DynamicMods.Dyn_Mod_n_AAList(1) = Me.txtDynMod1List.Text
-            End If
-        End If
-    End Sub
-    Private Sub txtDynMod2List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Me.txtDynMod2List.Text <> "C" Then
-            Me.StatModErrorProvider.SetError(sender, "")
-            Me.txtDynMod2List.Text = Me.txtDynMod2List.Text.ToUpper
-            If CSng(Me.txtDynMod2MassDiff.Text) <> 0.0 Then
-                newParams.DynamicMods.Dyn_Mod_n_AAList(2) = Me.txtDynMod2List.Text
-            End If
-        End If
-    End Sub
-    Private Sub txtDynMod3List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Me.txtDynMod3List.Text <> "C" Then
-            Me.StatModErrorProvider.SetError(sender, "")
-            Me.txtDynMod3List.Text = Me.txtDynMod3List.Text.ToUpper
-            If CSng(Me.txtDynMod3MassDiff.Text) <> 0.0 Then
-                newParams.DynamicMods.Dyn_Mod_n_AAList(3) = Me.txtDynMod3List.Text
-            End If
-        End If
-    End Sub
-    Private Sub txtDynMod4List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Me.txtDynMod4List.Text <> "C" Then
-            Me.StatModErrorProvider.SetError(sender, "")
-            Me.txtDynMod3List.Text = Me.txtDynMod3List.Text.ToUpper
-            If CSng(Me.txtDynMod4MassDiff.Text) <> 0.0 Then
-                newParams.DynamicMods.Dyn_Mod_n_AAList(4) = Me.txtDynMod4List.Text
-            End If
-        End If
-    End Sub
-    Private Sub txtDynMod5List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If Me.txtDynMod5List.Text <> "C" Then
-            Me.StatModErrorProvider.SetError(sender, "")
-            Me.txtDynMod5List.Text = Me.txtDynMod3List.Text.ToUpper
-            If CSng(Me.txtDynMod5MassDiff.Text) <> 0.0 Then
-                newParams.DynamicMods.Dyn_Mod_n_AAList(5) = Me.txtDynMod5List.Text
-            End If
-        End If
-    End Sub
-    Private Sub txtDynMod1MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If CSng(Me.txtDynMod1MassDiff.Text) <> 0.0 Then
-            newParams.DynamicMods.Dyn_Mod_n_AAList(1) = Me.txtDynMod1List.Text
-        End If
-        newParams.DynamicMods.Dyn_Mod_n_MassDiff(1) = CSng(Me.txtDynMod1MassDiff.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtDynMod2MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If CSng(Me.txtDynMod2MassDiff.Text) <> 0.0 Then
-            newParams.DynamicMods.Dyn_Mod_n_AAList(2) = Me.txtDynMod2List.Text
-        End If
-        newParams.DynamicMods.Dyn_Mod_n_MassDiff(2) = CSng(Me.txtDynMod2MassDiff.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtDynMod3MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If CSng(Me.txtDynMod3MassDiff.Text) <> 0.0 Then
-            newParams.DynamicMods.Dyn_Mod_n_AAList(3) = Me.txtDynMod3List.Text
-        End If
-        newParams.DynamicMods.Dyn_Mod_n_MassDiff(3) = CSng(Me.txtDynMod3MassDiff.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtDynMod4MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If CSng(Me.txtDynMod4MassDiff.Text) <> 0.0 Then
-            newParams.DynamicMods.Dyn_Mod_n_AAList(4) = Me.txtDynMod3List.Text
-        End If
-        newParams.DynamicMods.Dyn_Mod_n_MassDiff(4) = CSng(Me.txtDynMod4MassDiff.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtDynMod5MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If CSng(Me.txtDynMod3MassDiff.Text) <> 0.0 Then
-            newParams.DynamicMods.Dyn_Mod_n_AAList(5) = Me.txtDynMod3List.Text
-        End If
-        newParams.DynamicMods.Dyn_Mod_n_MassDiff(5) = CSng(Me.txtDynMod5MassDiff.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtDynMod1List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If Me.txtDynMod1List.Text <> "C" Then
+      Me.StatModErrorProvider.SetError(sender, "")
+      Me.txtDynMod1List.Text = Me.txtDynMod1List.Text.ToUpper
+      If CSng(Me.txtDynMod1MassDiff.Text) <> 0.0 Then
+        newParams.DynamicMods.Dyn_Mod_n_AAList(1) = Me.txtDynMod1List.Text
+      End If
+    End If
+  End Sub
+  Private Sub txtDynMod2List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If Me.txtDynMod2List.Text <> "C" Then
+      Me.StatModErrorProvider.SetError(sender, "")
+      Me.txtDynMod2List.Text = Me.txtDynMod2List.Text.ToUpper
+      If CSng(Me.txtDynMod2MassDiff.Text) <> 0.0 Then
+        newParams.DynamicMods.Dyn_Mod_n_AAList(2) = Me.txtDynMod2List.Text
+      End If
+    End If
+  End Sub
+  Private Sub txtDynMod3List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If Me.txtDynMod3List.Text <> "C" Then
+      Me.StatModErrorProvider.SetError(sender, "")
+      Me.txtDynMod3List.Text = Me.txtDynMod3List.Text.ToUpper
+      If CSng(Me.txtDynMod3MassDiff.Text) <> 0.0 Then
+        newParams.DynamicMods.Dyn_Mod_n_AAList(3) = Me.txtDynMod3List.Text
+      End If
+    End If
+  End Sub
+  Private Sub txtDynMod4List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If Me.txtDynMod4List.Text <> "C" Then
+      Me.StatModErrorProvider.SetError(sender, "")
+      Me.txtDynMod3List.Text = Me.txtDynMod3List.Text.ToUpper
+      If CSng(Me.txtDynMod4MassDiff.Text) <> 0.0 Then
+        newParams.DynamicMods.Dyn_Mod_n_AAList(4) = Me.txtDynMod4List.Text
+      End If
+    End If
+  End Sub
+  Private Sub txtDynMod5List_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If Me.txtDynMod5List.Text <> "C" Then
+      Me.StatModErrorProvider.SetError(sender, "")
+      Me.txtDynMod5List.Text = Me.txtDynMod3List.Text.ToUpper
+      If CSng(Me.txtDynMod5MassDiff.Text) <> 0.0 Then
+        newParams.DynamicMods.Dyn_Mod_n_AAList(5) = Me.txtDynMod5List.Text
+      End If
+    End If
+  End Sub
+  Private Sub txtDynMod1MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If CSng(Me.txtDynMod1MassDiff.Text) <> 0.0 Then
+      newParams.DynamicMods.Dyn_Mod_n_AAList(1) = Me.txtDynMod1List.Text
+    End If
+    newParams.DynamicMods.Dyn_Mod_n_MassDiff(1) = CSng(Me.txtDynMod1MassDiff.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtDynMod2MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If CSng(Me.txtDynMod2MassDiff.Text) <> 0.0 Then
+      newParams.DynamicMods.Dyn_Mod_n_AAList(2) = Me.txtDynMod2List.Text
+    End If
+    newParams.DynamicMods.Dyn_Mod_n_MassDiff(2) = CSng(Me.txtDynMod2MassDiff.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtDynMod3MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If CSng(Me.txtDynMod3MassDiff.Text) <> 0.0 Then
+      newParams.DynamicMods.Dyn_Mod_n_AAList(3) = Me.txtDynMod3List.Text
+    End If
+    newParams.DynamicMods.Dyn_Mod_n_MassDiff(3) = CSng(Me.txtDynMod3MassDiff.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtDynMod4MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If CSng(Me.txtDynMod4MassDiff.Text) <> 0.0 Then
+      newParams.DynamicMods.Dyn_Mod_n_AAList(4) = Me.txtDynMod3List.Text
+    End If
+    newParams.DynamicMods.Dyn_Mod_n_MassDiff(4) = CSng(Me.txtDynMod4MassDiff.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtDynMod5MassDiff_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    If CSng(Me.txtDynMod3MassDiff.Text) <> 0.0 Then
+      newParams.DynamicMods.Dyn_Mod_n_AAList(5) = Me.txtDynMod3List.Text
+    End If
+    newParams.DynamicMods.Dyn_Mod_n_MassDiff(5) = CSng(Me.txtDynMod5MassDiff.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
 #End Region
 
 #Region " [Basic] Static Modification Handlers "
 
-    Private Sub txtCTPep_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.CtermPeptide = CSng(Me.txtCTPep.Text)
-        Catch
-            Me.txtCTPep.Text = "0.0"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
+  Private Sub txtCTPep_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.CtermPeptide = CSng(Me.txtCTPep.Text)
+    Catch
+      Me.txtCTPep.Text = "0.0"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
 
 
-    Private Sub txtCTProt_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.CtermProtein = CSng(Me.txtCTProt.Text)
-        Catch
-            Me.txtCTProt.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtNTPep_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.NtermPeptide = CSng(Me.txtNTPep.Text)
-        Catch
-            Me.txtNTPep.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtNTProt_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.NtermProtein = CSng(Me.txtNTProt.Text)
-        Catch
-            Me.txtNTProt.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtGly_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.G_Glycine = CSng(Me.txtGly.Text)
-        Catch
-            Me.txtGly.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtAla_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.A_Alanine = CSng(Me.txtAla.Text)
-        Catch
-            Me.txtAla.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtSer_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.S_Serine = CSng(Me.txtSer.Text)
-        Catch
-            Me.txtSer.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtPro_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.P_Proline = CSng(Me.txtPro.Text)
-        Catch
-            Me.txtPro.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtVal_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.V_Valine = CSng(Me.txtVal.Text)
-        Catch
-            Me.txtVal.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtThr_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.T_Threonine = CSng(Me.txtThr.Text)
-        Catch
-            Me.txtThr.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtCys_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.C_Cysteine = CSng(Me.txtCys.Text)
-        Catch
-            Me.txtCys.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtLeu_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.L_Leucine = CSng(Me.txtLeu.Text)
-        Catch
-            Me.txtLeu.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtIle_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.I_Isoleucine = CSng(Me.txtIle.Text)
-        Catch
-            Me.txtIle.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub TxtLorI_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.X_LorI = CSng(Me.TxtLorI.Text)
-        Catch
-            Me.TxtLorI.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtAsn_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.N_Asparagine = CSng(Me.txtAsn.Text)
-        Catch
-            Me.txtAsn.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtOrn_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.O_Ornithine = CSng(Me.txtOrn.Text)
-        Catch
-            Me.txtOrn.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtNandD_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.B_avg_NandD = CSng(Me.txtNandD.Text)
-        Catch
-            Me.txtNandD.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtAsp_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.D_Aspartic_Acid = CSng(Me.txtAsp.Text)
-        Catch
-            Me.txtAsp.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtGln_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.Q_Glutamine = CSng(Me.txtGln.Text)
-        Catch
-            Me.txtGln.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtLys_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.K_Lysine = CSng(Me.txtLys.Text)
-        Catch
-            Me.txtLys.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtQandE_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.Z_avg_QandE = CSng(Me.txtQandE.Text)
-        Catch
-            Me.txtQandE.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtGlu_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.E_Glutamic_Acid = CSng(Me.txtGlu.Text)
-        Catch
-            Me.txtGlu.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtMet_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.M_Methionine = CSng(Me.txtMet.Text)
-        Catch
-            Me.txtMet.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtHis_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.H_Histidine = CSng(Me.txtHis.Text)
-        Catch
-            Me.txtHis.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtPhe_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.F_Phenylalanine = CSng(Me.txtPhe.Text)
-        Catch
-            Me.txtPhe.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtArg_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.R_Arginine = CSng(Me.txtArg.Text)
-        Catch
-            Me.txtArg.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtTyr_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.Y_Tyrosine = CSng(Me.txtTyr.Text)
-        Catch
-            Me.txtTyr.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
-    Private Sub txtTrp_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
-        Catch
-            Me.txtTrp.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
+  Private Sub txtCTProt_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.CtermProtein = CSng(Me.txtCTProt.Text)
+    Catch
+      Me.txtCTProt.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtNTPep_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.NtermPeptide = CSng(Me.txtNTPep.Text)
+    Catch
+      Me.txtNTPep.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtNTProt_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.NtermProtein = CSng(Me.txtNTProt.Text)
+    Catch
+      Me.txtNTProt.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtGly_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.G_Glycine = CSng(Me.txtGly.Text)
+    Catch
+      Me.txtGly.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtAla_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.A_Alanine = CSng(Me.txtAla.Text)
+    Catch
+      Me.txtAla.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtSer_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.S_Serine = CSng(Me.txtSer.Text)
+    Catch
+      Me.txtSer.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtPro_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.P_Proline = CSng(Me.txtPro.Text)
+    Catch
+      Me.txtPro.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtVal_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.V_Valine = CSng(Me.txtVal.Text)
+    Catch
+      Me.txtVal.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtThr_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.T_Threonine = CSng(Me.txtThr.Text)
+    Catch
+      Me.txtThr.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtCys_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.C_Cysteine = CSng(Me.txtCys.Text)
+    Catch
+      Me.txtCys.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtLeu_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.L_Leucine = CSng(Me.txtLeu.Text)
+    Catch
+      Me.txtLeu.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtIle_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.I_Isoleucine = CSng(Me.txtIle.Text)
+    Catch
+      Me.txtIle.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub TxtLorI_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.X_LorI = CSng(Me.TxtLorI.Text)
+    Catch
+      Me.TxtLorI.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtAsn_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.N_Asparagine = CSng(Me.txtAsn.Text)
+    Catch
+      Me.txtAsn.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtOrn_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.O_Ornithine = CSng(Me.txtOrn.Text)
+    Catch
+      Me.txtOrn.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtNandD_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.B_avg_NandD = CSng(Me.txtNandD.Text)
+    Catch
+      Me.txtNandD.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtAsp_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.D_Aspartic_Acid = CSng(Me.txtAsp.Text)
+    Catch
+      Me.txtAsp.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtGln_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.Q_Glutamine = CSng(Me.txtGln.Text)
+    Catch
+      Me.txtGln.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtLys_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.K_Lysine = CSng(Me.txtLys.Text)
+    Catch
+      Me.txtLys.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtQandE_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.Z_avg_QandE = CSng(Me.txtQandE.Text)
+    Catch
+      Me.txtQandE.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtGlu_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.E_Glutamic_Acid = CSng(Me.txtGlu.Text)
+    Catch
+      Me.txtGlu.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtMet_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.M_Methionine = CSng(Me.txtMet.Text)
+    Catch
+      Me.txtMet.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtHis_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.H_Histidine = CSng(Me.txtHis.Text)
+    Catch
+      Me.txtHis.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtPhe_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.F_Phenylalanine = CSng(Me.txtPhe.Text)
+    Catch
+      Me.txtPhe.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtArg_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.R_Arginine = CSng(Me.txtArg.Text)
+    Catch
+      Me.txtArg.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtTyr_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.Y_Tyrosine = CSng(Me.txtTyr.Text)
+    Catch
+      Me.txtTyr.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
+  Private Sub txtTrp_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
+    Catch
+      Me.txtTrp.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
 
 #End Region
 
 #Region " [Basic] Isotopic Modification Handlers "
-    Private Sub txtIsoC_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
-            newParams.IsotopicMods.Iso_C = CSng(sender.text)
-        Catch
-            sender.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
+  Private Sub txtIsoC_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
+      newParams.IsotopicMods.Iso_C = CSng(sender.text)
+    Catch
+      sender.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
 
-    Private Sub txtIsoH_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
-            newParams.IsotopicMods.Iso_H = CSng(sender.text)
-        Catch
-            sender.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
+  Private Sub txtIsoH_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
+      newParams.IsotopicMods.Iso_H = CSng(sender.text)
+    Catch
+      sender.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
 
-    Private Sub txtIsoO_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
-            newParams.IsotopicMods.Iso_O = CSng(sender.text)
-        Catch
-            sender.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
+  Private Sub txtIsoO_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
+      newParams.IsotopicMods.Iso_O = CSng(sender.text)
+    Catch
+      sender.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
 
-    Private Sub txtIsoN_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
-            newParams.IsotopicMods.Iso_N = CSng(sender.text)
-        Catch
-            sender.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
+  Private Sub txtIsoN_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
+      newParams.IsotopicMods.Iso_N = CSng(sender.text)
+    Catch
+      sender.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
 
-    Private Sub txtIsoS_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Try
-            'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
-            newParams.IsotopicMods.Iso_S = CSng(sender.text)
-        Catch
-            sender.Text = "0.0000"
-            Me.txtDescription.Text = Me.UpdateDescription(newParams)
-        End Try
-    End Sub
+  Private Sub txtIsoS_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Try
+      'newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
+      newParams.IsotopicMods.Iso_S = CSng(sender.text)
+    Catch
+      sender.Text = "0.0000"
+      Me.txtDescription.Text = Me.UpdateDescription(newParams)
+    End Try
+  End Sub
 
 
 #End Region
 
 #Region " [Advanced] Searching Tolerances "
 
-    Private Sub txtPepMassTol_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.PeptideMassTolerance = CSng(Me.txtPepMassTol.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtFragMassTol_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.FragmentIonTolerance = CSng(Me.txtFragMassTol.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtPeakMatchingTol_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.MatchedPeakMassTolerance = CSng(Me.txtPeakMatchingTol.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtIonCutoff_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonCutoffPercentage = CSng(Me.txtIonCutoff.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtMinProtMass_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.MinimumProteinMassToSearch = CInt(Me.txtMinProtMass.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtMaxProtMass_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.MaximumProteinMassToSearch = CInt(Me.txtMaxProtMass.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtPepMassTol_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.PeptideMassTolerance = CSng(Me.txtPepMassTol.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtFragMassTol_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.FragmentIonTolerance = CSng(Me.txtFragMassTol.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtPeakMatchingTol_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.MatchedPeakMassTolerance = CSng(Me.txtPeakMatchingTol.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtIonCutoff_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonCutoffPercentage = CSng(Me.txtIonCutoff.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtMinProtMass_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.MinimumProteinMassToSearch = CInt(Me.txtMinProtMass.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtMaxProtMass_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.MaximumProteinMassToSearch = CInt(Me.txtMaxProtMass.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
 #End Region
 
 #Region " [Advanced] Miscellaneous Options "
 
-    Private Sub txtNumOutputLines_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.NumberOfOutputLines = CInt(Me.txtNumOutputLines.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtNumOutputLines_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.NumberOfOutputLines = CInt(Me.txtNumOutputLines.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtNumDescLines_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.NumberOfDescriptionLines = CInt(Me.txtNumDescLines.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtNumResults_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.NumberOfResultsToProcess = CInt(Me.txtNumResults.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
-    Private Sub txtMatchPeakCount_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.NumberOfDetectedPeaksToMatch = CInt(Me.txtMatchPeakCountErrors.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtNumDescLines_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.NumberOfDescriptionLines = CInt(Me.txtNumDescLines.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtNumResults_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.NumberOfResultsToProcess = CInt(Me.txtNumResults.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
+  Private Sub txtMatchPeakCount_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.NumberOfDetectedPeaksToMatch = CInt(Me.txtMatchPeakCountErrors.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtMatchPeakCountErrors_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.NumberOfAllowedDetectedPeakErrors = CInt(Me.txtMatchPeakCountErrors.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtMatchPeakCountErrors_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.NumberOfAllowedDetectedPeakErrors = CInt(Me.txtMatchPeakCountErrors.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtMaxAAPerDynMod_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.MaximumNumAAPerDynMod = CInt(Me.txtMaxAAPerDynMod.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtMaxAAPerDynMod_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.MaximumNumAAPerDynMod = CInt(Me.txtMaxAAPerDynMod.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtMaxDiffPerPeptide_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.MaximumNumDifferentialPerPeptide = Me.txtMaxDiffPerPeptide.Text
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtMaxDiffPerPeptide_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.MaximumNumDifferentialPerPeptide = Me.txtMaxDiffPerPeptide.Text
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub cboNucReadingFrame_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.SelectedNucReadingFrame = CType(Me.cboNucReadingFrame.SelectedIndex, Integer)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub cboNucReadingFrame_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.SelectedNucReadingFrame = CType(Me.cboNucReadingFrame.SelectedIndex, Integer)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
 #End Region
 
 #Region " [Advanced] Option Checkboxes "
 
-    Private Sub chkUseAIons_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.Use_a_Ions = Me.chkUseAIons.Checked
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub chkUseAIons_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.Use_a_Ions = Me.chkUseAIons.Checked
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub chkUseBIons_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.Use_b_Ions = Me.chkUseBIons.Checked
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub chkUseBIons_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.Use_b_Ions = Me.chkUseBIons.Checked
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub chkUseYIons_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.Use_y_Ions = Me.chkUseYIons.Checked
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub chkUseYIons_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.Use_y_Ions = Me.chkUseYIons.Checked
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub chkCreateOutputFiles_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.CreateOutputFiles = Me.chkCreateOutputFiles.Checked
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub chkCreateOutputFiles_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.CreateOutputFiles = Me.chkCreateOutputFiles.Checked
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub chkShowFragmentIons_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.ShowFragmentIons = Me.chkShowFragmentIons.Checked
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub chkShowFragmentIons_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.ShowFragmentIons = Me.chkShowFragmentIons.Checked
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub chkRemovePrecursorPeaks_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.RemovePrecursorPeak = Me.chkRemovePrecursorPeaks.Checked
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub chkRemovePrecursorPeaks_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.RemovePrecursorPeak = Me.chkRemovePrecursorPeaks.Checked
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub chkPrintDupRefs_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.PrintDuplicateReferences = Me.chkPrintDupRefs.Checked
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub chkPrintDupRefs_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.PrintDuplicateReferences = Me.chkPrintDupRefs.Checked
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub chkResiduesInUpperCase_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.AminoAcidsAllUpperCase = Me.chkResiduesInUpperCase.Checked
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub chkResiduesInUpperCase_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.AminoAcidsAllUpperCase = Me.chkResiduesInUpperCase.Checked
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
 #End Region
 
 #Region " [Advanced] Ion Weighting Constants"
 
-    Private Sub txtAWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.a_Ion_Weighting = CSng(Me.txtAWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtAWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.a_Ion_Weighting = CSng(Me.txtAWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtBWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.b_Ion_Weighting = CSng(Me.txtBWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtBWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.b_Ion_Weighting = CSng(Me.txtBWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtCWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.c_Ion_Weighting = CSng(Me.txtCWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtCWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.c_Ion_Weighting = CSng(Me.txtCWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtDWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.d_Ion_Weighting = CSng(Me.txtDWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtDWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.d_Ion_Weighting = CSng(Me.txtDWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtVWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.v_Ion_Weighting = CSng(Me.txtVWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtVWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.v_Ion_Weighting = CSng(Me.txtVWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtWWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.w_Ion_Weighting = CSng(Me.txtWWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtWWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.w_Ion_Weighting = CSng(Me.txtWWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtXWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.x_Ion_Weighting = CSng(Me.txtXWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtXWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.x_Ion_Weighting = CSng(Me.txtXWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtYWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.y_Ion_Weighting = CSng(Me.txtYWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtYWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.y_Ion_Weighting = CSng(Me.txtYWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
-    Private Sub txtZWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        newParams.IonSeries.z_Ion_Weighting = CSng(Me.txtZWeight.Text)
-        Me.txtDescription.Text = Me.UpdateDescription(newParams)
-    End Sub
+  Private Sub txtZWeight_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    newParams.IonSeries.z_Ion_Weighting = CSng(Me.txtZWeight.Text)
+    Me.txtDescription.Text = Me.UpdateDescription(newParams)
+  End Sub
 
 #End Region
 
 #Region " Menu Handlers "
-    Private Sub mnuFileSaveBW2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW2.Click
-        Dim FileOutput As New clsWriteOutput
-        Dim newFilePath As String = ""
+  Private Sub mnuFileSaveBW2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW2.Click
+    Dim FileOutput As New clsWriteOutput
+    Dim newFilePath As String = ""
 
-        Dim SaveDialog As New SaveFileDialog
+    Dim SaveDialog As New SaveFileDialog
 
-        With SaveDialog
-            .Title = "Save Sequest/BioWorks v2.0 Parameter File"
-            .FileName = newParams.FileName
-        End With
+    With SaveDialog
+      .Title = "Save Sequest/BioWorks v2.0 Parameter File"
+      .FileName = newParams.FileName
+    End With
 
-        If SaveDialog.ShowDialog = DialogResult.OK Then
-            newFilePath = SaveDialog.FileName
-        End If
-        Call FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_20)
+    If SaveDialog.ShowDialog = DialogResult.OK Then
+      newFilePath = SaveDialog.FileName
+    End If
+    Call FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_20)
 
-        MsgBox("Param File: " & SaveDialog.FileName & " written successfully")
-    End Sub
-    Private Sub mnuFileSaveBW3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW3.Click
-        Dim FileOutput As New clsWriteOutput
-        Dim newFilePath As String = ""
+    MsgBox("Param File: " & SaveDialog.FileName & " written successfully")
+  End Sub
+  Private Sub mnuFileSaveBW3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW3.Click
+    Dim FileOutput As New clsWriteOutput
+    Dim newFilePath As String = ""
 
-        Dim SaveDialog As New SaveFileDialog
+    Dim SaveDialog As New SaveFileDialog
 
-        With SaveDialog
-            .Title = "Save Sequest/BioWorks v3.0 Parameter File"
+    With SaveDialog
+      .Title = "Save Sequest/BioWorks v3.0 Parameter File"
 
-        End With
+    End With
 
-        If SaveDialog.ShowDialog = DialogResult.OK Then
-            newFilePath = SaveDialog.FileName
-        End If
-        FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_30)
-    End Sub
-
-
-    Private Sub mnuFileSaveBW32_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW32.Click
-        Dim FileOutput As New clsWriteOutput
-        Dim newFilePath As String = ""
-
-        Dim SaveDialog As New SaveFileDialog
-
-        With SaveDialog
-            .Title = "Save Sequest/BioWorks v3.2 Parameter File"
-
-        End With
-
-        If SaveDialog.ShowDialog = DialogResult.OK Then
-            newFilePath = SaveDialog.FileName
-        End If
-        FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_32)
-
-    End Sub
-
-    Private Sub mnuHelpAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuHelpAbout.Click
-        Dim AboutBox As New frmAboutBox
-        AboutBox.ConnectionStringInUse = mySettings.DMS_ConnectionString
-        AboutBox.Show()
-    End Sub
-
-    Private Sub mnuFileLoadFromDMS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileLoadFromDMS.Click
-        Dim frmPicker As New frmDMSPicker(Me)
-        frmPicker.MySettings = mySettings
-        frmPicker.Show()
-
-    End Sub
-
-    Private Sub mnuFileUploadDMS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileUploadDMS.Click
-        'Gonna need security stuff in here to keep morons outa DMS
-        'Dim DMSParams As New clsParamsFromDMS(Me.MainCode.mySettings)
-
-        'Dim ident As System.Security.Principal.WindowsIdentity
-
-        'ident = ident.GetCurrent
-
-        'If m_clsParamsFromDMS Is Nothing Then
-        '    m_clsParamsFromDMS = Me.LoadDMSParamUploadClass(Me.MainCode.mySettings)
-        'End If
-        Dim SaveFrm As New frmDMSParamNamer(Me, Me.newParams)
-        SaveFrm.Show()
-        'Dim success As Boolean = dmsparams.ParamSetNameExists(testName)
-
-        'Call m_clsParamsFromDMS.WriteParamsToDMS(newParams)
-
-    End Sub
-
-    Private Sub mnuLoadFromFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuLoadFromFile.Click
-        Dim newFilePath As String
-        Dim OpenDialog As New OpenFileDialog
-
-        With OpenDialog
-            .Title = "Open Sequest/BioWorks Parameter File"
-            .DereferenceLinks = False
-            .InitialDirectory = "\\gigasax\DMS_Parameter_Files\Sequest\"
-            .Filter = "Sequest Param files (*.params)|*.params|All files (*.*)|*.*"
-            .FilterIndex = 1
-            .RestoreDirectory = True
-            .Multiselect = False
-        End With
-
-        If OpenDialog.ShowDialog = DialogResult.OK Then
-            newFilePath = OpenDialog.FileName
-            LoadParamsFromFile(newFilePath)
-        End If
-    End Sub
-
-    Private Sub mnuBatchUploadDMS_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuBatchUploadDMS.Click
-        Dim batch As clsBatchLoadTemplates = New clsBatchLoadTemplates(Me)
-        Dim openDialog As New OpenFileDialog
-        Dim FileNameArray As String()
-        Dim fc As System.Collections.Specialized.StringCollection
-        Dim numAdded As Integer
-        Dim numChanged As Integer
-        Dim numSkipped As Integer
-        Dim success As Boolean
-
-        With openDialog
-            .Multiselect = True
-            .InitialDirectory = "\\gigasax\DMS_Parameter_Files\Sequest\"
-            .Filter = "Sequest Param files (*.params)|*.params|All files (*.*)|*.*"
-            .FilterIndex = 1
-            .RestoreDirectory = True
-        End With
-
-        If openDialog.ShowDialog = DialogResult.OK Then
-            FileNameArray = openDialog.FileNames
-            fc = ConvertStringArrayToSC(FileNameArray)
-            success = batch.UploadParamSetsToDMS(fc)
-            numAdded = batch.NumParamSetsAdded
-            numChanged = batch.NumParamSetsChanged
-            numSkipped = batch.NumParamSetsSkipped
-        End If
-
-        MessageBox.Show(numAdded & " new Parameter sets added; " & numChanged & " Parameter sets changed; " & numSkipped & " Parameter sets skipped", _
-            "Operation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    If SaveDialog.ShowDialog = DialogResult.OK Then
+      newFilePath = SaveDialog.FileName
+    End If
+    FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_30)
+  End Sub
 
 
-    End Sub
+  Private Sub mnuFileSaveBW32_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveBW32.Click
+    Dim FileOutput As New clsWriteOutput
+    Dim newFilePath As String = ""
 
-    Private Function ConvertStringArrayToSC(ByVal stringArray As String()) As System.Collections.Specialized.StringCollection
-        Dim maxCount As Integer = UBound(stringArray)
-        Dim sc As New System.Collections.Specialized.StringCollection
-        Dim count As Integer
+    Dim SaveDialog As New SaveFileDialog
 
-        For count = 0 To maxCount
-            sc.Add(stringArray(count))
-        Next
+    With SaveDialog
+      .Title = "Save Sequest/BioWorks v3.2 Parameter File"
 
-        Return sc
-    End Function
+    End With
+
+    If SaveDialog.ShowDialog = DialogResult.OK Then
+      newFilePath = SaveDialog.FileName
+    End If
+    FileOutput.WriteOutputFile(newParams, newFilePath, clsParams.ParamFileTypes.BioWorks_32)
+
+  End Sub
+
+  Private Sub mnuHelpAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuHelpAbout.Click
+    Dim AboutBox As New frmAboutBox
+    AboutBox.ConnectionStringInUse = mySettings.DMS_ConnectionString
+    AboutBox.Show()
+  End Sub
+
+  Private Sub mnuFileLoadFromDMS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileLoadFromDMS.Click
+    Dim frmPicker As New frmDMSPicker(Me)
+    frmPicker.MySettings = mySettings
+    frmPicker.Show()
+
+  End Sub
+
+  Private Sub mnuFileUploadDMS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileUploadDMS.Click
+    'Gonna need security stuff in here to keep morons outa DMS
+    'Dim DMSParams As New clsParamsFromDMS(Me.MainCode.mySettings)
+
+    'Dim ident As System.Security.Principal.WindowsIdentity
+
+    'ident = ident.GetCurrent
+
+    'If m_clsParamsFromDMS Is Nothing Then
+    '    m_clsParamsFromDMS = Me.LoadDMSParamUploadClass(Me.MainCode.mySettings)
+    'End If
+    Dim SaveFrm As New frmDMSParamNamer(Me, Me.newParams)
+    SaveFrm.Show()
+    'Dim success As Boolean = dmsparams.ParamSetNameExists(testName)
+
+    'Call m_clsParamsFromDMS.WriteParamsToDMS(newParams)
+
+  End Sub
+
+  Private Sub mnuLoadFromFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuLoadFromFile.Click
+    Dim newFilePath As String
+    Dim OpenDialog As New OpenFileDialog
+
+    With OpenDialog
+      .Title = "Open Sequest/BioWorks Parameter File"
+      .DereferenceLinks = False
+      .InitialDirectory = "\\gigasax\DMS_Parameter_Files\Sequest\"
+      .Filter = "Sequest Param files (*.params)|*.params|All files (*.*)|*.*"
+      .FilterIndex = 1
+      .RestoreDirectory = True
+      .Multiselect = False
+    End With
+
+    If OpenDialog.ShowDialog = DialogResult.OK Then
+      newFilePath = OpenDialog.FileName
+      LoadParamsFromFile(newFilePath)
+    End If
+  End Sub
+
+  Private Sub mnuBatchUploadDMS_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuBatchUploadDMS.Click
+    Dim batch As clsBatchLoadTemplates = New clsBatchLoadTemplates(Me)
+    Dim openDialog As New OpenFileDialog
+    Dim FileNameArray As String()
+    Dim fc As System.Collections.Specialized.StringCollection
+    Dim numAdded As Integer
+    Dim numChanged As Integer
+    Dim numSkipped As Integer
+    Dim success As Boolean
+
+    With openDialog
+      .Multiselect = True
+      .InitialDirectory = "\\gigasax\DMS_Parameter_Files\Sequest\"
+      .Filter = "Sequest Param files (*.params)|*.params|All files (*.*)|*.*"
+      .FilterIndex = 1
+      .RestoreDirectory = True
+    End With
+
+    If openDialog.ShowDialog = DialogResult.OK Then
+      FileNameArray = openDialog.FileNames
+      fc = ConvertStringArrayToSC(FileNameArray)
+      success = batch.UploadParamSetsToDMS(fc)
+      numAdded = batch.NumParamSetsAdded
+      numChanged = batch.NumParamSetsChanged
+      numSkipped = batch.NumParamSetsSkipped
+    End If
+
+    MessageBox.Show(numAdded & " new Parameter sets added; " & numChanged & " Parameter sets changed; " & numSkipped & " Parameter sets skipped", _
+        "Operation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+
+  End Sub
+
+  Private Function ConvertStringArrayToSC(ByVal stringArray As String()) As System.Collections.Specialized.StringCollection
+    Dim maxCount As Integer = UBound(stringArray)
+    Dim sc As New System.Collections.Specialized.StringCollection
+    Dim count As Integer
+
+    For count = 0 To maxCount
+      sc.Add(stringArray(count))
+    Next
+
+    Return sc
+  End Function
 #End Region
 
-    Private Sub CheckForParamFileExistence()
+  Private Sub CheckForParamFileExistence()
 
-        Dim TemplateName As String = "sequest_N14_NE.params"
+    Dim TemplateName As String = "sequest_N14_NE.params"
 
-        If Not Me.embeddedResource.ResourceExists(TemplateName) Then
-            Me.embeddedResource.RestoreFromEmbeddedResource(TemplateName)
-        End If
+    If Not Me.embeddedResource.ResourceExists(TemplateName) Then
+      Me.embeddedResource.RestoreFromEmbeddedResource(TemplateName)
+    End If
 
-    End Sub
+  End Sub
 
-    Private Sub CheckForSettingsFileExistence()
-        If Not Me.embeddedResource.ResourceExists(Me.m_SettingsFileName) Then
-            Me.embeddedResource.RestoreFromEmbeddedResource(Me.m_SettingsFileName)
-        End If
-    End Sub
+  Private Sub CheckForSettingsFileExistence()
+    If Not Me.embeddedResource.ResourceExists(Me.m_SettingsFileName) Then
+      Me.embeddedResource.RestoreFromEmbeddedResource(Me.m_SettingsFileName)
+    End If
+  End Sub
 
-    Private Sub numericTextbox_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
-        Dim chk As String = sender.Text
-        Dim t As NumericTextBox = DirectCast(sender, NumericTextBox)
-        Dim tmpNewMass As Single
-        Dim forceNewValue As Boolean = CBool(t.ForceNewValue)
+  Private Sub numericTextbox_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Dim chk As String = sender.Text
+    Dim t As NumericTextBox = DirectCast(sender, NumericTextBox)
+    Dim tmpNewMass As Single
+    Dim forceNewValue As Boolean = CBool(t.ForceNewValue)
 
-        If IsNumeric(chk) = False Then
-            e.Cancel = True
-            Me.StatModErrorProvider.SetError(sender, "Not a valid number")
-        ElseIf IsNumeric(chk) = True And CSng(chk) = 0.0 Then
-            sender.backcolor = System.Drawing.SystemColors.Window
-            Me.StatModErrorProvider.SetError(sender, "")
-            t.Tag = 0
+    If IsNumeric(chk) = False Then
+      e.Cancel = True
+      Me.StatModErrorProvider.SetError(sender, "Not a valid number")
+    ElseIf IsNumeric(chk) = True And CSng(chk) = 0.0 Then
+      sender.backcolor = System.Drawing.SystemColors.Window
+      Me.StatModErrorProvider.SetError(sender, "")
+      t.Tag = 0
 
-        ElseIf IsNumeric(chk) = True And CSng(chk) <> 0.0 Then
-            Me.StatModErrorProvider.SetError(sender, "")
-            tmpNewMass = CSng(chk)
-            't.Tag = newTagValue
+    ElseIf IsNumeric(chk) = True And CSng(chk) <> 0.0 Then
+      Me.StatModErrorProvider.SetError(sender, "")
+      tmpNewMass = CSng(chk)
+      't.Tag = newTagValue
 
-            If Me.m_UseAutoTweak Then
-                Dim tmpModType As IMassTweaker.ModTypes = Me.GetModTypeFromControlName(sender)
-                Dim tmpAtom As String = ""
-                Dim tmpAA As String = ""
-                Dim tmpSymbol As String = ""
-                Dim tmpDesc As String = ""
-                Dim tmpGMID As Integer = 0
-                Dim dr As DialogResult
+      If Me.m_UseAutoTweak Then
+        Dim tmpModType As IMassTweaker.ModTypes = Me.GetModTypeFromControlName(sender)
+        Dim tmpAtom As String = ""
+        Dim tmpAA As String = ""
+        Dim tmpSymbol As String = ""
+        Dim tmpDesc As String = ""
+        Dim tmpGMID As Integer = 0
+        Dim dr As DialogResult
 
-                If tmpModType = IMassTweaker.ModTypes.IsotopicMod Then
-                    tmpAtom = Me.GetAffectedIsoAtomFromControlName(sender)
-                Else
-                    tmpAtom = "-"
-                End If
-
-                tmpNewMass = Me.m_clsMassTweaker.GetTweakedMass(tmpNewMass, tmpAtom)
-
-                If tmpNewMass = 0.0 Or forceNewValue = True Then
-                    t.ForceNewValue = False
-                    sender.backcolor = System.Drawing.SystemColors.Window
-                    Dim frmNewMass As New frmGlobalModNamer
-
-                    With frmNewMass
-
-                        .MassCorrectionsTable = Me.m_clsMassTweaker.MassCorrectionsTable
-                        .NewModMass = CSng(chk)
-                        .ModType = tmpModType
-                        .AffectedResidues = tmpAA
-                        .LoadGlobalMods(CSng(chk), tmpAtom)
-
-                        dr = frmNewMass.ShowDialog
-                        tmpSymbol = frmNewMass.NewSymbol
-                        tmpNewMass = CSng(.NewModMass)
-                        tmpDesc = .NewDescription
-
-                        If dr = DialogResult.OK Then
-
-                            Me.m_clsMassTweaker.AddMassCorrection(tmpSymbol, tmpDesc, _
-                                tmpNewMass)
-                            Me.m_clsMassTweaker.RefreshGlobalModsTableCache(mySettings.DMS_ConnectionString)
-                            Me.numericTextbox_Validating(sender, e)
-                        ElseIf dr = DialogResult.Yes Then   'Use existing
-                            sender.text = tmpNewMass
-                            Me.numericTextbox_Validating(sender, e)
-                            Exit Sub
-                        ElseIf dr = DialogResult.Cancel Then
-                            Me.StatModErrorProvider.SetError(sender, "You must either choose an existing global mod, or define a new one!")
-                            e.Cancel = True
-                        End If
-                    End With
-                Else
-                    tmpSymbol = Me.m_clsMassTweaker.TweakedSymbol
-                    tmpDesc = Me.m_clsMassTweaker.TweakedDescription
-                    tmpGMID = Me.m_clsMassTweaker.TweakedModID
-                    Me.tooltipProvider.SetToolTip(sender, tmpSymbol & ": " & tmpDesc)
-                    sender.tag = tmpGMID
-                    sender.backcolor = System.Drawing.SystemColors.InactiveCaptionText
-                    Me.StatModErrorProvider.SetError(sender, "")
-
-                End If
-            End If
-
-        End If
-        sender.Text = Format(CDbl(tmpNewMass), "0.0000")
-
-
-    End Sub
-
-    Private Sub AATextbox_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
-        Dim chk As String = sender.Text
-        If IsValidAAString(chk) = False Then
-            e.Cancel = True
-            Me.StatModErrorProvider.SetError(sender, "Not a valid Amino Acid")
+        If tmpModType = IMassTweaker.ModTypes.IsotopicMod Then
+          tmpAtom = Me.GetAffectedIsoAtomFromControlName(sender)
         Else
-            'Me.StatModErrorProvider.SetError(sender, "")
-            'sender.text = chk.ToUpper
+          tmpAtom = "-"
         End If
-    End Sub
 
-    Private Sub numericTextBox_EscapeButton(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs)
-        Dim t As NumericTextBox = DirectCast(sender, NumericTextBox)
-        If e.KeyCode = Keys.Escape Then
-            t.Text = "0.0000"
-            Me.numericTextbox_Validating(sender, Nothing)
-        ElseIf e.KeyCode = Keys.Return Or e.KeyCode = Keys.Enter Then
-            t.ForceNewValue = True
-            Me.numericTextbox_Validating(t, Nothing)
-        End If
-    End Sub
+        tmpNewMass = Me.m_clsMassTweaker.GetTweakedMass(tmpNewMass, tmpAtom)
 
+        If tmpNewMass = 0.0 Or forceNewValue = True Then
+          t.ForceNewValue = False
+          sender.backcolor = System.Drawing.SystemColors.Window
+          Dim frmNewMass As New frmGlobalModNamer
 
-    Private Function IsValidAAString(ByVal AAString As String) As Boolean
-        Dim counter As Integer
-        Dim chk As String
-        Dim valid As Boolean
+          With frmNewMass
 
-        For counter = 1 To Len(AAString)
-            chk = Mid(AAString, counter, 1)
-            If IsAminoAcid(chk) Then
-                valid = True
-            Else
-                valid = False
-                Return valid
+            .MassCorrectionsTable = Me.m_clsMassTweaker.MassCorrectionsTable
+            .NewModMass = CSng(chk)
+            .ModType = tmpModType
+            .AffectedResidues = tmpAA
+            .LoadGlobalMods(CSng(chk), tmpAtom)
+
+            dr = frmNewMass.ShowDialog
+            tmpSymbol = frmNewMass.NewSymbol
+            tmpNewMass = CSng(.NewModMass)
+            tmpDesc = .NewDescription
+
+            If dr = DialogResult.OK Then
+
+              Me.m_clsMassTweaker.AddMassCorrection(tmpSymbol, tmpDesc, _
+                  tmpNewMass)
+              Me.m_clsMassTweaker.RefreshGlobalModsTableCache(mySettings.DMS_ConnectionString)
+              Me.numericTextbox_Validating(sender, e)
+            ElseIf dr = DialogResult.Yes Then   'Use existing
+              sender.text = tmpNewMass
+              Me.numericTextbox_Validating(sender, e)
+              Exit Sub
+            ElseIf dr = DialogResult.Cancel Then
+              Me.StatModErrorProvider.SetError(sender, "You must either choose an existing global mod, or define a new one!")
+              e.Cancel = True
             End If
-        Next
+          End With
+        Else
+          tmpSymbol = Me.m_clsMassTweaker.TweakedSymbol
+          tmpDesc = Me.m_clsMassTweaker.TweakedDescription
+          tmpGMID = Me.m_clsMassTweaker.TweakedModID
+          Me.tooltipProvider.SetToolTip(sender, tmpSymbol & ": " & tmpDesc)
+          sender.tag = tmpGMID
+          sender.backcolor = System.Drawing.SystemColors.InactiveCaptionText
+          Me.StatModErrorProvider.SetError(sender, "")
+
+        End If
+      End If
+
+    End If
+    sender.Text = Format(CDbl(tmpNewMass), "0.0000")
+
+
+  End Sub
+
+  Private Sub AATextbox_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
+    Dim chk As String = sender.Text
+    If IsValidAAString(chk) = False Then
+      e.Cancel = True
+      Me.StatModErrorProvider.SetError(sender, "Not a valid Amino Acid")
+    Else
+      'Me.StatModErrorProvider.SetError(sender, "")
+      'sender.text = chk.ToUpper
+    End If
+  End Sub
+
+  Private Sub numericTextBox_EscapeButton(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs)
+    Dim t As NumericTextBox = DirectCast(sender, NumericTextBox)
+    If e.KeyCode = Keys.Escape Then
+      t.Text = "0.0000"
+      Me.numericTextbox_Validating(sender, Nothing)
+    ElseIf e.KeyCode = Keys.Return Or e.KeyCode = Keys.Enter Then
+      t.ForceNewValue = True
+      Me.numericTextbox_Validating(t, Nothing)
+    End If
+  End Sub
+
+
+  Private Function IsValidAAString(ByVal AAString As String) As Boolean
+    Dim counter As Integer
+    Dim chk As String
+    Dim valid As Boolean
+
+    For counter = 1 To Len(AAString)
+      chk = Mid(AAString, counter, 1)
+      If IsAminoAcid(chk) Then
+        valid = True
+      Else
+        valid = False
         Return valid
-    End Function
+      End If
+    Next
+    Return valid
+  End Function
 
-    Private Function IsAminoAcid(ByVal AA As String) As Boolean
-        If Asc(AA.ToUpper) < Asc("A") Or Asc(AA.ToUpper) > Asc("Z") Then
-            Return False
-        ElseIf InStr("JOU", AA.ToUpper) Then
-            Return False
-        Else
-            Return True
-        End If
-    End Function
+  Private Function IsAminoAcid(ByVal AA As String) As Boolean
+    'If InStr("<>[]", AA.ToUpper) Then
+    '  Return True
+    'Else
+    If Asc(AA.ToUpper) < Asc("A") Or Asc(AA.ToUpper) > Asc("Z") Then
+      Return False
+    ElseIf InStr("JOU", AA.ToUpper) Then
+      Return False
+    Else
+      Return True
+    End If
+  End Function
 
-    Private Function GetAffectedResidueFromControlName(ByVal sender As System.Object) As String
-        Dim tmpTB As System.Windows.Forms.TextBox = DirectCast(sender, System.Windows.Forms.TextBox)
-        Dim TBName As String = tmpTB.Name
+  Private Function GetAffectedResidueFromControlName(ByVal sender As System.Object) As String
+    Dim tmpTB As System.Windows.Forms.TextBox = DirectCast(sender, System.Windows.Forms.TextBox)
+    Dim TBName As String = tmpTB.Name
 
-        Select Case TBName
-            Case "txtCTPep", "txtCTProt", "txtNTPep", "txtNTProt"
-                Return "-"
-            Case "txtAla"
-                Return "A"
-            Case "txtGly"
-                Return "G"
-            Case "txtSer"
-                Return "S"
-            Case "txtCys"
-                Return "C"
-            Case "txtPro"
-                Return "P"
-            Case "txtLorI"
-                Return "X"
-            Case "txtThr"
-                Return "T"
-            Case "txtIle"
-                Return "I"
-            Case "txtVal"
-                Return "V"
-            Case "txtLeu"
-                Return "L"
-            Case "txtNandD"
-                Return "B"
-            Case "txtQandE"
-                Return "Z"
-            Case "txtAsn"
-                Return "N"
-            Case "txtLys"
-                Return "K"
-            Case "txtOrn"
-                Return "O"
-            Case "txtGln"
-                Return "Q"
-            Case "txtAsp"
-                Return "D"
-            Case "txtArg"
-                Return "R"
-            Case "txtTrp"
-                Return "W"
-            Case "txtGlu"
-                Return "E"
-            Case "txtHis"
-                Return "H"
-            Case "txtPhe"
-                Return "F"
-            Case "txtTyr"
-                Return "Y"
-            Case "txtMet"
-                Return "M"
-            Case "txtDynMod1MassDiff"
-                Return Me.txtDynMod1List.Text
-            Case "txtDynMod2MassDiff"
-                Return Me.txtDynMod2List.Text
-            Case "txtDynMod3MassDiff"
-                Return Me.txtDynMod3List.Text
-            Case Else
-                Return ""
-        End Select
-    End Function
+    Select Case TBName
+      Case "txtCTPep", "txtCTProt", "txtNTPep", "txtNTProt"
+        Return "-"
+      Case "txtAla"
+        Return "A"
+      Case "txtGly"
+        Return "G"
+      Case "txtSer"
+        Return "S"
+      Case "txtCys"
+        Return "C"
+      Case "txtPro"
+        Return "P"
+      Case "txtLorI"
+        Return "X"
+      Case "txtThr"
+        Return "T"
+      Case "txtIle"
+        Return "I"
+      Case "txtVal"
+        Return "V"
+      Case "txtLeu"
+        Return "L"
+      Case "txtNandD"
+        Return "B"
+      Case "txtQandE"
+        Return "Z"
+      Case "txtAsn"
+        Return "N"
+      Case "txtLys"
+        Return "K"
+      Case "txtOrn"
+        Return "O"
+      Case "txtGln"
+        Return "Q"
+      Case "txtAsp"
+        Return "D"
+      Case "txtArg"
+        Return "R"
+      Case "txtTrp"
+        Return "W"
+      Case "txtGlu"
+        Return "E"
+      Case "txtHis"
+        Return "H"
+      Case "txtPhe"
+        Return "F"
+      Case "txtTyr"
+        Return "Y"
+      Case "txtMet"
+        Return "M"
+      Case "txtDynMod1MassDiff"
+        Return Me.txtDynMod1List.Text
+      Case "txtDynMod2MassDiff"
+        Return Me.txtDynMod2List.Text
+      Case "txtDynMod3MassDiff"
+        Return Me.txtDynMod3List.Text
+      Case Else
+        Return ""
+    End Select
+  End Function
 
-    Private Function GetAffectedIsoAtomFromControlName(ByVal sender As System.Object) As String
-        Dim tmpTB As System.Windows.Forms.TextBox = DirectCast(sender, System.Windows.Forms.TextBox)
-        Dim TBName As String = tmpTB.Name
+  Private Function GetAffectedIsoAtomFromControlName(ByVal sender As System.Object) As String
+    Dim tmpTB As System.Windows.Forms.TextBox = DirectCast(sender, System.Windows.Forms.TextBox)
+    Dim TBName As String = tmpTB.Name
 
-        Select Case TBName
-            Case "txtIsoC"
-                Return "C"
-            Case "txtIsoH"
-                Return "H"
-            Case "txtIsoO"
-                Return "O"
-            Case "txtIsoN"
-                Return "N"
-            Case "txtIsoS"
-                Return "S"
-            Case Else
-                Return ""
-        End Select
-    End Function
-    Private Function GetModTypeFromControlName(ByVal sender As System.Object) As IMassTweaker.ModTypes
-        Dim tmpTB As System.Windows.Forms.TextBox = DirectCast(sender, System.Windows.Forms.TextBox)
-        Dim TBName As String = tmpTB.Parent.Name.ToString
+    Select Case TBName
+      Case "txtIsoC"
+        Return "C"
+      Case "txtIsoH"
+        Return "H"
+      Case "txtIsoO"
+        Return "O"
+      Case "txtIsoN"
+        Return "N"
+      Case "txtIsoS"
+        Return "S"
+      Case Else
+        Return ""
+    End Select
+  End Function
+  Private Function GetModTypeFromControlName(ByVal sender As System.Object) As IMassTweaker.ModTypes
+    Dim tmpTB As System.Windows.Forms.TextBox = DirectCast(sender, System.Windows.Forms.TextBox)
+    Dim TBName As String = tmpTB.Parent.Name.ToString
 
-        Select Case TBName
-            Case "gbxDynMods"
-                Return IMassTweaker.ModTypes.DynamicMod
-            Case "gbxIsoMods"
-                Return IMassTweaker.ModTypes.IsotopicMod
-            Case "gbxStaticMods"
-                Return IMassTweaker.ModTypes.StaticMod
-        End Select
-    End Function
+    Select Case TBName
+      Case "gbxDynMods"
+        Return IMassTweaker.ModTypes.DynamicMod
+      Case "gbxIsoMods"
+        Return IMassTweaker.ModTypes.IsotopicMod
+      Case "gbxStaticMods"
+        Return IMassTweaker.ModTypes.StaticMod
+    End Select
+  End Function
 
-    Private Sub cmdReTweak_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdReTweak.Click
-        If Me.m_UseAutoTweak Then RetweakMasses()
-    End Sub
+  Private Sub cmdReTweak_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdReTweak.Click
+    If Me.m_UseAutoTweak Then RetweakMasses()
+  End Sub
 
-    Private Sub RetweakMasses()
-        Dim g_d As Control
-        Dim t As Control
+  Private Sub RetweakMasses()
+    Dim g_d As Control
+    Dim t As Control
 
 
-        For Each g_d In Me.tabBasic.Controls
-            If g_d.GetType.ToString = "System.Windows.Forms.GroupBox" Then
-                For Each t In g_d.Controls
-                    If IsNumeric(t.Text) And t.GetType.ToString = "System.Windows.Forms.TextBox" Then
-                        If CSng(t.Text) <> 0.0 Then
-                            numericTextbox_Validating(t, Nothing)
-                        Else
-                            t.BackColor = System.Drawing.SystemColors.Window
-                        End If
-                    End If
-                Next
+    For Each g_d In Me.tabBasic.Controls
+      If g_d.GetType.ToString = "System.Windows.Forms.GroupBox" Then
+        For Each t In g_d.Controls
+          If IsNumeric(t.Text) And t.GetType.ToString = "System.Windows.Forms.TextBox" Then
+            If CSng(t.Text) <> 0.0 Then
+              numericTextbox_Validating(t, Nothing)
+            Else
+              t.BackColor = System.Drawing.SystemColors.Window
             End If
+          End If
         Next
+      End If
+    Next
 
-    End Sub
+  End Sub
 
-    Private Function UpdateDescription(ByVal paramSet As ParamFileGenerator.clsParams) As String
-        Return Me.m_DMSUpload.GetDiffsFromTemplate(paramSet)
-    End Function
+  Private Function UpdateDescription(ByVal paramSet As ParamFileGenerator.clsParams) As String
+    Return Me.m_DMSUpload.GetDiffsFromTemplate(paramSet)
+  End Function
 
-    Private Sub mnuDebugSyncAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDebugSyncAll.Click
-        Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
+  Private Sub mnuDebugSyncAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDebugSyncAll.Click
+    Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
 
-        sync.SyncAll()
+    sync.SyncAll()
 
-    End Sub
+  End Sub
 
-    Private Sub mnuDebugSyncSingle_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDebugSyncSingle.Click
-        Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
-        Dim paramFileID As Integer = CInt(InputBox("Enter an Parameter File ID to be Sync'ed", "Param File to Sync"))
-        sync.SyncOneJob(paramFileID)
-    End Sub
+  Private Sub mnuDebugSyncSingle_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDebugSyncSingle.Click
+    Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
+    Dim paramFileID As Integer = CInt(InputBox("Enter an Parameter File ID to be Sync'ed", "Param File to Sync"))
+    sync.SyncOneJob(paramFileID)
+  End Sub
 
-    Private Sub mnuDebugSyncDesc_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDebugSyncDesc.Click
-        Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
-        sync.SyncDescriptions(clsMainProcess.BaseLineParamSet)
+  Private Sub mnuDebugSyncDesc_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDebugSyncDesc.Click
+    Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
+    sync.SyncDescriptions(clsMainProcess.BaseLineParamSet)
 
-    End Sub
+  End Sub
 
 End Class
 
 Public Class NumericTextBox
-    Inherits System.Windows.Forms.TextBox
+  Inherits System.Windows.Forms.TextBox
 
-    Private m_ForceChange As Boolean
+  Private m_ForceChange As Boolean
 
-    Public Property ForceNewValue() As Boolean
-        Get
-            Return Me.m_ForceChange
-        End Get
-        Set(ByVal Value As Boolean)
-            Me.m_ForceChange = Value
-        End Set
-    End Property
+  Public Property ForceNewValue() As Boolean
+    Get
+      Return Me.m_ForceChange
+    End Get
+    Set(ByVal Value As Boolean)
+      Me.m_ForceChange = Value
+    End Set
+  End Property
 
 
 End Class
 
 Class ComboBoxContents
-    Private m_Name As String
-    Private m_Value As String
+  Private m_Name As String
+  Private m_Value As String
 
-    Sub New(ByVal name As String, ByVal value As String)
-        Me.m_Value = value
-        Me.m_Name = name
-    End Sub
+  Sub New(ByVal name As String, ByVal value As String)
+    Me.m_Value = value
+    Me.m_Name = name
+  End Sub
 
-    ReadOnly Property DisplayName() As String
-        Get
-            Return Me.m_Name
-        End Get
-    End Property
-    ReadOnly Property Value() As String
-        Get
-            Return Me.m_Value
-        End Get
-    End Property
+  ReadOnly Property DisplayName() As String
+    Get
+      Return Me.m_Name
+    End Get
+  End Property
+  ReadOnly Property Value() As String
+    Get
+      Return Me.m_Value
+    End Get
+  End Property
 End Class
