@@ -254,6 +254,9 @@ Public Class frmMain
             Me.txtResults.Text = "File successfully written to: " & System.IO.Path.Combine(m_OutputPath, m_ParamFileName)
         Else
             Me.txtResults.Text = "Error!"
+            If Not Me.m_DMS.LastError Is Nothing AndAlso Me.m_DMS.LastError.Length > 0 Then
+                Me.txtResults.Text &= " " & Me.m_DMS.LastError
+            End If
         End If
     End Sub
 

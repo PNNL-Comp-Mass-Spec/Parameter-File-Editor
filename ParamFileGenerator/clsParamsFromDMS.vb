@@ -310,7 +310,7 @@ Namespace DownloadParams
     End Function
     'Todo Adding mass mod grabber
     Protected Function GetMassModsFromDMS(ByVal ParamSetID As Integer, ByRef sc As clsDMSParamStorage) As clsDMSParamStorage
-      Const MaxDynMods As Integer = 6
+            Const MaxDynMods As Integer = 15
 
       Dim foundRow As DataRow
       Dim foundRows() As DataRow
