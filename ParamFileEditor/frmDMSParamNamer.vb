@@ -59,7 +59,7 @@ Public Class frmDMSParamNamer
         '
         Me.txtSaveFileName.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtSaveFileName.Location = New System.Drawing.Point(12, 24)
-        Me.txtSaveFileName.MaxLength = 64
+        Me.txtSaveFileName.MaxLength = 255
         Me.txtSaveFileName.Name = "txtSaveFileName"
         Me.txtSaveFileName.Size = New System.Drawing.Size(376, 21)
         Me.txtSaveFileName.TabIndex = 0
