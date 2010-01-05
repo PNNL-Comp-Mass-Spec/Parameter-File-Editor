@@ -245,11 +245,6 @@ Public Class frmMainGUI
         Me.tcMain = New System.Windows.Forms.TabControl
         Me.tabBasic = New System.Windows.Forms.TabPage
         Me.gbxIsoMods = New System.Windows.Forms.GroupBox
-        Me.txtIsoS = New ParamFileEditor.NumericTextBox
-        Me.txtIsoH = New ParamFileEditor.NumericTextBox
-        Me.txtIsoN = New ParamFileEditor.NumericTextBox
-        Me.txtIsoO = New ParamFileEditor.NumericTextBox
-        Me.txtIsoC = New ParamFileEditor.NumericTextBox
         Me.lblIsoS = New System.Windows.Forms.Label
         Me.lblIsoN = New System.Windows.Forms.Label
         Me.lblIsoH = New System.Windows.Forms.Label
@@ -259,34 +254,6 @@ Public Class frmMainGUI
         Me.chkAutoTweak = New System.Windows.Forms.CheckBox
         Me.gbxStaticMods = New System.Windows.Forms.GroupBox
         Me.lblCTPep = New System.Windows.Forms.Label
-        Me.txtCTPep = New ParamFileEditor.NumericTextBox
-        Me.txtAla = New ParamFileEditor.NumericTextBox
-        Me.txtCTProt = New ParamFileEditor.NumericTextBox
-        Me.txtNTPep = New ParamFileEditor.NumericTextBox
-        Me.txtNTProt = New ParamFileEditor.NumericTextBox
-        Me.txtGly = New ParamFileEditor.NumericTextBox
-        Me.txtSer = New ParamFileEditor.NumericTextBox
-        Me.txtCys = New ParamFileEditor.NumericTextBox
-        Me.txtPro = New ParamFileEditor.NumericTextBox
-        Me.TxtLorI = New ParamFileEditor.NumericTextBox
-        Me.txtThr = New ParamFileEditor.NumericTextBox
-        Me.txtIle = New ParamFileEditor.NumericTextBox
-        Me.txtVal = New ParamFileEditor.NumericTextBox
-        Me.txtLeu = New ParamFileEditor.NumericTextBox
-        Me.txtNandD = New ParamFileEditor.NumericTextBox
-        Me.txtQandE = New ParamFileEditor.NumericTextBox
-        Me.txtAsn = New ParamFileEditor.NumericTextBox
-        Me.txtLys = New ParamFileEditor.NumericTextBox
-        Me.txtOrn = New ParamFileEditor.NumericTextBox
-        Me.txtGln = New ParamFileEditor.NumericTextBox
-        Me.txtAsp = New ParamFileEditor.NumericTextBox
-        Me.txtArg = New ParamFileEditor.NumericTextBox
-        Me.txtTrp = New ParamFileEditor.NumericTextBox
-        Me.txtGlu = New ParamFileEditor.NumericTextBox
-        Me.txtHis = New ParamFileEditor.NumericTextBox
-        Me.txtPhe = New ParamFileEditor.NumericTextBox
-        Me.txtTyr = New ParamFileEditor.NumericTextBox
-        Me.txtMet = New ParamFileEditor.NumericTextBox
         Me.lblCTProt = New System.Windows.Forms.Label
         Me.lblNTPep = New System.Windows.Forms.Label
         Me.lblNTProt = New System.Windows.Forms.Label
@@ -336,11 +303,8 @@ Public Class frmMainGUI
         Me.lblCleavagePosition = New System.Windows.Forms.Label
         Me.gbxDynMods = New System.Windows.Forms.GroupBox
         Me.txtDynMod1List = New System.Windows.Forms.TextBox
-        Me.txtDynMod1MassDiff = New ParamFileEditor.NumericTextBox
         Me.txtDynMod2List = New System.Windows.Forms.TextBox
-        Me.txtDynMod2MassDiff = New ParamFileEditor.NumericTextBox
         Me.txtDynMod3List = New System.Windows.Forms.TextBox
-        Me.txtDynMod3MassDiff = New ParamFileEditor.NumericTextBox
         Me.lblDynMod1List = New System.Windows.Forms.Label
         Me.lblDynMod2List = New System.Windows.Forms.Label
         Me.lblDynMod3List = New System.Windows.Forms.Label
@@ -348,12 +312,10 @@ Public Class frmMainGUI
         Me.lblDynMod3MassDiff = New System.Windows.Forms.Label
         Me.lblDynMod2MassDiff = New System.Windows.Forms.Label
         Me.txtDynMod4List = New System.Windows.Forms.TextBox
-        Me.txtDynMod4MassDiff = New ParamFileEditor.NumericTextBox
         Me.lblDynMod4List = New System.Windows.Forms.Label
         Me.lblDynMod4MassDiff = New System.Windows.Forms.Label
         Me.lblDynMod5MassDiff = New System.Windows.Forms.Label
         Me.txtDynMod5List = New System.Windows.Forms.TextBox
-        Me.txtDynMod5MassDiff = New ParamFileEditor.NumericTextBox
         Me.lblDynMod5List = New System.Windows.Forms.Label
         Me.tabAdvanced = New System.Windows.Forms.TabPage
         Me.gbxIonWeighting = New System.Windows.Forms.GroupBox
@@ -438,6 +400,44 @@ Public Class frmMainGUI
         Me.lblParamFileInfo = New System.Windows.Forms.Label
         Me.StatModErrorProvider = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.tooltipProvider = New System.Windows.Forms.ToolTip(Me.components)
+        Me.txtIsoS = New ParamFileEditor.NumericTextBox
+        Me.txtIsoH = New ParamFileEditor.NumericTextBox
+        Me.txtIsoN = New ParamFileEditor.NumericTextBox
+        Me.txtIsoO = New ParamFileEditor.NumericTextBox
+        Me.txtIsoC = New ParamFileEditor.NumericTextBox
+        Me.txtCTPep = New ParamFileEditor.NumericTextBox
+        Me.txtAla = New ParamFileEditor.NumericTextBox
+        Me.txtCTProt = New ParamFileEditor.NumericTextBox
+        Me.txtNTPep = New ParamFileEditor.NumericTextBox
+        Me.txtNTProt = New ParamFileEditor.NumericTextBox
+        Me.txtGly = New ParamFileEditor.NumericTextBox
+        Me.txtSer = New ParamFileEditor.NumericTextBox
+        Me.txtCys = New ParamFileEditor.NumericTextBox
+        Me.txtPro = New ParamFileEditor.NumericTextBox
+        Me.TxtLorI = New ParamFileEditor.NumericTextBox
+        Me.txtThr = New ParamFileEditor.NumericTextBox
+        Me.txtIle = New ParamFileEditor.NumericTextBox
+        Me.txtVal = New ParamFileEditor.NumericTextBox
+        Me.txtLeu = New ParamFileEditor.NumericTextBox
+        Me.txtNandD = New ParamFileEditor.NumericTextBox
+        Me.txtQandE = New ParamFileEditor.NumericTextBox
+        Me.txtAsn = New ParamFileEditor.NumericTextBox
+        Me.txtLys = New ParamFileEditor.NumericTextBox
+        Me.txtOrn = New ParamFileEditor.NumericTextBox
+        Me.txtGln = New ParamFileEditor.NumericTextBox
+        Me.txtAsp = New ParamFileEditor.NumericTextBox
+        Me.txtArg = New ParamFileEditor.NumericTextBox
+        Me.txtTrp = New ParamFileEditor.NumericTextBox
+        Me.txtGlu = New ParamFileEditor.NumericTextBox
+        Me.txtHis = New ParamFileEditor.NumericTextBox
+        Me.txtPhe = New ParamFileEditor.NumericTextBox
+        Me.txtTyr = New ParamFileEditor.NumericTextBox
+        Me.txtMet = New ParamFileEditor.NumericTextBox
+        Me.txtDynMod1MassDiff = New ParamFileEditor.NumericTextBox
+        Me.txtDynMod2MassDiff = New ParamFileEditor.NumericTextBox
+        Me.txtDynMod3MassDiff = New ParamFileEditor.NumericTextBox
+        Me.txtDynMod4MassDiff = New ParamFileEditor.NumericTextBox
+        Me.txtDynMod5MassDiff = New ParamFileEditor.NumericTextBox
         Me.tcMain.SuspendLayout()
         Me.tabBasic.SuspendLayout()
         Me.gbxIsoMods.SuspendLayout()
@@ -500,51 +500,6 @@ Public Class frmMainGUI
         Me.gbxIsoMods.TabIndex = 11
         Me.gbxIsoMods.TabStop = False
         Me.gbxIsoMods.Text = "Isotopic Modifications to Apply"
-        '
-        'txtIsoS
-        '
-        Me.txtIsoS.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtIsoS.ForceNewValue = False
-        Me.txtIsoS.Location = New System.Drawing.Point(364, 31)
-        Me.txtIsoS.Name = "txtIsoS"
-        Me.txtIsoS.Size = New System.Drawing.Size(64, 20)
-        Me.txtIsoS.TabIndex = 9
-        '
-        'txtIsoH
-        '
-        Me.txtIsoH.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtIsoH.ForceNewValue = False
-        Me.txtIsoH.Location = New System.Drawing.Point(100, 31)
-        Me.txtIsoH.Name = "txtIsoH"
-        Me.txtIsoH.Size = New System.Drawing.Size(64, 20)
-        Me.txtIsoH.TabIndex = 8
-        '
-        'txtIsoN
-        '
-        Me.txtIsoN.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtIsoN.ForceNewValue = False
-        Me.txtIsoN.Location = New System.Drawing.Point(276, 31)
-        Me.txtIsoN.Name = "txtIsoN"
-        Me.txtIsoN.Size = New System.Drawing.Size(64, 20)
-        Me.txtIsoN.TabIndex = 6
-        '
-        'txtIsoO
-        '
-        Me.txtIsoO.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtIsoO.ForceNewValue = False
-        Me.txtIsoO.Location = New System.Drawing.Point(188, 31)
-        Me.txtIsoO.Name = "txtIsoO"
-        Me.txtIsoO.Size = New System.Drawing.Size(64, 20)
-        Me.txtIsoO.TabIndex = 5
-        '
-        'txtIsoC
-        '
-        Me.txtIsoC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtIsoC.ForceNewValue = False
-        Me.txtIsoC.Location = New System.Drawing.Point(16, 31)
-        Me.txtIsoC.Name = "txtIsoC"
-        Me.txtIsoC.Size = New System.Drawing.Size(64, 20)
-        Me.txtIsoC.TabIndex = 4
         '
         'lblIsoS
         '
@@ -691,261 +646,6 @@ Public Class frmMainGUI
         Me.lblCTPep.TabIndex = 1
         Me.lblCTPep.Text = "C-Term Pep"
         Me.lblCTPep.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
-        'txtCTPep
-        '
-        Me.txtCTPep.BackColor = System.Drawing.SystemColors.Window
-        Me.txtCTPep.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtCTPep.ForceNewValue = False
-        Me.txtCTPep.Location = New System.Drawing.Point(12, 32)
-        Me.txtCTPep.Name = "txtCTPep"
-        Me.txtCTPep.Size = New System.Drawing.Size(55, 20)
-        Me.txtCTPep.TabIndex = 12
-        '
-        'txtAla
-        '
-        Me.txtAla.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAla.ForceNewValue = False
-        Me.txtAla.Location = New System.Drawing.Point(322, 32)
-        Me.txtAla.Name = "txtAla"
-        Me.txtAla.Size = New System.Drawing.Size(55, 20)
-        Me.txtAla.TabIndex = 17
-        '
-        'txtCTProt
-        '
-        Me.txtCTProt.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtCTProt.ForceNewValue = False
-        Me.txtCTProt.Location = New System.Drawing.Point(74, 32)
-        Me.txtCTProt.Name = "txtCTProt"
-        Me.txtCTProt.Size = New System.Drawing.Size(55, 20)
-        Me.txtCTProt.TabIndex = 13
-        '
-        'txtNTPep
-        '
-        Me.txtNTPep.BackColor = System.Drawing.SystemColors.Window
-        Me.txtNTPep.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNTPep.ForceNewValue = False
-        Me.txtNTPep.Location = New System.Drawing.Point(136, 32)
-        Me.txtNTPep.Name = "txtNTPep"
-        Me.txtNTPep.Size = New System.Drawing.Size(55, 20)
-        Me.txtNTPep.TabIndex = 14
-        '
-        'txtNTProt
-        '
-        Me.txtNTProt.BackColor = System.Drawing.SystemColors.Window
-        Me.txtNTProt.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNTProt.ForceNewValue = False
-        Me.txtNTProt.Location = New System.Drawing.Point(198, 32)
-        Me.txtNTProt.Name = "txtNTProt"
-        Me.txtNTProt.Size = New System.Drawing.Size(55, 20)
-        Me.txtNTProt.TabIndex = 15
-        '
-        'txtGly
-        '
-        Me.txtGly.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGly.ForceNewValue = False
-        Me.txtGly.Location = New System.Drawing.Point(260, 32)
-        Me.txtGly.Name = "txtGly"
-        Me.txtGly.Size = New System.Drawing.Size(55, 20)
-        Me.txtGly.TabIndex = 16
-        '
-        'txtSer
-        '
-        Me.txtSer.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSer.ForceNewValue = False
-        Me.txtSer.Location = New System.Drawing.Point(384, 32)
-        Me.txtSer.Name = "txtSer"
-        Me.txtSer.Size = New System.Drawing.Size(55, 20)
-        Me.txtSer.TabIndex = 18
-        '
-        'txtCys
-        '
-        Me.txtCys.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtCys.ForceNewValue = False
-        Me.txtCys.Location = New System.Drawing.Point(198, 66)
-        Me.txtCys.Name = "txtCys"
-        Me.txtCys.Size = New System.Drawing.Size(55, 20)
-        Me.txtCys.TabIndex = 22
-        '
-        'txtPro
-        '
-        Me.txtPro.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPro.ForceNewValue = False
-        Me.txtPro.Location = New System.Drawing.Point(12, 66)
-        Me.txtPro.Name = "txtPro"
-        Me.txtPro.Size = New System.Drawing.Size(55, 20)
-        Me.txtPro.TabIndex = 19
-        '
-        'TxtLorI
-        '
-        Me.TxtLorI.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TxtLorI.ForceNewValue = False
-        Me.TxtLorI.Location = New System.Drawing.Point(384, 66)
-        Me.TxtLorI.Name = "TxtLorI"
-        Me.TxtLorI.Size = New System.Drawing.Size(55, 20)
-        Me.TxtLorI.TabIndex = 25
-        '
-        'txtThr
-        '
-        Me.txtThr.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtThr.ForceNewValue = False
-        Me.txtThr.Location = New System.Drawing.Point(136, 66)
-        Me.txtThr.Name = "txtThr"
-        Me.txtThr.Size = New System.Drawing.Size(55, 20)
-        Me.txtThr.TabIndex = 21
-        '
-        'txtIle
-        '
-        Me.txtIle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtIle.ForceNewValue = False
-        Me.txtIle.Location = New System.Drawing.Point(322, 66)
-        Me.txtIle.Name = "txtIle"
-        Me.txtIle.Size = New System.Drawing.Size(55, 20)
-        Me.txtIle.TabIndex = 24
-        '
-        'txtVal
-        '
-        Me.txtVal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtVal.ForceNewValue = False
-        Me.txtVal.Location = New System.Drawing.Point(74, 66)
-        Me.txtVal.Name = "txtVal"
-        Me.txtVal.Size = New System.Drawing.Size(55, 20)
-        Me.txtVal.TabIndex = 20
-        '
-        'txtLeu
-        '
-        Me.txtLeu.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLeu.ForceNewValue = False
-        Me.txtLeu.Location = New System.Drawing.Point(260, 66)
-        Me.txtLeu.Name = "txtLeu"
-        Me.txtLeu.Size = New System.Drawing.Size(55, 20)
-        Me.txtLeu.TabIndex = 23
-        '
-        'txtNandD
-        '
-        Me.txtNandD.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNandD.ForceNewValue = False
-        Me.txtNandD.Location = New System.Drawing.Point(136, 100)
-        Me.txtNandD.Name = "txtNandD"
-        Me.txtNandD.Size = New System.Drawing.Size(55, 20)
-        Me.txtNandD.TabIndex = 28
-        '
-        'txtQandE
-        '
-        Me.txtQandE.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtQandE.ForceNewValue = False
-        Me.txtQandE.Location = New System.Drawing.Point(384, 100)
-        Me.txtQandE.Name = "txtQandE"
-        Me.txtQandE.Size = New System.Drawing.Size(55, 20)
-        Me.txtQandE.TabIndex = 32
-        '
-        'txtAsn
-        '
-        Me.txtAsn.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAsn.ForceNewValue = False
-        Me.txtAsn.Location = New System.Drawing.Point(12, 100)
-        Me.txtAsn.Name = "txtAsn"
-        Me.txtAsn.Size = New System.Drawing.Size(55, 20)
-        Me.txtAsn.TabIndex = 26
-        '
-        'txtLys
-        '
-        Me.txtLys.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLys.ForceNewValue = False
-        Me.txtLys.Location = New System.Drawing.Point(322, 100)
-        Me.txtLys.Name = "txtLys"
-        Me.txtLys.Size = New System.Drawing.Size(55, 20)
-        Me.txtLys.TabIndex = 31
-        '
-        'txtOrn
-        '
-        Me.txtOrn.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOrn.ForceNewValue = False
-        Me.txtOrn.Location = New System.Drawing.Point(74, 100)
-        Me.txtOrn.Name = "txtOrn"
-        Me.txtOrn.Size = New System.Drawing.Size(55, 20)
-        Me.txtOrn.TabIndex = 27
-        '
-        'txtGln
-        '
-        Me.txtGln.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGln.ForceNewValue = False
-        Me.txtGln.Location = New System.Drawing.Point(260, 100)
-        Me.txtGln.Name = "txtGln"
-        Me.txtGln.Size = New System.Drawing.Size(55, 20)
-        Me.txtGln.TabIndex = 30
-        '
-        'txtAsp
-        '
-        Me.txtAsp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAsp.ForceNewValue = False
-        Me.txtAsp.Location = New System.Drawing.Point(198, 100)
-        Me.txtAsp.Name = "txtAsp"
-        Me.txtAsp.Size = New System.Drawing.Size(55, 20)
-        Me.txtAsp.TabIndex = 29
-        '
-        'txtArg
-        '
-        Me.txtArg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtArg.ForceNewValue = False
-        Me.txtArg.Location = New System.Drawing.Point(260, 134)
-        Me.txtArg.Name = "txtArg"
-        Me.txtArg.Size = New System.Drawing.Size(55, 20)
-        Me.txtArg.TabIndex = 37
-        '
-        'txtTrp
-        '
-        Me.txtTrp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTrp.ForceNewValue = False
-        Me.txtTrp.Location = New System.Drawing.Point(384, 134)
-        Me.txtTrp.Name = "txtTrp"
-        Me.txtTrp.Size = New System.Drawing.Size(55, 20)
-        Me.txtTrp.TabIndex = 39
-        '
-        'txtGlu
-        '
-        Me.txtGlu.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGlu.ForceNewValue = False
-        Me.txtGlu.Location = New System.Drawing.Point(12, 134)
-        Me.txtGlu.Name = "txtGlu"
-        Me.txtGlu.Size = New System.Drawing.Size(55, 20)
-        Me.txtGlu.TabIndex = 33
-        '
-        'txtHis
-        '
-        Me.txtHis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtHis.ForceNewValue = False
-        Me.txtHis.Location = New System.Drawing.Point(136, 134)
-        Me.txtHis.Name = "txtHis"
-        Me.txtHis.Size = New System.Drawing.Size(55, 20)
-        Me.txtHis.TabIndex = 35
-        '
-        'txtPhe
-        '
-        Me.txtPhe.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPhe.ForceNewValue = False
-        Me.txtPhe.Location = New System.Drawing.Point(198, 134)
-        Me.txtPhe.Name = "txtPhe"
-        Me.txtPhe.Size = New System.Drawing.Size(55, 20)
-        Me.txtPhe.TabIndex = 36
-        '
-        'txtTyr
-        '
-        Me.txtTyr.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTyr.ForceNewValue = False
-        Me.txtTyr.Location = New System.Drawing.Point(322, 134)
-        Me.txtTyr.Name = "txtTyr"
-        Me.txtTyr.Size = New System.Drawing.Size(55, 20)
-        Me.txtTyr.TabIndex = 38
-        '
-        'txtMet
-        '
-        Me.txtMet.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtMet.ForceNewValue = False
-        Me.txtMet.Location = New System.Drawing.Point(74, 134)
-        Me.txtMet.Name = "txtMet"
-        Me.txtMet.Size = New System.Drawing.Size(55, 20)
-        Me.txtMet.TabIndex = 34
         '
         'lblCTProt
         '
@@ -1457,16 +1157,6 @@ Public Class frmMainGUI
         Me.txtDynMod1List.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod1List.TabIndex = 6
         '
-        'txtDynMod1MassDiff
-        '
-        Me.txtDynMod1MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDynMod1MassDiff.ForceNewValue = False
-        Me.txtDynMod1MassDiff.Location = New System.Drawing.Point(12, 74)
-        Me.txtDynMod1MassDiff.Name = "txtDynMod1MassDiff"
-        Me.txtDynMod1MassDiff.Size = New System.Drawing.Size(76, 20)
-        Me.txtDynMod1MassDiff.TabIndex = 7
-        Me.txtDynMod1MassDiff.Tag = "0"
-        '
         'txtDynMod2List
         '
         Me.txtDynMod2List.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1475,16 +1165,6 @@ Public Class frmMainGUI
         Me.txtDynMod2List.Size = New System.Drawing.Size(75, 20)
         Me.txtDynMod2List.TabIndex = 8
         '
-        'txtDynMod2MassDiff
-        '
-        Me.txtDynMod2MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDynMod2MassDiff.ForceNewValue = False
-        Me.txtDynMod2MassDiff.Location = New System.Drawing.Point(100, 74)
-        Me.txtDynMod2MassDiff.Name = "txtDynMod2MassDiff"
-        Me.txtDynMod2MassDiff.Size = New System.Drawing.Size(76, 20)
-        Me.txtDynMod2MassDiff.TabIndex = 9
-        Me.txtDynMod2MassDiff.Tag = "0"
-        '
         'txtDynMod3List
         '
         Me.txtDynMod3List.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1492,16 +1172,6 @@ Public Class frmMainGUI
         Me.txtDynMod3List.Name = "txtDynMod3List"
         Me.txtDynMod3List.Size = New System.Drawing.Size(74, 20)
         Me.txtDynMod3List.TabIndex = 10
-        '
-        'txtDynMod3MassDiff
-        '
-        Me.txtDynMod3MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDynMod3MassDiff.ForceNewValue = False
-        Me.txtDynMod3MassDiff.Location = New System.Drawing.Point(188, 74)
-        Me.txtDynMod3MassDiff.Name = "txtDynMod3MassDiff"
-        Me.txtDynMod3MassDiff.Size = New System.Drawing.Size(76, 20)
-        Me.txtDynMod3MassDiff.TabIndex = 11
-        Me.txtDynMod3MassDiff.Tag = "0"
         '
         'lblDynMod1List
         '
@@ -1565,16 +1235,6 @@ Public Class frmMainGUI
         Me.txtDynMod4List.Size = New System.Drawing.Size(73, 20)
         Me.txtDynMod4List.TabIndex = 10
         '
-        'txtDynMod4MassDiff
-        '
-        Me.txtDynMod4MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDynMod4MassDiff.ForceNewValue = False
-        Me.txtDynMod4MassDiff.Location = New System.Drawing.Point(276, 74)
-        Me.txtDynMod4MassDiff.Name = "txtDynMod4MassDiff"
-        Me.txtDynMod4MassDiff.Size = New System.Drawing.Size(76, 20)
-        Me.txtDynMod4MassDiff.TabIndex = 11
-        Me.txtDynMod4MassDiff.Tag = "0"
-        '
         'lblDynMod4List
         '
         Me.lblDynMod4List.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1609,16 +1269,6 @@ Public Class frmMainGUI
         Me.txtDynMod5List.Name = "txtDynMod5List"
         Me.txtDynMod5List.Size = New System.Drawing.Size(76, 20)
         Me.txtDynMod5List.TabIndex = 10
-        '
-        'txtDynMod5MassDiff
-        '
-        Me.txtDynMod5MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDynMod5MassDiff.ForceNewValue = False
-        Me.txtDynMod5MassDiff.Location = New System.Drawing.Point(364, 74)
-        Me.txtDynMod5MassDiff.Name = "txtDynMod5MassDiff"
-        Me.txtDynMod5MassDiff.Size = New System.Drawing.Size(76, 20)
-        Me.txtDynMod5MassDiff.TabIndex = 11
-        Me.txtDynMod5MassDiff.Tag = "0"
         '
         'lblDynMod5List
         '
@@ -1842,7 +1492,7 @@ Public Class frmMainGUI
         Me.chkUseAIons.Name = "chkUseAIons"
         Me.chkUseAIons.Size = New System.Drawing.Size(104, 16)
         Me.chkUseAIons.TabIndex = 23
-        Me.chkUseAIons.Text = "Use A Ions?"
+        Me.chkUseAIons.Text = "A ion neutral loss?"
         '
         'chkUseBIons
         '
@@ -1852,7 +1502,7 @@ Public Class frmMainGUI
         Me.chkUseBIons.Name = "chkUseBIons"
         Me.chkUseBIons.Size = New System.Drawing.Size(104, 16)
         Me.chkUseBIons.TabIndex = 24
-        Me.chkUseBIons.Text = "Use B Ions?"
+        Me.chkUseBIons.Text = "B ion neutral loss?"
         '
         'chkUseYIons
         '
@@ -1862,7 +1512,7 @@ Public Class frmMainGUI
         Me.chkUseYIons.Name = "chkUseYIons"
         Me.chkUseYIons.Size = New System.Drawing.Size(104, 16)
         Me.chkUseYIons.TabIndex = 25
-        Me.chkUseYIons.Text = "Use Y Ions?"
+        Me.chkUseYIons.Text = "Y ion neutral loss?"
         '
         'gbxMiscParams
         '
@@ -2346,6 +1996,356 @@ Public Class frmMainGUI
         '
         Me.StatModErrorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink
         Me.StatModErrorProvider.ContainerControl = Me
+        '
+        'txtIsoS
+        '
+        Me.txtIsoS.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtIsoS.ForceNewValue = False
+        Me.txtIsoS.Location = New System.Drawing.Point(364, 31)
+        Me.txtIsoS.Name = "txtIsoS"
+        Me.txtIsoS.Size = New System.Drawing.Size(64, 20)
+        Me.txtIsoS.TabIndex = 9
+        '
+        'txtIsoH
+        '
+        Me.txtIsoH.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtIsoH.ForceNewValue = False
+        Me.txtIsoH.Location = New System.Drawing.Point(100, 31)
+        Me.txtIsoH.Name = "txtIsoH"
+        Me.txtIsoH.Size = New System.Drawing.Size(64, 20)
+        Me.txtIsoH.TabIndex = 8
+        '
+        'txtIsoN
+        '
+        Me.txtIsoN.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtIsoN.ForceNewValue = False
+        Me.txtIsoN.Location = New System.Drawing.Point(276, 31)
+        Me.txtIsoN.Name = "txtIsoN"
+        Me.txtIsoN.Size = New System.Drawing.Size(64, 20)
+        Me.txtIsoN.TabIndex = 6
+        '
+        'txtIsoO
+        '
+        Me.txtIsoO.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtIsoO.ForceNewValue = False
+        Me.txtIsoO.Location = New System.Drawing.Point(188, 31)
+        Me.txtIsoO.Name = "txtIsoO"
+        Me.txtIsoO.Size = New System.Drawing.Size(64, 20)
+        Me.txtIsoO.TabIndex = 5
+        '
+        'txtIsoC
+        '
+        Me.txtIsoC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtIsoC.ForceNewValue = False
+        Me.txtIsoC.Location = New System.Drawing.Point(16, 31)
+        Me.txtIsoC.Name = "txtIsoC"
+        Me.txtIsoC.Size = New System.Drawing.Size(64, 20)
+        Me.txtIsoC.TabIndex = 4
+        '
+        'txtCTPep
+        '
+        Me.txtCTPep.BackColor = System.Drawing.SystemColors.Window
+        Me.txtCTPep.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtCTPep.ForceNewValue = False
+        Me.txtCTPep.Location = New System.Drawing.Point(12, 32)
+        Me.txtCTPep.Name = "txtCTPep"
+        Me.txtCTPep.Size = New System.Drawing.Size(55, 20)
+        Me.txtCTPep.TabIndex = 12
+        '
+        'txtAla
+        '
+        Me.txtAla.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtAla.ForceNewValue = False
+        Me.txtAla.Location = New System.Drawing.Point(322, 32)
+        Me.txtAla.Name = "txtAla"
+        Me.txtAla.Size = New System.Drawing.Size(55, 20)
+        Me.txtAla.TabIndex = 17
+        '
+        'txtCTProt
+        '
+        Me.txtCTProt.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtCTProt.ForceNewValue = False
+        Me.txtCTProt.Location = New System.Drawing.Point(74, 32)
+        Me.txtCTProt.Name = "txtCTProt"
+        Me.txtCTProt.Size = New System.Drawing.Size(55, 20)
+        Me.txtCTProt.TabIndex = 13
+        '
+        'txtNTPep
+        '
+        Me.txtNTPep.BackColor = System.Drawing.SystemColors.Window
+        Me.txtNTPep.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtNTPep.ForceNewValue = False
+        Me.txtNTPep.Location = New System.Drawing.Point(136, 32)
+        Me.txtNTPep.Name = "txtNTPep"
+        Me.txtNTPep.Size = New System.Drawing.Size(55, 20)
+        Me.txtNTPep.TabIndex = 14
+        '
+        'txtNTProt
+        '
+        Me.txtNTProt.BackColor = System.Drawing.SystemColors.Window
+        Me.txtNTProt.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtNTProt.ForceNewValue = False
+        Me.txtNTProt.Location = New System.Drawing.Point(198, 32)
+        Me.txtNTProt.Name = "txtNTProt"
+        Me.txtNTProt.Size = New System.Drawing.Size(55, 20)
+        Me.txtNTProt.TabIndex = 15
+        '
+        'txtGly
+        '
+        Me.txtGly.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtGly.ForceNewValue = False
+        Me.txtGly.Location = New System.Drawing.Point(260, 32)
+        Me.txtGly.Name = "txtGly"
+        Me.txtGly.Size = New System.Drawing.Size(55, 20)
+        Me.txtGly.TabIndex = 16
+        '
+        'txtSer
+        '
+        Me.txtSer.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtSer.ForceNewValue = False
+        Me.txtSer.Location = New System.Drawing.Point(384, 32)
+        Me.txtSer.Name = "txtSer"
+        Me.txtSer.Size = New System.Drawing.Size(55, 20)
+        Me.txtSer.TabIndex = 18
+        '
+        'txtCys
+        '
+        Me.txtCys.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtCys.ForceNewValue = False
+        Me.txtCys.Location = New System.Drawing.Point(198, 66)
+        Me.txtCys.Name = "txtCys"
+        Me.txtCys.Size = New System.Drawing.Size(55, 20)
+        Me.txtCys.TabIndex = 22
+        '
+        'txtPro
+        '
+        Me.txtPro.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtPro.ForceNewValue = False
+        Me.txtPro.Location = New System.Drawing.Point(12, 66)
+        Me.txtPro.Name = "txtPro"
+        Me.txtPro.Size = New System.Drawing.Size(55, 20)
+        Me.txtPro.TabIndex = 19
+        '
+        'TxtLorI
+        '
+        Me.TxtLorI.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TxtLorI.ForceNewValue = False
+        Me.TxtLorI.Location = New System.Drawing.Point(384, 66)
+        Me.TxtLorI.Name = "TxtLorI"
+        Me.TxtLorI.Size = New System.Drawing.Size(55, 20)
+        Me.TxtLorI.TabIndex = 25
+        '
+        'txtThr
+        '
+        Me.txtThr.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtThr.ForceNewValue = False
+        Me.txtThr.Location = New System.Drawing.Point(136, 66)
+        Me.txtThr.Name = "txtThr"
+        Me.txtThr.Size = New System.Drawing.Size(55, 20)
+        Me.txtThr.TabIndex = 21
+        '
+        'txtIle
+        '
+        Me.txtIle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtIle.ForceNewValue = False
+        Me.txtIle.Location = New System.Drawing.Point(322, 66)
+        Me.txtIle.Name = "txtIle"
+        Me.txtIle.Size = New System.Drawing.Size(55, 20)
+        Me.txtIle.TabIndex = 24
+        '
+        'txtVal
+        '
+        Me.txtVal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtVal.ForceNewValue = False
+        Me.txtVal.Location = New System.Drawing.Point(74, 66)
+        Me.txtVal.Name = "txtVal"
+        Me.txtVal.Size = New System.Drawing.Size(55, 20)
+        Me.txtVal.TabIndex = 20
+        '
+        'txtLeu
+        '
+        Me.txtLeu.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtLeu.ForceNewValue = False
+        Me.txtLeu.Location = New System.Drawing.Point(260, 66)
+        Me.txtLeu.Name = "txtLeu"
+        Me.txtLeu.Size = New System.Drawing.Size(55, 20)
+        Me.txtLeu.TabIndex = 23
+        '
+        'txtNandD
+        '
+        Me.txtNandD.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtNandD.ForceNewValue = False
+        Me.txtNandD.Location = New System.Drawing.Point(136, 100)
+        Me.txtNandD.Name = "txtNandD"
+        Me.txtNandD.Size = New System.Drawing.Size(55, 20)
+        Me.txtNandD.TabIndex = 28
+        '
+        'txtQandE
+        '
+        Me.txtQandE.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtQandE.ForceNewValue = False
+        Me.txtQandE.Location = New System.Drawing.Point(384, 100)
+        Me.txtQandE.Name = "txtQandE"
+        Me.txtQandE.Size = New System.Drawing.Size(55, 20)
+        Me.txtQandE.TabIndex = 32
+        '
+        'txtAsn
+        '
+        Me.txtAsn.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtAsn.ForceNewValue = False
+        Me.txtAsn.Location = New System.Drawing.Point(12, 100)
+        Me.txtAsn.Name = "txtAsn"
+        Me.txtAsn.Size = New System.Drawing.Size(55, 20)
+        Me.txtAsn.TabIndex = 26
+        '
+        'txtLys
+        '
+        Me.txtLys.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtLys.ForceNewValue = False
+        Me.txtLys.Location = New System.Drawing.Point(322, 100)
+        Me.txtLys.Name = "txtLys"
+        Me.txtLys.Size = New System.Drawing.Size(55, 20)
+        Me.txtLys.TabIndex = 31
+        '
+        'txtOrn
+        '
+        Me.txtOrn.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtOrn.ForceNewValue = False
+        Me.txtOrn.Location = New System.Drawing.Point(74, 100)
+        Me.txtOrn.Name = "txtOrn"
+        Me.txtOrn.Size = New System.Drawing.Size(55, 20)
+        Me.txtOrn.TabIndex = 27
+        '
+        'txtGln
+        '
+        Me.txtGln.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtGln.ForceNewValue = False
+        Me.txtGln.Location = New System.Drawing.Point(260, 100)
+        Me.txtGln.Name = "txtGln"
+        Me.txtGln.Size = New System.Drawing.Size(55, 20)
+        Me.txtGln.TabIndex = 30
+        '
+        'txtAsp
+        '
+        Me.txtAsp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtAsp.ForceNewValue = False
+        Me.txtAsp.Location = New System.Drawing.Point(198, 100)
+        Me.txtAsp.Name = "txtAsp"
+        Me.txtAsp.Size = New System.Drawing.Size(55, 20)
+        Me.txtAsp.TabIndex = 29
+        '
+        'txtArg
+        '
+        Me.txtArg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtArg.ForceNewValue = False
+        Me.txtArg.Location = New System.Drawing.Point(260, 134)
+        Me.txtArg.Name = "txtArg"
+        Me.txtArg.Size = New System.Drawing.Size(55, 20)
+        Me.txtArg.TabIndex = 37
+        '
+        'txtTrp
+        '
+        Me.txtTrp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTrp.ForceNewValue = False
+        Me.txtTrp.Location = New System.Drawing.Point(384, 134)
+        Me.txtTrp.Name = "txtTrp"
+        Me.txtTrp.Size = New System.Drawing.Size(55, 20)
+        Me.txtTrp.TabIndex = 39
+        '
+        'txtGlu
+        '
+        Me.txtGlu.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtGlu.ForceNewValue = False
+        Me.txtGlu.Location = New System.Drawing.Point(12, 134)
+        Me.txtGlu.Name = "txtGlu"
+        Me.txtGlu.Size = New System.Drawing.Size(55, 20)
+        Me.txtGlu.TabIndex = 33
+        '
+        'txtHis
+        '
+        Me.txtHis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtHis.ForceNewValue = False
+        Me.txtHis.Location = New System.Drawing.Point(136, 134)
+        Me.txtHis.Name = "txtHis"
+        Me.txtHis.Size = New System.Drawing.Size(55, 20)
+        Me.txtHis.TabIndex = 35
+        '
+        'txtPhe
+        '
+        Me.txtPhe.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtPhe.ForceNewValue = False
+        Me.txtPhe.Location = New System.Drawing.Point(198, 134)
+        Me.txtPhe.Name = "txtPhe"
+        Me.txtPhe.Size = New System.Drawing.Size(55, 20)
+        Me.txtPhe.TabIndex = 36
+        '
+        'txtTyr
+        '
+        Me.txtTyr.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTyr.ForceNewValue = False
+        Me.txtTyr.Location = New System.Drawing.Point(322, 134)
+        Me.txtTyr.Name = "txtTyr"
+        Me.txtTyr.Size = New System.Drawing.Size(55, 20)
+        Me.txtTyr.TabIndex = 38
+        '
+        'txtMet
+        '
+        Me.txtMet.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtMet.ForceNewValue = False
+        Me.txtMet.Location = New System.Drawing.Point(74, 134)
+        Me.txtMet.Name = "txtMet"
+        Me.txtMet.Size = New System.Drawing.Size(55, 20)
+        Me.txtMet.TabIndex = 34
+        '
+        'txtDynMod1MassDiff
+        '
+        Me.txtDynMod1MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod1MassDiff.ForceNewValue = False
+        Me.txtDynMod1MassDiff.Location = New System.Drawing.Point(12, 74)
+        Me.txtDynMod1MassDiff.Name = "txtDynMod1MassDiff"
+        Me.txtDynMod1MassDiff.Size = New System.Drawing.Size(76, 20)
+        Me.txtDynMod1MassDiff.TabIndex = 7
+        Me.txtDynMod1MassDiff.Tag = "0"
+        '
+        'txtDynMod2MassDiff
+        '
+        Me.txtDynMod2MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod2MassDiff.ForceNewValue = False
+        Me.txtDynMod2MassDiff.Location = New System.Drawing.Point(100, 74)
+        Me.txtDynMod2MassDiff.Name = "txtDynMod2MassDiff"
+        Me.txtDynMod2MassDiff.Size = New System.Drawing.Size(76, 20)
+        Me.txtDynMod2MassDiff.TabIndex = 9
+        Me.txtDynMod2MassDiff.Tag = "0"
+        '
+        'txtDynMod3MassDiff
+        '
+        Me.txtDynMod3MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod3MassDiff.ForceNewValue = False
+        Me.txtDynMod3MassDiff.Location = New System.Drawing.Point(188, 74)
+        Me.txtDynMod3MassDiff.Name = "txtDynMod3MassDiff"
+        Me.txtDynMod3MassDiff.Size = New System.Drawing.Size(76, 20)
+        Me.txtDynMod3MassDiff.TabIndex = 11
+        Me.txtDynMod3MassDiff.Tag = "0"
+        '
+        'txtDynMod4MassDiff
+        '
+        Me.txtDynMod4MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod4MassDiff.ForceNewValue = False
+        Me.txtDynMod4MassDiff.Location = New System.Drawing.Point(276, 74)
+        Me.txtDynMod4MassDiff.Name = "txtDynMod4MassDiff"
+        Me.txtDynMod4MassDiff.Size = New System.Drawing.Size(76, 20)
+        Me.txtDynMod4MassDiff.TabIndex = 11
+        Me.txtDynMod4MassDiff.Tag = "0"
+        '
+        'txtDynMod5MassDiff
+        '
+        Me.txtDynMod5MassDiff.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDynMod5MassDiff.ForceNewValue = False
+        Me.txtDynMod5MassDiff.Location = New System.Drawing.Point(364, 74)
+        Me.txtDynMod5MassDiff.Name = "txtDynMod5MassDiff"
+        Me.txtDynMod5MassDiff.Size = New System.Drawing.Size(76, 20)
+        Me.txtDynMod5MassDiff.TabIndex = 11
+        Me.txtDynMod5MassDiff.Tag = "0"
         '
         'frmMainGUI
         '
