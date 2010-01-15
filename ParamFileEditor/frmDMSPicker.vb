@@ -9,9 +9,11 @@ Public Class frmDMSPicker
     Private m_frmMainGUI As frmMainGUI
     Private m_SortOrderAsc As Boolean = True
     Private m_SelectedCol As Integer = 0
-    Private m_SearchActive As Boolean = False
+    'Private m_SearchActive As Boolean = False
+
     Private m_Loader As ParamFileEditor.clsDMSPickerHandler
-    Friend WithEvents SearchTimer As New System.Timers.Timer(2000)
+    Friend WithEvents cmdSearch As System.Windows.Forms.Button
+    'Friend WithEvents SearchTimer As New System.Timers.Timer(2000)
 
 #Region " Windows Form Designer generated code "
 
@@ -23,7 +25,7 @@ Public Class frmDMSPicker
 
         'Add any initialization after the InitializeComponent() call
         m_frmMainGUI = Callingfrm
-        SearchTimer.AutoReset = False
+        'SearchTimer.AutoReset = False
     End Sub
 
     'Form overrides dispose to clean up the component list.
@@ -50,7 +52,7 @@ Public Class frmDMSPicker
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents txtLiveSearch As System.Windows.Forms.TextBox
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Dim resources As System.Resources.ResourceManager = New System.Resources.ResourceManager(GetType(frmDMSPicker))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmDMSPicker))
         Me.lvwDMSPicklist = New System.Windows.Forms.ListView
         Me.colParamID = New System.Windows.Forms.ColumnHeader
         Me.colFileName = New System.Windows.Forms.ColumnHeader
@@ -58,6 +60,8 @@ Public Class frmDMSPicker
         Me.cmdLoadParam = New System.Windows.Forms.Button
         Me.txtLiveSearch = New System.Windows.Forms.TextBox
         Me.PictureBox1 = New System.Windows.Forms.PictureBox
+        Me.cmdSearch = New System.Windows.Forms.Button
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lvwDMSPicklist
@@ -75,6 +79,7 @@ Public Class frmDMSPicker
         Me.lvwDMSPicklist.Size = New System.Drawing.Size(660, 412)
         Me.lvwDMSPicklist.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.lvwDMSPicklist.TabIndex = 0
+        Me.lvwDMSPicklist.UseCompatibleStateImageBehavior = False
         Me.lvwDMSPicklist.View = System.Windows.Forms.View.Details
         '
         'colParamID
@@ -124,10 +129,21 @@ Public Class frmDMSPicker
         Me.PictureBox1.TabIndex = 3
         Me.PictureBox1.TabStop = False
         '
+        'cmdSearch
+        '
+        Me.cmdSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cmdSearch.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.cmdSearch.Location = New System.Drawing.Point(222, 444)
+        Me.cmdSearch.Name = "cmdSearch"
+        Me.cmdSearch.Size = New System.Drawing.Size(79, 23)
+        Me.cmdSearch.TabIndex = 4
+        Me.cmdSearch.Text = "Search"
+        '
         'frmDMSPicker
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(692, 478)
+        Me.Controls.Add(Me.cmdSearch)
         Me.Controls.Add(Me.txtLiveSearch)
         Me.Controls.Add(Me.cmdLoadParam)
         Me.Controls.Add(Me.lvwDMSPicklist)
@@ -135,11 +151,17 @@ Public Class frmDMSPicker
         Me.MinimumSize = New System.Drawing.Size(700, 512)
         Me.Name = "frmDMSPicker"
         Me.Text = "DMS Parameter Set Picker"
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
 #End Region
+
+    Private Sub SearchNow()
+        Me.m_Loader.FillFilteredListView(Me.lvwDMSPicklist, txtLiveSearch.Text)
+    End Sub
 
     Private Sub frmDMSPicker_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         m_Loader = New ParamFileEditor.clsDMSPickerHandler
@@ -175,43 +197,76 @@ Public Class frmDMSPicker
     End Property
 
     Private Sub cmdLoadParam_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdLoadParam.Click
-        m_SelectedIndex = CInt(Me.lvwDMSPicklist.SelectedIndices(0))
-        Dim tmpParamID As Integer = CInt(Me.lvwDMSPicklist.Items(m_SelectedIndex).Text)
-        m_frmMainGUI.LoadDMSParamsFromID(tmpParamID)
-        Me.Close()
+        If Me.lvwDMSPicklist.SelectedIndices.Count = 0 Then
+            System.Windows.Forms.MessageBox.Show("Please select a parameter file to load", "Nothing selected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        Else
+            m_SelectedIndex = CInt(Me.lvwDMSPicklist.SelectedIndices(0))
+            Dim tmpParamID As Integer = CInt(Me.lvwDMSPicklist.Items(m_SelectedIndex).Text)
+            m_frmMainGUI.LoadDMSParamsFromID(tmpParamID)
+            Me.Close()
+        End If
+    End Sub
+
+    Private Sub txtLiveSearch_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtLiveSearch.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            SearchNow()
+        End If
+    End Sub
+
+    Private Sub txtLiveSearch_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtLiveSearch.KeyPress
 
     End Sub
 
     Private Sub txtLiveSearch_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtLiveSearch.TextChanged
-        If m_SearchActive Then
-            SearchTimer.Start()
+        If txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption AndAlso _
+           txtLiveSearch.Text <> "Search" Then
+            ' This code is needed to handle the user right clicking and pasting text to search
+            txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
+            'm_SearchActive = True
+            'SearchTimer.Start()
         End If
+
+        'If m_SearchActive Then
+        ' SearchTimer.Start()
+        'End If
     End Sub
 
     Private Sub txtLiveSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtLiveSearch.Click
-        If m_SearchActive Then
-        Else
-            txtLiveSearch.Text = Nothing
+        ' Note: This _Click event is fired on left click but not on right click
+        ''If m_SearchActive Then
+        ''    ' Do nothing
+        ''Else
+        ''    txtLiveSearch.Text = Nothing
+        ''    txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
+        ''    m_SearchActive = True
+        ''End If
+
+        If txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption AndAlso _
+           txtLiveSearch.Text = "Search" Then
+            txtLiveSearch.Text = ""
             txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
-            m_SearchActive = True
         End If
     End Sub
 
     Private Sub txtLiveSearch_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtLiveSearch.Leave
         If txtLiveSearch.Text.Length = 0 Then
+            'Me.m_SearchActive = False
+            'SearchTimer.Stop()
             txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption
             txtLiveSearch.Text = "Search"
-            Me.m_SearchActive = False
-            SearchTimer.Stop()
             Me.m_Loader.FillListView(Me.lvwDMSPicklist)
         End If
     End Sub
 
-    Friend Sub TimerHandler(ByVal sender As Object, ByVal e As System.Timers.ElapsedEventArgs) Handles SearchTimer.Elapsed
-        Me.m_Loader.FillFilteredListView(Me.lvwDMSPicklist, Me.txtLiveSearch.Text)
-    End Sub
+    'Friend Sub TimerHandler(ByVal sender As Object, ByVal e As System.Timers.ElapsedEventArgs) Handles SearchTimer.Elapsed
+    '    SearchNow
+    'End Sub
 
     Private Sub lvwDMSPicklist_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles lvwDMSPicklist.DoubleClick
         Me.cmdLoadParam_Click(Me.cmdLoadParam, Nothing)
+    End Sub
+
+    Private Sub cmdSearch_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSearch.Click
+        SearchNow()
     End Sub
 End Class
