@@ -105,7 +105,7 @@ Public Class clsParams
     Private m_parentMassUnits As Integer
     Private m_fragMassUnits As Integer
     Private m_dynMods As clsDynamicMods
-    Private m_termDynMods As clsTermDynamicMods
+    Private m_termDynMods As clsTermDynamicMods ' Peptide terminal dynamic mods
     Private m_staticModsList As clsStaticMods
     Private m_partialSeq As String
 
@@ -540,7 +540,7 @@ Public Class clsParams
         m_dynMods = New clsDynamicMods
         m_staticModsList = New clsStaticMods
         m_isoMods = New clsIsoMods
-
+        m_termDynMods = New clsTermDynamicMods("0.0 0.0")
     End Sub
 
     Public Function ReturnMassFilter(ByVal MinimumMassToFilter As Single, ByVal MaximumMassToFilter As Single) As String

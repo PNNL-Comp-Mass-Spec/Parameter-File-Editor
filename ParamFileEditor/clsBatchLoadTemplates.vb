@@ -102,7 +102,7 @@ Friend Class clsBatchLoadTemplates
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
                     If results = DialogResult.Yes Then
                         changed = changed + 1
-                        Me.WriteParamsToDMS(c)
+                        Me.WriteParamsToDMS(c, True)
                     ElseIf results = DialogResult.No Then
 
                     End If

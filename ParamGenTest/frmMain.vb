@@ -77,7 +77,7 @@ Public Class frmMain
         Me.txtOutputPath.Name = "txtOutputPath"
         Me.txtOutputPath.Size = New System.Drawing.Size(400, 20)
         Me.txtOutputPath.TabIndex = 0
-        Me.txtOutputPath.Text = "D:\Sequest\"
+        Me.txtOutputPath.Text = "E:\Temp\"
         '
         'txtDMSConnectionString
         '
@@ -150,7 +150,7 @@ Public Class frmMain
         Me.cmdDoIt.Name = "cmdDoIt"
         Me.cmdDoIt.Size = New System.Drawing.Size(124, 32)
         Me.cmdDoIt.TabIndex = 10
-        Me.cmdDoIt.Text = "Go"
+        Me.cmdDoIt.Text = "&Go"
         '
         'txtFASTAPath
         '
@@ -213,7 +213,7 @@ Public Class frmMain
         Me.Controls.Add(Me.lblOutputPath)
         Me.Controls.Add(Me.cboFileTypes)
         Me.Name = "frmMain"
-        Me.Text = "Form1"
+        Me.Text = "Sequest Param Generator"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

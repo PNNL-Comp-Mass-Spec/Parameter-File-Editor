@@ -131,43 +131,55 @@ Public Class frmDMSParamNamer
     End Sub
 
     Private Sub cmdUpload_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdUpload.Click
-        'Dim dms As New clsParamsFromDMS(m_MainForm.MainCode.mySettings)
-        Dim dms As clsDMSParamUpload = m_clsDMSParams
-        Dim nameExists As Boolean = dms.ParamSetNameExists(m_SaveName)
-        Dim ParamSetID As Integer = m_Params.DMS_ID
-        Dim IDExists As Boolean = dms.ParamSetIDExists(ParamSetID)
-        'Dim replace As Boolean = False
 
-        Dim results As New DialogResult
-        m_Params.FileName = m_SaveName
+        Dim nameExists As Boolean
+        Dim ParamSetID As Integer
+        Dim IDExists As Boolean
+        Dim eDialogResult As New DialogResult
+        Dim blnSuccess As Boolean
 
-        If IDExists And nameExists Then
-            results = MessageBox.Show("This Parameter Set already exists. Would you like to replace it with the current Parameter set?", _
-                "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
-            If results = DialogResult.No Then
-                Exit Sub
+        Try
+
+            nameExists = m_clsDMSParams.ParamSetNameExists(m_SaveName)
+            ParamSetID = m_Params.DMS_ID
+            IDExists = m_clsDMSParams.ParamSetIDExists(ParamSetID)
+
+            m_Params.FileName = m_SaveName
+            m_Params.Description = txtDiffs.Text
+
+            If IDExists And nameExists Then
+                eDialogResult = MessageBox.Show("This Parameter Set already exists. Would you like to replace it with the current Parameter set?", _
+                    "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
+                If eDialogResult = DialogResult.No Then
+                    Exit Sub
+                End If
+            ElseIf nameExists And Not IDExists Then
+                eDialogResult = MessageBox.Show("A Parameter Set with this name already exists. Would you like to replace it with the current Parameter set?", _
+                    "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
+                If eDialogResult = DialogResult.No Then
+                    Exit Sub
+                End If
+
             Else
-
+                eDialogResult = MessageBox.Show("Are you sure you want to add a new Parameter set?", _
+                    "Make New Parameter Set", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                If eDialogResult = DialogResult.No Then
+                    Exit Sub
+                End If
             End If
-        ElseIf nameExists And Not IDExists Then
-            results = MessageBox.Show("A Parameter Set with this name already exists. Would you like to replace it with the current Parameter set?", _
-                "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
-            If results = DialogResult.No Then
-                Exit Sub
+
+            blnSuccess = m_clsDMSParams.WriteParamsToDMS(m_Params, False)
+
+            If blnSuccess Then
+                Windows.Forms.MessageBox.Show("File successfully uploaded: " & m_SaveName, "Succcess", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
+                Windows.Forms.MessageBox.Show("A problem occurred while uploading the file " & m_SaveName & ": " & m_clsDMSParams.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End If
 
-        Else
-            results = MessageBox.Show("Are you sure you want to add a new Parameter set?", _
-                "Make New Parameter Set", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
-            If results = DialogResult.No Then
-                Exit Sub
-            Else
+        Catch ex As Exception
+            Windows.Forms.MessageBox.Show("Error in cmdUpload_Click: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        End Try
 
-            End If
-        End If
-
-        dms.WriteParamsToDMS(m_Params)
 
         Me.Close()
 

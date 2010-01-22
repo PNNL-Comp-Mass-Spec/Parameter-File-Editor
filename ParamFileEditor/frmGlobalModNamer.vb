@@ -472,7 +472,7 @@ Public Class frmGlobalModNamer
 
     End Function
 
-    Private Function SelectedModExists(ByVal modMass As Single) As Boolean
+    Private Function SelectedModExists(ByVal modMass As Double) As Boolean
 
         Dim rows() As DataRow = Me.MassCorrectionsTable.Select("[Monoisotopic_Mass_Correction] = " & modMass)
 
@@ -520,17 +520,29 @@ Public Class frmGlobalModNamer
     End Sub
 
     Private Function UseSelectedMod() As Boolean
+        Dim modExists As Boolean = False
 
-        Dim lvw As ListView = Me.lvwExistingMods
-        Dim tmpNewSymbol As String = lvw.SelectedItems(0).Text
-        Dim tmpNewDesc As String = lvw.SelectedItems(0).SubItems(1).Text
-        Dim tmpNewMass As Single = CSng(lvw.SelectedItems(0).SubItems(2).Text)
+        Try
+            Dim lvw As ListView = Me.lvwExistingMods
+            If lvw.SelectedItems.Count = 0 Then Exit Try
 
-        Me.NewSymbol = tmpNewSymbol
-        Me.NewDescription = tmpNewDesc
-        Me.NewModMass = tmpNewMass
+            Dim tmpNewSymbol As String = lvw.SelectedItems(0).Text
+            Dim tmpNewDesc As String = lvw.SelectedItems(0).SubItems(1).Text
+            Dim tmpNewMass As Double = CDbl(lvw.SelectedItems(0).SubItems(2).Text)
 
-        Dim modExists As Boolean = SelectedModExists(tmpNewMass)
+            Me.NewSymbol = tmpNewSymbol
+            Me.NewDescription = tmpNewDesc
+            Me.NewModMass = tmpNewMass
+
+            modExists = SelectedModExists(tmpNewMass)
+
+            If Not modExists Then
+                System.Windows.Forms.MessageBox.Show("Could not find mass " & tmpNewMass.ToString & " in the mod list (MassCorrectionsTable).", "Not found", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
+
+        Catch ex As Exception
+            System.Windows.Forms.MessageBox.Show("Exception looking for specified mod: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        End Try
 
         Return modExists
 

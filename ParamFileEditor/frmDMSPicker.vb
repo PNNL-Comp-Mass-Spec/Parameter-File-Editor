@@ -104,8 +104,8 @@ Public Class frmDMSPicker
         Me.cmdLoadParam.Location = New System.Drawing.Point(528, 444)
         Me.cmdLoadParam.Name = "cmdLoadParam"
         Me.cmdLoadParam.Size = New System.Drawing.Size(148, 23)
-        Me.cmdLoadParam.TabIndex = 1
-        Me.cmdLoadParam.Text = "Load Selected Param Set"
+        Me.cmdLoadParam.TabIndex = 3
+        Me.cmdLoadParam.Text = "&Load Selected Param Set"
         '
         'txtLiveSearch
         '
@@ -116,7 +116,7 @@ Public Class frmDMSPicker
         Me.txtLiveSearch.Location = New System.Drawing.Point(40, 450)
         Me.txtLiveSearch.Name = "txtLiveSearch"
         Me.txtLiveSearch.Size = New System.Drawing.Size(160, 14)
-        Me.txtLiveSearch.TabIndex = 2
+        Me.txtLiveSearch.TabIndex = 1
         Me.txtLiveSearch.Text = "Search"
         '
         'PictureBox1
@@ -136,8 +136,8 @@ Public Class frmDMSPicker
         Me.cmdSearch.Location = New System.Drawing.Point(222, 444)
         Me.cmdSearch.Name = "cmdSearch"
         Me.cmdSearch.Size = New System.Drawing.Size(79, 23)
-        Me.cmdSearch.TabIndex = 4
-        Me.cmdSearch.Text = "Search"
+        Me.cmdSearch.TabIndex = 2
+        Me.cmdSearch.Text = "&Search"
         '
         'frmDMSPicker
         '
@@ -166,7 +166,7 @@ Public Class frmDMSPicker
     Private Sub frmDMSPicker_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         m_Loader = New ParamFileEditor.clsDMSPickerHandler
         m_Loader.ProgramSettings = Me.MySettings
-        m_Loader.FillListView(Me.lvwDMSPicklist)
+        m_Loader.FillListView(Me.lvwDMSPicklist)                
     End Sub
 
     Private Sub lvwDMSPicklist_ColumnClick(ByVal sender As Object, ByVal e As System.Windows.Forms.ColumnClickEventArgs) Handles lvwDMSPicklist.ColumnClick
@@ -211,10 +211,6 @@ Public Class frmDMSPicker
         If e.KeyCode = Keys.Enter Then
             SearchNow()
         End If
-    End Sub
-
-    Private Sub txtLiveSearch_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtLiveSearch.KeyPress
-
     End Sub
 
     Private Sub txtLiveSearch_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtLiveSearch.TextChanged

@@ -415,6 +415,9 @@ Public Class clsTermDynamicMods
     Inherits clsDynamicMods
 
 #Region " Public Procedures "
+    Public Const NTERM_SYMBOL As String = "<"
+    Public Const CTERM_SYMBOL As String = ">"
+
     Sub New(ByVal TermDynModString As String)
         MyBase.New()
         Me.m_OrigDynModString = TermDynModString
@@ -422,14 +425,68 @@ Public Class clsTermDynamicMods
 
     End Sub
 
+    Public Property Dyn_Mod_NTerm() As Single
+        Get
+            Return GetTermDynMod(NTERM_SYMBOL)
+        End Get
+        Set(ByVal value As Single)
+            UpdateTermDynMod(NTERM_SYMBOL, value)           
+        End Set
+    End Property
+
+    Public Property Dyn_Mod_CTerm() As Single
+        Get
+            Return GetTermDynMod(CTERM_SYMBOL)
+        End Get
+        Set(ByVal value As Single)
+            UpdateTermDynMod(CTERM_SYMBOL, value)
+        End Set
+    End Property
+
+    Protected Function GetTermDynMod(ByVal strSymbol As String) As Single
+        Dim objModEntry As clsModEntry
+        objModEntry = Me.m_FindMod(strSymbol)
+
+        If objModEntry Is Nothing Then
+            Return 0
+        Else
+            Return objModEntry.MassDifference
+        End If
+    End Function
+
+    Protected Sub UpdateTermDynMod(ByVal strSymbol As String, ByVal sngMass As Single)
+
+        Dim intIndex As Integer
+        intIndex = Me.m_FindModIndex(strSymbol)
+
+        If intIndex < 0 Then
+            ' Mod was not found
+            ' Add it (assuming sngMass is non-zero)
+            If sngMass <> 0 Then
+                Dim resCollection As StringCollection
+                resCollection = New StringCollection
+                resCollection.Add(strSymbol)
+                Me.Add(New clsModEntry(resCollection, sngMass, clsModEntry.ModificationTypes.Dynamic))
+            End If
+        Else
+            ' Mod was found
+            ' Update the mass (or remove it if sngMass is zero)
+            If sngMass = 0 Then
+                Me.Remove(intIndex)
+            Else
+                Dim objModEntry As clsModEntry
+                objModEntry = Me.GetModEntry(intIndex)
+                objModEntry.MassDifference = sngMass
+            End If
+        End If
+    End Sub
+
     Protected Overrides Sub ParseDynModString(ByVal DMString As String)
         Dim tmpCTMass As Single
         Dim tmpNTMass As Single
-        'Dim tmpRes As String
-        Dim resCollection As StringCollection
 
         Dim splitRE As System.Text.RegularExpressions.Regex = _
-            New System.Text.RegularExpressions.Regex("(?<ctmodmass>\d+\.\d+)\s+(?<ntmodmass>\d+\.\d+)")
+            New System.Text.RegularExpressions.Regex("(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)")
         Dim m As System.Text.RegularExpressions.Match
 
         If DMString Is Nothing Then
@@ -443,49 +500,45 @@ Public Class clsTermDynamicMods
             tmpCTMass = CSng(m.Groups("ctmodmass").Value)
             tmpNTMass = CSng(m.Groups("ntmodmass").Value)
 
-            resCollection = New StringCollection
-            resCollection.Add("<")
-            Me.Add(New clsModEntry(resCollection, tmpNTMass, clsModEntry.ModificationTypes.Dynamic))
+            Me.Dyn_Mod_NTerm = tmpNTMass
+            Me.Dyn_Mod_CTerm = tmpCTMass
 
-            resCollection = New StringCollection
-            resCollection.Add(">")
-            Me.Add(New clsModEntry(resCollection, tmpCTMass, clsModEntry.ModificationTypes.Dynamic))
         End If
 
-  End Sub
+    End Sub
 
-  Protected Overrides Function AssembleModString(ByVal counter As Integer) As String
-    Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
+    Protected Overrides Function AssembleModString(ByVal counter As Integer) As String
+        Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
 
-    Dim tmpModString As String
-    Dim ctRes As String = ">"
-    Dim ntRes As String = "<"
+        Dim tmpModString As String
+        Dim ctRes As String = ">"
+        Dim ntRes As String = "<"
 
-    Dim ctModMass As Single = 0.0
-    Dim ntModMass As Single = 0.0
+        Dim ctModMass As Single = 0.0
+        Dim ntModMass As Single = 0.0
 
-    Dim tmpModMass As Single
+        Dim tmpModMass As Single
 
-    Dim dynMod As clsModEntry
+        Dim dynMod As clsModEntry
 
-    For Each dynMod In Me.List
-      tmpModMass = dynMod.MassDifference
-      tmpModString = dynMod.ReturnAllAffectedResiduesString
-      If tmpModString = ">" Then
-        ctModMass = tmpModMass
-        ctRes = tmpModString
-      ElseIf tmpModString = "<" Then
-        ntModMass = tmpModMass
-        ntRes = tmpModString
-      End If
-    Next
+        For Each dynMod In Me.List
+            tmpModMass = dynMod.MassDifference
+            tmpModString = dynMod.ReturnAllAffectedResiduesString
+            If tmpModString = ">" Then
+                ctModMass = tmpModMass
+                ctRes = tmpModString
+            ElseIf tmpModString = "<" Then
+                ntModMass = tmpModMass
+                ntRes = tmpModString
+            End If
+        Next
 
-    sb.Append(Format(ctModMass, "0.000000"))
-    sb.Append(" ")
-    sb.Append(Format(ntModMass, "0.000000"))
+        sb.Append(Format(ctModMass, "0.000000"))
+        sb.Append(" ")
+        sb.Append(Format(ntModMass, "0.000000"))
 
-    Return sb.ToString.Trim()
-  End Function
+        Return sb.ToString.Trim()
+    End Function
 
 
 #End Region
@@ -570,11 +623,13 @@ Public Class clsDynamicMods
         '    Return ""
         'End If
     End Function
-    'TODO replace with real function for term dyn mods
-    'Just a placeholder for now
-    Public Function ReturnDynTermModString() As String
-        Return "0.0000 0.0000"
-    End Function
+
+    ' 'TODO replace with real function for term dyn mods
+    ' 'Just a placeholder for now
+    ''Public Function ReturnDynTermModString() As String
+    ''    Return "0.0000 0.0000"
+    ''End Function
+
     Public Overloads Sub Add( _
         ByVal AffectedResidueString As String, _
         ByVal MassDifference As Single, _

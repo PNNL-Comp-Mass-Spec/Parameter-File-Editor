@@ -17,88 +17,89 @@ Namespace DownloadParams
 #End Region
 
 #Region " Enums "
-    Public Enum AcceptableParams
-      SelectedEnzymeIndex
-      SelectedEnzymeCleavagePosition
-      MaximumNumberMissedCleavages
-      ParentMassType
-      FragmentMassType
-      DynamicMods
-      StaticModificationsList
-      IsotopicMods
-      PartialSequenceToMatch
-      CreateOutputFiles
-      NumberOfResultsToProcess
-      MaximumNumAAPerDynMod
-      MaximumNumDifferentialPerPeptide
-      PeptideMassTolerance
-      FragmentIonTolerance
-      NumberOfOutputLines
-      NumberOfDescriptionLines
-      ShowFragmentIons
-      PrintDuplicateReferences
-      SelectedNucReadingFrameIndex
-      RemovePrecursorPeak
-      IonSeries
-      IonCutoffPercentage
-      MinimumProteinMassToSearch
-      MaximumProteinMassToSearch
-      NumberOfDetectedPeaksToMatch
-      NumberOfAllowedDetectedPeakErrors
-      MatchedPeakMassTolerance
-      AminoAcidsAllUpperCase
-      SequenceHeaderInfoToFilter
-      PeptideMassUnits
-      FragmentMassUnits
-    End Enum
-    Public Enum BasicParams
-      SelectedEnzymeIndex
-      SelectedEnzymeCleavagePosition
-      MaximumNumberMissedCleavages
-      ParentMassType
-      FragmentMassType
-      PartialSequenceToMatch
-    End Enum
-    Public Enum AdvancedParams
-      CreateOutputFiles
-      NumberOfResultsToProcess
-      MaximumNumAAPerDynMod
-      MaximumNumDifferentialPerPeptide
-      PeptideMassTolerance
-      FragmentIonTolerance
-      NumberOfOutputLines
-      NumberOfDescriptionLines
-      ShowFragmentIons
-      PrintDuplicateReferences
-      SelectedNucReadingFrameIndex
-      RemovePrecursorPeak
-      IonSeries
-      IonCutoffPercentage
-      MinimumProteinMassToSearch
-      MaximumProteinMassToSearch
-      NumberOfDetectedPeaksToMatch
-      NumberOfAllowedDetectedPeakErrors
-      MatchedPeakMassTolerance
-      AminoAcidsAllUpperCase
-      SequenceHeaderInfoToFilter
-      PeptideMassUnits
-      FragmentMassUnits
-    End Enum
+        Public Enum AcceptableParams
+            SelectedEnzymeIndex
+            SelectedEnzymeCleavagePosition
+            MaximumNumberMissedCleavages
+            ParentMassType
+            FragmentMassType
+            DynamicMods
+            TermDynamicMods
+            StaticModificationsList
+            IsotopicMods
+            PartialSequenceToMatch
+            CreateOutputFiles
+            NumberOfResultsToProcess
+            MaximumNumAAPerDynMod
+            MaximumNumDifferentialPerPeptide
+            PeptideMassTolerance
+            FragmentIonTolerance
+            NumberOfOutputLines
+            NumberOfDescriptionLines
+            ShowFragmentIons
+            PrintDuplicateReferences
+            SelectedNucReadingFrameIndex
+            RemovePrecursorPeak
+            IonSeries
+            IonCutoffPercentage
+            MinimumProteinMassToSearch
+            MaximumProteinMassToSearch
+            NumberOfDetectedPeaksToMatch
+            NumberOfAllowedDetectedPeakErrors
+            MatchedPeakMassTolerance
+            AminoAcidsAllUpperCase
+            SequenceHeaderInfoToFilter
+            PeptideMassUnits
+            FragmentMassUnits
+        End Enum
+        Public Enum BasicParams
+            SelectedEnzymeIndex
+            SelectedEnzymeCleavagePosition
+            MaximumNumberMissedCleavages
+            ParentMassType
+            FragmentMassType
+            PartialSequenceToMatch
+        End Enum
+        Public Enum AdvancedParams
+            CreateOutputFiles
+            NumberOfResultsToProcess
+            MaximumNumAAPerDynMod
+            MaximumNumDifferentialPerPeptide
+            PeptideMassTolerance
+            FragmentIonTolerance
+            NumberOfOutputLines
+            NumberOfDescriptionLines
+            ShowFragmentIons
+            PrintDuplicateReferences
+            SelectedNucReadingFrameIndex
+            RemovePrecursorPeak
+            IonSeries
+            IonCutoffPercentage
+            MinimumProteinMassToSearch
+            MaximumProteinMassToSearch
+            NumberOfDetectedPeaksToMatch
+            NumberOfAllowedDetectedPeakErrors
+            MatchedPeakMassTolerance
+            AminoAcidsAllUpperCase
+            SequenceHeaderInfoToFilter
+            PeptideMassUnits
+            FragmentMassUnits
+        End Enum
 
-    Public Enum IonSeriesParams
-      Use_a_Ions
-      Use_b_Ions
-      Use_y_Ions
-      a_Ion_Weighting
-      b_Ion_Weighting
-      c_Ion_Weighting
-      d_Ion_Weighting
-      v_Ion_Weighting
-      w_Ion_Weighting
-      x_Ion_Weighting
-      y_Ion_Weighting
-      z_Ion_Weighting
-    End Enum
+        Public Enum IonSeriesParams
+            Use_a_Ions
+            Use_b_Ions
+            Use_y_Ions
+            a_Ion_Weighting
+            b_Ion_Weighting
+            c_Ion_Weighting
+            d_Ion_Weighting
+            v_Ion_Weighting
+            w_Ion_Weighting
+            x_Ion_Weighting
+            y_Ion_Weighting
+            z_Ion_Weighting
+        End Enum
 
 #End Region
 
@@ -559,42 +560,47 @@ Namespace DownloadParams
     End Function
 
     Protected Function WriteDataCollectionFromParamSet(ByVal ParamSet As clsParams) As clsDMSParamStorage        'Upload
-      Dim c As clsDMSParamStorage = New clsDMSParamStorage
+            Dim c As clsDMSParamStorage = New clsDMSParamStorage
 
-      Dim pType As Type = ParamSet.GetType
-      Dim tmpType As Type
-      Dim pProps As PropertyInfo() = pType.GetProperties((BindingFlags.Public Or BindingFlags.Instance))
-      Dim pProp As PropertyInfo
+            Dim pType As Type = ParamSet.GetType
+            Dim tmpType As Type
+            Dim pProps As PropertyInfo() = pType.GetProperties((BindingFlags.Public Or BindingFlags.Instance))
+            Dim pProp As PropertyInfo
 
-      Dim tmpName As String
-      Dim tmpValue As String
+            Dim tmpName As String
+            Dim tmpValue As String
 
-      For Each pProp In pProps
-        tmpName = pProp.Name
-        tmpType = pProp.PropertyType
-        If Me.m_AcceptableParams.Contains(tmpName) Then
-          If (tmpType.Name = "clsIonSeries") Then
-            c = ExpandIonSeries(ParamSet.IonSeries, c)
-          ElseIf (tmpType.Name = "clsIsoMods") Then
-            c = ExpandIsoTopicMods(ParamSet.IsotopicMods, c)
-          ElseIf Me.m_BasicParams.Contains(tmpName) Then
-            tmpValue = (pProp.GetValue(ParamSet, Nothing)).ToString
-            c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.BasicParam)
-          ElseIf Me.m_AdvancedParams.Contains(tmpName) Then
-            tmpValue = (pProp.GetValue(ParamSet, Nothing)).ToString
-            c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.AdvancedParam)
-          ElseIf tmpType.Name = "clsDynamicMods" Then
-            c = ExpandDynamicMods(ParamSet.DynamicMods, c)
-          ElseIf tmpType.Name = "clsTermDynamicMods" Then
-            c = ExpandDynamicMods(ParamSet.TermDynamicMods, c)
-          ElseIf (tmpType.Name = "clsStaticMods") Then
-            c = ExpandStaticMods(ParamSet.StaticModificationsList, c)
-          End If
-        End If
+            For Each pProp In pProps
+                tmpName = pProp.Name
+                tmpType = pProp.PropertyType
+                If Me.m_AcceptableParams.Contains(tmpName) Then
+                    If (tmpType.Name = "clsIonSeries") Then
+                        c = ExpandIonSeries(ParamSet.IonSeries, c)
 
-      Next
+                    ElseIf (tmpType.Name = "clsIsoMods") Then
+                        c = ExpandIsoTopicMods(ParamSet.IsotopicMods, c)
 
-      Return c
+                    ElseIf tmpType.Name = "clsDynamicMods" Then
+                        c = ExpandDynamicMods(ParamSet.DynamicMods, c, clsDMSParamStorage.ParamTypes.DynamicModification)
+
+                    ElseIf tmpType.Name = "clsTermDynamicMods" Then
+                        c = ExpandDynamicMods(ParamSet.TermDynamicMods, c, clsDMSParamStorage.ParamTypes.TermDynamicModification)
+
+                    ElseIf (tmpType.Name = "clsStaticMods") Then
+                        c = ExpandStaticMods(ParamSet.StaticModificationsList, c)
+
+                    ElseIf Me.m_BasicParams.Contains(tmpName) Then
+                        tmpValue = (pProp.GetValue(ParamSet, Nothing)).ToString
+                        c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.BasicParam)
+                    ElseIf Me.m_AdvancedParams.Contains(tmpName) Then
+                        tmpValue = (pProp.GetValue(ParamSet, Nothing)).ToString
+                        c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.AdvancedParam)                    
+                    End If
+                End If
+
+            Next
+
+            Return c
 
     End Function
 
@@ -728,25 +734,31 @@ Namespace DownloadParams
 
     End Function
 
-    Private Function ExpandDynamicMods(ByVal DynModSet As clsDynamicMods, ByRef ParamCollection As clsDMSParamStorage) As clsDMSParamStorage
-      Dim maxCount As Integer = DynModSet.Count
-      Dim counter As Integer
-      Dim tmpName As String
-      Dim tmpValue As String
+        Private Function ExpandDynamicMods(ByVal DynModSet As clsDynamicMods, ByRef ParamCollection As clsDMSParamStorage, ByVal eDynModType As clsDMSParamStorage.ParamTypes) As clsDMSParamStorage
+            Dim maxCount As Integer = DynModSet.Count
+            Dim counter As Integer
+            Dim tmpName As String
+            Dim tmpValue As String
 
-      If maxCount = 0 Then
-        Return ParamCollection
-      End If
+            If maxCount = 0 Then
+                Return ParamCollection
+            End If
 
-      For counter = 1 To maxCount
-        tmpName = DynModSet.Dyn_Mod_n_AAList(counter)
-        tmpValue = Format(DynModSet.Dyn_Mod_n_MassDiff(counter), "0.0000")
-        ParamCollection.Add(tmpName, tmpValue, clsDMSParamStorage.ParamTypes.DynamicModification)
-      Next
+            If eDynModType <> clsDMSParamStorage.ParamTypes.DynamicModification And _
+               eDynModType <> clsDMSParamStorage.ParamTypes.TermDynamicModification Then
+                ' This is unexpected; force eDynModType to be .DynamicModification
+                eDynModType = clsDMSParamStorage.ParamTypes.DynamicModification
+            End If
 
-      Return ParamCollection
+            For counter = 1 To maxCount
+                tmpName = DynModSet.Dyn_Mod_n_AAList(counter)
+                tmpValue = Format(DynModSet.Dyn_Mod_n_MassDiff(counter), "0.0000")
+                ParamCollection.Add(tmpName, tmpValue, eDynModType)
+            Next
 
-    End Function
+            Return ParamCollection
+
+        End Function
 
     Private Function ExpandStaticMods(ByVal StatModSet As clsStaticMods, ByRef ParamCollection As clsDMSParamStorage) As clsDMSParamStorage
       Dim maxCount As Integer = StatModSet.Count
@@ -829,199 +841,192 @@ Namespace DownloadParams
       Dim diffCollection As clsDMSParamStorage = CompareDataCollections(templateColl, checkColl)
       Return diffCollection
     End Function
-    Protected Function SummarizeDiffColl(ByRef diffColl As clsDMSParamStorage) As String
 
-      Dim maxIndex As Integer = diffColl.Count - 1
-      Dim index As Integer
-      Dim tmpString As String
-      Dim tmpElement As String = ""
+        Protected Function SummarizeDiffColl(ByRef diffColl As clsDMSParamStorage) As String
 
-      Dim tmpDynMods As String = ""
-      Dim tmpTermDynMods As String = ""
-      Dim tmpStatMods As String = ""
-      Dim tmpIsoMods As String = ""
-      Dim tmpOtherParams As String = ""
+            Dim maxIndex As Integer = diffColl.Count - 1
+            Dim index As Integer
+            Dim tmpString As String
+            Dim tmpElement As String = ""
 
-      Dim tmpDynModsList As Queue = Nothing
-      Dim tmpTermDynModsList As Queue = Nothing
-      Dim tmpStatModsList As Queue = Nothing
-      Dim tmpIsoModsList As Queue = Nothing
-      Dim tmpOtherParamsList As Queue = Nothing
+            Dim tmpIsoMods As String = ""
+            Dim tmpOtherParams As String = ""
 
-      Dim tmpType As clsDMSParamStorage.ParamTypes
-      Dim tmpSpec As String = ""
-      Dim tmpValue As String = ""
-      Dim tmpSign As String = ""
+            Dim tmpDynModsList As Queue = Nothing
+            Dim tmpTermDynModsList As Queue = Nothing
+            Dim tmpStatModsList As Queue = Nothing
+            Dim tmpIsoModsList As Queue = Nothing
+            Dim tmpOtherParamsList As Queue = Nothing
 
-      For index = 0 To maxIndex
-        With diffColl.Item(index)
-          tmpType = .Type
-          tmpSpec = .Specifier
-          tmpValue = .Value
+            Dim tmpType As clsDMSParamStorage.ParamTypes
+            Dim tmpSpec As String = ""
+            Dim tmpValue As String = ""
+            Dim tmpSign As String = ""
 
+            Dim intDynModCount As Integer = 0
+            Dim intTermDynModCount As Integer = 0
 
-        End With
-        If tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
-          If CSng(tmpValue) > 0 Then
-            tmpSign = "+"
-          ElseIf CSng(tmpValue) = 0 Then
-            tmpSign = ""
-          Else
-            tmpSign = ""
-          End If
-
-          If tmpStatMods = "" Then
-            tmpStatMods = "Static Mods: "
-          End If
-          'tmpStatMods = tmpStatMods & tmpSpec & " (" & tmpSign & tmpValue & "), "
-          If tmpStatModsList Is Nothing Then
-            tmpStatModsList = New Queue()
-            tmpStatModsList.Enqueue(tmpStatMods)
-          End If
-          tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
+            For index = 0 To maxIndex
+                With diffColl.Item(index)
+                    tmpType = .Type
+                    tmpSpec = .Specifier
+                    tmpValue = .Value
 
 
-        ElseIf tmpType = clsDMSParamStorage.ParamTypes.DynamicModification Then
-          If CSng(tmpValue) > 0 Then
-            tmpSign = "+"
-          ElseIf CSng(tmpValue) = 0 Then
-            tmpSign = ""
-          Else
-            tmpSign = ""
-          End If
+                End With
+                If tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
+                    If CSng(tmpValue) > 0 Then
+                        tmpSign = "+"
+                    ElseIf CSng(tmpValue) = 0 Then
+                        tmpSign = ""
+                    Else
+                        tmpSign = ""
+                    End If
 
-          If tmpDynMods = "" Then
-            tmpDynMods = "Dynamic Mods: "
-          End If
-          'tmpDynMods = tmpDynMods & tmpSpec & " (" & tmpSign & tmpValue & "), "
-          If tmpDynModsList Is Nothing Then
-            tmpDynModsList = New Queue()
-            tmpDynModsList.Enqueue(tmpDynMods)
-          End If
-          tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
+                    If tmpStatModsList Is Nothing Then
+                        tmpStatModsList = New Queue()
+                        tmpStatModsList.Enqueue("Static Mods: ")
+                    End If
+                    tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
 
 
+                ElseIf tmpType = clsDMSParamStorage.ParamTypes.DynamicModification Then
+                    If CSng(tmpValue) > 0 Then
+                        tmpSign = "+"
+                    ElseIf CSng(tmpValue) = 0 Then
+                        tmpSign = ""
+                    Else
+                        tmpSign = ""
+                    End If
 
-        ElseIf tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification Then
+                    If tmpDynModsList Is Nothing Then
+                        tmpDynModsList = New Queue()
+                        tmpDynModsList.Enqueue("Dynamic Mods: ")
+                    End If
+                    tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
 
-          If tmpSpec = "<" Then
-            tmpSpec = "N-Terminal"
-          ElseIf tmpSpec = ">" Then
-            tmpSpec = "C-Terminal"
-          End If
-
-          If CSng(tmpValue) > 0 Then
-            tmpSign = "+"
-          ElseIf CSng(tmpValue) = 0 Then
-            tmpSign = ""
-          Else
-            tmpSign = ""
-          End If
-
-          If tmpTermDynMods = "" Then
-            tmpTermDynMods = "Terminal Dynamic Mods: "
-          End If
-
-          'tmpTermDynMods = tmpTermDynMods + tmpSpec + " (" + tmpSign + tmpValue + ") "
-          If tmpTermDynModsList Is Nothing Then
-            tmpTermDynModsList = New Queue()
-            tmpTermDynModsList.Enqueue(tmpTermDynMods)
-          End If
-          tmpTermDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ") ")
+                    intDynModCount += 1
 
 
+                ElseIf tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification Then
 
-        ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
-          If CSng(tmpValue) > 0 Then
-            tmpSign = "+"
-          ElseIf CSng(tmpValue) = 0 Then
-            tmpSign = ""
-          Else
-            tmpSign = ""
-          End If
+                    If tmpSpec = "<" Then
+                        tmpSpec = "N-Term Peptide"
+                    ElseIf tmpSpec = ">" Then
+                        tmpSpec = "C-Term Peptide"
+                    End If
 
-          If tmpIsoMods = "" Then
-            tmpIsoMods = "Isotopic Mods: "
-          End If
-          'tmpIsoMods = tmpIsoMods & tmpSpec & " (" & tmpSign & tmpValue & "), "
-          If tmpIsoModsList Is Nothing Then
-            tmpIsoModsList = New Queue()
-            tmpIsoModsList.Enqueue(tmpIsoMods)
-          End If
-          tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ") ")
+                    If CSng(tmpValue) > 0 Then
+                        tmpSign = "+"
+                    ElseIf CSng(tmpValue) = 0 Then
+                        tmpSign = ""
+                    Else
+                        tmpSign = ""
+                    End If
 
 
-        Else
-          If tmpOtherParams = "" Then
-            tmpOtherParams = "Other Parameters: "
-          End If
-          'tmpOtherParams = tmpOtherParams & tmpSpec & " = " & tmpValue & ", "
-          If tmpOtherParamsList Is Nothing Then
-            tmpOtherParamsList = New Queue()
-            tmpOtherParamsList.Enqueue(tmpOtherParams)
-          End If
-          tmpOtherParamsList.Enqueue(tmpSpec & " = " & tmpValue)
+                    If tmpTermDynModsList Is Nothing Then
+                        tmpTermDynModsList = New Queue()
+                        tmpTermDynModsList.Enqueue("PepTerm Dynamic Mods: ")
+                    End If
+                    tmpTermDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
 
-        End If
-      Next
-
-      'If Right(tmpDynMods, 2) <> ", " And Not tmpDynMods Is Nothing Then
-      '  tmpDynMods = tmpDynMods & ", "
-      'End If
-
-      'If Right(tmpStatMods, 2) <> ", " And Not tmpStatMods Is Nothing Then
-      '  tmpStatMods = tmpStatMods & ", "
-      'End If
-
-      'If Right(tmpIsoMods, 2) <> ", " And Not tmpIsoMods Is Nothing Then
-      '  tmpIsoMods = tmpIsoMods & ", "
-      'End If
-
-      'If Right(tmpOtherParams, 2) = ", " And Not tmpOtherParams Is Nothing Then
-      '  tmpOtherParams = Left(tmpOtherParams, Len(tmpOtherParams) - 2)
-      'End If
-
-      Dim tmpParamsList As Queue = New Queue
-
-      With tmpParamsList
-        If tmpDynModsList IsNot Nothing Then .Enqueue(tmpDynModsList)
-        If tmpStatModsList IsNot Nothing Then .Enqueue(tmpStatModsList)
-        If tmpTermDynModsList IsNot Nothing Then .Enqueue(tmpTermDynModsList)
-        If tmpIsoModsList IsNot Nothing Then .Enqueue(tmpIsoModsList)
-        If tmpOtherParamsList IsNot Nothing Then .Enqueue(tmpOtherParamsList)
-      End With
-      tmpString = ""
-
-      Dim item As Queue = Nothing
-      Dim subitem As String = Nothing
-      Dim elementTitle As String = ""
-      While tmpParamsList.Count > 0
-        If tmpString.Length > 0 Then tmpString += ", "
-        item = DirectCast(tmpParamsList.Dequeue, Queue)
-        tmpElement = ""
-        elementTitle = item.Dequeue.ToString
-        While item.Count > 0
-          subitem = item.Dequeue().ToString
-          If tmpElement.Length > 0 Then tmpElement += ", "
-          tmpElement += subitem
-        End While
-        tmpString += elementTitle + tmpElement
-      End While
+                    intTermDynModCount += 1
 
 
+                ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
+                    If CSng(tmpValue) > 0 Then
+                        tmpSign = "+"
+                    ElseIf CSng(tmpValue) = 0 Then
+                        tmpSign = ""
+                    Else
+                        tmpSign = ""
+                    End If
 
-      'tmpString = tmpDynMods & tmpStatMods & tmpTermDynMods & tmpIsoMods & tmpOtherParams
+                    If tmpIsoMods = "" Then
+                        tmpIsoMods = "Isotopic Mods: "
+                    End If
 
-      'If Right(tmpString, 2) = ", " Then
-      '  tmpString = Left(tmpString, Len(tmpString) - 2)
-      'End If
-
-      If tmpString = Nothing Then tmpString = " --No Change-- "
-
-      Return tmpString
+                    If tmpIsoModsList Is Nothing Then
+                        tmpIsoModsList = New Queue()
+                        tmpIsoModsList.Enqueue(tmpIsoMods)
+                    End If
+                    tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
 
 
-    End Function
+                Else
+                    If tmpOtherParams = "" Then
+                        tmpOtherParams = "Other Parameters: "
+                    End If
+
+                    If tmpOtherParamsList Is Nothing Then
+                        tmpOtherParamsList = New Queue()
+                        tmpOtherParamsList.Enqueue(tmpOtherParams)
+                    End If
+                    tmpOtherParamsList.Enqueue(tmpSpec & " = " & tmpValue)
+
+                End If
+            Next
+
+            ' Build the string describing the mods
+            tmpString = ""
+
+            tmpString = MakeListOfMods(tmpString, tmpDynModsList, True)
+
+            tmpString = MakeListOfMods(tmpString, tmpTermDynModsList, False)
+            If intDynModCount = 0 And intTermDynModCount > 0 Then
+                tmpString = "Dynamic Mods: " & tmpString
+            End If
+
+            tmpString = MakeListOfMods(tmpString, tmpStatModsList, True)
+            tmpString = MakeListOfMods(tmpString, tmpIsoModsList, True)
+            tmpString = MakeListOfMods(tmpString, tmpOtherParamsList, True)
+
+
+            If tmpString = Nothing OrElse tmpString.Length = 0 Then
+                tmpString = " --No Change-- "
+            End If
+
+            Return tmpString
+
+
+        End Function
+
+        Private Function MakeListOfMods(ByVal strModDescriptionPrevious As String, _
+                                        ByVal objModList As Queue, _
+                                        ByVal blnAddTitlePrefix As Boolean) As String
+
+            Dim tmpElement As String = ""
+
+            If strModDescriptionPrevious Is Nothing Then strModDescriptionPrevious = ""
+            If objModList Is Nothing Then
+                Return strModDescriptionPrevious
+            End If
+
+            Dim subitem As String = Nothing
+            Dim elementTitle As String = ""
+            If objModList.Count > 0 Then
+                If strModDescriptionPrevious.Length > 0 Then strModDescriptionPrevious += ", "
+
+                tmpElement = ""
+                elementTitle = objModList.Dequeue.ToString
+                While objModList.Count > 0
+                    subitem = objModList.Dequeue().ToString
+                    If tmpElement.Length > 0 Then tmpElement += ", "
+                    tmpElement += subitem
+                End While
+
+                If blnAddTitlePrefix Then
+                    strModDescriptionPrevious += elementTitle + tmpElement
+                Else
+                    strModDescriptionPrevious += tmpElement
+                End If
+
+            End If
+
+            Return strModDescriptionPrevious
+
+        End Function
 
     Protected Function CompareDataCollections(ByVal templateColl As clsDMSParamStorage, ByVal checkColl As clsDMSParamStorage) As clsDMSParamStorage        'Neither
       Dim diffColl As New clsDMSParamStorage
