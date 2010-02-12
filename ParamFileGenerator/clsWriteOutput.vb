@@ -84,6 +84,13 @@ Public Class clsWriteOutput
             .Add("ion_series = " & p.IonSeries.ReturnIonString)
             .Add("fragment_ion_tolerance = " & Format(p.FragmentIonTolerance, "0.0000").ToString)
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+
+                ' MEM Note from February 2010
+                '  Our version of Sequest [ TurboSEQUEST - PVM Slave v.27 (rev. 12), (c) 1998-2005 ]
+                '   does not support mmu or ppm for Fragment Mass Units
+                '  In fact, it's possible it completely ignores the fragment_ion_units entry in the .params file
+                '  Thus, it is advisable you always use fragment_ion_units = 0  (which means Da)
+
                 .Add("fragment_ion_units = " + p.FragmentMassUnits.ToString)
             End If
 

@@ -2543,8 +2543,14 @@ Public Class frmMainGUI
             .BeginUpdate()
             .Items.Clear()
             .Items.Add("amu")
-            .Items.Add("mmu")
-            .Items.Add("ppm")
+
+            ' MEM Note from February 2010
+            '  Our version of Sequest [ TurboSEQUEST - PVM Slave v.27 (rev. 12), (c) 1998-2005 ]
+            '   does not support mmu or ppm for Fragment Mass Units
+            '  In fact, it's possible it completely ignores the fragment_ion_units entry in the .params file
+            '  Thus, the only value added to cboFragmentMassUnits is "amu"
+            ''.Items.Add("mmu")
+            ''.Items.Add("ppm")
             .EndUpdate()
         End With
 
@@ -2676,6 +2682,24 @@ Public Class frmMainGUI
             frm.chkUseBIons.Checked = .IonSeries.Use_b_Ions
             frm.chkUseYIons.Checked = .IonSeries.Use_y_Ions
             frm.cboParentMassUnits.SelectedIndex = CInt(.PeptideMassUnits)
+
+            If .FragmentMassUnits <> 0 Then
+
+                ' MEM Note from February 2010
+                '  Our version of Sequest [ TurboSEQUEST - PVM Slave v.27 (rev. 12), (c) 1998-2005 ]
+                '   does not support mmu or ppm for Fragment Mass Units
+                '  In fact, it's possible it completely ignores the fragment_ion_units entry in the .params file
+                '  Thus, the only value added allowed for .FragmentMassUnits is 0
+
+                ' Old parameter file with FragmentMassUnits set as a non-zero value
+                ' Force it to be 0
+                .FragmentMassUnits = 0
+
+                ' In addition, if .FragmentIonTolerance is over 1, then set it to 0
+                If .FragmentIonTolerance > 1 Then
+                    .FragmentIonTolerance = 0
+                End If
+            End If
             frm.cboFragmentMassUnits.SelectedIndex = CInt(.FragmentMassUnits)
 
             frm.chkCreateOutputFiles.Checked = .CreateOutputFiles
