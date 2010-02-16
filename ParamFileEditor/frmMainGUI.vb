@@ -2512,147 +2512,154 @@ Public Class frmMainGUI
 
     Private Sub SetupBasicTab(ByVal frm As frmMainGUI, ByVal bt As IBasicParams)
         Me.RemoveBasicTabHandlers()
-        'Load comboboxes
-        With frm.cboParentMassType
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add("Average")
-            .Items.Add("Monoisotopic")
-            .EndUpdate()
-        End With
 
-        With frm.cboFragmentMassType
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add("Average")
-            .Items.Add("Monoisotopic")
-            .EndUpdate()
-        End With
+        Try
+         
+            'Load comboboxes
+            With frm.cboParentMassType
+                .BeginUpdate()
+                .Items.Clear()
+                .Items.Add("Average")
+                .Items.Add("Monoisotopic")
+                .EndUpdate()
+            End With
+
+            With frm.cboFragmentMassType
+                .BeginUpdate()
+                .Items.Clear()
+                .Items.Add("Average")
+                .Items.Add("Monoisotopic")
+                .EndUpdate()
+            End With
 
 
-        With frm.cboParentMassUnits
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add("amu")
-            .Items.Add("mmu")
-            .Items.Add("ppm")
-            .EndUpdate()
-        End With
+            With frm.cboParentMassUnits
+                .BeginUpdate()
+                .Items.Clear()
+                .Items.Add("amu")
+                .Items.Add("mmu")
+                .Items.Add("ppm")
+                .EndUpdate()
+            End With
 
-        With frm.cboFragmentMassUnits
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add("amu")
+            With frm.cboFragmentMassUnits
+                .BeginUpdate()
+                .Items.Clear()
+                .Items.Add("amu")
 
-            ' MEM Note from February 2010
-            '  Our version of Sequest [ TurboSEQUEST - PVM Slave v.27 (rev. 12), (c) 1998-2005 ]
-            '   does not support mmu or ppm for Fragment Mass Units
-            '  In fact, it's possible it completely ignores the fragment_ion_units entry in the .params file
-            '  Thus, the only value added to cboFragmentMassUnits is "amu"
-            ''.Items.Add("mmu")
-            ''.Items.Add("ppm")
-            .EndUpdate()
-        End With
+                ' MEM Note from February 2010
+                '  Our version of Sequest [ TurboSEQUEST - PVM Slave v.27 (rev. 12), (c) 1998-2005 ]
+                '   does not support mmu or ppm for Fragment Mass Units
+                '  In fact, it's possible it completely ignores the fragment_ion_units entry in the .params file
+                '  Thus, the only value added to cboFragmentMassUnits is "amu"
+                ''.Items.Add("mmu")
+                ''.Items.Add("ppm")
+                .EndUpdate()
+            End With
 
-        Dim enz As New clsEnzymeDetails
+            Dim enz As New clsEnzymeDetails
 
-        With frm.cboEnzymeSelect
-            .BeginUpdate()
-            .Items.Clear()
-            For Each enz In frm.newParams.EnzymeList
-                .Items.Add(enz.EnzymeID & " - " & enz.EnzymeName & " [" & enz.EnzymeCleavePoints & "]")
-            Next
-            .EndUpdate()
-        End With
+            With frm.cboEnzymeSelect
+                .BeginUpdate()
+                .Items.Clear()
+                For Each enz In frm.newParams.EnzymeList
+                    .Items.Add(enz.EnzymeID & " - " & enz.EnzymeName & " [" & enz.EnzymeCleavePoints & "]")
+                Next
+                .EndUpdate()
+            End With
 
-        With frm.cboCleavagePosition
-            .DisplayMember = "DisplayName"
-            .ValueMember = "Value"
-            .BeginUpdate()
-            .Items.Clear()
-            .Items.Add(New ComboBoxContents("No Enzyme", "0"))
-            .EndUpdate()
-            .Enabled = False
-        End With
+            With frm.cboCleavagePosition
+                .DisplayMember = "DisplayName"
+                .ValueMember = "Value"
+                .BeginUpdate()
+                .Items.Clear()
+                .Items.Add(New ComboBoxContents("No Enzyme", "0"))
+                .EndUpdate()
+                .Enabled = False
+            End With
 
-        Dim counter As Integer = 0
-        With frm.cboMissedCleavages
-            .BeginUpdate()
-            .Items.Clear()
-            For counter = 0 To 5
-                .Items.Add(counter.ToString)
-            Next
-            .EndUpdate()
-        End With
+            Dim counter As Integer = 0
+            With frm.cboMissedCleavages
+                .BeginUpdate()
+                .Items.Clear()
+                For counter = 0 To 5
+                    .Items.Add(counter.ToString)
+                Next
+                .EndUpdate()
+            End With
 
-        With bt
-            'Name and description info
-            frm.txtParamInfo.Text = DEF_TEMPLATE_LABEL_TEXT & .FileName
-            frm.txtDescription.Text = .Description
+            With bt
+                'Name and description info
+                frm.txtParamInfo.Text = DEF_TEMPLATE_LABEL_TEXT & .FileName
+                frm.txtDescription.Text = .Description
 
-            'Search settings
-            frm.cboParentMassType.SelectedIndex = CInt(.ParentMassType)
-            frm.cboFragmentMassType.SelectedIndex = CInt(.FragmentMassType)
-            frm.cboEnzymeSelect.SelectedIndex = .SelectedEnzymeIndex()
-            frm.cboCleavagePosition.SelectedValue = .SelectedEnzymeCleavagePosition
-            frm.cboMissedCleavages.SelectedIndex = .MaximumNumberMissedCleavages
-            frm.txtPartialSeq.Text = .PartialSequenceToMatch
+                'Search settings
+                frm.cboParentMassType.SelectedIndex = CInt(.ParentMassType)
+                frm.cboFragmentMassType.SelectedIndex = CInt(.FragmentMassType)
+                frm.cboEnzymeSelect.SelectedIndex = .SelectedEnzymeIndex()
+                frm.cboCleavagePosition.SelectedValue = .SelectedEnzymeCleavagePosition
+                frm.cboMissedCleavages.SelectedIndex = .MaximumNumberMissedCleavages
+                frm.txtPartialSeq.Text = .PartialSequenceToMatch
 
-            'Dynamic Mods
-            frm.txtDynMod1List.Text = .DynamicMods.Dyn_Mod_n_AAList(1)
-            frm.txtDynMod2List.Text = .DynamicMods.Dyn_Mod_n_AAList(2)
-            frm.txtDynMod3List.Text = .DynamicMods.Dyn_Mod_n_AAList(3)
-            frm.txtDynMod4List.Text = .DynamicMods.Dyn_Mod_n_AAList(4)
-            frm.txtDynMod5List.Text = .DynamicMods.Dyn_Mod_n_AAList(5)
-            frm.txtDynMod1MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(1), "0.0000").ToString
-            frm.txtDynMod2MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(2), "0.0000").ToString
-            frm.txtDynMod3MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(3), "0.0000").ToString
-            frm.txtDynMod4MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(4), "0.0000").ToString
-            frm.txtDynMod5MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(5), "0.0000").ToString
+                'Dynamic Mods
+                frm.txtDynMod1List.Text = .DynamicMods.Dyn_Mod_n_AAList(1)
+                frm.txtDynMod2List.Text = .DynamicMods.Dyn_Mod_n_AAList(2)
+                frm.txtDynMod3List.Text = .DynamicMods.Dyn_Mod_n_AAList(3)
+                frm.txtDynMod4List.Text = .DynamicMods.Dyn_Mod_n_AAList(4)
+                frm.txtDynMod5List.Text = .DynamicMods.Dyn_Mod_n_AAList(5)
+                frm.txtDynMod1MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(1), "0.0000").ToString
+                frm.txtDynMod2MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(2), "0.0000").ToString
+                frm.txtDynMod3MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(3), "0.0000").ToString
+                frm.txtDynMod4MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(4), "0.0000").ToString
+                frm.txtDynMod5MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(5), "0.0000").ToString
 
-            frm.txtDynNTPep.Text = Format(.TermDynamicMods.Dyn_Mod_NTerm, "0.0000").ToString
-            frm.txtDynCTPep.Text = Format(.TermDynamicMods.Dyn_Mod_CTerm, "0.0000").ToString
+                frm.txtDynNTPep.Text = Format(.TermDynamicMods.Dyn_Mod_NTerm, "0.0000").ToString
+                frm.txtDynCTPep.Text = Format(.TermDynamicMods.Dyn_Mod_CTerm, "0.0000").ToString
 
-            'Static Mods
-            frm.txtCTPep.Text = Format(.StaticModificationsList.CtermPeptide, "0.0000").ToString
-            frm.txtCTProt.Text = Format(.StaticModificationsList.CtermProtein, "0.0000").ToString
-            frm.txtNTPep.Text = Format(.StaticModificationsList.NtermPeptide, "0.0000").ToString
-            frm.txtNTProt.Text = Format(.StaticModificationsList.NtermProtein, "0.0000").ToString
-            frm.txtGly.Text = Format(.StaticModificationsList.G_Glycine, "0.0000").ToString
-            frm.txtAla.Text = Format(.StaticModificationsList.A_Alanine, "0.0000").ToString
-            frm.txtSer.Text = Format(.StaticModificationsList.S_Serine, "0.0000").ToString
+                'Static Mods
+                frm.txtCTPep.Text = Format(.StaticModificationsList.CtermPeptide, "0.0000").ToString
+                frm.txtCTProt.Text = Format(.StaticModificationsList.CtermProtein, "0.0000").ToString
+                frm.txtNTPep.Text = Format(.StaticModificationsList.NtermPeptide, "0.0000").ToString
+                frm.txtNTProt.Text = Format(.StaticModificationsList.NtermProtein, "0.0000").ToString
+                frm.txtGly.Text = Format(.StaticModificationsList.G_Glycine, "0.0000").ToString
+                frm.txtAla.Text = Format(.StaticModificationsList.A_Alanine, "0.0000").ToString
+                frm.txtSer.Text = Format(.StaticModificationsList.S_Serine, "0.0000").ToString
 
-            frm.txtPro.Text = Format(.StaticModificationsList.P_Proline, "0.0000").ToString
-            frm.txtVal.Text = Format(.StaticModificationsList.V_Valine, "0.0000").ToString
-            frm.txtThr.Text = Format(.StaticModificationsList.T_Threonine, "0.0000").ToString
-            frm.txtCys.Text = Format(.StaticModificationsList.C_Cysteine, "0.0000").ToString
-            frm.txtLeu.Text = Format(.StaticModificationsList.L_Leucine, "0.0000").ToString
-            frm.txtIle.Text = Format(.StaticModificationsList.I_Isoleucine, "0.0000").ToString
-            frm.TxtLorI.Text = Format(.StaticModificationsList.X_LorI, "0.0000").ToString
+                frm.txtPro.Text = Format(.StaticModificationsList.P_Proline, "0.0000").ToString
+                frm.txtVal.Text = Format(.StaticModificationsList.V_Valine, "0.0000").ToString
+                frm.txtThr.Text = Format(.StaticModificationsList.T_Threonine, "0.0000").ToString
+                frm.txtCys.Text = Format(.StaticModificationsList.C_Cysteine, "0.0000").ToString
+                frm.txtLeu.Text = Format(.StaticModificationsList.L_Leucine, "0.0000").ToString
+                frm.txtIle.Text = Format(.StaticModificationsList.I_Isoleucine, "0.0000").ToString
+                frm.TxtLorI.Text = Format(.StaticModificationsList.X_LorI, "0.0000").ToString
 
-            frm.txtAsn.Text = Format(.StaticModificationsList.N_Asparagine, "0.0000").ToString
-            frm.txtOrn.Text = Format(.StaticModificationsList.O_Ornithine, "0.0000").ToString
-            frm.txtNandD.Text = Format(.StaticModificationsList.B_avg_NandD, "0.0000").ToString
-            frm.txtAsp.Text = Format(.StaticModificationsList.D_Aspartic_Acid, "0.0000").ToString
-            frm.txtGln.Text = Format(.StaticModificationsList.Q_Glutamine, "0.0000").ToString
-            frm.txtLys.Text = Format(.StaticModificationsList.K_Lysine, "0.0000").ToString
-            frm.txtQandE.Text = Format(.StaticModificationsList.Z_avg_QandE, "0.0000").ToString
+                frm.txtAsn.Text = Format(.StaticModificationsList.N_Asparagine, "0.0000").ToString
+                frm.txtOrn.Text = Format(.StaticModificationsList.O_Ornithine, "0.0000").ToString
+                frm.txtNandD.Text = Format(.StaticModificationsList.B_avg_NandD, "0.0000").ToString
+                frm.txtAsp.Text = Format(.StaticModificationsList.D_Aspartic_Acid, "0.0000").ToString
+                frm.txtGln.Text = Format(.StaticModificationsList.Q_Glutamine, "0.0000").ToString
+                frm.txtLys.Text = Format(.StaticModificationsList.K_Lysine, "0.0000").ToString
+                frm.txtQandE.Text = Format(.StaticModificationsList.Z_avg_QandE, "0.0000").ToString
 
-            frm.txtGlu.Text = Format(.StaticModificationsList.E_Glutamic_Acid, "0.0000").ToString
-            frm.txtMet.Text = Format(.StaticModificationsList.M_Methionine, "0.0000").ToString
-            frm.txtHis.Text = Format(.StaticModificationsList.H_Histidine, "0.0000").ToString
-            frm.txtPhe.Text = Format(.StaticModificationsList.F_Phenylalanine, "0.0000").ToString
-            frm.txtArg.Text = Format(.StaticModificationsList.R_Arginine, "0.0000").ToString
-            frm.txtTyr.Text = Format(.StaticModificationsList.Y_Tyrosine, "0.0000").ToString
-            frm.txtTrp.Text = Format(.StaticModificationsList.W_Tryptophan, "0.0000").ToString
+                frm.txtGlu.Text = Format(.StaticModificationsList.E_Glutamic_Acid, "0.0000").ToString
+                frm.txtMet.Text = Format(.StaticModificationsList.M_Methionine, "0.0000").ToString
+                frm.txtHis.Text = Format(.StaticModificationsList.H_Histidine, "0.0000").ToString
+                frm.txtPhe.Text = Format(.StaticModificationsList.F_Phenylalanine, "0.0000").ToString
+                frm.txtArg.Text = Format(.StaticModificationsList.R_Arginine, "0.0000").ToString
+                frm.txtTyr.Text = Format(.StaticModificationsList.Y_Tyrosine, "0.0000").ToString
+                frm.txtTrp.Text = Format(.StaticModificationsList.W_Tryptophan, "0.0000").ToString
 
-            frm.txtIsoC.Text = Format(.IsotopicModificationsList.Iso_C, "0.0000").ToString
-            frm.txtIsoH.Text = Format(.IsotopicModificationsList.Iso_H, "0.0000").ToString
-            frm.txtIsoO.Text = Format(.IsotopicModificationsList.Iso_O, "0.0000").ToString
-            frm.txtIsoN.Text = Format(.IsotopicModificationsList.Iso_N, "0.0000").ToString
-            frm.txtIsoS.Text = Format(.IsotopicModificationsList.Iso_S, "0.0000").ToString
+                frm.txtIsoC.Text = Format(.IsotopicModificationsList.Iso_C, "0.0000").ToString
+                frm.txtIsoH.Text = Format(.IsotopicModificationsList.Iso_H, "0.0000").ToString
+                frm.txtIsoO.Text = Format(.IsotopicModificationsList.Iso_O, "0.0000").ToString
+                frm.txtIsoN.Text = Format(.IsotopicModificationsList.Iso_N, "0.0000").ToString
+                frm.txtIsoS.Text = Format(.IsotopicModificationsList.Iso_S, "0.0000").ToString
 
-        End With
+            End With
+
+        Catch ex As Exception
+            System.Windows.Forms.MessageBox.Show("Error in SetupBasicTab: " & ex.Message)
+        End Try
 
         'TODO Change code to check connection status/availability and set accordingly
         frm.chkAutoTweak.Checked = True
@@ -2660,84 +2667,94 @@ Public Class frmMainGUI
         Me.AddBasicTabHandlers()
 
     End Sub
+
     Private Sub SetupAdvancedTab(ByVal frm As frmMainGUI, ByVal at As IAdvancedParams)
+
         Me.RemoveAdvTabHandlers()
-        'Load Combo Box
-        With frm.cboNucReadingFrame.Items
-            .Add("None - Protein Database Used")
-            .Add("Forward - Frame 1")
-            .Add("Forward - Frame 2")
-            .Add("Forward - Frame 3")
-            .Add("Reverse - Frame 1")
-            .Add("Reverse - Frame 2")
-            .Add("Reverse - Frame 3")
-            .Add("Forward - All 3 Frames")
-            .Add("Reverse - All 3 Frames")
-            .Add("All Six Frames")
-        End With
 
-        With at
-            'Setup checkboxes
-            frm.chkUseAIons.Checked = .IonSeries.Use_a_Ions
-            frm.chkUseBIons.Checked = .IonSeries.Use_b_Ions
-            frm.chkUseYIons.Checked = .IonSeries.Use_y_Ions
-            frm.cboParentMassUnits.SelectedIndex = CInt(.PeptideMassUnits)
+        Try
 
-            If .FragmentMassUnits <> 0 Then
+            'Load Combo Box
+            With frm.cboNucReadingFrame.Items
+                .Add("None - Protein Database Used")
+                .Add("Forward - Frame 1")
+                .Add("Forward - Frame 2")
+                .Add("Forward - Frame 3")
+                .Add("Reverse - Frame 1")
+                .Add("Reverse - Frame 2")
+                .Add("Reverse - Frame 3")
+                .Add("Forward - All 3 Frames")
+                .Add("Reverse - All 3 Frames")
+                .Add("All Six Frames")
+            End With
 
-                ' MEM Note from February 2010
-                '  Our version of Sequest [ TurboSEQUEST - PVM Slave v.27 (rev. 12), (c) 1998-2005 ]
-                '   does not support mmu or ppm for Fragment Mass Units
-                '  In fact, it's possible it completely ignores the fragment_ion_units entry in the .params file
-                '  Thus, the only value added allowed for .FragmentMassUnits is 0
+            With at
+                'Setup checkboxes
+                frm.chkUseAIons.Checked = .IonSeries.Use_a_Ions
+                frm.chkUseBIons.Checked = .IonSeries.Use_b_Ions
+                frm.chkUseYIons.Checked = .IonSeries.Use_y_Ions
+                frm.cboParentMassUnits.SelectedIndex = CInt(.PeptideMassUnits)
 
-                ' Old parameter file with FragmentMassUnits set as a non-zero value
-                ' Force it to be 0
-                .FragmentMassUnits = 0
+                If .FragmentMassUnits <> 0 Then
 
-                ' In addition, if .FragmentIonTolerance is over 1, then set it to 0
-                If .FragmentIonTolerance > 1 Then
-                    .FragmentIonTolerance = 0
+                    ' MEM Note from February 2010
+                    '  Our version of Sequest [ TurboSEQUEST - PVM Slave v.27 (rev. 12), (c) 1998-2005 ]
+                    '   does not support mmu or ppm for Fragment Mass Units
+                    '  In fact, it's possible it completely ignores the fragment_ion_units entry in the .params file
+                    '  Thus, the only value added allowed for .FragmentMassUnits is 0
+
+                    ' Old parameter file with FragmentMassUnits set as a non-zero value
+                    ' Force it to be 0
+                    .FragmentMassUnits = 0
+
+                    ' In addition, if .FragmentIonTolerance is over 1, then set it to 0
+                    If .FragmentIonTolerance > 1 Then
+                        .FragmentIonTolerance = 0
+                    End If
                 End If
-            End If
-            frm.cboFragmentMassUnits.SelectedIndex = CInt(.FragmentMassUnits)
+                frm.cboFragmentMassUnits.SelectedIndex = CInt(.FragmentMassUnits)
 
-            frm.chkCreateOutputFiles.Checked = .CreateOutputFiles
-            frm.chkShowFragmentIons.Checked = .ShowFragmentIons
-            frm.chkRemovePrecursorPeaks.Checked = .RemovePrecursorPeak
-            frm.chkPrintDupRefs.Checked = .PrintDuplicateReferences
-            frm.chkResiduesInUpperCase.Checked = .AminoAcidsAllUpperCase
+                frm.chkCreateOutputFiles.Checked = .CreateOutputFiles
+                frm.chkShowFragmentIons.Checked = .ShowFragmentIons
+                frm.chkRemovePrecursorPeaks.Checked = .RemovePrecursorPeak
+                frm.chkPrintDupRefs.Checked = .PrintDuplicateReferences
+                frm.chkResiduesInUpperCase.Checked = .AminoAcidsAllUpperCase
 
-            'Setup Search Tolerances
-            frm.txtPepMassTol.Text = Format(.PeptideMassTolerance, "0.0000").ToString
-            frm.txtFragMassTol.Text = Format(.FragmentIonTolerance, "0.0000").ToString
-            frm.txtPeakMatchingTol.Text = Format(.MatchedPeakMassTolerance, "0.0000").ToString
-            frm.txtIonCutoff.Text = Format(.IonCutoffPercentage, "0.0000").ToString
-            frm.txtMinProtMass.Text = Format(.MinimumProteinMassToSearch, "0.0000").ToString
-            frm.txtMaxProtMass.Text = Format(.MaximumProteinMassToSearch, "0.0000").ToString
-            frm.cboNucReadingFrame.SelectedIndex = .SelectedNucReadingFrame
-            frm.txtNumResults.Text = CInt(.NumberOfResultsToProcess)
+                'Setup Search Tolerances
+                frm.txtPepMassTol.Text = Format(.PeptideMassTolerance, "0.0000").ToString
+                frm.txtFragMassTol.Text = Format(.FragmentIonTolerance, "0.0000").ToString
+                frm.txtPeakMatchingTol.Text = Format(.MatchedPeakMassTolerance, "0.0000").ToString
+                frm.txtIonCutoff.Text = Format(.IonCutoffPercentage, "0.0000").ToString
+                frm.txtMinProtMass.Text = Format(.MinimumProteinMassToSearch, "0.0000").ToString
+                frm.txtMaxProtMass.Text = Format(.MaximumProteinMassToSearch, "0.0000").ToString
+                frm.cboNucReadingFrame.SelectedIndex = .SelectedNucReadingFrame
+                frm.txtNumResults.Text = CInt(.NumberOfResultsToProcess)
 
 
-            'Setup Misc Options
-            frm.txtNumOutputLines.Text = Format(.NumberOfOutputLines, "0").ToString
-            frm.txtNumDescLines.Text = Format(.NumberOfDescriptionLines, "0").ToString
-            frm.txtMatchPeakCount.Text = Format(.NumberOfDetectedPeaksToMatch, "0").ToString
-            frm.txtMatchPeakCountErrors.Text = Format(.NumberOfAllowedDetectedPeakErrors, "0").ToString
-            frm.txtMaxAAPerDynMod.Text = Format(.MaximumNumAAPerDynMod, "0").ToString
-            frm.txtMaxDiffPerPeptide.Text = .MaximumDifferentialPerPeptide
+                'Setup Misc Options
+                frm.txtNumOutputLines.Text = Format(.NumberOfOutputLines, "0").ToString
+                frm.txtNumDescLines.Text = Format(.NumberOfDescriptionLines, "0").ToString
+                frm.txtMatchPeakCount.Text = Format(.NumberOfDetectedPeaksToMatch, "0").ToString
+                frm.txtMatchPeakCountErrors.Text = Format(.NumberOfAllowedDetectedPeakErrors, "0").ToString
+                frm.txtMaxAAPerDynMod.Text = Format(.MaximumNumAAPerDynMod, "0").ToString
+                frm.txtMaxDiffPerPeptide.Text = .MaximumDifferentialPerPeptide
 
-            'Setup Ion Weighting
-            frm.txtAWeight.Text = Format(.IonSeries.a_Ion_Weighting, "0.0").ToString
-            frm.txtBWeight.Text = Format(.IonSeries.b_Ion_Weighting, "0.0").ToString
-            frm.txtCWeight.Text = Format(.IonSeries.c_Ion_Weighting, "0.0").ToString
-            frm.txtDWeight.Text = Format(.IonSeries.d_Ion_Weighting, "0.0").ToString
-            frm.txtVWeight.Text = Format(.IonSeries.v_Ion_Weighting, "0.0").ToString
-            frm.txtWWeight.Text = Format(.IonSeries.w_Ion_Weighting, "0.0").ToString
-            frm.txtXWeight.Text = Format(.IonSeries.x_Ion_Weighting, "0.0").ToString
-            frm.txtYWeight.Text = Format(.IonSeries.y_Ion_Weighting, "0.0").ToString
-            frm.txtZWeight.Text = Format(.IonSeries.z_Ion_Weighting, "0.0").ToString
-        End With
+                'Setup Ion Weighting
+                frm.txtAWeight.Text = Format(.IonSeries.a_Ion_Weighting, "0.0").ToString
+                frm.txtBWeight.Text = Format(.IonSeries.b_Ion_Weighting, "0.0").ToString
+                frm.txtCWeight.Text = Format(.IonSeries.c_Ion_Weighting, "0.0").ToString
+                frm.txtDWeight.Text = Format(.IonSeries.d_Ion_Weighting, "0.0").ToString
+                frm.txtVWeight.Text = Format(.IonSeries.v_Ion_Weighting, "0.0").ToString
+                frm.txtWWeight.Text = Format(.IonSeries.w_Ion_Weighting, "0.0").ToString
+                frm.txtXWeight.Text = Format(.IonSeries.x_Ion_Weighting, "0.0").ToString
+                frm.txtYWeight.Text = Format(.IonSeries.y_Ion_Weighting, "0.0").ToString
+                frm.txtZWeight.Text = Format(.IonSeries.z_Ion_Weighting, "0.0").ToString
+            End With
+
+        Catch ex As Exception
+            System.Windows.Forms.MessageBox.Show("Error in SetupAdvancedTab: " & ex.Message)
+        End Try
+
         Me.AddAdvTabHandlers()
 
     End Sub
@@ -3122,15 +3139,23 @@ Public Class frmMainGUI
     End Sub
 
     Private Sub LoadParamsetFromDMS(ByVal ParamSetID As Integer)
-        If m_clsParamsFromDMS Is Nothing Then
-            m_clsParamsFromDMS = LoadDMSParamsClass(mySettings)
-        End If
-        newParams = m_clsParamsFromDMS.ReadParamsFromDMS(ParamSetID)
+        Try
+            If m_clsParamsFromDMS Is Nothing Then
+                m_clsParamsFromDMS = LoadDMSParamsClass(mySettings)
+            Else
+                ' Need to run a Refresh of m_clsParamsFromDMS so that it knows about any newly imported param files
+                m_clsParamsFromDMS.RefreshParamsFromDMS()
+            End If
+            newParams = m_clsParamsFromDMS.ReadParamsFromDMS(ParamSetID)
 
-        Dim iso As New clsDeconvolveIsoMods(mySettings.DMS_ConnectionString)
-        newParams = iso.DeriveIsoMods(newParams)
+            Dim iso As New clsDeconvolveIsoMods(mySettings.DMS_ConnectionString)
+            newParams = iso.DeriveIsoMods(newParams)
 
-        RefreshTabs(Me, newParams)
+            RefreshTabs(Me, newParams)
+        Catch ex As Exception
+            System.Windows.Forms.MessageBox.Show("Error in LoadParamsetFromDMS: " & ex.Message)
+        End Try
+       
     End Sub
 
     Private Sub LoadParamsetFromFile(ByVal FilePath As String)

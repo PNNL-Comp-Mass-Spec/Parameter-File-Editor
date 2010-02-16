@@ -4,7 +4,7 @@ Imports ParamFileGenerator
 
 
 Friend Class clsDMSParamUpload
-    Inherits ParamFileGenerator.DownloadParams.clsparamsfromdms
+    Inherits ParamFileGenerator.DownloadParams.clsParamsFromDMS
 
 #Region " Member Properties "
     'Private m_clsUpdateModsTable As clsUpdateModsTable

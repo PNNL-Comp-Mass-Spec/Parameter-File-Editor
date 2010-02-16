@@ -272,22 +272,36 @@ Namespace DownloadParams
       Return p
     End Function
     'TODO Fix this function for new mod handling
-    Protected Function GetParamSetWithID(ByVal ParamSetID As Integer, Optional ByVal DisableMassLookup As Boolean = False) As clsParams  'Download
-      Dim dr As DataRow = GetFileRowWithID(ParamSetID)
-      Dim foundrows As DataRow() = Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
-      Dim storageSet As clsDMSParamStorage = Me.MakeStorageClassFromTableRowSet(foundrows)
-      If Not DisableMassLookup Then
-        storageSet = GetMassModsFromDMS(ParamSetID, storageSet)
-      End If
-      Dim p As clsParams = Me.UpdateParamSetFromDataCollection(storageSet)
-      p.FileName = DirectCast(dr.Item("Param_File_Name"), String)
-      p.Description = Me.SummarizeDiffColl(storageSet)
-      For Each paramRow As DataRow In foundrows
-        p.AddLoadedParamName(paramRow.Item("Entry_Specifier").ToString, paramRow.Item("Entry_Value").ToString)
-      Next
+        Protected Function GetParamSetWithID(ByVal ParamSetID As Integer, Optional ByVal DisableMassLookup As Boolean = False) As clsParams  'Download
 
-      Return p
-    End Function
+            Dim dr As DataRow = GetFileRowWithID(ParamSetID)
+            If dr Is Nothing Then
+                ' Match not found
+                Return New clsParams()
+            End If
+
+            Dim foundrows As DataRow() = Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
+            If foundrows Is Nothing OrElse foundrows.Length = 0 Then
+                ' Match not found
+                Return New clsParams()
+            End If
+
+            Dim storageSet As clsDMSParamStorage = Me.MakeStorageClassFromTableRowSet(foundrows)
+
+            If Not DisableMassLookup Then
+                storageSet = GetMassModsFromDMS(ParamSetID, storageSet)
+            End If
+
+            Dim p As clsParams = Me.UpdateParamSetFromDataCollection(storageSet)
+            p.FileName = DirectCast(dr.Item("Param_File_Name"), String)
+            p.Description = Me.SummarizeDiffColl(storageSet)
+
+            For Each paramRow As DataRow In foundrows
+                p.AddLoadedParamName(paramRow.Item("Entry_Specifier").ToString, paramRow.Item("Entry_Value").ToString)
+            Next
+
+            Return p
+        End Function
 
     Protected Function MakeStorageClassFromTableRowSet(ByVal foundRows As DataRow()) As clsDMSParamStorage
       Dim foundRow As DataRow
