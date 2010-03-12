@@ -112,12 +112,11 @@ Public Class frmDMSPicker
         Me.txtLiveSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.txtLiveSearch.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtLiveSearch.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption
+        Me.txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
         Me.txtLiveSearch.Location = New System.Drawing.Point(40, 450)
         Me.txtLiveSearch.Name = "txtLiveSearch"
         Me.txtLiveSearch.Size = New System.Drawing.Size(160, 14)
         Me.txtLiveSearch.TabIndex = 1
-        Me.txtLiveSearch.Text = "Search"
         '
         'PictureBox1
         '
@@ -213,43 +212,43 @@ Public Class frmDMSPicker
         End If
     End Sub
 
-    Private Sub txtLiveSearch_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtLiveSearch.TextChanged
-        If txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption AndAlso _
-           txtLiveSearch.Text <> "Search" Then
-            ' This code is needed to handle the user right clicking and pasting text to search
-            txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
-            'm_SearchActive = True
-            'SearchTimer.Start()
-        End If
+    ''Private Sub txtLiveSearch_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtLiveSearch.TextChanged
+    ''    If txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption AndAlso _
+    ''       txtLiveSearch.Text <> "Search" Then
+    ''        ' This code is needed to handle the user right clicking and pasting text to search
+    ''        txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
+    ''        'm_SearchActive = True
+    ''        'SearchTimer.Start()
+    ''    End If
 
-        'If m_SearchActive Then
-        ' SearchTimer.Start()
-        'End If
-    End Sub
+    ''    'If m_SearchActive Then
+    ''    ' SearchTimer.Start()
+    ''    'End If
+    ''End Sub
 
-    Private Sub txtLiveSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtLiveSearch.Click
-        ' Note: This _Click event is fired on left click but not on right click
-        ''If m_SearchActive Then
-        ''    ' Do nothing
-        ''Else
-        ''    txtLiveSearch.Text = Nothing
-        ''    txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
-        ''    m_SearchActive = True
-        ''End If
+    ''Private Sub txtLiveSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtLiveSearch.Click
+    ''    ' Note: This _Click event is fired on left click but not on right click
+    ''    ''If m_SearchActive Then
+    ''    ''    ' Do nothing
+    ''    ''Else
+    ''    ''    txtLiveSearch.Text = Nothing
+    ''    ''    txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
+    ''    ''    m_SearchActive = True
+    ''    ''End If
 
-        If txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption AndAlso _
-           txtLiveSearch.Text = "Search" Then
-            txtLiveSearch.Text = ""
-            txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
-        End If
-    End Sub
+    ''    If txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption AndAlso _
+    ''       txtLiveSearch.Text = "Search" Then
+    ''        txtLiveSearch.Text = ""
+    ''        txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
+    ''    End If
+    ''End Sub
 
     Private Sub txtLiveSearch_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtLiveSearch.Leave
         If txtLiveSearch.Text.Length = 0 Then
             'Me.m_SearchActive = False
             'SearchTimer.Stop()
-            txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption
-            txtLiveSearch.Text = "Search"
+            'txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption
+            'txtLiveSearch.Text = "Search"
             Me.m_Loader.FillListView(Me.lvwDMSPicklist)
         End If
     End Sub

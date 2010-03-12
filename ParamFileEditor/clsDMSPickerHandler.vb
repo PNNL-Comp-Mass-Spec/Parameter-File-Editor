@@ -21,11 +21,10 @@ Public Class clsDMSPickerHandler
             Me.m_tmpIDTable = c.RetrieveAvailableParams
         End If
 
+        filterString = "Type_ID = 1000"
+
         If Len(filterCriteria) <> 0 Then
-            filterString = "[Filename] LIKE '%" & filterCriteria & _
-                "%' OR [Diffs] LIKE '%" & filterCriteria & "%'"
-        Else
-            filterString = ""
+            filterString &= " AND ([Filename] LIKE '%" & filterCriteria & "%' OR [Diffs] LIKE '%" & filterCriteria & "%')"
         End If
 
         paramRows = Me.m_tmpIDTable.Select(filterString)

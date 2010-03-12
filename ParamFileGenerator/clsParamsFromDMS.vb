@@ -281,10 +281,6 @@ Namespace DownloadParams
             End If
 
             Dim foundrows As DataRow() = Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
-            If foundrows Is Nothing OrElse foundrows.Length = 0 Then
-                ' Match not found
-                Return New clsParams()
-            End If
 
             Dim storageSet As clsDMSParamStorage = Me.MakeStorageClassFromTableRowSet(foundrows)
 
@@ -504,14 +500,14 @@ Namespace DownloadParams
 
       Dim tmpIDTable As New DataTable
       Dim paramTableSQL As String
-      paramTableSQL = _
-          "SELECT " & _
-              "Param_File_ID as ID, " & _
-              "Param_File_Name AS Filename, " & _
-              "Param_File_Description as Diffs, " & _
-              "Param_File_Type_ID as Type_ID " & _
-          "FROM T_Param_Files " & _
-          "WHERE Param_File_Type_ID = 1000 or Param_File_Type_ID = 1008"
+            paramTableSQL = _
+                "SELECT " & _
+                    "Param_File_ID as ID, " & _
+                    "Param_File_Name AS Filename, " & _
+                    "Param_File_Description as Diffs, " & _
+                    "Param_File_Type_ID as Type_ID " & _
+                "FROM T_Param_Files " & _
+                "WHERE Param_File_Type_ID = 1000 or Param_File_Type_ID = 1008"
 
       tmpIDTable = Me.GetTable(paramTableSQL)
 
