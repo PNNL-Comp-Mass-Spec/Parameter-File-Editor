@@ -1173,6 +1173,8 @@ Public Class clsGetEnzymeBlock
         sc.Add("14. AspN                   0      D           -")
         sc.Add("15. Elastase               1      ALIV        P")
         sc.Add("16. Elastase/Tryp/Chymo    1      ALIVKRWFY   P")
+        sc.Add("17. ArgC                   1      R-          P")
+        sc.Add("18. Do_not_cleave          1      B           -")
 
         Return sc
 

@@ -73,3 +73,5 @@ add_W_Tryptophan = 0.0000                ; added to W - avg. 186.2132, mono. 186
 14. AspN                   0      D           -
 15. Elastase               1      ALIV        P
 16. Elastase/Tryp/Chymo    1      ALIVKRWFY   P
+17. ArgC                   1      R-          P
+18. Do_not_cleave          1      B           -
