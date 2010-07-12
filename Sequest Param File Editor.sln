@@ -13,32 +13,47 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamGenTest", "ParamGenTest\ParamGenTest.vbproj", "{C99B2126-0B2B-4C48-A063-A5784C7C3774}"
 EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release|x86.ActiveCfg = Release|Any CPU
+		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release|x86.Build.0 = Release|Any CPU
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug|x86.ActiveCfg = Debug|x86
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug|x86.Build.0 = Debug|x86
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|x86.ActiveCfg = Release|x86
+		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|x86.Build.0 = Release|x86
 		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Debug|Any CPU.ActiveCfg = Debug
+		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Debug|x86.ActiveCfg = Debug
+		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Debug|x86.Build.0 = Debug
 		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|Any CPU.ActiveCfg = Release
 		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|Any CPU.Build.0 = Release
+		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|x86.ActiveCfg = Release
+		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|x86.Build.0 = Release
 		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
