@@ -71,6 +71,8 @@ Public Class frmGlobalModNamer
         '
         'gbxNewMod
         '
+        Me.gbxNewMod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.gbxNewMod.Controls.Add(Me.lblDescription)
         Me.gbxNewMod.Controls.Add(Me.txtDescription)
         Me.gbxNewMod.Controls.Add(Me.cmdAddNew)
@@ -80,7 +82,7 @@ Public Class frmGlobalModNamer
         Me.gbxNewMod.Controls.Add(Me.lblSymbolName)
         Me.gbxNewMod.Location = New System.Drawing.Point(12, 8)
         Me.gbxNewMod.Name = "gbxNewMod"
-        Me.gbxNewMod.Size = New System.Drawing.Size(420, 212)
+        Me.gbxNewMod.Size = New System.Drawing.Size(433, 212)
         Me.gbxNewMod.TabIndex = 0
         Me.gbxNewMod.TabStop = False
         Me.gbxNewMod.Text = "New Mod Info"
@@ -95,10 +97,12 @@ Public Class frmGlobalModNamer
         '
         'txtDescription
         '
+        Me.txtDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDescription.Location = New System.Drawing.Point(28, 88)
         Me.txtDescription.Multiline = True
         Me.txtDescription.Name = "txtDescription"
-        Me.txtDescription.Size = New System.Drawing.Size(364, 100)
+        Me.txtDescription.Size = New System.Drawing.Size(393, 100)
         Me.txtDescription.TabIndex = 5
         '
         'cmdAddNew
@@ -145,16 +149,20 @@ Public Class frmGlobalModNamer
         '
         'gbxExistingMods
         '
+        Me.gbxExistingMods.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.gbxExistingMods.Controls.Add(Me.lvwExistingMods)
         Me.gbxExistingMods.Location = New System.Drawing.Point(12, 228)
         Me.gbxExistingMods.Name = "gbxExistingMods"
-        Me.gbxExistingMods.Size = New System.Drawing.Size(420, 308)
+        Me.gbxExistingMods.Size = New System.Drawing.Size(433, 308)
         Me.gbxExistingMods.TabIndex = 1
         Me.gbxExistingMods.TabStop = False
         Me.gbxExistingMods.Text = "Closely-Matching Existing Entries"
         '
         'lvwExistingMods
         '
+        Me.lvwExistingMods.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lvwExistingMods.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colSymbol, Me.colDescription, Me.colModMass})
         Me.lvwExistingMods.FullRowSelect = True
         Me.lvwExistingMods.GridLines = True
@@ -162,7 +170,7 @@ Public Class frmGlobalModNamer
         Me.lvwExistingMods.Location = New System.Drawing.Point(12, 20)
         Me.lvwExistingMods.MultiSelect = False
         Me.lvwExistingMods.Name = "lvwExistingMods"
-        Me.lvwExistingMods.Size = New System.Drawing.Size(396, 272)
+        Me.lvwExistingMods.Size = New System.Drawing.Size(409, 272)
         Me.lvwExistingMods.TabIndex = 0
         Me.lvwExistingMods.UseCompatibleStateImageBehavior = False
         Me.lvwExistingMods.View = System.Windows.Forms.View.Details
@@ -175,12 +183,12 @@ Public Class frmGlobalModNamer
         'colDescription
         '
         Me.colDescription.Text = "Description"
-        Me.colDescription.Width = 264
+        Me.colDescription.Width = 240
         '
         'colModMass
         '
         Me.colModMass.Text = "Mod Mass"
-        Me.colModMass.Width = 64
+        Me.colModMass.Width = 85
         '
         'errorProvider
         '
@@ -208,7 +216,7 @@ Public Class frmGlobalModNamer
         '
         Me.AcceptButton = Me.cmdAddNew
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(444, 586)
+        Me.ClientSize = New System.Drawing.Size(457, 586)
         Me.Controls.Add(Me.cmdUseSelectedMod)
         Me.Controls.Add(Me.gbxExistingMods)
         Me.Controls.Add(Me.gbxNewMod)
