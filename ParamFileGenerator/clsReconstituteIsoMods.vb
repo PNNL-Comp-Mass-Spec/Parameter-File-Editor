@@ -63,7 +63,7 @@ Public Class clsReconstitueIsoMods
         Dim im As ParamFileGenerator.clsModEntry
 
         Dim tmpAtom As String
-        Dim tmpIsoMass As Single
+        Dim tmpIsoMass As Double
         Dim tmpAtomCount As Integer
 
         Dim AAEnums() As String = System.Enum.GetNames(GetType(ParamFileGenerator.clsStaticMods.ResidueCode))

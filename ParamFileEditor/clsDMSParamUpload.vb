@@ -151,8 +151,7 @@ Friend Class clsDMSParamUpload
         Dim diff As clsDMSParamStorage.ParamsEntry
         Dim diffcollection As clsDMSParamStorage
         Dim counter As Integer
-        Dim tmpMass As Single
-        Dim blnSuccess As Boolean
+        Dim tmpMass As Double
 
         diffcollection = Me.GetDiffColl(clsMainProcess.BaseLineParamSet, ParamSet)
 
@@ -164,7 +163,7 @@ Friend Class clsDMSParamUpload
                 If diff.Type <> clsDMSParamStorage.ParamTypes.IsotopicModification Then
                     tmpMass = at.GetTweakedMass(diff.Value)
                 Else
-                    tmpMass = CSng(diff.Value)
+                    tmpMass = CDbl(diff.Value)
                 End If
                 Me.RunSP_AddUpdateParamEntry(paramSetID, counter, diff.Type, diff.Specifier, tmpMass)
                 counter += 1

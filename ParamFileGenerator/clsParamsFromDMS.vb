@@ -721,13 +721,13 @@ Namespace DownloadParams
 
         ElseIf tmpType = clsDMSParamStorage.ParamTypes.DynamicModification Then
 
-          p.DynamicMods.Add(tmpSpec.ToString, CSng(Val(tmpValue.ToString)))
+                    p.DynamicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue.ToString)))
         ElseIf tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
-          p.StaticModificationsList.Add(tmpSpec.ToString, CSng(Val(tmpValue.ToString)))
+                    p.StaticModificationsList.Add(tmpSpec.ToString, CDbl(Val(tmpValue.ToString)))
         ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
-          p.IsotopicMods.Add(tmpSpec.ToString, CSng(Val(tmpValue)))
+                    p.IsotopicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue)))
         ElseIf tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification Then
-          p.TermDynamicMods.Add(tmpSpec.ToString, CSng(Val(tmpValue)))
+                    p.TermDynamicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue)))
         End If
       Next
 
@@ -762,7 +762,7 @@ Namespace DownloadParams
 
             For counter = 1 To maxCount
                 tmpName = DynModSet.Dyn_Mod_n_AAList(counter)
-                tmpValue = Format(DynModSet.Dyn_Mod_n_MassDiff(counter), "0.0000")
+                tmpValue = Format(DynModSet.Dyn_Mod_n_MassDiff(counter), "0.00000")
                 ParamCollection.Add(tmpName, tmpValue, eDynModType)
             Next
 
@@ -871,6 +871,9 @@ Namespace DownloadParams
             Dim tmpType As clsDMSParamStorage.ParamTypes
             Dim tmpSpec As String = ""
             Dim tmpValue As String = ""
+            Dim tmpValueFormatted As String = ""
+            Dim dblValue As Double
+
             Dim tmpSign As String = ""
 
             Dim intDynModCount As Integer = 0
@@ -881,39 +884,36 @@ Namespace DownloadParams
                     tmpType = .Type
                     tmpSpec = .Specifier
                     tmpValue = .Value
-
-
                 End With
-                If tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
-                    If CSng(tmpValue) > 0 Then
+
+                If Double.TryParse(tmpValue, dblValue) Then
+                    tmpValueFormatted = dblValue.ToString("0.0000")
+                    If dblValue > 0 Then
                         tmpSign = "+"
-                    ElseIf CSng(tmpValue) = 0 Then
-                        tmpSign = ""
                     Else
                         tmpSign = ""
                     End If
+                Else
+                    tmpValueFormatted = String.Copy(tmpValue)
+                    tmpSign = ""
+                End If
+
+                If tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
 
                     If tmpStatModsList Is Nothing Then
                         tmpStatModsList = New Queue()
                         tmpStatModsList.Enqueue("Static Mods: ")
                     End If
-                    tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
+                    tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
 
 
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.DynamicModification Then
-                    If CSng(tmpValue) > 0 Then
-                        tmpSign = "+"
-                    ElseIf CSng(tmpValue) = 0 Then
-                        tmpSign = ""
-                    Else
-                        tmpSign = ""
-                    End If
 
                     If tmpDynModsList Is Nothing Then
                         tmpDynModsList = New Queue()
                         tmpDynModsList.Enqueue("Dynamic Mods: ")
                     End If
-                    tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
+                    tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
 
                     intDynModCount += 1
 
@@ -926,32 +926,16 @@ Namespace DownloadParams
                         tmpSpec = "C-Term Peptide"
                     End If
 
-                    If CSng(tmpValue) > 0 Then
-                        tmpSign = "+"
-                    ElseIf CSng(tmpValue) = 0 Then
-                        tmpSign = ""
-                    Else
-                        tmpSign = ""
-                    End If
-
-
                     If tmpTermDynModsList Is Nothing Then
                         tmpTermDynModsList = New Queue()
                         tmpTermDynModsList.Enqueue("PepTerm Dynamic Mods: ")
                     End If
-                    tmpTermDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
+                    tmpTermDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
 
                     intTermDynModCount += 1
 
 
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
-                    If CSng(tmpValue) > 0 Then
-                        tmpSign = "+"
-                    ElseIf CSng(tmpValue) = 0 Then
-                        tmpSign = ""
-                    Else
-                        tmpSign = ""
-                    End If
 
                     If tmpIsoMods = "" Then
                         tmpIsoMods = "Isotopic Mods: "
@@ -961,7 +945,7 @@ Namespace DownloadParams
                         tmpIsoModsList = New Queue()
                         tmpIsoModsList.Enqueue(tmpIsoMods)
                     End If
-                    tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValue + ")")
+                    tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
 
 
                 Else

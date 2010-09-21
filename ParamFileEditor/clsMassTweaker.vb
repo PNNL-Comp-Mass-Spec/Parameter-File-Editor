@@ -5,17 +5,17 @@ Public Interface IMassTweaker
         IsotopicMod
     End Enum
 
-    Property MaxTweakDifference() As Single
+    Property MaxTweakDifference() As Double
     ReadOnly Property TweakedSymbol() As String
     ReadOnly Property TweakedDescription() As String
     ReadOnly Property TweakedModID() As Integer
     ReadOnly Property MassCorrectionsTable() As DataTable
 
-    Function GetTweakedMass(ByVal ModMass As Single, Optional ByVal AffectedAtom As String = "-") As Single
+    Function GetTweakedMass(ByVal ModMass As Double, Optional ByVal AffectedAtom As String = "-") As Double
 
     Sub AddMassCorrection(ByVal modName As String, _
         ByVal modDescription As String, _
-        ByVal modMassChange As Single, _
+        ByVal modMassChange As Double, _
         Optional ByVal modAffectedAtom As String = "-")
     Sub RefreshGlobalModsTableCache(ByVal connectionString As String)
 End Interface
@@ -30,7 +30,7 @@ Public Class clsMassTweaker
 
 #Region " Constants "
     Protected Const Mass_Corrections_Table_Name As String = "T_Mass_Correction_Factors"
-    Protected Const Max_Tweak_Difference As Single = 0.005
+    Protected Const Max_Tweak_Difference As Double = 0.005
 #End Region
 
     Private m_SPError As String
@@ -40,7 +40,7 @@ Public Class clsMassTweaker
 
     Private m_MassCorrectionsTable As DataTable
     Private m_Initialized As Boolean
-    Private m_MaxTweakDiff As Single
+    Private m_MaxTweakDiff As Double
 
     Friend ReadOnly Property MassCorrectionsTable() As DataTable Implements IMassTweaker.MassCorrectionsTable
         Get
@@ -54,11 +54,11 @@ Public Class clsMassTweaker
         End Get
     End Property
 
-    Friend Property MaxTweakDifference() As Single Implements IMassTweaker.MaxTweakDifference
+    Friend Property MaxTweakDifference() As Double Implements IMassTweaker.MaxTweakDifference
         Get
             Return Me.m_MaxTweakDiff
         End Get
-        Set(ByVal Value As Single)
+        Set(ByVal Value As Double)
             Me.m_MaxTweakDiff = Value
         End Set
     End Property
@@ -124,26 +124,26 @@ Public Class clsMassTweaker
         Me.m_MassCorrectionsTable = Me.GetMassCorrectionsTable(connectionString)
     End Sub
 
-    Private Function GetTweakedMass(ByVal ModMass As Single, Optional ByVal AffectedAtom As String = "-") As Single Implements IMassTweaker.GetTweakedMass
+    Private Function GetTweakedMass(ByVal ModMass As Double, Optional ByVal AffectedAtom As String = "-") As Double Implements IMassTweaker.GetTweakedMass
 
         Dim row As DataRow
         Dim rows() As DataRow
 
         Dim smallestDiffID As Integer
-        Dim diff As Single
-        Dim smallestDiff As Single = Me.m_MaxTweakDiff
-        Dim newMass As Single
+        Dim diff As Double
+        Dim smallestDiff As Double = Me.m_MaxTweakDiff
+        Dim newMass As Double
 
         rows = Me.MassCorrectionsTable.Select("[Monoisotopic_Mass_Correction] > " & ModMass - smallestDiff & _
                 " AND [Monoisotopic_Mass_Correction] < " & ModMass + smallestDiff & " AND [Affected_Atom] = '" & AffectedAtom & "'")
 
         For Each row In rows
-            diff = Math.Abs(CSng(row.Item("Monoisotopic_Mass_Correction")) - ModMass)
+            diff = Math.Abs(CDbl(row.Item("Monoisotopic_Mass_Correction")) - ModMass)
             If diff < Me.m_MaxTweakDiff Then
                 If diff < smallestDiff Then
                     smallestDiff = diff
                     smallestDiffID = DirectCast(row.Item("Mass_Correction_ID"), Int32)
-                    newMass = CSng(row.Item("Monoisotopic_Mass_Correction"))
+                    newMass = CDbl(row.Item("Monoisotopic_Mass_Correction"))
                     Me.m_UsedDescription = row.Item("Description")
                     Me.m_UsedSymbol = row.Item("Mass_Correction_Tag")
                 End If
@@ -159,7 +159,7 @@ Public Class clsMassTweaker
     Private Sub RunSP_AddMassCorrectionEntry( _
     ByVal modName As String, _
     ByVal modDescription As String, _
-    ByVal modMassChange As Single, _
+    ByVal modMassChange As Double, _
     Optional ByVal modAffectedAtom As String = "-") Implements IMassTweaker.AddMassCorrection
 
 
@@ -218,7 +218,7 @@ Public Class clsMassTweaker
     'ByVal modSymbol As String, _
     'ByVal modDescription As String, _
     'ByVal modType As IMassTweaker.ModTypes, _
-    'ByVal modMassChange As Single, _
+    'ByVal modMassChange As Double, _
     'ByVal modResidues As String) Implements IMassTweaker.AddGlobalMod
 
     '    Dim sp_Save As SqlClient.SqlCommand

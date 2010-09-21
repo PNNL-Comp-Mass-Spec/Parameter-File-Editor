@@ -233,7 +233,7 @@ Public Class frmGlobalModNamer
     Private m_MassValid As Boolean = True
     Private m_DescValid As Boolean = False
 
-    Private m_origMass As Single
+    Private m_origMass As Double
     Private m_origType As IMassTweaker.ModTypes
     Private m_origResidues As String
 
@@ -256,12 +256,12 @@ Public Class frmGlobalModNamer
         End Set
     End Property
 
-    Friend Property NewModMass() As Single
+    Friend Property NewModMass() As Double
         Get
-            Return CSng(Me.txtModMass.Text)
+            Return CDbl(Me.txtModMass.Text)
         End Get
-        Set(ByVal Value As Single)
-            Me.txtModMass.Text = Format(CDbl(Value), "0.0000")
+        Set(ByVal Value As Double)
+            Me.txtModMass.Text = Format(CDbl(Value), "0.00000")
             Me.m_origMass = Value
         End Set
     End Property
@@ -293,20 +293,20 @@ Public Class frmGlobalModNamer
         End Set
     End Property
 
-    Friend Sub LoadGlobalMods(ByVal ModMass As Single, ByVal AffectedAtom As String)
+    Friend Sub LoadGlobalMods(ByVal ModMass As Double, ByVal AffectedAtom As String)
         Me.LoadExistingModsListview(Me.lvwExistingMods, ModMass, AffectedAtom)
     End Sub
 
     Private Sub LoadExistingModsListview( _
         ByVal lvw As ListView, _
-        ByVal ModMass As Single, _
+        ByVal ModMass As Double, _
         ByVal AffectedAtom As String)
 
         Dim modRow As DataRow
         Dim modRows() As DataRow
 
         Dim filterString As String
-        Const MassVariance As Single = 3.0
+        Const MassVariance As Double = 3.0
         Dim counter As Integer = 1
 
         Do
@@ -338,18 +338,18 @@ Public Class frmGlobalModNamer
 
     Private Sub txtModMass_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
         Dim chk As String = sender.Text
-        Dim tmpNewMass As Single
+        Dim tmpNewMass As Double
 
-        If IsNumeric(chk) = False Then
+        If Not Double.TryParse(chk, 0) Then
             e.Cancel = True
             Me.errorProvider.SetError(sender, "Not a valid number")
             Me.m_MassValid = False
         ElseIf IsNumeric(chk) = True And CSng(chk) <> 0.0 Then
             Me.errorProvider.SetError(sender, "")
-            tmpNewMass = CSng(chk)
+            tmpNewMass = CDbl(chk)
 
         End If
-        sender.Text = Format(CDbl(tmpNewMass), "0.0000")
+        sender.Text = Format(CDbl(tmpNewMass), "0.00000")
 
     End Sub
 
@@ -422,7 +422,7 @@ Public Class frmGlobalModNamer
 
     Private Sub cmdAddNew_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdAddNew.Click
         If Validate_cmdAddNew() Then
-            If Me.SelectedModExists(CSng(Me.txtModMass.Text)) Then
+            If Me.SelectedModExists(CDbl(Me.txtModMass.Text)) Then
                 DialogResult = DialogResult.Yes
             Else
                 DialogResult = DialogResult.OK

@@ -2640,53 +2640,53 @@ Public Class frmMainGUI
                 frm.txtDynMod3List.Text = .DynamicMods.Dyn_Mod_n_AAList(3)
                 frm.txtDynMod4List.Text = .DynamicMods.Dyn_Mod_n_AAList(4)
                 frm.txtDynMod5List.Text = .DynamicMods.Dyn_Mod_n_AAList(5)
-                frm.txtDynMod1MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(1), "0.0000").ToString
-                frm.txtDynMod2MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(2), "0.0000").ToString
-                frm.txtDynMod3MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(3), "0.0000").ToString
-                frm.txtDynMod4MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(4), "0.0000").ToString
-                frm.txtDynMod5MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(5), "0.0000").ToString
+                frm.txtDynMod1MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(1), "0.00000").ToString
+                frm.txtDynMod2MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(2), "0.00000").ToString
+                frm.txtDynMod3MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(3), "0.00000").ToString
+                frm.txtDynMod4MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(4), "0.00000").ToString
+                frm.txtDynMod5MassDiff.Text = Format(.DynamicMods.Dyn_Mod_n_MassDiff(5), "0.00000").ToString
 
-                frm.txtDynNTPep.Text = Format(.TermDynamicMods.Dyn_Mod_NTerm, "0.0000").ToString
-                frm.txtDynCTPep.Text = Format(.TermDynamicMods.Dyn_Mod_CTerm, "0.0000").ToString
+                frm.txtDynNTPep.Text = Format(.TermDynamicMods.Dyn_Mod_NTerm, "0.00000").ToString
+                frm.txtDynCTPep.Text = Format(.TermDynamicMods.Dyn_Mod_CTerm, "0.00000").ToString
 
                 'Static Mods
-                frm.txtCTPep.Text = Format(.StaticModificationsList.CtermPeptide, "0.0000").ToString
-                frm.txtCTProt.Text = Format(.StaticModificationsList.CtermProtein, "0.0000").ToString
-                frm.txtNTPep.Text = Format(.StaticModificationsList.NtermPeptide, "0.0000").ToString
-                frm.txtNTProt.Text = Format(.StaticModificationsList.NtermProtein, "0.0000").ToString
-                frm.txtGly.Text = Format(.StaticModificationsList.G_Glycine, "0.0000").ToString
-                frm.txtAla.Text = Format(.StaticModificationsList.A_Alanine, "0.0000").ToString
-                frm.txtSer.Text = Format(.StaticModificationsList.S_Serine, "0.0000").ToString
+                frm.txtCTPep.Text = Format(.StaticModificationsList.CtermPeptide, "0.00000").ToString
+                frm.txtCTProt.Text = Format(.StaticModificationsList.CtermProtein, "0.00000").ToString
+                frm.txtNTPep.Text = Format(.StaticModificationsList.NtermPeptide, "0.00000").ToString
+                frm.txtNTProt.Text = Format(.StaticModificationsList.NtermProtein, "0.00000").ToString
+                frm.txtGly.Text = Format(.StaticModificationsList.G_Glycine, "0.00000").ToString
+                frm.txtAla.Text = Format(.StaticModificationsList.A_Alanine, "0.00000").ToString
+                frm.txtSer.Text = Format(.StaticModificationsList.S_Serine, "0.00000").ToString
 
-                frm.txtPro.Text = Format(.StaticModificationsList.P_Proline, "0.0000").ToString
-                frm.txtVal.Text = Format(.StaticModificationsList.V_Valine, "0.0000").ToString
-                frm.txtThr.Text = Format(.StaticModificationsList.T_Threonine, "0.0000").ToString
-                frm.txtCys.Text = Format(.StaticModificationsList.C_Cysteine, "0.0000").ToString
-                frm.txtLeu.Text = Format(.StaticModificationsList.L_Leucine, "0.0000").ToString
-                frm.txtIle.Text = Format(.StaticModificationsList.I_Isoleucine, "0.0000").ToString
-                frm.TxtLorI.Text = Format(.StaticModificationsList.X_LorI, "0.0000").ToString
+                frm.txtPro.Text = Format(.StaticModificationsList.P_Proline, "0.00000").ToString
+                frm.txtVal.Text = Format(.StaticModificationsList.V_Valine, "0.00000").ToString
+                frm.txtThr.Text = Format(.StaticModificationsList.T_Threonine, "0.00000").ToString
+                frm.txtCys.Text = Format(.StaticModificationsList.C_Cysteine, "0.00000").ToString
+                frm.txtLeu.Text = Format(.StaticModificationsList.L_Leucine, "0.00000").ToString
+                frm.txtIle.Text = Format(.StaticModificationsList.I_Isoleucine, "0.00000").ToString
+                frm.TxtLorI.Text = Format(.StaticModificationsList.X_LorI, "0.00000").ToString
 
-                frm.txtAsn.Text = Format(.StaticModificationsList.N_Asparagine, "0.0000").ToString
-                frm.txtOrn.Text = Format(.StaticModificationsList.O_Ornithine, "0.0000").ToString
-                frm.txtNandD.Text = Format(.StaticModificationsList.B_avg_NandD, "0.0000").ToString
-                frm.txtAsp.Text = Format(.StaticModificationsList.D_Aspartic_Acid, "0.0000").ToString
-                frm.txtGln.Text = Format(.StaticModificationsList.Q_Glutamine, "0.0000").ToString
-                frm.txtLys.Text = Format(.StaticModificationsList.K_Lysine, "0.0000").ToString
-                frm.txtQandE.Text = Format(.StaticModificationsList.Z_avg_QandE, "0.0000").ToString
+                frm.txtAsn.Text = Format(.StaticModificationsList.N_Asparagine, "0.00000").ToString
+                frm.txtOrn.Text = Format(.StaticModificationsList.O_Ornithine, "0.00000").ToString
+                frm.txtNandD.Text = Format(.StaticModificationsList.B_avg_NandD, "0.00000").ToString
+                frm.txtAsp.Text = Format(.StaticModificationsList.D_Aspartic_Acid, "0.00000").ToString
+                frm.txtGln.Text = Format(.StaticModificationsList.Q_Glutamine, "0.00000").ToString
+                frm.txtLys.Text = Format(.StaticModificationsList.K_Lysine, "0.00000").ToString
+                frm.txtQandE.Text = Format(.StaticModificationsList.Z_avg_QandE, "0.00000").ToString
 
-                frm.txtGlu.Text = Format(.StaticModificationsList.E_Glutamic_Acid, "0.0000").ToString
-                frm.txtMet.Text = Format(.StaticModificationsList.M_Methionine, "0.0000").ToString
-                frm.txtHis.Text = Format(.StaticModificationsList.H_Histidine, "0.0000").ToString
-                frm.txtPhe.Text = Format(.StaticModificationsList.F_Phenylalanine, "0.0000").ToString
-                frm.txtArg.Text = Format(.StaticModificationsList.R_Arginine, "0.0000").ToString
-                frm.txtTyr.Text = Format(.StaticModificationsList.Y_Tyrosine, "0.0000").ToString
-                frm.txtTrp.Text = Format(.StaticModificationsList.W_Tryptophan, "0.0000").ToString
+                frm.txtGlu.Text = Format(.StaticModificationsList.E_Glutamic_Acid, "0.00000").ToString
+                frm.txtMet.Text = Format(.StaticModificationsList.M_Methionine, "0.00000").ToString
+                frm.txtHis.Text = Format(.StaticModificationsList.H_Histidine, "0.00000").ToString
+                frm.txtPhe.Text = Format(.StaticModificationsList.F_Phenylalanine, "0.00000").ToString
+                frm.txtArg.Text = Format(.StaticModificationsList.R_Arginine, "0.00000").ToString
+                frm.txtTyr.Text = Format(.StaticModificationsList.Y_Tyrosine, "0.00000").ToString
+                frm.txtTrp.Text = Format(.StaticModificationsList.W_Tryptophan, "0.00000").ToString
 
-                frm.txtIsoC.Text = Format(.IsotopicModificationsList.Iso_C, "0.0000").ToString
-                frm.txtIsoH.Text = Format(.IsotopicModificationsList.Iso_H, "0.0000").ToString
-                frm.txtIsoO.Text = Format(.IsotopicModificationsList.Iso_O, "0.0000").ToString
-                frm.txtIsoN.Text = Format(.IsotopicModificationsList.Iso_N, "0.0000").ToString
-                frm.txtIsoS.Text = Format(.IsotopicModificationsList.Iso_S, "0.0000").ToString
+                frm.txtIsoC.Text = Format(.IsotopicModificationsList.Iso_C, "0.00000").ToString
+                frm.txtIsoH.Text = Format(.IsotopicModificationsList.Iso_H, "0.00000").ToString
+                frm.txtIsoO.Text = Format(.IsotopicModificationsList.Iso_O, "0.00000").ToString
+                frm.txtIsoN.Text = Format(.IsotopicModificationsList.Iso_N, "0.00000").ToString
+                frm.txtIsoS.Text = Format(.IsotopicModificationsList.Iso_S, "0.00000").ToString
 
             End With
 
@@ -2754,12 +2754,12 @@ Public Class frmMainGUI
                 frm.chkResiduesInUpperCase.Checked = .AminoAcidsAllUpperCase
 
                 'Setup Search Tolerances
-                frm.txtPepMassTol.Text = Format(.PeptideMassTolerance, "0.0000").ToString
-                frm.txtFragMassTol.Text = Format(.FragmentIonTolerance, "0.0000").ToString
-                frm.txtPeakMatchingTol.Text = Format(.MatchedPeakMassTolerance, "0.0000").ToString
-                frm.txtIonCutoff.Text = Format(.IonCutoffPercentage, "0.0000").ToString
-                frm.txtMinProtMass.Text = Format(.MinimumProteinMassToSearch, "0.0000").ToString
-                frm.txtMaxProtMass.Text = Format(.MaximumProteinMassToSearch, "0.0000").ToString
+                frm.txtPepMassTol.Text = Format(.PeptideMassTolerance, "0.00000").ToString
+                frm.txtFragMassTol.Text = Format(.FragmentIonTolerance, "0.00000").ToString
+                frm.txtPeakMatchingTol.Text = Format(.MatchedPeakMassTolerance, "0.00000").ToString
+                frm.txtIonCutoff.Text = Format(.IonCutoffPercentage, "0.00000").ToString
+                frm.txtMinProtMass.Text = Format(.MinimumProteinMassToSearch, "0.00000").ToString
+                frm.txtMaxProtMass.Text = Format(.MaximumProteinMassToSearch, "0.00000").ToString
                 frm.cboNucReadingFrame.SelectedIndex = .SelectedNucReadingFrame
                 frm.txtNumResults.Text = CInt(.NumberOfResultsToProcess)
 
@@ -3471,26 +3471,26 @@ Public Class frmMainGUI
     Private Sub UpdateDynamicModMass(ByRef txtModMassTextbox As ParamFileEditor.NumericTextBox, _
                                      ByRef txtModAATextbox As TextBox, _
                                      ByVal intModNumber As Integer)
-        Dim sngModMass As Single
+        Dim dblModMass As Double
 
         Try
-            sngModMass = CSng(txtModMassTextbox.Text)
-            If sngModMass <> 0.0 Then
+            dblModMass = CDbl(txtModMassTextbox.Text)
+            If dblModMass <> 0.0 Then
                 ' Make sure this mod is defined
                 newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber) = txtModAATextbox.Text
             End If
 
-            If newParams.DynamicMods.Count < intModNumber And sngModMass = 0 Then
+            If newParams.DynamicMods.Count < intModNumber And dblModMass = 0 Then
                 ' Nothing to update
             Else
-                If sngModMass <> 0 Then
-                    newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber) = sngModMass
+                If dblModMass <> 0 Then
+                    newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber) = dblModMass
                 Else
                     ' If this mod, and all other mods after this mod are 0, then remove this mod and all subsequent mods
                     If newParams.DynamicMods.Count = intModNumber Then
                         newParams.DynamicMods.Remove(intModNumber - 1)
                     Else
-                        newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber) = sngModMass
+                        newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber) = dblModMass
                     End If
                 End If
             End If
@@ -3505,7 +3505,7 @@ Public Class frmMainGUI
 
     Private Sub txtDynCTPep_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.TermDynamicMods.Dyn_Mod_CTerm = CSng(Me.txtDynCTPep.Text)
+            newParams.TermDynamicMods.Dyn_Mod_CTerm = CDbl(Me.txtDynCTPep.Text)
         Catch
             Me.txtDynCTPep.Text = "0.0"
         End Try
@@ -3514,7 +3514,7 @@ Public Class frmMainGUI
 
     Private Sub txtDynNTPep_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.TermDynamicMods.Dyn_Mod_NTerm = CSng(Me.txtDynNTPep.Text)
+            newParams.TermDynamicMods.Dyn_Mod_NTerm = CDbl(Me.txtDynNTPep.Text)
         Catch
             Me.txtDynNTPep.Text = "0.0"
         End Try
@@ -3527,7 +3527,7 @@ Public Class frmMainGUI
 
     Private Sub txtCTPep_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.CtermPeptide = CSng(Me.txtCTPep.Text)
+            newParams.StaticModificationsList.CtermPeptide = CDbl(Me.txtCTPep.Text)
         Catch
             Me.txtCTPep.Text = "0.0"
         End Try
@@ -3535,217 +3535,217 @@ Public Class frmMainGUI
     End Sub
     Private Sub txtCTProt_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.CtermProtein = CSng(Me.txtCTProt.Text)
+            newParams.StaticModificationsList.CtermProtein = CDbl(Me.txtCTProt.Text)
         Catch
-            Me.txtCTProt.Text = "0.0000"
+            Me.txtCTProt.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtNTPep_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.NtermPeptide = CSng(Me.txtNTPep.Text)
+            newParams.StaticModificationsList.NtermPeptide = CDbl(Me.txtNTPep.Text)
         Catch
-            Me.txtNTPep.Text = "0.0000"
+            Me.txtNTPep.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtNTProt_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.NtermProtein = CSng(Me.txtNTProt.Text)
+            newParams.StaticModificationsList.NtermProtein = CDbl(Me.txtNTProt.Text)
         Catch
-            Me.txtNTProt.Text = "0.0000"
+            Me.txtNTProt.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtGly_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.G_Glycine = CSng(Me.txtGly.Text)
+            newParams.StaticModificationsList.G_Glycine = CDbl(Me.txtGly.Text)
         Catch
-            Me.txtGly.Text = "0.0000"
+            Me.txtGly.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtAla_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.A_Alanine = CSng(Me.txtAla.Text)
+            newParams.StaticModificationsList.A_Alanine = CDbl(Me.txtAla.Text)
         Catch
-            Me.txtAla.Text = "0.0000"
+            Me.txtAla.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtSer_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.S_Serine = CSng(Me.txtSer.Text)
+            newParams.StaticModificationsList.S_Serine = CDbl(Me.txtSer.Text)
         Catch
-            Me.txtSer.Text = "0.0000"
+            Me.txtSer.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtPro_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.P_Proline = CSng(Me.txtPro.Text)
+            newParams.StaticModificationsList.P_Proline = CDbl(Me.txtPro.Text)
         Catch
-            Me.txtPro.Text = "0.0000"
+            Me.txtPro.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtVal_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.V_Valine = CSng(Me.txtVal.Text)
+            newParams.StaticModificationsList.V_Valine = CDbl(Me.txtVal.Text)
         Catch
-            Me.txtVal.Text = "0.0000"
+            Me.txtVal.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtThr_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.T_Threonine = CSng(Me.txtThr.Text)
+            newParams.StaticModificationsList.T_Threonine = CDbl(Me.txtThr.Text)
         Catch
-            Me.txtThr.Text = "0.0000"
+            Me.txtThr.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtCys_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.C_Cysteine = CSng(Me.txtCys.Text)
+            newParams.StaticModificationsList.C_Cysteine = CDbl(Me.txtCys.Text)
         Catch
-            Me.txtCys.Text = "0.0000"
+            Me.txtCys.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtLeu_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.L_Leucine = CSng(Me.txtLeu.Text)
+            newParams.StaticModificationsList.L_Leucine = CDbl(Me.txtLeu.Text)
         Catch
-            Me.txtLeu.Text = "0.0000"
+            Me.txtLeu.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtIle_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.I_Isoleucine = CSng(Me.txtIle.Text)
+            newParams.StaticModificationsList.I_Isoleucine = CDbl(Me.txtIle.Text)
         Catch
-            Me.txtIle.Text = "0.0000"
+            Me.txtIle.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub TxtLorI_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.X_LorI = CSng(Me.TxtLorI.Text)
+            newParams.StaticModificationsList.X_LorI = CDbl(Me.TxtLorI.Text)
         Catch
-            Me.TxtLorI.Text = "0.0000"
+            Me.TxtLorI.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtAsn_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.N_Asparagine = CSng(Me.txtAsn.Text)
+            newParams.StaticModificationsList.N_Asparagine = CDbl(Me.txtAsn.Text)
         Catch
-            Me.txtAsn.Text = "0.0000"
+            Me.txtAsn.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtOrn_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.O_Ornithine = CSng(Me.txtOrn.Text)
+            newParams.StaticModificationsList.O_Ornithine = CDbl(Me.txtOrn.Text)
         Catch
-            Me.txtOrn.Text = "0.0000"
+            Me.txtOrn.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtNandD_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.B_avg_NandD = CSng(Me.txtNandD.Text)
+            newParams.StaticModificationsList.B_avg_NandD = CDbl(Me.txtNandD.Text)
         Catch
-            Me.txtNandD.Text = "0.0000"
+            Me.txtNandD.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtAsp_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.D_Aspartic_Acid = CSng(Me.txtAsp.Text)
+            newParams.StaticModificationsList.D_Aspartic_Acid = CDbl(Me.txtAsp.Text)
         Catch
-            Me.txtAsp.Text = "0.0000"
+            Me.txtAsp.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtGln_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.Q_Glutamine = CSng(Me.txtGln.Text)
+            newParams.StaticModificationsList.Q_Glutamine = CDbl(Me.txtGln.Text)
         Catch
-            Me.txtGln.Text = "0.0000"
+            Me.txtGln.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtLys_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.K_Lysine = CSng(Me.txtLys.Text)
+            newParams.StaticModificationsList.K_Lysine = CDbl(Me.txtLys.Text)
         Catch
-            Me.txtLys.Text = "0.0000"
+            Me.txtLys.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtQandE_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.Z_avg_QandE = CSng(Me.txtQandE.Text)
+            newParams.StaticModificationsList.Z_avg_QandE = CDbl(Me.txtQandE.Text)
         Catch
-            Me.txtQandE.Text = "0.0000"
+            Me.txtQandE.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtGlu_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.E_Glutamic_Acid = CSng(Me.txtGlu.Text)
+            newParams.StaticModificationsList.E_Glutamic_Acid = CDbl(Me.txtGlu.Text)
         Catch
-            Me.txtGlu.Text = "0.0000"
+            Me.txtGlu.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtMet_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.M_Methionine = CSng(Me.txtMet.Text)
+            newParams.StaticModificationsList.M_Methionine = CDbl(Me.txtMet.Text)
         Catch
-            Me.txtMet.Text = "0.0000"
+            Me.txtMet.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtHis_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.H_Histidine = CSng(Me.txtHis.Text)
+            newParams.StaticModificationsList.H_Histidine = CDbl(Me.txtHis.Text)
         Catch
-            Me.txtHis.Text = "0.0000"
+            Me.txtHis.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtPhe_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.F_Phenylalanine = CSng(Me.txtPhe.Text)
+            newParams.StaticModificationsList.F_Phenylalanine = CDbl(Me.txtPhe.Text)
         Catch
-            Me.txtPhe.Text = "0.0000"
+            Me.txtPhe.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtArg_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.R_Arginine = CSng(Me.txtArg.Text)
+            newParams.StaticModificationsList.R_Arginine = CDbl(Me.txtArg.Text)
         Catch
-            Me.txtArg.Text = "0.0000"
+            Me.txtArg.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtTyr_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.Y_Tyrosine = CSng(Me.txtTyr.Text)
+            newParams.StaticModificationsList.Y_Tyrosine = CDbl(Me.txtTyr.Text)
         Catch
-            Me.txtTyr.Text = "0.0000"
+            Me.txtTyr.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
     Private Sub txtTrp_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.StaticModificationsList.W_Tryptophan = CSng(Me.txtTrp.Text)
+            newParams.StaticModificationsList.W_Tryptophan = CDbl(Me.txtTrp.Text)
         Catch
-            Me.txtTrp.Text = "0.0000"
+            Me.txtTrp.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
@@ -3755,45 +3755,45 @@ Public Class frmMainGUI
 #Region " [Basic] Isotopic Modification Handlers "
     Private Sub txtIsoC_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.IsotopicMods.Iso_C = CSng(sender.text)
+            newParams.IsotopicMods.Iso_C = CDbl(sender.text)
         Catch
-            sender.Text = "0.0000"
+            sender.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
 
     Private Sub txtIsoH_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.IsotopicMods.Iso_H = CSng(sender.text)
+            newParams.IsotopicMods.Iso_H = CDbl(sender.text)
         Catch
-            sender.Text = "0.0000"
+            sender.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
 
     Private Sub txtIsoO_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.IsotopicMods.Iso_O = CSng(sender.text)
+            newParams.IsotopicMods.Iso_O = CDbl(sender.text)
         Catch
-            sender.Text = "0.0000"
+            sender.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
 
     Private Sub txtIsoN_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.IsotopicMods.Iso_N = CSng(sender.text)
+            newParams.IsotopicMods.Iso_N = CDbl(sender.text)
         Catch
-            sender.Text = "0.0000"
+            sender.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
 
     Private Sub txtIsoS_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
-            newParams.IsotopicMods.Iso_S = CSng(sender.text)
+            newParams.IsotopicMods.Iso_S = CDbl(sender.text)
         Catch
-            sender.Text = "0.0000"
+            sender.Text = "0.00000"
         End Try
         UpdateDescription()
     End Sub
@@ -4207,12 +4207,12 @@ Public Class frmMainGUI
         Try
             Dim chk As String = sender.Text
             Dim t As NumericTextBox = DirectCast(sender, NumericTextBox)
-            Dim tmpNewMass As Single
+            Dim tmpNewMass As Double
             Dim forceNewValue As Boolean = t.ForceNewValue
 
             Dim blnIsNumber As Boolean
 
-            blnIsNumber = Single.TryParse(chk, tmpNewMass)
+            blnIsNumber = Double.TryParse(chk, tmpNewMass)
             If Not blnIsNumber Then
                 e.Cancel = True
                 Me.StatModErrorProvider.SetError(sender, "Not a valid number")
@@ -4249,14 +4249,14 @@ Public Class frmMainGUI
                             With frmNewMass
 
                                 .MassCorrectionsTable = Me.m_clsMassTweaker.MassCorrectionsTable
-                                .NewModMass = CSng(chk)
+                                .NewModMass = CDbl(chk)
                                 .ModType = tmpModType
                                 .AffectedResidues = tmpAA
-                                .LoadGlobalMods(CSng(chk), tmpAtom)
+                                .LoadGlobalMods(CDbl(chk), tmpAtom)
 
                                 dr = frmNewMass.ShowDialog
                                 tmpSymbol = frmNewMass.NewSymbol
-                                tmpNewMass = CSng(.NewModMass)
+                                tmpNewMass = CDbl(.NewModMass)
                                 tmpDesc = .NewDescription
 
                                 If dr = DialogResult.OK Then
@@ -4287,7 +4287,7 @@ Public Class frmMainGUI
                     End If
                 End If
             End If
-            sender.Text = tmpNewMass.ToString("0.0000")
+            sender.Text = tmpNewMass.ToString("0.00000")
 
         Catch ex As Exception
             System.Windows.Forms.MessageBox.Show("Exception in numericTextbox_Validating: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -4309,7 +4309,7 @@ Public Class frmMainGUI
         Try
             Dim t As NumericTextBox = DirectCast(sender, NumericTextBox)
             If e.KeyCode = Keys.Escape Then
-                t.Text = "0.0000"
+                t.Text = "0.00000"
                 Me.numericTextbox_Validating(sender, Nothing)
             ElseIf e.KeyCode = Keys.Return OrElse e.KeyCode = Keys.Enter Then
                 t.ForceNewValue = True
