@@ -2709,6 +2709,7 @@ Public Class frmMainGUI
 
             'Load Combo Box
             With frm.cboNucReadingFrame.Items
+                .Clear()
                 .Add("None - Protein Database Used")
                 .Add("Forward - Frame 1")
                 .Add("Forward - Frame 2")

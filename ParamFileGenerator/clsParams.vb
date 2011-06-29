@@ -127,7 +127,6 @@ Public Class clsParams
     Private m_numDescLines As Integer           'A
     Private m_showFragIons As Boolean           'A
     Private m_printDupRef As Boolean            'A
-    Private m_readingFrameIndex As Integer      'A
     Private m_readingFrame As IAdvancedParams.FrameList         'A
     Private m_removePrecursorPeak As Boolean    'A
     Private m_ionCutoffPer As Single            'A
@@ -367,10 +366,10 @@ Public Class clsParams
     End Property
     Public Property SelectedNucReadingFrameIndex() As Integer Implements IAdvancedParams.SelectedNucReadingFrameIndex
         Get
-            Return m_readingFrameIndex
+            Return CInt(SelectedNucReadingFrame)
         End Get
         Set(ByVal Value As Integer)
-            m_readingFrameIndex = Value
+            m_readingFrame = CType(Value, IAdvancedParams.FrameList)
         End Set
     End Property
     Public Property ParentMassType() As IBasicParams.MassTypeList Implements IBasicParams.ParentMassType

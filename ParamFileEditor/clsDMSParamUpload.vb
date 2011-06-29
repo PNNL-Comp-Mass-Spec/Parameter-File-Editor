@@ -327,77 +327,77 @@ Friend Class clsDMSParamUpload
 
     End Function
 
-    Protected Function RunSP_AddUpdateGlobalModModMappingEntry( _
-        ByVal paramFileID As Integer, _
-        ByVal localSymbolID As Integer, _
-        ByVal globalModID As Integer) As Boolean
+    ''Protected Function RunSP_AddUpdateGlobalModModMappingEntry( _
+    ''    ByVal paramFileID As Integer, _
+    ''    ByVal localSymbolID As Integer, _
+    ''    ByVal globalModID As Integer) As Boolean
 
-        Const SP_NAME As String = "AddUpdateGlobalModMappingEntry"
+    ''    Const SP_NAME As String = "AddUpdateGlobalModMappingEntry"
 
-        Dim sp_Save As SqlClient.SqlCommand
-        Dim blnSuccess As Boolean
+    ''    Dim sp_Save As SqlClient.SqlCommand
+    ''    Dim blnSuccess As Boolean
 
-        Try
-            blnSuccess = False
-            If Not Me.m_PersistConnection Then Me.OpenConnection()
+    ''    Try
+    ''        blnSuccess = False
+    ''        If Not Me.m_PersistConnection Then Me.OpenConnection()
 
-            sp_Save = New SqlClient.SqlCommand(SP_NAME, Me.m_DBCn)
+    ''        sp_Save = New SqlClient.SqlCommand(SP_NAME, Me.m_DBCn)
 
-            sp_Save.CommandType = CommandType.StoredProcedure
+    ''        sp_Save.CommandType = CommandType.StoredProcedure
 
-            'Define parameters
-            Dim myParam As SqlClient.SqlParameter
+    ''        'Define parameters
+    ''        Dim myParam As SqlClient.SqlParameter
 
-            'Define parameter for sp's return value
-            myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.ReturnValue
+    ''        'Define parameter for sp's return value
+    ''        myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
+    ''        myParam.Direction = ParameterDirection.ReturnValue
 
-            'Define parameters for the sp's arguments
-            myParam = sp_Save.Parameters.Add("@paramFileID", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = paramFileID
+    ''        'Define parameters for the sp's arguments
+    ''        myParam = sp_Save.Parameters.Add("@paramFileID", SqlDbType.Int)
+    ''        myParam.Direction = ParameterDirection.Input
+    ''        myParam.Value = paramFileID
 
-            myParam = sp_Save.Parameters.Add("@globalModID", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = globalModID
+    ''        myParam = sp_Save.Parameters.Add("@globalModID", SqlDbType.Int)
+    ''        myParam.Direction = ParameterDirection.Input
+    ''        myParam.Value = globalModID
 
-            myParam = sp_Save.Parameters.Add("@localSymbolID", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = localSymbolID
+    ''        myParam = sp_Save.Parameters.Add("@localSymbolID", SqlDbType.Int)
+    ''        myParam.Direction = ParameterDirection.Input
+    ''        myParam.Value = localSymbolID
 
-            myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
-            myParam.Direction = ParameterDirection.Output
-
-
-            'Execute the sp
-            sp_Save.ExecuteNonQuery()
-
-            'Get return value
-            Dim ret As Integer = CInt(sp_Save.Parameters("@Return").Value)
-
-            If ret <> 0 Then
-                Me.m_SPError = "Procedure " & SP_NAME & " returned a non-zero value (" & ret.ToString & ")"
-
-                Dim strMsg As String = CStr(sp_Save.Parameters("@message").Value)
-                If Not strMsg Is Nothing AndAlso strMsg.Length > 0 Then
-                    Me.m_SPError &= ": " & strMsg
-                End If
-
-                blnSuccess = False
-            Else
-                blnSuccess = True
-            End If
-
-            If Not Me.m_PersistConnection Then Me.CloseConnection()
-
-        Catch ex As Exception
-            Me.m_SPError = "Exception calling stored procedure " & SP_NAME & ": " & ex.Message
-        End Try
-
-        Return blnSuccess
+    ''        myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
+    ''        myParam.Direction = ParameterDirection.Output
 
 
-    End Function
+    ''        'Execute the sp
+    ''        sp_Save.ExecuteNonQuery()
+
+    ''        'Get return value
+    ''        Dim ret As Integer = CInt(sp_Save.Parameters("@Return").Value)
+
+    ''        If ret <> 0 Then
+    ''            Me.m_SPError = "Procedure " & SP_NAME & " returned a non-zero value (" & ret.ToString & ")"
+
+    ''            Dim strMsg As String = CStr(sp_Save.Parameters("@message").Value)
+    ''            If Not strMsg Is Nothing AndAlso strMsg.Length > 0 Then
+    ''                Me.m_SPError &= ": " & strMsg
+    ''            End If
+
+    ''            blnSuccess = False
+    ''        Else
+    ''            blnSuccess = True
+    ''        End If
+
+    ''        If Not Me.m_PersistConnection Then Me.CloseConnection()
+
+    ''    Catch ex As Exception
+    ''        Me.m_SPError = "Exception calling stored procedure " & SP_NAME & ": " & ex.Message
+    ''    End Try
+
+    ''    Return blnSuccess
+
+
+    ''End Function
 
     Protected Function RunSP_DeleteParamFile(ByVal paramFileName As String) As Boolean
 

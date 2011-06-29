@@ -174,7 +174,7 @@ Public Class clsWriteOutput
             .Add("add_W_Tryptophan = " & Format(p.StaticModificationsList.W_Tryptophan, "0.0000").ToString)
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("add_J_user_amino_acid = 0.0000")
-                .Add("add_U_user_amino_acid = 0.0000")
+                .Add("add_U_user_amino_acid = 0.0000")          ' Note: you'd use 150.9536 for selenocysteine.  However, manual testing by Sam Purvine in 2010 showed that our version of Sequest ignores this parameter
             End If
             .Add("")
 
