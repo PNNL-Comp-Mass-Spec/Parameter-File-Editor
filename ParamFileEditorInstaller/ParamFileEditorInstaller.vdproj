@@ -15,18 +15,18 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_06BFAE57D77C10EBC591D66D00404911"
+        "OwnerKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_8F80A4DA0CDE114ED87A9E403A433217"
-        "OwnerKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_0F10E22C419D46FBB014DB3CAF8DF84C"
         "MsmSig" = "8:_UNDEFINED"
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8F80A4DA0CDE114ED87A9E403A433217"
+        "OwnerKey" = "8:_06BFAE57D77C10EBC591D66D00404911"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -119,7 +119,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "Version" = "8:2.0.50727"
+                "FrameworkVersion" = "8:2.0.50727"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=9832"
                 "SupportedRuntimes" = "8:1.1.4322"
@@ -128,14 +128,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8F80A4DA0CDE114ED87A9E403A433217"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_06BFAE57D77C10EBC591D66D00404911"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.1.3561.31731, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.2.4248.34745, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8F80A4DA0CDE114ED87A9E403A433217"
+                    "_06BFAE57D77C10EBC591D66D00404911"
                     {
                     "Name" = "8:ParamFileGenerator.dll"
                     "Attributes" = "3:512"
@@ -209,14 +209,16 @@
         "MsiBootstrapper"
         {
         "LangId" = "3:1033"
+        "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sequest Param File Editor"
         "ProductCode" = "8:{0794D9E5-53F3-4492-BC7C-A2DC4E75C3F9}"
-        "PackageCode" = "8:{B0E8D776-D3BE-454E-8C9D-423786E9B51E}"
+        "PackageCode" = "8:{91B7B449-3700-4ACF-9086-44A6C3DEB361}"
         "UpgradeCode" = "8:{6B68153E-0FA1-4B77-9B01-C246BE805CD8}"
+        "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"

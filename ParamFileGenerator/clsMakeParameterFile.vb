@@ -10,6 +10,7 @@ Namespace MakeParams
             BioWorks_Current
             X_Tandem     'X!Tandem XML file
             Inspect      'InSpect
+            MSGFDB       'MSGF-DB
             Invalid      'Other stuff not currently handled
         End Enum
         Function MakeFile(ByVal ParamFileName As String, _
@@ -125,11 +126,19 @@ Namespace MakeParams
                             ParamFileName, _
                             OutputFilePath, _
                             DMSConnectionString)
+
                     Case IGenerateFile.ParamFileType.Inspect
                         Return Me.MakeFileInspect( _
                             ParamFileName, _
                             OutputFilePath, _
                             DMSConnectionString)
+
+                    Case IGenerateFile.ParamFileType.MSGFDB
+                        Return Me.MakeFileMSGFDB( _
+                           ParamFileName, _
+                           OutputFilePath, _
+                           DMSConnectionString)
+
                     Case IGenerateFile.ParamFileType.Invalid
                         Exit Function
                     Case Else
@@ -263,7 +272,6 @@ Namespace MakeParams
 
         End Function
 
-
         Protected Function MakeFileInspect( _
             ByVal ParamFileName As String, _
             ByVal OutputFilePath As String, _
@@ -285,6 +293,47 @@ Namespace MakeParams
                 "SELECT TOP 1 AJT_parmFileStoragePath " & _
                 "FROM T_Analysis_Tool " & _
                 "WHERE AJT_Toolname = 'Inspect'"
+
+            paramFilePathTable = Me.m_TableGetter.GetTable(paramFilePathSQL)
+
+            paramFilePath = System.IO.Path.Combine(paramFilePathTable.Rows(0).Item(0).ToString, ParamFileName)
+            fullOutputFilePath = System.IO.Path.Combine(OutputFilePath, ParamFileName)
+
+            'Make sure that the paramfile doesn't already exist
+            If System.IO.File.Exists(fullOutputFilePath) Then
+                System.IO.File.Delete(fullOutputFilePath)
+            End If
+
+            'Copy the param file from gigasax to the working directory
+            System.IO.File.Copy(paramFilePath, System.IO.Path.Combine(OutputFilePath, ParamFileName))
+
+            Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
+
+            Return True
+
+        End Function
+
+        Protected Function MakeFileMSGFDB( _
+            ByVal ParamFileName As String, _
+            ByVal OutputFilePath As String, _
+            ByVal DMSConnectionString As String) As Boolean
+
+            Dim paramFilePathSQL As String
+
+            Dim paramFilePathTable As DataTable
+            Dim paramFilePath As String
+
+            Dim fullOutputFilePath As String
+
+
+            If Me.m_TableGetter Is Nothing Then
+                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
+            End If
+
+            paramFilePathSQL = _
+                "SELECT TOP 1 AJT_parmFileStoragePath " & _
+                "FROM T_Analysis_Tool " & _
+                "WHERE AJT_Toolname = 'MSGFDB'"
 
             paramFilePathTable = Me.m_TableGetter.GetTable(paramFilePathSQL)
 
