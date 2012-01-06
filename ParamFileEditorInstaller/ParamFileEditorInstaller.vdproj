@@ -119,7 +119,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:2.0.50727"
+                "FrameworkVersion" = "8:2.0.50727  "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=9832"
                 "SupportedRuntimes" = "8:1.1.4322"
@@ -216,7 +216,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sequest Param File Editor"
         "ProductCode" = "8:{0794D9E5-53F3-4492-BC7C-A2DC4E75C3F9}"
-        "PackageCode" = "8:{91B7B449-3700-4ACF-9086-44A6C3DEB361}"
+        "PackageCode" = "8:{1094307D-D53F-4BEC-8697-775CCDC8350E}"
         "UpgradeCode" = "8:{6B68153E-0FA1-4B77-9B01-C246BE805CD8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
