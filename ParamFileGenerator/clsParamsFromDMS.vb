@@ -350,7 +350,7 @@ Namespace DownloadParams
       'Dim dt As DataTable = GetTable(SQL)
 
       For counter = 1 To MaxDynMods
-        foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & counter & " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]")
+				foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & counter & " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]")
         If foundRows.Length > 0 Then
           tmpSpec = GetDynModSpecifier(foundRows)
           tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
