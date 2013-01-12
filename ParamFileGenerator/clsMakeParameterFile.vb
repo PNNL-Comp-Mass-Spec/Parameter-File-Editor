@@ -10,7 +10,8 @@ Namespace MakeParams
             BioWorks_Current
             X_Tandem     'X!Tandem XML file
             Inspect      'InSpect
-            MSGFDB       'MSGF-DB
+			MSGFPlus	 'MSGF-DB or MSGF+
+			MSAlign		 'MSAlign
             Invalid      'Other stuff not currently handled
         End Enum
         Function MakeFile(ByVal ParamFileName As String, _
@@ -133,265 +134,172 @@ Namespace MakeParams
                             OutputFilePath, _
                             DMSConnectionString)
 
-                    Case IGenerateFile.ParamFileType.MSGFDB
-                        Return Me.MakeFileMSGFDB( _
-                           ParamFileName, _
-                           OutputFilePath, _
-                           DMSConnectionString)
-
-                    Case IGenerateFile.ParamFileType.Invalid
-                        Exit Function
-                    Case Else
-                        ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
-                        Return Me.MakeFileSQ( _
-                            ParamFileName, _
-                            ParamFileType, _
-                            FASTAFilePath, _
-                            OutputFilePath, _
-                            DMSConnectionString, _
-                            ForceMonoParentMass)
-                End Select
-                Return True
-
-            Catch ex As Exception
-                Me.m_LastError = ex.Message
-                Return False
-
-            End Try
-
-
-        End Function
-
-        Protected Function GetMonoMassStatus(ByVal DatasetID As Integer, ByVal DMSConnectionString As String) As Boolean
-            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_ID = " + DatasetID.ToString
-            Return Me.GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
-        End Function
-
-        Protected Function GetMonoMassStatus(ByVal DatasetName As String, ByVal DMSConnectionString As String) As Boolean
-            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = '" + DatasetName + "'"
-            Return Me.GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
-        End Function
-
-        Private Function GetMonoParentStatusWorker(ByVal LookupSQL As String, ByVal DMSConnectionString As String) As Boolean
-            Dim TypeCheckTable As DataTable
-
-            Dim UseMonoMass As Boolean
-            Dim UseMonoMassInt As Integer
-
-            If Me.m_TableGetter Is Nothing Then
-                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
-            End If
-
-            TypeCheckTable = Me.m_TableGetter.GetTable(LookupSQL)
-
-            If TypeCheckTable.Rows.Count > 0 Then
-                UseMonoMassInt = CInt(TypeCheckTable.Rows(0).Item(0))
-                If UseMonoMassInt > 0 Then
-                    UseMonoMass = True
-                Else
-                    UseMonoMass = False
-                End If
-            End If
-            Return UseMonoMass
-        End Function
-
-        Protected Function MakeFileSQ( _
-            ByVal ParamFileName As String, _
-            ByVal ParamFileType As IGenerateFile.ParamFileType, _
-            ByVal FASTAFilePath As String, _
-            ByVal OutputFilePath As String, _
-            ByVal DMSConnectionString As String, _
-            ByVal forceMonoParentMass As Boolean) As Boolean
-
-            If Me.m_TableGetter Is Nothing Then
-                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
-            End If
-
-            Const DEF_TEMPLATE_FILEPATH As String = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
+					Case IGenerateFile.ParamFileType.MSGFPlus
+						Return Me.MakeFileMSGFPlus( _
+						   ParamFileName, _
+						   OutputFilePath, _
+						   DMSConnectionString)
+
+					Case IGenerateFile.ParamFileType.MSAlign
+						Return Me.MakeFileMSAlign( _
+						  ParamFileName, _
+						  OutputFilePath, _
+						  DMSConnectionString)
+
+					Case IGenerateFile.ParamFileType.Invalid
+						Exit Function
+					Case Else
+						ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
+						Return Me.MakeFileSQ( _
+							ParamFileName, _
+							ParamFileType, _
+							FASTAFilePath, _
+							OutputFilePath, _
+							DMSConnectionString, _
+							ForceMonoParentMass)
+				End Select
+				Return True
+
+			Catch ex As Exception
+				Me.m_LastError = ex.Message
+				Return False
+
+			End Try
+
+
+		End Function
+
+		Protected Function GetMonoMassStatus(ByVal DatasetID As Integer, ByVal DMSConnectionString As String) As Boolean
+			Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_ID = " + DatasetID.ToString
+			Return Me.GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
+		End Function
+
+		Protected Function GetMonoMassStatus(ByVal DatasetName As String, ByVal DMSConnectionString As String) As Boolean
+			Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = '" + DatasetName + "'"
+			Return Me.GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
+		End Function
+
+		Private Function GetMonoParentStatusWorker(ByVal LookupSQL As String, ByVal DMSConnectionString As String) As Boolean
+			Dim TypeCheckTable As DataTable
+
+			Dim UseMonoMass As Boolean
+			Dim UseMonoMassInt As Integer
+
+			If Me.m_TableGetter Is Nothing Then
+				Me.m_TableGetter = New clsDBTask(DMSConnectionString)
+			End If
+
+			TypeCheckTable = Me.m_TableGetter.GetTable(LookupSQL)
 
-            If Me.m_TemplateFilePathString = "" Then
-                Me.m_TemplateFilePathString = DEF_TEMPLATE_FILEPATH
-            End If
+			If TypeCheckTable.Rows.Count > 0 Then
+				UseMonoMassInt = CInt(TypeCheckTable.Rows(0).Item(0))
+				If UseMonoMassInt > 0 Then
+					UseMonoMass = True
+				Else
+					UseMonoMass = False
+				End If
+			End If
+			Return UseMonoMass
+		End Function
 
-            Dim success As Boolean = False
-            Dim successExtra As Boolean = False
+		Protected Function MakeFileSQ( _
+			ByVal ParamFileName As String, _
+			ByVal ParamFileType As IGenerateFile.ParamFileType, _
+			ByVal FASTAFilePath As String, _
+			ByVal OutputFilePath As String, _
+			ByVal DMSConnectionString As String, _
+			ByVal forceMonoParentMass As Boolean) As Boolean
 
-            'Try
-            Dim fi As New System.IO.FileInfo(m_TemplateFilePathString)
-            If Not fi.Exists Then
-                success = False
-                Me.m_LastError = "Default template file '" & m_TemplateFilePathString & "' does not exist"
-                Return success
-            End If
+			If Me.m_TableGetter Is Nothing Then
+				Me.m_TableGetter = New clsDBTask(DMSConnectionString)
+			End If
 
-            Dim l_MainCode As New clsMainProcess(m_TemplateFilePathString)
+			Const DEF_TEMPLATE_FILEPATH As String = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
 
-            Dim l_LoadedParams As clsParams
-            Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
-            Dim l_ReconIsoMods As IReconstituteIsoMods
-            l_ReconIsoMods = New clsReconstitueIsoMods(DMSConnectionString)
+			If Me.m_TemplateFilePathString = "" Then
+				Me.m_TemplateFilePathString = DEF_TEMPLATE_FILEPATH
+			End If
 
-            If l_DMS.ParamFileTable Is Nothing Then
-                success = False
-                m_LastError = "Could Not Establish Database Connection"
-                Return success
-            End If
+			Dim success As Boolean = False
+			Dim successExtra As Boolean = False
 
-            If Not l_DMS.ParamSetNameExists(ParamFileName) Then
-                success = False
-                m_LastError = "Named Parameter File does not exist in the database"
-                Return success
-            End If
+			'Try
+			Dim fi As New System.IO.FileInfo(m_TemplateFilePathString)
+			If Not fi.Exists Then
+				success = False
+				Me.m_LastError = "Default template file '" & m_TemplateFilePathString & "' does not exist"
+				Return success
+			End If
 
-            l_LoadedParams = l_DMS.ReadParamsFromDMS(ParamFileName)
-            l_LoadedParams = l_ReconIsoMods.ReconstitueIsoMods(l_LoadedParams)
+			Dim l_MainCode As New clsMainProcess(m_TemplateFilePathString)
 
-            If forceMonoParentMass And Not l_LoadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
-                l_LoadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic
-            End If
+			Dim l_LoadedParams As clsParams
+			Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
+			Dim l_ReconIsoMods As IReconstituteIsoMods
+			l_ReconIsoMods = New clsReconstitueIsoMods(DMSConnectionString)
 
-            If Not l_LoadedParams.LoadedParamNames.ContainsKey("PeptideMassUnits") Then
-                l_LoadedParams.PeptideMassUnits = IAdvancedParams.MassUnitList.amu
-            End If
+			If l_DMS.ParamFileTable Is Nothing Then
+				success = False
+				m_LastError = "Could Not Establish Database Connection"
+				Return success
+			End If
 
-            If Not l_LoadedParams.LoadedParamNames.ContainsKey("FragmentMassUnits") Then
-                l_LoadedParams.FragmentMassUnits = IAdvancedParams.MassUnitList.amu
-            End If
+			If Not l_DMS.ParamSetNameExists(ParamFileName) Then
+				success = False
+				m_LastError = "Parameter File '" & ParamFileName & "' does not exist in the database"
+				Return success
+			End If
 
-            l_LoadedParams.DefaultFASTAPath = FASTAFilePath
+			l_LoadedParams = l_DMS.ReadParamsFromDMS(ParamFileName)
+			l_LoadedParams = l_ReconIsoMods.ReconstitueIsoMods(l_LoadedParams)
 
-            If Me.m_FileWriter Is Nothing Then
-                Me.m_FileWriter = New clsWriteOutput
-            End If
+			If forceMonoParentMass And Not l_LoadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
+				l_LoadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic
+			End If
 
-            success = Me.m_FileWriter.WriteOutputFile(l_LoadedParams, System.IO.Path.Combine(OutputFilePath, ParamFileName), ParamFileType)
+			If Not l_LoadedParams.LoadedParamNames.ContainsKey("PeptideMassUnits") Then
+				l_LoadedParams.PeptideMassUnits = IAdvancedParams.MassUnitList.amu
+			End If
 
-            successExtra = Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
+			If Not l_LoadedParams.LoadedParamNames.ContainsKey("FragmentMassUnits") Then
+				l_LoadedParams.FragmentMassUnits = IAdvancedParams.MassUnitList.amu
+			End If
 
-            Return success
+			l_LoadedParams.DefaultFASTAPath = FASTAFilePath
 
-        End Function
+			If Me.m_FileWriter Is Nothing Then
+				Me.m_FileWriter = New clsWriteOutput
+			End If
 
-        Protected Function MakeFileInspect( _
-            ByVal ParamFileName As String, _
-            ByVal OutputFilePath As String, _
-            ByVal DMSConnectionString As String) As Boolean
+			success = Me.m_FileWriter.WriteOutputFile(l_LoadedParams, System.IO.Path.Combine(OutputFilePath, ParamFileName), ParamFileType)
 
-            Dim paramFilePathSQL As String
+			successExtra = Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
 
-            Dim paramFilePathTable As DataTable
-            Dim paramFilePath As String
+			Return success
 
-            Dim fullOutputFilePath As String
+		End Function
 
+		Protected Function MakeFileInspect(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
 
-            If Me.m_TableGetter Is Nothing Then
-                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
-            End If
+			Return RetrieveStaticPSMParameterFile("Inspect", ParamFileName, OutputFilePath, DMSConnectionString)
 
-            paramFilePathSQL = _
-                "SELECT TOP 1 AJT_parmFileStoragePath " & _
-                "FROM T_Analysis_Tool " & _
-                "WHERE AJT_Toolname = 'Inspect'"
+		End Function
 
-            paramFilePathTable = Me.m_TableGetter.GetTable(paramFilePathSQL)
+		Protected Function MakeFileMSAlign(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
 
-            paramFilePath = System.IO.Path.Combine(paramFilePathTable.Rows(0).Item(0).ToString, ParamFileName)
-            fullOutputFilePath = System.IO.Path.Combine(OutputFilePath, ParamFileName)
+			Return RetrieveStaticPSMParameterFile("MSAlign", ParamFileName, OutputFilePath, DMSConnectionString)
 
-            'Make sure that the paramfile doesn't already exist
-            If System.IO.File.Exists(fullOutputFilePath) Then
-                System.IO.File.Delete(fullOutputFilePath)
-            End If
+		End Function
 
-            'Copy the param file from gigasax to the working directory
-            System.IO.File.Copy(paramFilePath, System.IO.Path.Combine(OutputFilePath, ParamFileName))
+		Protected Function MakeFileMSGFPlus(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
 
-            Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
+			Return RetrieveStaticPSMParameterFile("MSGFPlus", ParamFileName, OutputFilePath, DMSConnectionString)
 
-            Return True
+		End Function
 
-        End Function
+        Protected Function MakeFileXT(ByVal ParamFileName As String,ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
 
-        Protected Function MakeFileMSGFDB( _
-            ByVal ParamFileName As String, _
-            ByVal OutputFilePath As String, _
-            ByVal DMSConnectionString As String) As Boolean
-
-            Dim paramFilePathSQL As String
-
-            Dim paramFilePathTable As DataTable
-            Dim paramFilePath As String
-
-            Dim fullOutputFilePath As String
-
-
-            If Me.m_TableGetter Is Nothing Then
-                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
-            End If
-
-            paramFilePathSQL = _
-                "SELECT TOP 1 AJT_parmFileStoragePath " & _
-                "FROM T_Analysis_Tool " & _
-                "WHERE AJT_Toolname = 'MSGFDB'"
-
-            paramFilePathTable = Me.m_TableGetter.GetTable(paramFilePathSQL)
-
-            paramFilePath = System.IO.Path.Combine(paramFilePathTable.Rows(0).Item(0).ToString, ParamFileName)
-            fullOutputFilePath = System.IO.Path.Combine(OutputFilePath, ParamFileName)
-
-            'Make sure that the paramfile doesn't already exist
-            If System.IO.File.Exists(fullOutputFilePath) Then
-                System.IO.File.Delete(fullOutputFilePath)
-            End If
-
-            'Copy the param file from gigasax to the working directory
-            System.IO.File.Copy(paramFilePath, System.IO.Path.Combine(OutputFilePath, ParamFileName))
-
-            Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
-
-            Return True
-
-        End Function
-
-        Protected Function MakeFileXT( _
-            ByVal ParamFileName As String, _
-            ByVal OutputFilePath As String, _
-            ByVal DMSConnectionString As String) As Boolean
-
-            Dim paramFilePathSQL As String
-
-            Dim paramFilePathTable As DataTable
-            Dim paramFilePath As String
-
-            Dim fullOutputFilePath As String
-
-
-            If Me.m_TableGetter Is Nothing Then
-                Me.m_TableGetter = New clsDBTask(DMSConnectionString)
-            End If
-
-            paramFilePathSQL = _
-                "SELECT TOP 1 AJT_parmFileStoragePath " & _
-                "FROM T_Analysis_Tool " & _
-                "WHERE AJT_Toolname = 'XTandem'"
-
-            paramFilePathTable = Me.m_TableGetter.GetTable(paramFilePathSQL)
-
-            paramFilePath = System.IO.Path.Combine(paramFilePathTable.Rows(0).Item(0).ToString, ParamFileName)
-            fullOutputFilePath = System.IO.Path.Combine(OutputFilePath, ParamFileName)
-
-            'Make sure that the paramfile doesn't already exist
-            If System.IO.File.Exists(fullOutputFilePath) Then
-                System.IO.File.Delete(fullOutputFilePath)
-            End If
-
-            'Copy the param file from gigasax to the working directory
-            System.IO.File.Copy(paramFilePath, System.IO.Path.Combine(OutputFilePath, ParamFileName))
-
-            Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
-
-            Return True
+			Return RetrieveStaticPSMParameterFile("XTandem", ParamFileName, OutputFilePath, DMSConnectionString)
 
         End Function
 
@@ -440,41 +348,76 @@ Namespace MakeParams
 
         End Function
 
+		Protected Function RetrieveStaticPSMParameterFile(ByVal AnalysisToolName As String, ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
 
+			Dim paramFilePathSQL As String
 
-        Protected Function GetAvailableParamSetNames(ByVal DMSConnectionString As String) _
-            As System.Collections.Specialized.StringCollection Implements IGenerateFile.GetAvailableParamSetNames
+			Dim paramFilePathTable As DataTable
+			Dim paramFilePath As String
 
-            Dim l_ParamSetsAvailable As New System.Collections.Specialized.StringCollection
-            Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
-            Dim d_ParamSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams()
-            Dim dr As DataRow
-            For Each dr In d_ParamSetsAvailable.Rows
-                l_ParamSetsAvailable.Add(dr.Item("FileName").ToString)
-            Next
-            Return l_ParamSetsAvailable
-        End Function
+			Dim fullOutputFilePath As String
 
-        Protected Function GetAvailableParamSetTable(ByVal DMSConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamSetTable
-            Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
-            Dim paramSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams
+			If Me.m_TableGetter Is Nothing Then
+				Me.m_TableGetter = New clsDBTask(DMSConnectionString)
+			End If
 
-            l_DMS = Nothing
+			paramFilePathSQL = _
+			 "SELECT TOP 1 AJT_parmFileStoragePath " & _
+			 "FROM T_Analysis_Tool " & _
+			 "WHERE AJT_Toolname = '" & AnalysisToolName & "'"
 
-            Return paramSetsAvailable
+			paramFilePathTable = Me.m_TableGetter.GetTable(paramFilePathSQL)
 
-        End Function
+			paramFilePath = System.IO.Path.Combine(paramFilePathTable.Rows(0).Item(0).ToString, ParamFileName)
+			fullOutputFilePath = System.IO.Path.Combine(OutputFilePath, ParamFileName)
 
-        Protected Function GetAvailableParamSetTypes(ByVal DMSConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamFileTypes
-            Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
-            Dim paramTypesAvailable As DataTable = l_DMS.RetrieveParamFileTypes
-            Return paramTypesAvailable
-        End Function
+			'Make sure that the paramfile doesn't already exist
+			If System.IO.File.Exists(fullOutputFilePath) Then
+				System.IO.File.Delete(fullOutputFilePath)
+			End If
 
-        Public ReadOnly Property LastError() As String Implements IGenerateFile.LastError
-            Get
-                Return m_LastError
-            End Get
-        End Property
-    End Class
+			'Copy the param file from gigasax to the working directory
+			System.IO.File.Copy(paramFilePath, System.IO.Path.Combine(OutputFilePath, ParamFileName))
+
+			Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
+
+			Return True
+
+		End Function
+
+		Protected Function GetAvailableParamSetNames(ByVal DMSConnectionString As String) _
+		 As System.Collections.Specialized.StringCollection Implements IGenerateFile.GetAvailableParamSetNames
+
+			Dim l_ParamSetsAvailable As New System.Collections.Specialized.StringCollection
+			Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
+			Dim d_ParamSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams()
+			Dim dr As DataRow
+			For Each dr In d_ParamSetsAvailable.Rows
+				l_ParamSetsAvailable.Add(dr.Item("FileName").ToString)
+			Next
+			Return l_ParamSetsAvailable
+		End Function
+
+		Protected Function GetAvailableParamSetTable(ByVal DMSConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamSetTable
+			Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
+			Dim paramSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams
+
+			l_DMS = Nothing
+
+			Return paramSetsAvailable
+
+		End Function
+
+		Protected Function GetAvailableParamSetTypes(ByVal DMSConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamFileTypes
+			Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
+			Dim paramTypesAvailable As DataTable = l_DMS.RetrieveParamFileTypes
+			Return paramTypesAvailable
+		End Function
+
+		Public ReadOnly Property LastError() As String Implements IGenerateFile.LastError
+			Get
+				Return m_LastError
+			End Get
+		End Property
+	End Class
 End Namespace
