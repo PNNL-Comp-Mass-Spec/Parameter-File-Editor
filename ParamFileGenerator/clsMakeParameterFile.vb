@@ -12,7 +12,8 @@ Namespace MakeParams
             Inspect      'InSpect
 			MSGFPlus	 'MSGF-DB or MSGF+
 			MSAlign		 'MSAlign
-            Invalid      'Other stuff not currently handled
+			MSAlignHistone		 'MSAlign_Histone (which is MS-Align+)
+			Invalid		 'Other stuff not currently handled
         End Enum
         Function MakeFile(ByVal ParamFileName As String, _
              ByVal ParamFileType As ParamFileType, _
@@ -142,6 +143,12 @@ Namespace MakeParams
 
 					Case IGenerateFile.ParamFileType.MSAlign
 						Return Me.MakeFileMSAlign( _
+						  ParamFileName, _
+						  OutputFilePath, _
+						  DMSConnectionString)
+
+					Case IGenerateFile.ParamFileType.MSAlignHistone
+						Return Me.MakeFileMSAlignHistone( _
 						  ParamFileName, _
 						  OutputFilePath, _
 						  DMSConnectionString)
@@ -291,6 +298,11 @@ Namespace MakeParams
 
 		End Function
 
+		Protected Function MakeFileMSAlignHistone(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
+
+			Return RetrieveStaticPSMParameterFile("MSAlign_Histone", ParamFileName, OutputFilePath, DMSConnectionString)
+
+		End Function
 		Protected Function MakeFileMSGFPlus(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
 
 			Return RetrieveStaticPSMParameterFile("MSGFPlus", ParamFileName, OutputFilePath, DMSConnectionString)
