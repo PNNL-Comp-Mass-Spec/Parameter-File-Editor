@@ -140,11 +140,6 @@
             "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.2.4842.28835, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_06BFAE57D77C10EBC591D66D00404911"
-                    {
-                    "Name" = "8:ParamFileGenerator.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ParamFileGenerator.dll"
             "TargetName" = "8:"
@@ -220,15 +215,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sequest Param File Editor"
-        "ProductCode" = "8:{4EB82494-A0CB-4FC4-B391-57B2F7747AAF}"
-        "PackageCode" = "8:{AB2FA191-DD76-4B37-ADF2-CDB45F2C2CDE}"
+        "ProductCode" = "8:{F5BFE0E5-41C4-46DF-B40E-2AEFA8C1794E}"
+        "PackageCode" = "8:{50ECB5F5-FAE7-4AB8-928F-C4B36B75B9FC}"
         "UpgradeCode" = "8:{6B68153E-0FA1-4B77-9B01-C246BE805CD8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.11"
+        "ProductVersion" = "8:1.0.12"
         "Manufacturer" = "8:PRISM Tools"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
