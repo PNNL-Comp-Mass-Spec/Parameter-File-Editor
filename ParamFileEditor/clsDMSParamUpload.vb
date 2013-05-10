@@ -37,9 +37,9 @@ Friend Class clsDMSParamUpload
         Return SaveParams(Paramset, True)
     End Function
 
-    Friend Function GetDiffsFromTemplate(ByVal paramSetID As Integer) As String
-        Return DistillFeaturesFromParamSet(paramSetID)
-    End Function
+	Friend Function GetDiffsFromTemplate(ByVal paramSetID As Integer, ByVal eParamFileTypeID As eParamFileTypeConstants) As String
+		Return DistillFeaturesFromParamSet(paramSetID, eParamFileTypeID)
+	End Function
 
     Friend Function GetDiffsFromTemplate(ByVal paramSet As clsParams) As String
         Return DistillFeaturesFromParamSet(paramSet)

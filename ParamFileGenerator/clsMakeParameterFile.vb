@@ -209,6 +209,17 @@ Namespace MakeParams
 			Return UseMonoMass
 		End Function
 
+		''' <summary>
+		''' Create Sequest parameter file
+		''' </summary>
+		''' <param name="ParamFileName"></param>
+		''' <param name="ParamFileType"></param>
+		''' <param name="FASTAFilePath"></param>
+		''' <param name="OutputFilePath"></param>
+		''' <param name="DMSConnectionString"></param>
+		''' <param name="forceMonoParentMass"></param>
+		''' <returns></returns>
+		''' <remarks></remarks>
 		Protected Function MakeFileSQ( _
 			ByVal ParamFileName As String, _
 			ByVal ParamFileType As IGenerateFile.ParamFileType, _

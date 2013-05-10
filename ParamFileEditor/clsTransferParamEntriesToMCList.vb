@@ -68,8 +68,11 @@ Friend Class clsTransferParamEntriesToMassModList
     End Sub
 
     Private Sub SyncDesc(ByRef BaseLineParams As ParamFileGenerator.clsParams)
-        Dim ParamFileTable As DataTable
-        Dim PFSQL As String = "SELECT * FROM T_Param_Files WHERE [Param_File_Type_ID] = 1000"
+		Dim ParamFileTable As DataTable
+		Dim eParamFileType As ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants
+		eParamFileType = ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants.Sequest
+
+		Dim PFSQL As String = "SELECT * FROM T_Param_Files WHERE [Param_File_Type_ID] = " & eParamFileType
 
         Dim tmpDA As SqlClient.SqlDataAdapter = Nothing
         Dim tmpCB As SqlClient.SqlCommandBuilder = Nothing
@@ -90,7 +93,7 @@ Friend Class clsTransferParamEntriesToMassModList
                 Debug.WriteLine("")
             End If
             Debug.Write("Param File = " & currParamFileID & " | CS = " & filerow.RowState.ToString & ", ")
-            testparams = Me.GetParamSetWithID(currParamFileID)
+			testparams = Me.GetParamSetWithID(currParamFileID, eParamFileType)
 
             filerow.Item("Param_File_Description") = testparams.Description
 
