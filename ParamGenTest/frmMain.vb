@@ -279,10 +279,16 @@ Public Class frmMain
             Case 1000
                 Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.BioWorks_32
             Case 1008
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.X_Tandem
-            Case Else
+				Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.X_Tandem
+			Case 1018
+				Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSGFPlus
+			Case 1019
+				Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlign
+			Case 1022
+				Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlignHistone
+			Case Else
 
-        End Select
+		End Select
         'Me.m_ParamFileType = _
         '    CType([Enum].Parse(GetType(ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType), _
         '    Me.cboFileTypes.Text), _
@@ -312,10 +318,14 @@ Public Class frmMain
         For Each dr In foundrows
             Me.cboAvailableParams.Items.Add(New ParamFileEntry( _
                 CInt(dr.Item("ID")), dr.Item("Filename").ToString))
-        Next
+		Next
+		
         Me.cboAvailableParams.DisplayMember = "Description"
         Me.cboAvailableParams.ValueMember = "Value"
-        Me.cboAvailableParams.SelectedIndex = 0
+
+		If Me.cboAvailableParams.Items.Count > 0 Then
+			Me.cboAvailableParams.SelectedIndex = 0
+		End If
 
         Me.cboAvailableParams.EndUpdate()
 

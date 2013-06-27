@@ -634,7 +634,7 @@ Namespace DownloadParams
 			  "Param_File_Description as Diffs, " & _
 			  "Param_File_Type_ID as Type_ID " & _
 			  "FROM T_Param_Files " & _
-			  "WHERE Param_File_Type_ID = " & eParamFileTypeConstants.Sequest & " or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem
+			  "WHERE Param_File_Type_ID = " & eParamFileTypeConstants.Sequest & " or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem & " or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB
 
 			tmpIDTable = Me.GetTable(paramTableSQL)
 
