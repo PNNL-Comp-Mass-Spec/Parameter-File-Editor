@@ -11,7 +11,8 @@ Public Class frmDMSPicker
     Private m_SelectedCol As Integer = 0
     'Private m_SearchActive As Boolean = False
 
-    Private m_Loader As ParamFileEditor.clsDMSPickerHandler
+	Private m_Loader As ParamFileEditor.clsDMSPickerHandler
+	Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents cmdSearch As System.Windows.Forms.Button
     'Friend WithEvents SearchTimer As New System.Timers.Timer(2000)
 
@@ -49,112 +50,111 @@ Public Class frmDMSPicker
     Friend WithEvents lvwDMSPicklist As System.Windows.Forms.ListView
     Friend WithEvents colParamID As System.Windows.Forms.ColumnHeader
     Friend WithEvents cmdLoadParam As System.Windows.Forms.Button
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents txtLiveSearch As System.Windows.Forms.TextBox
+	Friend WithEvents txtLiveSearch As System.Windows.Forms.TextBox
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmDMSPicker))
-        Me.lvwDMSPicklist = New System.Windows.Forms.ListView
-        Me.colParamID = New System.Windows.Forms.ColumnHeader
-        Me.colFileName = New System.Windows.Forms.ColumnHeader
-        Me.colDiffs = New System.Windows.Forms.ColumnHeader
-        Me.cmdLoadParam = New System.Windows.Forms.Button
-        Me.txtLiveSearch = New System.Windows.Forms.TextBox
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox
-        Me.cmdSearch = New System.Windows.Forms.Button
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SuspendLayout()
-        '
-        'lvwDMSPicklist
-        '
-        Me.lvwDMSPicklist.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lvwDMSPicklist.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colParamID, Me.colFileName, Me.colDiffs})
-        Me.lvwDMSPicklist.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lvwDMSPicklist.FullRowSelect = True
-        Me.lvwDMSPicklist.GridLines = True
-        Me.lvwDMSPicklist.Location = New System.Drawing.Point(16, 16)
-        Me.lvwDMSPicklist.MultiSelect = False
-        Me.lvwDMSPicklist.Name = "lvwDMSPicklist"
-        Me.lvwDMSPicklist.Size = New System.Drawing.Size(660, 412)
-        Me.lvwDMSPicklist.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.lvwDMSPicklist.TabIndex = 0
-        Me.lvwDMSPicklist.UseCompatibleStateImageBehavior = False
-        Me.lvwDMSPicklist.View = System.Windows.Forms.View.Details
-        '
-        'colParamID
-        '
-        Me.colParamID.Text = "ID"
-        Me.colParamID.Width = 42
-        '
-        'colFileName
-        '
-        Me.colFileName.Text = "Parameter File Name"
-        Me.colFileName.Width = 154
-        '
-        'colDiffs
-        '
-        Me.colDiffs.Text = "Differences From Template File"
-        Me.colDiffs.Width = 460
-        '
-        'cmdLoadParam
-        '
-        Me.cmdLoadParam.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cmdLoadParam.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.cmdLoadParam.Location = New System.Drawing.Point(528, 444)
-        Me.cmdLoadParam.Name = "cmdLoadParam"
-        Me.cmdLoadParam.Size = New System.Drawing.Size(148, 23)
-        Me.cmdLoadParam.TabIndex = 3
-        Me.cmdLoadParam.Text = "&Load Selected Param Set"
-        '
-        'txtLiveSearch
-        '
-        Me.txtLiveSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtLiveSearch.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtLiveSearch.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.txtLiveSearch.Location = New System.Drawing.Point(40, 450)
-        Me.txtLiveSearch.Name = "txtLiveSearch"
-        Me.txtLiveSearch.Size = New System.Drawing.Size(160, 14)
-        Me.txtLiveSearch.TabIndex = 1
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(16, 444)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(200, 24)
-        Me.PictureBox1.TabIndex = 3
-        Me.PictureBox1.TabStop = False
-        '
-        'cmdSearch
-        '
-        Me.cmdSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cmdSearch.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.cmdSearch.Location = New System.Drawing.Point(222, 444)
-        Me.cmdSearch.Name = "cmdSearch"
-        Me.cmdSearch.Size = New System.Drawing.Size(79, 23)
-        Me.cmdSearch.TabIndex = 2
-        Me.cmdSearch.Text = "&Search"
-        '
-        'frmDMSPicker
-        '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(692, 478)
-        Me.Controls.Add(Me.cmdSearch)
-        Me.Controls.Add(Me.txtLiveSearch)
-        Me.Controls.Add(Me.cmdLoadParam)
-        Me.Controls.Add(Me.lvwDMSPicklist)
-        Me.Controls.Add(Me.PictureBox1)
-        Me.MinimumSize = New System.Drawing.Size(700, 512)
-        Me.Name = "frmDMSPicker"
-        Me.Text = "DMS Parameter Set Picker"
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmDMSPicker))
+		Me.lvwDMSPicklist = New System.Windows.Forms.ListView()
+		Me.colParamID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.colFileName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.colDiffs = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.cmdLoadParam = New System.Windows.Forms.Button()
+		Me.txtLiveSearch = New System.Windows.Forms.TextBox()
+		Me.cmdSearch = New System.Windows.Forms.Button()
+		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.SuspendLayout()
+		'
+		'lvwDMSPicklist
+		'
+		Me.lvwDMSPicklist.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+				  Or System.Windows.Forms.AnchorStyles.Left) _
+				  Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.lvwDMSPicklist.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colParamID, Me.colFileName, Me.colDiffs})
+		Me.lvwDMSPicklist.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.lvwDMSPicklist.FullRowSelect = True
+		Me.lvwDMSPicklist.GridLines = True
+		Me.lvwDMSPicklist.Location = New System.Drawing.Point(19, 18)
+		Me.lvwDMSPicklist.MultiSelect = False
+		Me.lvwDMSPicklist.Name = "lvwDMSPicklist"
+		Me.lvwDMSPicklist.Size = New System.Drawing.Size(784, 470)
+		Me.lvwDMSPicklist.Sorting = System.Windows.Forms.SortOrder.Ascending
+		Me.lvwDMSPicklist.TabIndex = 0
+		Me.lvwDMSPicklist.UseCompatibleStateImageBehavior = False
+		Me.lvwDMSPicklist.View = System.Windows.Forms.View.Details
+		'
+		'colParamID
+		'
+		Me.colParamID.Text = "ID"
+		Me.colParamID.Width = 42
+		'
+		'colFileName
+		'
+		Me.colFileName.Text = "Parameter File Name"
+		Me.colFileName.Width = 154
+		'
+		'colDiffs
+		'
+		Me.colDiffs.Text = "Differences From Template File"
+		Me.colDiffs.Width = 460
+		'
+		'cmdLoadParam
+		'
+		Me.cmdLoadParam.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.cmdLoadParam.FlatStyle = System.Windows.Forms.FlatStyle.System
+		Me.cmdLoadParam.Location = New System.Drawing.Point(626, 506)
+		Me.cmdLoadParam.Name = "cmdLoadParam"
+		Me.cmdLoadParam.Size = New System.Drawing.Size(177, 27)
+		Me.cmdLoadParam.TabIndex = 3
+		Me.cmdLoadParam.Text = "&Load Selected Param Set"
+		'
+		'txtLiveSearch
+		'
+		Me.txtLiveSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.txtLiveSearch.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.txtLiveSearch.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.txtLiveSearch.ForeColor = System.Drawing.SystemColors.ControlText
+		Me.txtLiveSearch.Location = New System.Drawing.Point(48, 510)
+		Me.txtLiveSearch.Name = "txtLiveSearch"
+		Me.txtLiveSearch.Size = New System.Drawing.Size(425, 17)
+		Me.txtLiveSearch.TabIndex = 1
+		'
+		'cmdSearch
+		'
+		Me.cmdSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.cmdSearch.FlatStyle = System.Windows.Forms.FlatStyle.System
+		Me.cmdSearch.Location = New System.Drawing.Point(509, 506)
+		Me.cmdSearch.Name = "cmdSearch"
+		Me.cmdSearch.Size = New System.Drawing.Size(95, 27)
+		Me.cmdSearch.TabIndex = 2
+		Me.cmdSearch.Text = "&Search"
+		'
+		'PictureBox1
+		'
+		Me.PictureBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+		Me.PictureBox1.Location = New System.Drawing.Point(19, 506)
+		Me.PictureBox1.Name = "PictureBox1"
+		Me.PictureBox1.Size = New System.Drawing.Size(34, 28)
+		Me.PictureBox1.TabIndex = 3
+		Me.PictureBox1.TabStop = False
+		'
+		'frmDMSPicker
+		'
+		Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
+		Me.ClientSize = New System.Drawing.Size(822, 546)
+		Me.Controls.Add(Me.cmdSearch)
+		Me.Controls.Add(Me.txtLiveSearch)
+		Me.Controls.Add(Me.cmdLoadParam)
+		Me.Controls.Add(Me.lvwDMSPicklist)
+		Me.Controls.Add(Me.PictureBox1)
+		Me.MinimumSize = New System.Drawing.Size(840, 591)
+		Me.Name = "frmDMSPicker"
+		Me.Text = "DMS Parameter Set Picker"
+		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.ResumeLayout(False)
+		Me.PerformLayout()
 
-    End Sub
+	End Sub
 
 #End Region
 

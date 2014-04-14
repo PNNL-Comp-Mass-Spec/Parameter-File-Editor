@@ -107,10 +107,13 @@ Public Class clsWriteOutput
             .Add("print_duplicate_references = " & ConvertBoolToInteger(p.PrintDuplicateReferences).ToString)
             If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("enzyme_number = " & p.SelectedEnzymeIndex.ToString)
-            Else
-                enz = p.EnzymeList(p.SelectedEnzymeIndex)
-                .Add("enzyme_info = " + enz.ReturnBW32EnzymeInfoString(p.SelectedEnzymeCleavagePosition))
-            End If
+			Else
+				If p.SelectedEnzymeIndex >= p.EnzymeList.Count Then
+					Throw New IndexOutOfRangeException("Enzyme ID " & p.SelectedEnzymeIndex & " is not recognized; template file is out of date")
+				End If
+				enz = p.EnzymeList(p.SelectedEnzymeIndex)
+				.Add("enzyme_info = " + enz.ReturnBW32EnzymeInfoString(p.SelectedEnzymeCleavagePosition))
+			End If
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("max_num_differential_per_peptide = " + p.MaximumNumDifferentialPerPeptide.ToString)
             End If

@@ -46,192 +46,192 @@ Public Class frmGlobalModNamer
     Friend WithEvents cmdUseSelectedMod As System.Windows.Forms.Button
     Friend WithEvents lblMessages As System.Windows.Forms.Label
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
-        Me.gbxNewMod = New System.Windows.Forms.GroupBox
-        Me.lblDescription = New System.Windows.Forms.Label
-        Me.txtDescription = New System.Windows.Forms.TextBox
-        Me.cmdAddNew = New System.Windows.Forms.Button
-        Me.txtModMass = New System.Windows.Forms.TextBox
-        Me.lblModMass = New System.Windows.Forms.Label
-        Me.txtSymbolName = New System.Windows.Forms.TextBox
-        Me.lblSymbolName = New System.Windows.Forms.Label
-        Me.gbxExistingMods = New System.Windows.Forms.GroupBox
-        Me.lvwExistingMods = New System.Windows.Forms.ListView
-        Me.colSymbol = New System.Windows.Forms.ColumnHeader
-        Me.colDescription = New System.Windows.Forms.ColumnHeader
-        Me.colModMass = New System.Windows.Forms.ColumnHeader
-        Me.errorProvider = New System.Windows.Forms.ErrorProvider(Me.components)
-        Me.toolTipProvider = New System.Windows.Forms.ToolTip(Me.components)
-        Me.lblMessages = New System.Windows.Forms.Label
-        Me.cmdUseSelectedMod = New System.Windows.Forms.Button
-        Me.gbxNewMod.SuspendLayout()
-        Me.gbxExistingMods.SuspendLayout()
-        CType(Me.errorProvider, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SuspendLayout()
-        '
-        'gbxNewMod
-        '
-        Me.gbxNewMod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.gbxNewMod.Controls.Add(Me.lblDescription)
-        Me.gbxNewMod.Controls.Add(Me.txtDescription)
-        Me.gbxNewMod.Controls.Add(Me.cmdAddNew)
-        Me.gbxNewMod.Controls.Add(Me.txtModMass)
-        Me.gbxNewMod.Controls.Add(Me.lblModMass)
-        Me.gbxNewMod.Controls.Add(Me.txtSymbolName)
-        Me.gbxNewMod.Controls.Add(Me.lblSymbolName)
-        Me.gbxNewMod.Location = New System.Drawing.Point(12, 8)
-        Me.gbxNewMod.Name = "gbxNewMod"
-        Me.gbxNewMod.Size = New System.Drawing.Size(433, 212)
-        Me.gbxNewMod.TabIndex = 0
-        Me.gbxNewMod.TabStop = False
-        Me.gbxNewMod.Text = "New Mod Info"
-        '
-        'lblDescription
-        '
-        Me.lblDescription.Location = New System.Drawing.Point(28, 72)
-        Me.lblDescription.Name = "lblDescription"
-        Me.lblDescription.Size = New System.Drawing.Size(128, 16)
-        Me.lblDescription.TabIndex = 6
-        Me.lblDescription.Text = "Description"
-        '
-        'txtDescription
-        '
-        Me.txtDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtDescription.Location = New System.Drawing.Point(28, 88)
-        Me.txtDescription.Multiline = True
-        Me.txtDescription.Name = "txtDescription"
-        Me.txtDescription.Size = New System.Drawing.Size(393, 100)
-        Me.txtDescription.TabIndex = 5
-        '
-        'cmdAddNew
-        '
-        Me.cmdAddNew.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.cmdAddNew.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.cmdAddNew.Location = New System.Drawing.Point(292, 35)
-        Me.cmdAddNew.Name = "cmdAddNew"
-        Me.cmdAddNew.Size = New System.Drawing.Size(100, 23)
-        Me.cmdAddNew.TabIndex = 4
-        Me.cmdAddNew.Text = "Add New Mod"
-        '
-        'txtModMass
-        '
-        Me.txtModMass.Location = New System.Drawing.Point(160, 36)
-        Me.txtModMass.MaxLength = 8
-        Me.txtModMass.Name = "txtModMass"
-        Me.txtModMass.Size = New System.Drawing.Size(104, 20)
-        Me.txtModMass.TabIndex = 3
-        '
-        'lblModMass
-        '
-        Me.lblModMass.Location = New System.Drawing.Point(160, 20)
-        Me.lblModMass.Name = "lblModMass"
-        Me.lblModMass.Size = New System.Drawing.Size(56, 16)
-        Me.lblModMass.TabIndex = 2
-        Me.lblModMass.Text = "Mod Mass"
-        '
-        'txtSymbolName
-        '
-        Me.txtSymbolName.Location = New System.Drawing.Point(28, 36)
-        Me.txtSymbolName.MaxLength = 8
-        Me.txtSymbolName.Name = "txtSymbolName"
-        Me.txtSymbolName.Size = New System.Drawing.Size(104, 20)
-        Me.txtSymbolName.TabIndex = 1
-        '
-        'lblSymbolName
-        '
-        Me.lblSymbolName.Location = New System.Drawing.Point(28, 20)
-        Me.lblSymbolName.Name = "lblSymbolName"
-        Me.lblSymbolName.Size = New System.Drawing.Size(84, 16)
-        Me.lblSymbolName.TabIndex = 0
-        Me.lblSymbolName.Text = "Mod Name"
-        '
-        'gbxExistingMods
-        '
-        Me.gbxExistingMods.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.gbxExistingMods.Controls.Add(Me.lvwExistingMods)
-        Me.gbxExistingMods.Location = New System.Drawing.Point(12, 228)
-        Me.gbxExistingMods.Name = "gbxExistingMods"
-        Me.gbxExistingMods.Size = New System.Drawing.Size(433, 308)
-        Me.gbxExistingMods.TabIndex = 1
-        Me.gbxExistingMods.TabStop = False
-        Me.gbxExistingMods.Text = "Closely-Matching Existing Entries"
-        '
-        'lvwExistingMods
-        '
-        Me.lvwExistingMods.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lvwExistingMods.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colSymbol, Me.colDescription, Me.colModMass})
-        Me.lvwExistingMods.FullRowSelect = True
-        Me.lvwExistingMods.GridLines = True
-        Me.lvwExistingMods.HideSelection = False
-        Me.lvwExistingMods.Location = New System.Drawing.Point(12, 20)
-        Me.lvwExistingMods.MultiSelect = False
-        Me.lvwExistingMods.Name = "lvwExistingMods"
-        Me.lvwExistingMods.Size = New System.Drawing.Size(409, 272)
-        Me.lvwExistingMods.TabIndex = 0
-        Me.lvwExistingMods.UseCompatibleStateImageBehavior = False
-        Me.lvwExistingMods.View = System.Windows.Forms.View.Details
-        '
-        'colSymbol
-        '
-        Me.colSymbol.Text = "Mod Name"
-        Me.colSymbol.Width = 64
-        '
-        'colDescription
-        '
-        Me.colDescription.Text = "Description"
-        Me.colDescription.Width = 240
-        '
-        'colModMass
-        '
-        Me.colModMass.Text = "Mod Mass"
-        Me.colModMass.Width = 85
-        '
-        'errorProvider
-        '
-        Me.errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink
-        Me.errorProvider.ContainerControl = Me
-        '
-        'lblMessages
-        '
-        Me.lblMessages.Location = New System.Drawing.Point(20, 540)
-        Me.lblMessages.Name = "lblMessages"
-        Me.lblMessages.Size = New System.Drawing.Size(404, 36)
-        Me.lblMessages.TabIndex = 3
-        Me.lblMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'cmdUseSelectedMod
-        '
-        Me.cmdUseSelectedMod.Location = New System.Drawing.Point(272, 553)
-        Me.cmdUseSelectedMod.Name = "cmdUseSelectedMod"
-        Me.cmdUseSelectedMod.Size = New System.Drawing.Size(160, 23)
-        Me.cmdUseSelectedMod.TabIndex = 4
-        Me.cmdUseSelectedMod.Text = "Use Selected Mod Mass"
-        Me.cmdUseSelectedMod.UseVisualStyleBackColor = True
-        '
-        'frmGlobalModNamer
-        '
-        Me.AcceptButton = Me.cmdAddNew
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(457, 586)
-        Me.Controls.Add(Me.cmdUseSelectedMod)
-        Me.Controls.Add(Me.gbxExistingMods)
-        Me.Controls.Add(Me.gbxNewMod)
-        Me.Controls.Add(Me.lblMessages)
-        Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.Name = "frmGlobalModNamer"
-        Me.Text = "Add New Global Modification"
-        Me.gbxNewMod.ResumeLayout(False)
-        Me.gbxNewMod.PerformLayout()
-        Me.gbxExistingMods.ResumeLayout(False)
-        CType(Me.errorProvider, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ResumeLayout(False)
+		Me.components = New System.ComponentModel.Container()
+		Me.gbxNewMod = New System.Windows.Forms.GroupBox()
+		Me.lblDescription = New System.Windows.Forms.Label()
+		Me.txtDescription = New System.Windows.Forms.TextBox()
+		Me.cmdAddNew = New System.Windows.Forms.Button()
+		Me.txtModMass = New System.Windows.Forms.TextBox()
+		Me.lblModMass = New System.Windows.Forms.Label()
+		Me.txtSymbolName = New System.Windows.Forms.TextBox()
+		Me.lblSymbolName = New System.Windows.Forms.Label()
+		Me.gbxExistingMods = New System.Windows.Forms.GroupBox()
+		Me.lvwExistingMods = New System.Windows.Forms.ListView()
+		Me.colSymbol = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.colDescription = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.colModMass = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.errorProvider = New System.Windows.Forms.ErrorProvider(Me.components)
+		Me.toolTipProvider = New System.Windows.Forms.ToolTip(Me.components)
+		Me.lblMessages = New System.Windows.Forms.Label()
+		Me.cmdUseSelectedMod = New System.Windows.Forms.Button()
+		Me.gbxNewMod.SuspendLayout()
+		Me.gbxExistingMods.SuspendLayout()
+		CType(Me.errorProvider, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.SuspendLayout()
+		'
+		'gbxNewMod
+		'
+		Me.gbxNewMod.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+				  Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.gbxNewMod.Controls.Add(Me.lblDescription)
+		Me.gbxNewMod.Controls.Add(Me.txtDescription)
+		Me.gbxNewMod.Controls.Add(Me.cmdAddNew)
+		Me.gbxNewMod.Controls.Add(Me.txtModMass)
+		Me.gbxNewMod.Controls.Add(Me.lblModMass)
+		Me.gbxNewMod.Controls.Add(Me.txtSymbolName)
+		Me.gbxNewMod.Controls.Add(Me.lblSymbolName)
+		Me.gbxNewMod.Location = New System.Drawing.Point(17, 10)
+		Me.gbxNewMod.Name = "gbxNewMod"
+		Me.gbxNewMod.Size = New System.Drawing.Size(569, 261)
+		Me.gbxNewMod.TabIndex = 0
+		Me.gbxNewMod.TabStop = False
+		Me.gbxNewMod.Text = "New Mod Info"
+		'
+		'lblDescription
+		'
+		Me.lblDescription.Location = New System.Drawing.Point(39, 89)
+		Me.lblDescription.Name = "lblDescription"
+		Me.lblDescription.Size = New System.Drawing.Size(179, 19)
+		Me.lblDescription.TabIndex = 6
+		Me.lblDescription.Text = "Description"
+		'
+		'txtDescription
+		'
+		Me.txtDescription.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+				  Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.txtDescription.Location = New System.Drawing.Point(39, 108)
+		Me.txtDescription.Multiline = True
+		Me.txtDescription.Name = "txtDescription"
+		Me.txtDescription.Size = New System.Drawing.Size(513, 123)
+		Me.txtDescription.TabIndex = 5
+		'
+		'cmdAddNew
+		'
+		Me.cmdAddNew.DialogResult = System.Windows.Forms.DialogResult.OK
+		Me.cmdAddNew.FlatStyle = System.Windows.Forms.FlatStyle.System
+		Me.cmdAddNew.Location = New System.Drawing.Point(409, 43)
+		Me.cmdAddNew.Name = "cmdAddNew"
+		Me.cmdAddNew.Size = New System.Drawing.Size(140, 28)
+		Me.cmdAddNew.TabIndex = 4
+		Me.cmdAddNew.Text = "Add New Mod"
+		'
+		'txtModMass
+		'
+		Me.txtModMass.Location = New System.Drawing.Point(224, 44)
+		Me.txtModMass.MaxLength = 8
+		Me.txtModMass.Name = "txtModMass"
+		Me.txtModMass.Size = New System.Drawing.Size(146, 23)
+		Me.txtModMass.TabIndex = 3
+		'
+		'lblModMass
+		'
+		Me.lblModMass.Location = New System.Drawing.Point(224, 25)
+		Me.lblModMass.Name = "lblModMass"
+		Me.lblModMass.Size = New System.Drawing.Size(78, 19)
+		Me.lblModMass.TabIndex = 2
+		Me.lblModMass.Text = "Mod Mass"
+		'
+		'txtSymbolName
+		'
+		Me.txtSymbolName.Location = New System.Drawing.Point(39, 44)
+		Me.txtSymbolName.MaxLength = 8
+		Me.txtSymbolName.Name = "txtSymbolName"
+		Me.txtSymbolName.Size = New System.Drawing.Size(146, 23)
+		Me.txtSymbolName.TabIndex = 1
+		'
+		'lblSymbolName
+		'
+		Me.lblSymbolName.Location = New System.Drawing.Point(39, 25)
+		Me.lblSymbolName.Name = "lblSymbolName"
+		Me.lblSymbolName.Size = New System.Drawing.Size(118, 19)
+		Me.lblSymbolName.TabIndex = 0
+		Me.lblSymbolName.Text = "Mod Name"
+		'
+		'gbxExistingMods
+		'
+		Me.gbxExistingMods.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+				  Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.gbxExistingMods.Controls.Add(Me.lvwExistingMods)
+		Me.gbxExistingMods.Location = New System.Drawing.Point(17, 281)
+		Me.gbxExistingMods.Name = "gbxExistingMods"
+		Me.gbxExistingMods.Size = New System.Drawing.Size(569, 379)
+		Me.gbxExistingMods.TabIndex = 1
+		Me.gbxExistingMods.TabStop = False
+		Me.gbxExistingMods.Text = "Closely-Matching Existing Entries"
+		'
+		'lvwExistingMods
+		'
+		Me.lvwExistingMods.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+				  Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.lvwExistingMods.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colSymbol, Me.colDescription, Me.colModMass})
+		Me.lvwExistingMods.FullRowSelect = True
+		Me.lvwExistingMods.GridLines = True
+		Me.lvwExistingMods.HideSelection = False
+		Me.lvwExistingMods.Location = New System.Drawing.Point(17, 25)
+		Me.lvwExistingMods.MultiSelect = False
+		Me.lvwExistingMods.Name = "lvwExistingMods"
+		Me.lvwExistingMods.Size = New System.Drawing.Size(535, 334)
+		Me.lvwExistingMods.TabIndex = 0
+		Me.lvwExistingMods.UseCompatibleStateImageBehavior = False
+		Me.lvwExistingMods.View = System.Windows.Forms.View.Details
+		'
+		'colSymbol
+		'
+		Me.colSymbol.Text = "Mod Name"
+		Me.colSymbol.Width = 64
+		'
+		'colDescription
+		'
+		Me.colDescription.Text = "Description"
+		Me.colDescription.Width = 240
+		'
+		'colModMass
+		'
+		Me.colModMass.Text = "Mod Mass"
+		Me.colModMass.Width = 85
+		'
+		'errorProvider
+		'
+		Me.errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink
+		Me.errorProvider.ContainerControl = Me
+		'
+		'lblMessages
+		'
+		Me.lblMessages.Location = New System.Drawing.Point(28, 665)
+		Me.lblMessages.Name = "lblMessages"
+		Me.lblMessages.Size = New System.Drawing.Size(566, 44)
+		Me.lblMessages.TabIndex = 3
+		Me.lblMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+		'
+		'cmdUseSelectedMod
+		'
+		Me.cmdUseSelectedMod.Location = New System.Drawing.Point(381, 681)
+		Me.cmdUseSelectedMod.Name = "cmdUseSelectedMod"
+		Me.cmdUseSelectedMod.Size = New System.Drawing.Size(224, 28)
+		Me.cmdUseSelectedMod.TabIndex = 4
+		Me.cmdUseSelectedMod.Text = "Use Selected Mod Mass"
+		Me.cmdUseSelectedMod.UseVisualStyleBackColor = True
+		'
+		'frmGlobalModNamer
+		'
+		Me.AcceptButton = Me.cmdAddNew
+		Me.AutoScaleBaseSize = New System.Drawing.Size(7, 16)
+		Me.ClientSize = New System.Drawing.Size(603, 586)
+		Me.Controls.Add(Me.cmdUseSelectedMod)
+		Me.Controls.Add(Me.gbxExistingMods)
+		Me.Controls.Add(Me.gbxNewMod)
+		Me.Controls.Add(Me.lblMessages)
+		Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+		Me.Name = "frmGlobalModNamer"
+		Me.Text = "Add New Global Modification"
+		Me.gbxNewMod.ResumeLayout(False)
+		Me.gbxNewMod.PerformLayout()
+		Me.gbxExistingMods.ResumeLayout(False)
+		CType(Me.errorProvider, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.ResumeLayout(False)
 
-    End Sub
+	End Sub
 
 #End Region
 

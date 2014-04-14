@@ -137,9 +137,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.2.4842.28835, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ParamFileGenerator, Version=1.2.5217.20000, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_06BFAE57D77C10EBC591D66D00404911"
+                    {
+                    "Name" = "8:ParamFileGenerator.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ParamFileGenerator.dll"
             "TargetName" = "8:"
@@ -215,15 +220,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sequest Param File Editor"
-        "ProductCode" = "8:{F5BFE0E5-41C4-46DF-B40E-2AEFA8C1794E}"
-        "PackageCode" = "8:{50ECB5F5-FAE7-4AB8-928F-C4B36B75B9FC}"
+        "ProductCode" = "8:{619BBF0C-3D98-43C3-9DBB-C0462168C7FA}"
+        "PackageCode" = "8:{A07F9BA7-DA77-4DF7-94AB-8009529790B5}"
         "UpgradeCode" = "8:{6B68153E-0FA1-4B77-9B01-C246BE805CD8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.12"
+        "ProductVersion" = "8:1.0.13"
         "Manufacturer" = "8:PRISM Tools"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
