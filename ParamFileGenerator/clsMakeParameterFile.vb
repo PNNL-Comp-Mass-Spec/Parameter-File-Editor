@@ -13,6 +13,8 @@ Namespace MakeParams
 			MSGFPlus	 'MSGF-DB or MSGF+
 			MSAlign		 'MSAlign
 			MSAlignHistone		 'MSAlign_Histone (which is MS-Align+)
+			MODa
+			MSPathFinder
 			Invalid		 'Other stuff not currently handled
         End Enum
         Function MakeFile(ByVal ParamFileName As String, _
@@ -35,7 +37,7 @@ Namespace MakeParams
              ByVal DMSConnectionString As String, _
              ByVal DatasetName As String) As Boolean
 
-        Function GetAvailableParamSetNames(ByVal DMSConnectionString As String) As System.Collections.Specialized.StringCollection
+		Function GetAvailableParamSetNames(ByVal DMSConnectionString As String) As Specialized.StringCollection
         Function GetAvailableParamSetTable(ByVal DMSConnectionString As String) As DataTable
 
         Function GetAvailableParamFileTypes(ByVal DMSConnectionString As String) As DataTable
@@ -111,59 +113,71 @@ Namespace MakeParams
             Return Me.MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, ForceMonoStatus)
 
         End Function
-        Protected Function MakeFile( _
-            ByVal ParamFileName As String, _
-            ByVal ParamFileType As IGenerateFile.ParamFileType, _
-            ByVal FASTAFilePath As String, _
-            ByVal OutputFilePath As String, _
-            ByVal DMSConnectionString As String, _
-            ByVal ForceMonoParentMass As Boolean) As Boolean
 
+		Protected Function MakeFile(
+		  ByVal ParamFileName As String,
+		  ByVal ParamFileType As IGenerateFile.ParamFileType,
+		  ByVal FASTAFilePath As String,
+		  ByVal OutputFilePath As String,
+		  ByVal DMSConnectionString As String,
+		  ByVal ForceMonoParentMass As Boolean) As Boolean
 
+			Try
+				Select Case ParamFileType
+					Case IGenerateFile.ParamFileType.X_Tandem
+						Return Me.MakeFileXT(
+						 ParamFileName,
+						 OutputFilePath,
+						 DMSConnectionString)
 
-            Try
-                Select Case ParamFileType
-                    Case IGenerateFile.ParamFileType.X_Tandem
-                        Return Me.MakeFileXT( _
-                            ParamFileName, _
-                            OutputFilePath, _
-                            DMSConnectionString)
+					Case IGenerateFile.ParamFileType.Inspect
+						Return Me.MakeFileInspect(
+						 ParamFileName,
+						 OutputFilePath,
+						 DMSConnectionString)
 
-                    Case IGenerateFile.ParamFileType.Inspect
-                        Return Me.MakeFileInspect( _
-                            ParamFileName, _
-                            OutputFilePath, _
-                            DMSConnectionString)
+					Case IGenerateFile.ParamFileType.MODa
+						Return Me.MakeFileMODa(
+						ParamFileName,
+						OutputFilePath,
+						DMSConnectionString)
 
 					Case IGenerateFile.ParamFileType.MSGFPlus
-						Return Me.MakeFileMSGFPlus( _
-						   ParamFileName, _
-						   OutputFilePath, _
+						Return Me.MakeFileMSGFPlus(
+						   ParamFileName,
+						   OutputFilePath,
 						   DMSConnectionString)
 
 					Case IGenerateFile.ParamFileType.MSAlign
-						Return Me.MakeFileMSAlign( _
-						  ParamFileName, _
-						  OutputFilePath, _
+						Return Me.MakeFileMSAlign(
+						  ParamFileName,
+						  OutputFilePath,
 						  DMSConnectionString)
 
 					Case IGenerateFile.ParamFileType.MSAlignHistone
-						Return Me.MakeFileMSAlignHistone( _
-						  ParamFileName, _
-						  OutputFilePath, _
+						Return Me.MakeFileMSAlignHistone(
+						  ParamFileName,
+						  OutputFilePath,
+						  DMSConnectionString)
+
+					Case IGenerateFile.ParamFileType.MSPathFinder
+						Return Me.MakeFileMSPathFinder(
+						  ParamFileName,
+						  OutputFilePath,
 						  DMSConnectionString)
 
 					Case IGenerateFile.ParamFileType.Invalid
 						Exit Function
+
 					Case Else
 						ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
-						Return Me.MakeFileSQ( _
-							ParamFileName, _
-							ParamFileType, _
-							FASTAFilePath, _
-							OutputFilePath, _
-							DMSConnectionString, _
-							ForceMonoParentMass)
+						Return Me.MakeFileSQ(
+						 ParamFileName,
+						 ParamFileType,
+						 FASTAFilePath,
+						 OutputFilePath,
+						 DMSConnectionString,
+						 ForceMonoParentMass)
 				End Select
 				Return True
 
@@ -242,7 +256,7 @@ Namespace MakeParams
 			Dim successExtra As Boolean = False
 
 			'Try
-			Dim fi As New System.IO.FileInfo(m_TemplateFilePathString)
+			Dim fi As New IO.FileInfo(m_TemplateFilePathString)
 			If Not fi.Exists Then
 				success = False
 				Me.m_LastError = "Default template file '" & m_TemplateFilePathString & "' does not exist"
@@ -289,7 +303,7 @@ Namespace MakeParams
 				Me.m_FileWriter = New clsWriteOutput
 			End If
 
-			success = Me.m_FileWriter.WriteOutputFile(l_LoadedParams, System.IO.Path.Combine(OutputFilePath, ParamFileName), ParamFileType)
+			success = Me.m_FileWriter.WriteOutputFile(l_LoadedParams, IO.Path.Combine(OutputFilePath, ParamFileName), ParamFileType)
 
 			successExtra = Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
 
@@ -300,6 +314,12 @@ Namespace MakeParams
 		Protected Function MakeFileInspect(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
 
 			Return RetrieveStaticPSMParameterFile("Inspect", ParamFileName, OutputFilePath, DMSConnectionString)
+
+		End Function
+
+		Protected Function MakeFileMODa(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
+
+			Return RetrieveStaticPSMParameterFile("MODa", ParamFileName, OutputFilePath, DMSConnectionString)
 
 		End Function
 
@@ -314,9 +334,16 @@ Namespace MakeParams
 			Return RetrieveStaticPSMParameterFile("MSAlign_Histone", ParamFileName, OutputFilePath, DMSConnectionString)
 
 		End Function
+
 		Protected Function MakeFileMSGFPlus(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
 
 			Return RetrieveStaticPSMParameterFile("MSGFPlus", ParamFileName, OutputFilePath, DMSConnectionString)
+
+		End Function
+
+		Protected Function MakeFileMSPathFinder(ByVal ParamFileName As String, ByVal OutputFilePath As String, ByVal DMSConnectionString As String) As Boolean
+
+			Return RetrieveStaticPSMParameterFile("MSPathFinder", ParamFileName, OutputFilePath, DMSConnectionString)
 
 		End Function
 
@@ -342,7 +369,7 @@ Namespace MakeParams
             End If
 
             Dim baseParamfileName As String
-            baseParamfileName = System.IO.Path.GetFileNameWithoutExtension(ParamFileName)
+			baseParamfileName = IO.Path.GetFileNameWithoutExtension(ParamFileName)
 
             If Me.m_FileWriter Is Nothing Then
                 Me.m_FileWriter = New clsWriteOutput
@@ -363,10 +390,10 @@ Namespace MakeParams
             mdTable = Me.m_TableGetter.GetTable(mdSQL)
 
             'Dump the Mass_Correction_Tags file to the working directory
-            Me.m_FileWriter.WriteDatatableToOutputFile(mctTable, System.IO.Path.Combine(OutputFilePath, "Mass_Correction_Tags.txt"))
+			Me.m_FileWriter.WriteDatatableToOutputFile(mctTable, IO.Path.Combine(OutputFilePath, "Mass_Correction_Tags.txt"))
 
             'Dump the param file specific Mod Defs file to the working directory
-            Me.m_FileWriter.WriteDatatableToOutputFile(mdTable, System.IO.Path.Combine(OutputFilePath, baseParamfileName & "_ModDefs.txt"))
+			Me.m_FileWriter.WriteDatatableToOutputFile(mdTable, IO.Path.Combine(OutputFilePath, baseParamfileName & "_ModDefs.txt"))
 
 
         End Function
@@ -391,16 +418,16 @@ Namespace MakeParams
 
 			paramFilePathTable = Me.m_TableGetter.GetTable(paramFilePathSQL)
 
-			paramFilePath = System.IO.Path.Combine(paramFilePathTable.Rows(0).Item(0).ToString, ParamFileName)
-			fullOutputFilePath = System.IO.Path.Combine(OutputFilePath, ParamFileName)
+			paramFilePath = IO.Path.Combine(paramFilePathTable.Rows(0).Item(0).ToString, ParamFileName)
+			fullOutputFilePath = IO.Path.Combine(OutputFilePath, ParamFileName)
 
 			'Make sure that the paramfile doesn't already exist
-			If System.IO.File.Exists(fullOutputFilePath) Then
-				System.IO.File.Delete(fullOutputFilePath)
+			If IO.File.Exists(fullOutputFilePath) Then
+				IO.File.Delete(fullOutputFilePath)
 			End If
 
 			'Copy the param file from gigasax to the working directory
-			System.IO.File.Copy(paramFilePath, System.IO.Path.Combine(OutputFilePath, ParamFileName))
+			IO.File.Copy(paramFilePath, IO.Path.Combine(OutputFilePath, ParamFileName))
 
 			Me.MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
 
@@ -409,9 +436,9 @@ Namespace MakeParams
 		End Function
 
 		Protected Function GetAvailableParamSetNames(ByVal DMSConnectionString As String) _
-		 As System.Collections.Specialized.StringCollection Implements IGenerateFile.GetAvailableParamSetNames
+		  As Specialized.StringCollection Implements IGenerateFile.GetAvailableParamSetNames
 
-			Dim l_ParamSetsAvailable As New System.Collections.Specialized.StringCollection
+			Dim l_ParamSetsAvailable As New Specialized.StringCollection
 			Dim l_DMS As New DownloadParams.clsParamsFromDMS(DMSConnectionString)
 			Dim d_ParamSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams()
 			Dim dr As DataRow

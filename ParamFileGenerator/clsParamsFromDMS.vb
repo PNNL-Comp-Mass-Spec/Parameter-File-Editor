@@ -126,6 +126,9 @@ Namespace DownloadParams
 			SMAQC = 1020
 			LipidMapSearch = 1021
 			MSAlign_Histone = 1022
+			MODa = 1023
+			GlyQIQ = 1024
+			MSPathFinder = 1025
 		End Enum
 
 #End Region
@@ -206,7 +209,12 @@ Namespace DownloadParams
 
 			If m_ParamFileType <> eParamFileTypeConstants.Sequest Then
 				' This param file type is not supported for export from DMS
-				Throw New System.NotSupportedException("Parameter file " & ParamSetName & " is of type " & [Enum].GetName(GetType(eParamFileTypeConstants), m_ParamFileType) & ", which isn't support for export from DMS")
+				Dim paramFileTypeName As String = [Enum].GetName(GetType(eParamFileTypeConstants), m_ParamFileType)
+				If String.IsNullOrEmpty(paramFileTypeName) Then
+					paramFileTypeName = "Unknown"
+				End If
+
+				Throw New System.NotSupportedException("Parameter file " & ParamSetName & " is of type " & paramfileTypeName & ", which isn't support for export from DMS")
 			End If
 
 			m_ID = GetIDWithName(m_Name, m_ParamFileType)
@@ -619,7 +627,7 @@ Namespace DownloadParams
 		End Function
 
 		''' <summary>
-		''' Finds parameter file info for Sequest
+		''' Finds parameter file info for Sequest, X!Tandem, MSGF+, or MSPathFinder
 		''' </summary>
 		''' <returns></returns>
 		''' <remarks></remarks>
@@ -634,7 +642,10 @@ Namespace DownloadParams
 			  "Param_File_Description as Diffs, " & _
 			  "Param_File_Type_ID as Type_ID " & _
 			  "FROM T_Param_Files " & _
-			  "WHERE Param_File_Type_ID = " & eParamFileTypeConstants.Sequest & " or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem & " or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB
+			  "WHERE Param_File_Type_ID = " & eParamFileTypeConstants.Sequest &
+			  " or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem &
+			  " or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB &
+			  " or Param_File_Type_ID = " & eParamFileTypeConstants.MSPathFinder
 
 			tmpIDTable = Me.GetTable(paramTableSQL)
 
@@ -969,7 +980,12 @@ Namespace DownloadParams
 
 			If eParamFileType <> eParamFileTypeConstants.Sequest Then
 				' This param file type is not supported for export from DMS
-				Console.WriteLine("Parameter file " & paramSetName & " is of type " & [Enum].GetName(GetType(eParamFileTypeConstants), eParamFileType) & ", which isn't support for export from DMS")
+				Dim paramFileTypeName As String = [Enum].GetName(GetType(eParamFileTypeConstants), eParamFileType)
+				If String.IsNullOrEmpty(paramFileTypeName) Then
+					paramFileTypeName = "Unknown"
+				End If
+
+				Console.WriteLine("Parameter file " & paramSetName & " is of type " & paramFileTypeName & ", which isn't support for export from DMS")
 				Return False
 			End If
 
