@@ -1,12 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileGenerator", "ParamFileGenerator\ParamFileGenerator.vbproj", "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
 EndProject
-Project("{C8D11400-126E-41CD-887F-60BD40844F9E}") = "DMS_Params_Setup", "DMS_Params_Setup\DMS_Params_Setup.dbproj", "{67CBC824-A49E-4E9B-A947-360F3DFE65C3}"
-EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileEditor", "ParamFileEditor\ParamFileEditor.vbproj", "{DF84F4CE-B4B1-43B7-B169-84078341607F}"
-EndProject
-Project("{C8D11400-126E-41CD-887F-60BD40844F9E}") = "DMS5_T3", "DMS5_T3\DMS5_T3.dbproj", "{79106D25-E747-4D7D-A6B3-C55A17E91A67}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ParamFileEditorInstaller", "ParamFileEditorInstaller\ParamFileEditorInstaller.vdproj", "{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}"
 EndProject
@@ -28,10 +26,6 @@ Global
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release|x86.ActiveCfg = Release|Any CPU
 		{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}.Release|x86.Build.0 = Release|Any CPU
-		{67CBC824-A49E-4E9B-A947-360F3DFE65C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67CBC824-A49E-4E9B-A947-360F3DFE65C3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{67CBC824-A49E-4E9B-A947-360F3DFE65C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67CBC824-A49E-4E9B-A947-360F3DFE65C3}.Release|x86.ActiveCfg = Release|Any CPU
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Debug|x86.ActiveCfg = Debug|x86
@@ -40,10 +34,6 @@ Global
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|x86.ActiveCfg = Release|x86
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|x86.Build.0 = Release|x86
-		{79106D25-E747-4D7D-A6B3-C55A17E91A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{79106D25-E747-4D7D-A6B3-C55A17E91A67}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{79106D25-E747-4D7D-A6B3-C55A17E91A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{79106D25-E747-4D7D-A6B3-C55A17E91A67}.Release|x86.ActiveCfg = Release|Any CPU
 		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Debug|Any CPU.ActiveCfg = Debug
 		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Debug|x86.ActiveCfg = Debug
 		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|Any CPU.ActiveCfg = Release
