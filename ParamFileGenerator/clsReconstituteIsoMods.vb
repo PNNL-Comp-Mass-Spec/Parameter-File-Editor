@@ -1,6 +1,6 @@
 Public Interface IReconstituteIsoMods
 
-    Function ReconstitueIsoMods(ByVal ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams
+    Function ReconstitueIsoMods(ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams
 
 End Interface
 
@@ -18,17 +18,17 @@ Public Class clsReconstitueIsoMods
     Private m_ResTable As DataTable
     Private m_ConnectionString As String
 
-    Public Sub New(ByVal connectionString As String)
+    Public Sub New(connectionString As String)
         Dim getResTable As New ParamFileGenerator.clsGetResiduesList(connectionString)
         Me.m_ResTable = getResTable.ResiduesTable
         Me.m_ConnectionString = connectionString
 
     End Sub
 
-    Friend Function ReconIsoMods(ByVal ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams Implements IReconstituteIsoMods.ReconstitueIsoMods
+    Friend Function ReconIsoMods(ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams Implements IReconstituteIsoMods.ReconstitueIsoMods
         Return Me.StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods)
     End Function
-    Protected Function getMultiplier(ByVal AA As String, ByVal Atom As AvailableAtoms) As Integer
+    Protected Function getMultiplier(AA As String, Atom As AvailableAtoms) As Integer
 
         Dim m_Atomrows() As DataRow = Me.m_ResTable.Select("[Residue_Symbol] = '" & AA & "'")
         Dim m_AtomRow As DataRow = m_Atomrows(0)
@@ -38,7 +38,7 @@ Public Class clsReconstitueIsoMods
 
     End Function
 
-    Protected Function getAtomCountColumn(ByVal Atom As AvailableAtoms) As String
+    Protected Function getAtomCountColumn(Atom As AvailableAtoms) As String
 
         Select Case Atom
             Case AvailableAtoms.C
@@ -57,8 +57,8 @@ Public Class clsReconstitueIsoMods
 
     End Function
     Protected Function StreamlineIsoModsToStatics( _
-        ByVal ParamsClass As ParamFileGenerator.clsParams, _
-        ByVal IsoMods As ParamFileGenerator.clsIsoMods) As ParamFileGenerator.clsParams
+        ParamsClass As ParamFileGenerator.clsParams, _
+        IsoMods As ParamFileGenerator.clsIsoMods) As ParamFileGenerator.clsParams
 
         Dim im As ParamFileGenerator.clsModEntry
 

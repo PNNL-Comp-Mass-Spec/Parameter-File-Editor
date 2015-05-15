@@ -20,7 +20,7 @@ ParamFileGenerator
 	<remarks></remarks>
 </member><member name="M:ParamFileGenerator.DownloadParams.clsParamsFromDMS.GetAvailableParamSets">
 	<summary>
- Finds parameter file info for Sequest, X!Tandem, MSGF+, or MSPathFinder
+ Finds parameter file info for Sequest, X!Tandem, MSGF+, MSPathFinder, or MODPlus
  </summary>
 	<returns></returns>
 	<remarks></remarks>

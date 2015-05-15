@@ -25,7 +25,7 @@ Public Interface IBasicParams
     Property IsotopicModificationsList() As clsIsoMods
     Property PartialSequenceToMatch() As String
     Property EnzymeList() As clsEnzymeCollection
-    Function RetrieveEnzymeDetails(ByVal index As Integer) As clsEnzymeDetails
+    Function RetrieveEnzymeDetails(index As Integer) As clsEnzymeDetails
 End Interface
 Public Interface IAdvancedParams
     Enum FrameList As Integer
@@ -165,7 +165,7 @@ Public Class clsParams
         Get
             Return m_ID
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_ID = Value
         End Set
     End Property
@@ -173,7 +173,7 @@ Public Class clsParams
         Get
             Return m_fileName
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_fileName = Value
         End Set
     End Property
@@ -181,7 +181,7 @@ Public Class clsParams
         Get
             Return m_typeIndex
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_typeIndex = Value
         End Set
     End Property
@@ -189,7 +189,7 @@ Public Class clsParams
         Get
             Return m_desc
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_desc = Value
         End Set
     End Property
@@ -197,7 +197,7 @@ Public Class clsParams
         Get
             Return m_defDBPath1
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_defDBPath1 = Value
         End Set
     End Property
@@ -205,7 +205,7 @@ Public Class clsParams
         Get
             Return m_defDBPath2
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_defDBPath2 = Value
         End Set
     End Property
@@ -213,7 +213,7 @@ Public Class clsParams
         Get
             Return m_numResults
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_numResults = Value
         End Set
     End Property
@@ -221,7 +221,7 @@ Public Class clsParams
         Get
             Return m_pepMassTol
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_pepMassTol = Value
         End Set
     End Property
@@ -229,7 +229,7 @@ Public Class clsParams
         Get
             Return m_createOutputFiles
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             m_createOutputFiles = Value
         End Set
     End Property
@@ -237,7 +237,7 @@ Public Class clsParams
         Get
             Return m_ionSeries
         End Get
-        Set(ByVal Value As clsIonSeries)
+        Set(Value As clsIonSeries)
             m_ionSeries = Value
         End Set
     End Property
@@ -245,7 +245,7 @@ Public Class clsParams
         Get
             Return m_dynMods
         End Get
-        Set(ByVal Value As clsDynamicMods)
+        Set(Value As clsDynamicMods)
             m_dynMods = Value
         End Set
     End Property
@@ -253,7 +253,7 @@ Public Class clsParams
         Get
             Return Me.m_termDynMods
         End Get
-        Set(ByVal Value As clsTermDynamicMods)
+        Set(Value As clsTermDynamicMods)
             Me.m_termDynMods = Value
         End Set
     End Property
@@ -261,7 +261,7 @@ Public Class clsParams
         Get
             Return Me.m_isoMods
         End Get
-        Set(ByVal Value As clsIsoMods)
+        Set(Value As clsIsoMods)
             Me.m_isoMods = Value
         End Set
     End Property
@@ -269,7 +269,7 @@ Public Class clsParams
         Get
             Return m_maxAAPerDynMod
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_maxAAPerDynMod = Value
         End Set
     End Property
@@ -277,7 +277,7 @@ Public Class clsParams
         Get
             Return m_maxDiffPerPeptide
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_maxDiffPerPeptide = Value
         End Set
     End Property
@@ -285,7 +285,7 @@ Public Class clsParams
         Get
             Return m_usePhosphoFragmentation
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_usePhosphoFragmentation = Value
         End Set
     End Property
@@ -293,7 +293,7 @@ Public Class clsParams
         Get
             Return m_fragIonTol
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_fragIonTol = Value
         End Set
     End Property
@@ -301,7 +301,7 @@ Public Class clsParams
         Get
             Return m_numOutLines
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_numOutLines = Value
         End Set
     End Property
@@ -309,7 +309,7 @@ Public Class clsParams
         Get
             Return m_numDescLines
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_numDescLines = Value
         End Set
     End Property
@@ -317,7 +317,7 @@ Public Class clsParams
         Get
             Return m_showFragIons
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             m_showFragIons = Value
         End Set
     End Property
@@ -325,7 +325,7 @@ Public Class clsParams
         Get
             Return m_printDupRef
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             m_printDupRef = Value
         End Set
     End Property
@@ -333,7 +333,7 @@ Public Class clsParams
         Get
             Return m_enzymeDetails
         End Get
-        Set(ByVal Value As clsEnzymeDetails)
+        Set(Value As clsEnzymeDetails)
             If Me.m_enzymeDetails Is Nothing Then
                 m_enzymeDetails = New clsEnzymeDetails
             End If
@@ -344,7 +344,7 @@ Public Class clsParams
         Get
             Return m_enzymeNumber
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_enzymeNumber = Value
         End Set
     End Property
@@ -352,7 +352,7 @@ Public Class clsParams
         Get
             Return Me.m_enzymeCleavagePosition
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             Me.m_enzymeCleavagePosition = Value
         End Set
     End Property
@@ -360,7 +360,7 @@ Public Class clsParams
         Get
             Return m_readingFrame
         End Get
-        Set(ByVal Value As IAdvancedParams.FrameList)
+        Set(Value As IAdvancedParams.FrameList)
             m_readingFrame = Value
         End Set
     End Property
@@ -368,7 +368,7 @@ Public Class clsParams
         Get
             Return CInt(SelectedNucReadingFrame)
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_readingFrame = CType(Value, IAdvancedParams.FrameList)
         End Set
     End Property
@@ -376,7 +376,7 @@ Public Class clsParams
         Get
             Return m_parentMassType
         End Get
-        Set(ByVal Value As IBasicParams.MassTypeList)
+        Set(Value As IBasicParams.MassTypeList)
             m_parentMassType = Value
         End Set
     End Property
@@ -384,7 +384,7 @@ Public Class clsParams
         Get
             Return m_fragMassType
         End Get
-        Set(ByVal Value As IBasicParams.MassTypeList)
+        Set(Value As IBasicParams.MassTypeList)
             m_fragMassType = Value
         End Set
     End Property
@@ -392,7 +392,7 @@ Public Class clsParams
         Get
             Return m_removePrecursorPeak
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             m_removePrecursorPeak = Value
         End Set
     End Property
@@ -400,7 +400,7 @@ Public Class clsParams
         Get
             Return m_ionCutoffPer
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_ionCutoffPer = Value
         End Set
     End Property
@@ -408,7 +408,7 @@ Public Class clsParams
         Get
             Return m_maxICSites
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_maxICSites = Value
         End Set
     End Property
@@ -416,7 +416,7 @@ Public Class clsParams
         Get
             Return m_minProtMassFilter
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_minProtMassFilter = Value
         End Set
     End Property
@@ -424,7 +424,7 @@ Public Class clsParams
         Get
             Return m_maxProtMassFilter
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_maxProtMassFilter = Value
         End Set
     End Property
@@ -432,7 +432,7 @@ Public Class clsParams
         Get
             Return m_matchPeakCount
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_matchPeakCount = Value
         End Set
     End Property
@@ -440,7 +440,7 @@ Public Class clsParams
         Get
             Return m_matchPeakCountErrors
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_matchPeakCountErrors = Value
         End Set
     End Property
@@ -448,7 +448,7 @@ Public Class clsParams
         Get
             Return m_matchPeakTol
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_matchPeakTol = Value
         End Set
     End Property
@@ -456,7 +456,7 @@ Public Class clsParams
         Get
             Return m_upperCase
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             m_upperCase = Value
         End Set
     End Property
@@ -464,7 +464,7 @@ Public Class clsParams
         Get
             Return m_partialSeq
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_partialSeq = Value
         End Set
     End Property
@@ -472,7 +472,7 @@ Public Class clsParams
         Get
             Return m_seqHdrFilter
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_seqHdrFilter = Value
         End Set
     End Property
@@ -480,7 +480,7 @@ Public Class clsParams
         Get
             Return Me.m_peptideMassUnits
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             Me.m_peptideMassUnits = Value
         End Set
     End Property
@@ -488,7 +488,7 @@ Public Class clsParams
         Get
             Return m_fragMassUnits
         End Get
-        Set(ByVal value As Integer)
+        Set(value As Integer)
             m_fragMassUnits = value
         End Set
     End Property
@@ -496,7 +496,7 @@ Public Class clsParams
         Get
             Return m_staticModsList
         End Get
-        Set(ByVal Value As clsStaticMods)
+        Set(Value As clsStaticMods)
             If Me.m_staticModsList Is Nothing Then
                 m_staticModsList = New clsStaticMods
             End If
@@ -507,7 +507,7 @@ Public Class clsParams
         Get
             Return m_enzymeDetailStorage
         End Get
-        Set(ByVal Value As clsEnzymeCollection)
+        Set(Value As clsEnzymeCollection)
             m_enzymeDetailStorage = Value
         End Set
     End Property
@@ -518,7 +518,7 @@ Public Class clsParams
         End Get
     End Property
 
-    Public Sub AddLoadedParamName(ByVal ParameterName As String, ByVal ParameterValue As String)
+    Public Sub AddLoadedParamName(ParameterName As String, ParameterValue As String)
         If Me.m_loadedParamEntryNames Is Nothing Then
             Me.m_loadedParamEntryNames = New Hashtable
         End If
@@ -527,7 +527,7 @@ Public Class clsParams
         End If
     End Sub
 
-    Public Function RetrieveEnzymeDetails(ByVal EnzymeListIndex As Integer) As clsEnzymeDetails Implements IBasicParams.RetrieveEnzymeDetails
+    Public Function RetrieveEnzymeDetails(EnzymeListIndex As Integer) As clsEnzymeDetails Implements IBasicParams.RetrieveEnzymeDetails
         Return m_enzymeDetailStorage.Item(EnzymeListIndex)
     End Function
 #End Region
@@ -542,17 +542,17 @@ Public Class clsParams
         m_termDynMods = New clsTermDynamicMods("0.0 0.0")
     End Sub
 
-    Public Function ReturnMassFilter(ByVal MinimumMassToFilter As Single, ByVal MaximumMassToFilter As Single) As String
+    Public Function ReturnMassFilter(MinimumMassToFilter As Single, MaximumMassToFilter As Single) As String
         Return ReturnMassFilterString(MinimumMassToFilter, MaximumMassToFilter)
     End Function
 
 
-    Public Sub LoadTemplate(ByVal templateFileName As String)
+    Public Sub LoadTemplate(templateFileName As String)
         Dim loadingSuccessful As Boolean
         loadingSuccessful = LoadTemplateParams(templateFileName)
     End Sub
 
-    Private Function LoadTemplateParams(ByVal TemplateFileName As String) As Boolean
+    Private Function LoadTemplateParams(TemplateFileName As String) As Boolean
         Dim Success As Boolean
         Dim tmpProtMassFilterStringArray() As String
         Dim SectionName As String
@@ -717,7 +717,7 @@ Public Class clsParams
 
     End Function
 
-    Private Function InterpretMassFilterString(ByVal massFilterString As String) As String()
+    Private Function InterpretMassFilterString(massFilterString As String) As String()
         Dim s() As String = Nothing
         Dim counter As Integer = 0
         Dim placeCounter As Integer = 0
@@ -747,14 +747,14 @@ Public Class clsParams
     End Function
 
     Private Function ReturnMassFilterString( _
-        ByVal minMass As Single, _
-        ByVal maxMass As Single) As String
+        minMass As Single, _
+        maxMass As Single) As String
 
         Return Format(minMass.ToString, "0") & " " & Format(maxMass.ToString, "0")
 
     End Function
 
-    Private Function GetFilePath(ByVal templateFileName As String) As String
+    Private Function GetFilePath(templateFileName As String) As String
         Return templateFileName
     End Function
 
@@ -762,7 +762,7 @@ Public Class clsParams
 End Class
 
 Public Class clsIonSeries
-    public m_origIonSeriesString As String
+    Public m_origIonSeriesString As String
 
     Private m_initialized As Boolean
     Private m_use_a_Ions As Integer
@@ -778,7 +778,7 @@ Public Class clsIonSeries
     Private m_yWeight As Single
     Private m_zWeight As Single
 
-    Public Sub New(ByVal IonSeriesString As String)
+    Public Sub New(IonSeriesString As String)
         m_origIonSeriesString = IonSeriesString
         Call ParseISS(m_origIonSeriesString)
     End Sub
@@ -794,7 +794,7 @@ Public Class clsIonSeries
         End If
     End Sub
 
-    Private Sub ParseISS(ByVal ionString As String)
+    Private Sub ParseISS(ionString As String)
         Dim tmpSplit() As String
         tmpSplit = ionString.Split(System.Convert.ToChar(" "))
         m_use_a_Ions = CInt(tmpSplit(0))
@@ -817,7 +817,7 @@ Public Class clsIonSeries
         Get
             Return m_initialized
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             m_initialized = Value
         End Set
     End Property
@@ -825,7 +825,7 @@ Public Class clsIonSeries
         Get
             Return Math.Abs(m_use_a_Ions)
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_use_a_Ions = Math.Abs(Value)
         End Set
     End Property
@@ -833,7 +833,7 @@ Public Class clsIonSeries
         Get
             Return Math.Abs(m_use_b_Ions)
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_use_b_Ions = Math.Abs(Value)
         End Set
     End Property
@@ -841,7 +841,7 @@ Public Class clsIonSeries
         Get
             Return Math.Abs(m_use_y_Ions)
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_use_y_Ions = Math.Abs(Value)
         End Set
     End Property
@@ -849,7 +849,7 @@ Public Class clsIonSeries
         Get
             Return m_aWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_aWeight = Value
         End Set
     End Property
@@ -857,7 +857,7 @@ Public Class clsIonSeries
         Get
             Return m_bWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_bWeight = Value
         End Set
     End Property
@@ -865,7 +865,7 @@ Public Class clsIonSeries
         Get
             Return m_cWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_cWeight = Value
         End Set
     End Property
@@ -873,7 +873,7 @@ Public Class clsIonSeries
         Get
             Return m_dWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_dWeight = Value
         End Set
     End Property
@@ -881,7 +881,7 @@ Public Class clsIonSeries
         Get
             Return m_vWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_vWeight = Value
         End Set
     End Property
@@ -889,7 +889,7 @@ Public Class clsIonSeries
         Get
             Return m_wWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_wWeight = Value
         End Set
     End Property
@@ -897,7 +897,7 @@ Public Class clsIonSeries
         Get
             Return m_xWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_xWeight = Value
         End Set
     End Property
@@ -905,7 +905,7 @@ Public Class clsIonSeries
         Get
             Return m_yWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_yWeight = Value
         End Set
     End Property
@@ -913,7 +913,7 @@ Public Class clsIonSeries
         Get
             Return m_zWeight
         End Get
-        Set(ByVal Value As Single)
+        Set(Value As Single)
             m_zWeight = Value
         End Set
     End Property
@@ -952,7 +952,7 @@ Public Class clsEnzymeDetails
     Private m_CleavePoints As String    'Amino Acids at which to cleave
     Private m_NoCleavePoints As String  'Amino Acids to skip cleavage
 
-    Public Sub New(ByVal EnzymeString As String)
+    Public Sub New(EnzymeString As String)
         m_EnzymeString = EnzymeString
         Call ParseEnzymeString(m_EnzymeString)
     End Sub
@@ -961,7 +961,7 @@ Public Class clsEnzymeDetails
 
     End Sub
 
-    Private Sub ParseEnzymeString(ByVal enzStr As String)
+    Private Sub ParseEnzymeString(enzStr As String)
         Dim s() As String = Nothing
         Dim counter As Integer = 0
         Dim placeCounter As Integer = 0
@@ -996,7 +996,7 @@ Public Class clsEnzymeDetails
         Get
             Return m_Number
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_Number = Value
         End Set
     End Property
@@ -1004,7 +1004,7 @@ Public Class clsEnzymeDetails
         Get
             Return m_Name
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_Name = Value
         End Set
     End Property
@@ -1012,7 +1012,7 @@ Public Class clsEnzymeDetails
         Get
             Return m_Offset
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             m_Offset = Value
         End Set
     End Property
@@ -1020,7 +1020,7 @@ Public Class clsEnzymeDetails
         Get
             Return m_CleavePoints
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_CleavePoints = Value
         End Set
     End Property
@@ -1028,7 +1028,7 @@ Public Class clsEnzymeDetails
         Get
             Return m_NoCleavePoints
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             m_NoCleavePoints = Value
         End Set
     End Property
@@ -1046,7 +1046,7 @@ Public Class clsEnzymeDetails
 
     End Function
 
-    Public Function ReturnBW32EnzymeInfoString(ByVal cleavagePosition As Integer) As String
+    Public Function ReturnBW32EnzymeInfoString(cleavagePosition As Integer) As String
         Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
 
         sb.Append(EnzymeName)
@@ -1078,15 +1078,15 @@ Public Class clsEnzymeCollection
         MyBase.New()
     End Sub
 
-    Public Sub add(ByVal Enzyme As clsEnzymeDetails)
+    Public Sub add(Enzyme As clsEnzymeDetails)
         Me.List.Add(Enzyme)
     End Sub
 
-    Default Public Property Item(ByVal index As Integer) As clsEnzymeDetails
+    Default Public Property Item(index As Integer) As clsEnzymeDetails
         Get
             Return DirectCast(Me.List(index), clsEnzymeDetails)
         End Get
-        Set(ByVal Value As clsEnzymeDetails)
+        Set(Value As clsEnzymeDetails)
             Me.List(index) = Value
         End Set
     End Property
@@ -1103,14 +1103,14 @@ Public Class clsGetEnzymeBlock
         Get
             Return m_EnzymeCollection
         End Get
-        Set(ByVal Value As clsEnzymeCollection)
+        Set(Value As clsEnzymeCollection)
             m_EnzymeCollection = Value
         End Set
     End Property
 
     Public Sub New( _
-        ByVal TemplateFilePath As String, _
-        ByVal SectionName As String)
+        TemplateFilePath As String, _
+        SectionName As String)
 
         m_templateFilePath = TemplateFilePath
         m_sectionName = SectionName
@@ -1173,15 +1173,15 @@ Public Class clsGetEnzymeBlock
         sc.Add("15. Elastase               1      ALIV        P")
         sc.Add("16. Elastase/Tryp/Chymo    1      ALIVKRWFY   P")
         sc.Add("17. ArgC                   1      R-          P")
-		sc.Add("18. Do_not_cleave          1      B           -")
-		sc.Add("19. LysN                   0      K           -")
+        sc.Add("18. Do_not_cleave          1      B           -")
+        sc.Add("19. LysN                   0      K           -")
 
         Return sc
 
     End Function
 
     Private Function InterpretEnzymeBlockCollection( _
-    ByVal enzymeBlock As System.Collections.Specialized.StringCollection) As clsEnzymeCollection
+    enzymeBlock As System.Collections.Specialized.StringCollection) As clsEnzymeCollection
 
         Dim tempEnzyme As clsEnzymeDetails
         Dim tempStorage As clsEnzymeCollection = New clsEnzymeCollection

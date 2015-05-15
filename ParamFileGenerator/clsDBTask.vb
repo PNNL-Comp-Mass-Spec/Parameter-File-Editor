@@ -4,14 +4,14 @@ Imports System.Data.SqlClient
 Imports System.Data.OleDb
 
 Public Interface IGetSQLData
-    Function GetTable(ByVal SelectSQL As String) As DataTable
+    Function GetTable(SelectSQL As String) As DataTable
     Function GetTable( _
-        ByVal SelectSQL As String, _
+        SelectSQL As String, _
         ByRef SQLDataAdapter As SqlClient.SqlDataAdapter, _
         ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable
 
     Sub OpenConnection()
-    Sub OpenConnection(ByVal ConnectionString As String)
+    Sub OpenConnection(ConnectionString As String)
     Sub CloseConnection()
 
     Property ConnectionString() As String
@@ -34,17 +34,17 @@ Public Class clsDBTask
 #End Region
 
     ' constructor
-    Public Sub New(ByVal ConnectionString As String, Optional ByVal PersistConnection As Boolean = False)
+    Public Sub New(ConnectionString As String, Optional PersistConnection As Boolean = False)
         Me.m_connection_str = ConnectionString
         Me.SetupNew(PersistConnection)
 
     End Sub
 
-    Public Sub New(Optional ByVal PersistConnection As Boolean = False)
+    Public Sub New(Optional PersistConnection As Boolean = False)
         Me.SetupNew(PersistConnection)
     End Sub
 
-    Private Sub SetupNew(ByVal PersistConnection As Boolean)
+    Private Sub SetupNew(PersistConnection As Boolean)
         Me.m_PersistConnection = PersistConnection
         If Me.m_PersistConnection Then
             Me.OpenConnection(Me.m_connection_str)
@@ -64,7 +64,7 @@ Public Class clsDBTask
         OpenConnection(Me.m_connection_str)
     End Sub
 
-    Protected Sub OpenConnection(ByVal ConnectionString As String) Implements IGetSQLData.OpenConnection
+    Protected Sub OpenConnection(ConnectionString As String) Implements IGetSQLData.OpenConnection
         Dim retryCount As Integer = 3
         If m_DBCn Is Nothing Then
             m_DBCn = New SqlConnection(ConnectionString & "Connect Timeout=30")
@@ -111,7 +111,7 @@ Public Class clsDBTask
         Get
             Return Me.m_connection_str
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             Me.m_connection_str = Value
         End Set
     End Property
@@ -128,7 +128,7 @@ Public Class clsDBTask
     End Property
 
     Protected Function GetTable( _
-        ByVal SelectSQL As String, _
+        SelectSQL As String, _
         ByRef SQLDataAdapter As SqlClient.SqlDataAdapter, _
         ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable Implements IGetSQLData.GetTable
 
@@ -171,7 +171,7 @@ Public Class clsDBTask
 
     End Function
 
-    Protected Function GetTable(ByVal SelectSQL As String) As DataTable Implements IGetSQLData.GetTable
+    Protected Function GetTable(SelectSQL As String) As DataTable Implements IGetSQLData.GetTable
         Dim tmpDA As SqlClient.SqlDataAdapter = Nothing
         Dim tmpCB As SqlClient.SqlCommandBuilder = Nothing
 
@@ -180,11 +180,11 @@ Public Class clsDBTask
     End Function
 
     Protected Sub CreateRelationship( _
-        ByVal ds As DataSet, _
-        ByVal dt1 As DataTable, _
-        ByVal dt1_keyFieldName As String, _
-        ByVal dt2 As DataTable, _
-        ByVal dt2_keyFieldName As String)
+        ds As DataSet, _
+        dt1 As DataTable, _
+        dt1_keyFieldName As String, _
+        dt2 As DataTable, _
+        dt2_keyFieldName As String)
 
         Dim dc_dt1_keyField As DataColumn = dt1.Columns(dt1_keyFieldName)
         Dim dc_dt2_keyField As DataColumn = dt2.Columns(dt2_keyFieldName)
@@ -193,8 +193,8 @@ Public Class clsDBTask
     End Sub
 
     Protected Sub SetPrimaryKey( _
-        ByVal keyColumnIndex As Integer, _
-        ByVal dt As DataTable)
+        keyColumnIndex As Integer, _
+        dt As DataTable)
 
         Dim pKey(0) As DataColumn
         pKey(0) = dt.Columns(keyColumnIndex)

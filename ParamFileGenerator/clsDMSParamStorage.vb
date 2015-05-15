@@ -11,28 +11,28 @@ Public Class clsDMSParamStorage
     End Enum
 
     Public Sub Add( _
-        ByVal ParamSpecifier As String, _
-        ByVal ParamValue As String, _
-        ByVal ParamType As ParamTypes)
+        ParamSpecifier As String, _
+        ParamValue As String, _
+        ParamType As ParamTypes)
 
         Dim e As New ParamsEntry(ParamSpecifier, ParamValue, ParamType)
         Me.List.Add(DirectCast(e, ParamsEntry))
     End Sub
 
-    Public Sub Remove(ByVal index As Integer)
+    Public Sub Remove(index As Integer)
         Me.List.RemoveAt(index)
     End Sub
 
-    Default Public Property Item(ByVal index As Integer) As ParamsEntry
+    Default Public Property Item(index As Integer) As ParamsEntry
         Get
             Return DirectCast(Me.List(index), ParamsEntry)
         End Get
-        Set(ByVal Value As ParamsEntry)
+        Set(Value As ParamsEntry)
             Me.List(index) = Value
         End Set
     End Property
 
-    Default Public Property Item(ByVal ParamName As String, ByVal ParamType As ParamTypes) As ParamsEntry
+    Default Public Property Item(ParamName As String, ParamType As ParamTypes) As ParamsEntry
         Get
             Dim index As Integer = Me.IndexOf(ParamName, ParamType)
             If index >= 0 Then
@@ -41,13 +41,13 @@ Public Class clsDMSParamStorage
                 Return Nothing
             End If
         End Get
-        Set(ByVal Value As ParamsEntry)
+        Set(Value As ParamsEntry)
 
         End Set
     End Property
 
 
-    Public Function IndexOf(ByVal paramName As String, ByVal paramType As ParamTypes) As Integer
+    Public Function IndexOf(paramName As String, paramType As ParamTypes) As Integer
         Dim e As ParamsEntry
         Dim counter As Integer
         For Each e In Me.List
@@ -66,7 +66,7 @@ Public Class clsDMSParamStorage
         Protected m_Value As String
         Protected m_Type As ParamTypes
 
-        Public Sub New(ByVal ParamSpecifier As String, ByVal ParamValue As String, ByVal ParamType As ParamTypes)
+        Public Sub New(ParamSpecifier As String, ParamValue As String, ParamType As ParamTypes)
             Me.m_Spec = ParamSpecifier
             Me.m_Value = ParamValue
             Me.m_Type = ParamType

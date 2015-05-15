@@ -9,7 +9,7 @@ Public Class clsGetResiduesList
         End Get
     End Property
 
-    Public Sub New(ByVal connectionString As String)
+    Public Sub New(connectionString As String)
         MyBase.New(connectionString)
         Dim SQL As String
         Dim residuesTableName As String = "T_Residues"

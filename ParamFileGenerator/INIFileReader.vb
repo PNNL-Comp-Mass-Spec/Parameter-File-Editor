@@ -35,15 +35,15 @@ Public Class IniFileReader
     Private m_SaveFilename As String
     Private m_initialized As Boolean = False
 
-    Public Sub New(ByVal IniFilename As String)
+    Public Sub New(IniFilename As String)
         InitIniFileReader(Inifilename, False)
     End Sub
 
-    Public Sub New(ByVal IniFileName As String, ByVal IsCaseSensitive As Boolean)
+    Public Sub New(IniFileName As String, IsCaseSensitive As Boolean)
         InitIniFileReader(IniFileName, IsCaseSensitive)
     End Sub
 
-    Private Sub InitIniFileReader(ByVal IniFileName As String, ByVal IsCaseSensitive As Boolean)
+    Private Sub InitIniFileReader(IniFileName As String, IsCaseSensitive As Boolean)
         Dim fi As FileInfo
         Dim s As String
         Dim tr As TextReader = Nothing
@@ -112,7 +112,7 @@ Public Class IniFileReader
         End Get
     End Property
 
-    Private Function SetNameCase(ByVal aName As String) As String
+    Private Function SetNameCase(aName As String) As String
         If (CaseSensitive) Then
             Return aName
         Else
@@ -132,7 +132,7 @@ Public Class IniFileReader
         End If
     End Function
 
-    Private Function GetSection(ByVal sectionName As String) As XmlElement
+    Private Function GetSection(sectionName As String) As XmlElement
         If (Not (sectionName = Nothing)) AndAlso (sectionName <> "") Then
             sectionName = SetNameCase(sectionName)
             Return CType(m_XmlDoc.SelectSingleNode("//section[@name='" & sectionName & "']"), XmlElement)
@@ -140,7 +140,7 @@ Public Class IniFileReader
         Return Nothing
     End Function
 
-    Private Function GetItem(ByVal sectionName As String, ByVal keyName As String) As XmlElement
+    Private Function GetItem(sectionName As String, keyName As String) As XmlElement
         Dim section As XmlElement
         If (Not keyName Is Nothing) AndAlso (keyName <> "") Then
             keyName = SetNameCase(keyName)
@@ -152,7 +152,7 @@ Public Class IniFileReader
         Return Nothing
     End Function
 
-    Public Function SetIniSection(ByVal oldSection As String, ByVal newSection As String) As Boolean
+    Public Function SetIniSection(oldSection As String, newSection As String) As Boolean
         Dim section As XmlElement
         If Not Initialized Then
             Throw New IniFileReaderNotInitializedException
@@ -168,7 +168,7 @@ Public Class IniFileReader
         Return False
     End Function
 
-    Public Function SetIniValue(ByVal sectionName As String, ByVal keyName As String, ByVal newValue As String) As Boolean
+    Public Function SetIniValue(sectionName As String, keyName As String, newValue As String) As Boolean
         Dim item As XmlElement
         Dim section As XmlElement
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
@@ -214,7 +214,7 @@ Public Class IniFileReader
         Return False
     End Function
 
-    Private Function DeleteSection(ByVal sectionName As String) As Boolean
+    Private Function DeleteSection(sectionName As String) As Boolean
         Dim section As XmlElement = GetSection(sectionName)
         If Not section Is Nothing Then
             section.ParentNode.RemoveChild(section)
@@ -224,7 +224,7 @@ Public Class IniFileReader
         Return False
     End Function
 
-    Private Function DeleteItem(ByVal sectionName As String, ByVal keyName As String) As Boolean
+    Private Function DeleteItem(sectionName As String, keyName As String) As Boolean
         Dim item As XmlElement = GetItem(sectionName, keyName)
         If Not item Is Nothing Then
             item.ParentNode.RemoveChild(item)
@@ -233,7 +233,7 @@ Public Class IniFileReader
         Return False
     End Function
 
-    Public Function SetIniKey(ByVal sectionName As String, ByVal keyName As String, ByVal newValue As String) As Boolean
+    Public Function SetIniKey(sectionName As String, keyName As String, newValue As String) As Boolean
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Dim item As XmlElement = GetItem(sectionName, keyName)
         If Not item Is Nothing Then
@@ -243,7 +243,7 @@ Public Class IniFileReader
         Return False
     End Function
 
-    Public Function GetIniValue(ByVal sectionName As String, ByVal keyName As String) As String
+    Public Function GetIniValue(sectionName As String, keyName As String) As String
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Dim N As XmlNode = GetItem(sectionName, keyName)
         If Not N Is Nothing Then
@@ -252,7 +252,7 @@ Public Class IniFileReader
         Return Nothing
     End Function
 
-    Public Function GetIniComments(ByVal sectionName As String) As StringCollection
+    Public Function GetIniComments(sectionName As String) As StringCollection
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Dim sc As StringCollection = New StringCollection
         Dim target As XmlNode
@@ -274,7 +274,7 @@ Public Class IniFileReader
         Return sc
     End Function
 
-    Public Function SetIniComments(ByVal sectionName As String, ByVal comments As StringCollection) As Boolean
+    Public Function SetIniComments(sectionName As String, comments As StringCollection) As Boolean
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Dim target As XmlNode
         Dim nodes As XmlNodeList
@@ -323,7 +323,7 @@ Public Class IniFileReader
         End Get
     End Property
 
-    Private Function GetItemsInSection(ByVal sectionName As String, ByVal itemType As IniItemTypeEnum) As StringCollection
+    Private Function GetItemsInSection(sectionName As String, itemType As IniItemTypeEnum) As StringCollection
         Dim nodes As XmlNodeList
         Dim items As StringCollection = New StringCollection
         Dim section As XmlNode = GetSection(sectionName)
@@ -349,22 +349,22 @@ Public Class IniFileReader
         End If
     End Function
 
-    Public Function AllKeysInSection(ByVal sectionName As String) As StringCollection
+    Public Function AllKeysInSection(sectionName As String) As StringCollection
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Return GetItemsInSection(sectionName, IniItemTypeEnum.GetKeys)
     End Function
 
-    Public Function AllValuesInSection(ByVal sectionName As String) As StringCollection
+    Public Function AllValuesInSection(sectionName As String) As StringCollection
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Return GetItemsInSection(sectionName, IniItemTypeEnum.GetValues)
     End Function
 
-    Public Function AllItemsInSection(ByVal sectionName As String) As StringCollection
+    Public Function AllItemsInSection(sectionName As String) As StringCollection
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Return (GetItemsInSection(sectionName, IniItemTypeEnum.GetKeysAndValues))
     End Function
 
-    Public Function GetCustomIniAttribute(ByVal sectionName As String, ByVal keyName As String, ByVal attributeName As String) As String
+    Public Function GetCustomIniAttribute(sectionName As String, keyName As String, attributeName As String) As String
         Dim N As XmlElement
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         If (Not attributeName Is Nothing) AndAlso (attributeName <> "") Then
@@ -377,7 +377,7 @@ Public Class IniFileReader
         Return Nothing
     End Function
 
-    Public Function SetCustomIniAttribute(ByVal sectionName As String, ByVal keyName As String, ByVal attributeName As String, ByVal attributeValue As String) As Boolean
+    Public Function SetCustomIniAttribute(sectionName As String, keyName As String, attributeName As String, attributeValue As String) As Boolean
         Dim N As XmlElement
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         If attributeName <> "" Then
@@ -402,7 +402,7 @@ Public Class IniFileReader
         End If
     End Function
 
-    Private Function CreateSection(ByVal sectionName As String) As Boolean
+    Private Function CreateSection(sectionName As String) As Boolean
         Dim N As XmlElement
         Dim Natt As XmlAttribute
         If (Not sectionName Is Nothing) AndAlso (sectionName <> "") Then
@@ -423,7 +423,7 @@ Public Class IniFileReader
         Return False
     End Function
 
-    Private Function CreateItem(ByVal sectionName As String, ByVal keyName As String, ByVal newValue As String) As Boolean
+    Private Function CreateItem(sectionName As String, keyName As String, newValue As String) As Boolean
         Dim item As XmlElement
         Dim section As XmlElement
         Try
@@ -442,7 +442,7 @@ Public Class IniFileReader
         End Try
     End Function
 
-    Private Sub ParseLineXml(ByVal s As String, ByVal doc As XmlDocument)
+    Private Sub ParseLineXml(s As String, doc As XmlDocument)
         Dim key As String
         Dim value As String
         Dim N As XmlElement
@@ -493,7 +493,7 @@ Public Class IniFileReader
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             Return m_SaveFilename
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             Dim fi As FileInfo
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             fi = New FileInfo(Value)

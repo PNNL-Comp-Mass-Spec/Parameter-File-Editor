@@ -4,9 +4,9 @@ Imports System.Collections.Specialized
 Public Class clsWriteOutput
 
     Public Function WriteOutputFile( _
-        ByVal Params As clsParams, _
-        ByVal OutputPathName As String, _
-        ByVal FileType As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType) As Boolean
+        Params As clsParams, _
+        OutputPathName As String, _
+        FileType As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType) As Boolean
 
         Dim paramCollection As StringCollection = DumpToSQStringCollection(Params, FileType)
         Call OutputTextParamFile(paramCollection, OutputPathName)
@@ -15,8 +15,8 @@ Public Class clsWriteOutput
     End Function
 
     Public Function WriteDatatableToOutputFile( _
-        ByVal TableToWrite As DataTable, _
-        ByVal OutputPathName As String) As Boolean
+        TableToWrite As DataTable, _
+        OutputPathName As String) As Boolean
 
         Me.DumpDataTableToOutputFile(TableToWrite, OutputPathName)
         Return True
@@ -24,8 +24,8 @@ Public Class clsWriteOutput
     End Function
 
     Private Sub DumpDataTableToOutputFile( _
-        ByVal dt As DataTable, _
-        ByVal outputPath As String)
+        dt As DataTable, _
+        outputPath As String)
 
         Dim dr As DataRow
         Dim rowElement As Object
@@ -53,8 +53,8 @@ Public Class clsWriteOutput
     End Sub
 
     Private Function DumpToSQStringCollection( _
-        ByVal p As clsParams, _
-        ByVal type As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType) As StringCollection
+        p As clsParams, _
+        type As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType) As StringCollection
 
         Dim enz As New clsEnzymeDetails
         Dim sc As New StringCollection
@@ -107,13 +107,13 @@ Public Class clsWriteOutput
             .Add("print_duplicate_references = " & ConvertBoolToInteger(p.PrintDuplicateReferences).ToString)
             If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("enzyme_number = " & p.SelectedEnzymeIndex.ToString)
-			Else
-				If p.SelectedEnzymeIndex >= p.EnzymeList.Count Then
-					Throw New IndexOutOfRangeException("Enzyme ID " & p.SelectedEnzymeIndex & " is not recognized; template file is out of date")
-				End If
-				enz = p.EnzymeList(p.SelectedEnzymeIndex)
-				.Add("enzyme_info = " + enz.ReturnBW32EnzymeInfoString(p.SelectedEnzymeCleavagePosition))
-			End If
+            Else
+                If p.SelectedEnzymeIndex >= p.EnzymeList.Count Then
+                    Throw New IndexOutOfRangeException("Enzyme ID " & p.SelectedEnzymeIndex & " is not recognized; template file is out of date")
+                End If
+                enz = p.EnzymeList(p.SelectedEnzymeIndex)
+                .Add("enzyme_info = " + enz.ReturnBW32EnzymeInfoString(p.SelectedEnzymeCleavagePosition))
+            End If
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("max_num_differential_per_peptide = " + p.MaximumNumDifferentialPerPeptide.ToString)
             End If
@@ -195,16 +195,16 @@ Public Class clsWriteOutput
     End Function
 
     Private Function WriteModificationDefinitionsFile( _
-        ByVal Params As clsParams, _
-        ByVal OutputPathName As String) As Boolean
+        Params As clsParams, _
+        OutputPathName As String) As Boolean
 
 
 
     End Function
 
     Private Sub OutputTextParamFile( _
-        ByVal sc As System.Collections.Specialized.StringCollection, _
-        ByVal outputPath As String)
+        sc As System.Collections.Specialized.StringCollection, _
+        outputPath As String)
 
         Dim sw As New StreamWriter(outputPath)
         Dim s As String
@@ -217,7 +217,7 @@ Public Class clsWriteOutput
 
     End Sub
 
-    Private Function ConvertBoolToInteger(ByVal bln As Boolean) As Integer
+    Private Function ConvertBoolToInteger(bln As Boolean) As Integer
         If bln = True Then
             Return 1
         Else

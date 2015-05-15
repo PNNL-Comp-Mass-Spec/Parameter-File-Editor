@@ -48,7 +48,7 @@ Public Class clsMainProcess
 
     End Sub
 
-    Public Sub New(ByVal templateFilePath As String)
+    Public Sub New(templateFilePath As String)
         m_TemplateFileName = templateFilePath
         clsMainProcess.m_BaseLineParams = New clsParams
         m_TemplateFilePath = System.IO.Path.GetDirectoryName(templateFilePath)
