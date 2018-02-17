@@ -1,12 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileGenerator", "ParamFileGenerator\ParamFileGenerator.vbproj", "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileEditor", "ParamFileEditor\ParamFileEditor.vbproj", "{DF84F4CE-B4B1-43B7-B169-84078341607F}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ParamFileEditorInstaller", "ParamFileEditorInstaller\ParamFileEditorInstaller.vdproj", "{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamGenTest", "ParamGenTest\ParamGenTest.vbproj", "{C99B2126-0B2B-4C48-A063-A5784C7C3774}"
 EndProject
@@ -34,12 +32,6 @@ Global
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|x86.ActiveCfg = Release|x86
 		{DF84F4CE-B4B1-43B7-B169-84078341607F}.Release|x86.Build.0 = Release|x86
-		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Debug|Any CPU.ActiveCfg = Debug
-		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Debug|x86.ActiveCfg = Debug
-		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|Any CPU.ActiveCfg = Release
-		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|Any CPU.Build.0 = Release
-		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|x86.ActiveCfg = Release
-		{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}.Release|x86.Build.0 = Release
 		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C99B2126-0B2B-4C48-A063-A5784C7C3774}.Debug|x86.ActiveCfg = Debug|x86
@@ -50,6 +42,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E8C272E2-C01F-4CA6-AFB7-F8F60E30307D}
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
