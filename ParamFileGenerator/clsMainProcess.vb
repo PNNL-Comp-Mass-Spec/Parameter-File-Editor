@@ -1,3 +1,6 @@
+Imports System.IO
+Imports System.Reflection
+
 Public Class clsMainProcess
 
 #Region " Member Properties "
@@ -12,7 +15,7 @@ Public Class clsMainProcess
     Shared m_BaseLineParams As clsParams
     'Const DEF_TEMPLATE_LABEL_TEXT As String = "Currently Loaded Template: "
     Const DEF_TEMPLATE_FILENAME As String = "sequest_N14_NE.params"
-    Shared DEF_TEMPLATE_FILEPATH As String = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly.Location)
+    Shared ReadOnly DEF_TEMPLATE_FILEPATH As String = Path.GetDirectoryName(Assembly.GetEntryAssembly.Location)
 
 
 #End Region
@@ -28,7 +31,7 @@ Public Class clsMainProcess
 
     Public Shared ReadOnly Property TemplateFileName() As String
         Get
-            Return System.IO.Path.Combine(m_TemplateFilePath, System.IO.Path.GetFileName(m_TemplateFileName))
+            Return Path.Combine(m_TemplateFilePath, Path.GetFileName(m_TemplateFileName))
         End Get
     End Property
 
@@ -36,13 +39,13 @@ Public Class clsMainProcess
 
     Public Sub New()
 
-        m_TemplateFileName = System.IO.Path.Combine(DEF_TEMPLATE_FILEPATH, clsMainProcess.DEF_TEMPLATE_FILENAME)
-        clsMainProcess.m_BaseLineParams = New clsParams
+        m_TemplateFileName = Path.Combine(DEF_TEMPLATE_FILEPATH, DEF_TEMPLATE_FILENAME)
+        m_BaseLineParams = New clsParams
         m_TemplateFilePath = DEF_TEMPLATE_FILEPATH
 
 
-        With clsMainProcess.m_BaseLineParams
-            .FileName = clsMainProcess.DEF_TEMPLATE_FILENAME
+        With m_BaseLineParams
+            .FileName = DEF_TEMPLATE_FILENAME
             .LoadTemplate(m_TemplateFileName)
         End With
 
@@ -50,11 +53,11 @@ Public Class clsMainProcess
 
     Public Sub New(templateFilePath As String)
         m_TemplateFileName = templateFilePath
-        clsMainProcess.m_BaseLineParams = New clsParams
-        m_TemplateFilePath = System.IO.Path.GetDirectoryName(templateFilePath)
+        m_BaseLineParams = New clsParams
+        m_TemplateFilePath = Path.GetDirectoryName(templateFilePath)
 
-        With clsMainProcess.m_BaseLineParams
-            .FileName = System.IO.Path.GetFileName(templateFilePath)
+        With m_BaseLineParams
+            .FileName = Path.GetFileName(templateFilePath)
             .LoadTemplate(templateFilePath)
 
         End With

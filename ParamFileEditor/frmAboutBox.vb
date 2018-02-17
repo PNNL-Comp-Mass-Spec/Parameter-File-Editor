@@ -18,7 +18,7 @@ Public Class frmAboutBox
     End Sub
 
     'Form overrides dispose to clean up the component list.
-    Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+    Protected Overloads Overrides Sub Dispose(disposing As Boolean)
         If disposing Then
             If Not (components Is Nothing) Then
                 components.Dispose()
@@ -139,9 +139,9 @@ Public Class frmAboutBox
 
 #End Region
 
-    Private Sub frmAboutBox_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Me.Left = Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width
-        Me.Top = Screen.PrimaryScreen.WorkingArea.Height / 2 - Me.Height
+    Private Sub frmAboutBox_Load(sender As Object, e As System.EventArgs) Handles MyBase.Load
+        Me.Left = CInt(Screen.PrimaryScreen.WorkingArea.Width / 2 - Me.Width)
+        Me.Top = CInt(Screen.PrimaryScreen.WorkingArea.Height / 2 - Me.Height)
         Dim compileVersion As String = Application.ProductVersion.ToString
         Dim fi As New System.IO.FileInfo(Application.ExecutablePath)
         Dim compileDate As String = Format(fi.LastWriteTime, "Medium Date")
@@ -155,7 +155,7 @@ Public Class frmAboutBox
         Get
             Return Me.m_ConnectionString
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             Me.m_ConnectionString = Value
         End Set
     End Property

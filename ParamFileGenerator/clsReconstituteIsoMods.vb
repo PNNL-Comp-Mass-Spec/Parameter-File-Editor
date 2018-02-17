@@ -1,6 +1,6 @@
 Public Interface IReconstituteIsoMods
 
-    Function ReconstitueIsoMods(ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams
+    Function ReconstitueIsoMods(ParamsClass As clsParams) As clsParams
 
 End Interface
 
@@ -15,24 +15,23 @@ Public Class clsReconstitueIsoMods
     End Enum
 
 
-    Private m_ResTable As DataTable
-    Private m_ConnectionString As String
+    Private ReadOnly m_ResTable As DataTable
 
     Public Sub New(connectionString As String)
-        Dim getResTable As New ParamFileGenerator.clsGetResiduesList(connectionString)
-        Me.m_ResTable = getResTable.ResiduesTable
-        Me.m_ConnectionString = connectionString
+        Dim getResTable As New clsGetResiduesList(connectionString)
+        m_ResTable = getResTable.ResiduesTable
+        ' Unused: m_ConnectionString = connectionString
 
     End Sub
 
-    Friend Function ReconIsoMods(ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams Implements IReconstituteIsoMods.ReconstitueIsoMods
-        Return Me.StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods)
+    Friend Function ReconIsoMods(ParamsClass As clsParams) As clsParams Implements IReconstituteIsoMods.ReconstitueIsoMods
+        Return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods)
     End Function
     Protected Function getMultiplier(AA As String, Atom As AvailableAtoms) As Integer
 
-        Dim m_Atomrows() As DataRow = Me.m_ResTable.Select("[Residue_Symbol] = '" & AA & "'")
+        Dim m_Atomrows() As DataRow = m_ResTable.Select("[Residue_Symbol] = '" & AA & "'")
         Dim m_AtomRow As DataRow = m_Atomrows(0)
-        Dim m_AtomCount As Integer = CInt(m_AtomRow.Item(getAtomCountColumn(Atom)))
+        Dim m_AtomCount = CInt(m_AtomRow.Item(getAtomCountColumn(Atom)))
 
         Return m_AtomCount
 
@@ -56,17 +55,17 @@ Public Class clsReconstitueIsoMods
         End Select
 
     End Function
-    Protected Function StreamlineIsoModsToStatics( _
-        ParamsClass As ParamFileGenerator.clsParams, _
-        IsoMods As ParamFileGenerator.clsIsoMods) As ParamFileGenerator.clsParams
+    Protected Function StreamlineIsoModsToStatics(
+        ParamsClass As clsParams,
+        IsoMods As clsIsoMods) As clsParams
 
-        Dim im As ParamFileGenerator.clsModEntry
+        Dim im As clsModEntry
 
         Dim tmpAtom As String
         Dim tmpIsoMass As Double
         Dim tmpAtomCount As Integer
 
-        Dim AAEnums() As String = System.Enum.GetNames(GetType(ParamFileGenerator.clsStaticMods.ResidueCode))
+        Dim AAEnums() As String = [Enum].GetNames(GetType(clsMods.ResidueCode))
         Dim tmpAA As String
         Dim tmpAASLC As String
 
@@ -78,9 +77,9 @@ Public Class clsReconstitueIsoMods
             For Each tmpAA In AAEnums
                 If InStr(tmpAA, "Term") = 0 Then
                     tmpAASLC = Left(tmpAA, 1)
-                    tmpAtomCount = CInt(getMultiplier(tmpAASLC, DirectCast(System.Enum.Parse(GetType(AvailableAtoms), tmpAtom), AvailableAtoms)))
-                    ParamsClass.StaticModificationsList.ChangeAAModification( _
-                        DirectCast(System.Enum.Parse(GetType(ParamFileGenerator.clsStaticMods.ResidueCode), tmpAA), ParamFileGenerator.clsStaticMods.ResidueCode), _
+                    tmpAtomCount = CInt(getMultiplier(tmpAASLC, DirectCast([Enum].Parse(GetType(AvailableAtoms), tmpAtom), AvailableAtoms)))
+                    ParamsClass.StaticModificationsList.ChangeAAModification(
+                        DirectCast([Enum].Parse(GetType(clsMods.ResidueCode), tmpAA), clsMods.ResidueCode),
                         tmpIsoMass * tmpAtomCount, True)
                 End If
             Next

@@ -1,4 +1,4 @@
-Imports ParamFileEditor.ProgramSettings
+Imports System.Collections.Specialized
 Imports ParamFileGenerator
 Imports System.IO
 
@@ -23,9 +23,9 @@ Namespace ProgramSettings
         Private m_MTModParamFileTable As String
         Private m_MTGlobalModListTable As String
         Private m_templateFileName As String
-        Private m_tmpCommonMods As System.Collections.Specialized.StringCollection
+        Private m_tmpCommonMods As StringCollection
         Private m_commonModsColl As clsCommonModsCollection
-        Private m_fieldMappingsTable As DataTable
+        ' Unused: Private m_fieldMappingsTable As DataTable
         Private m_aaMappingsTable As DataTable
         Private m_iniFilePath As String
 
@@ -38,7 +38,7 @@ Namespace ProgramSettings
 
 #Region " Public Properties and Functions "
 
-        Public Sub LoadSettings(ByVal iniFileName As String)
+        Public Sub LoadSettings(iniFileName As String)
             Dim loadingSuccessful As Boolean
             m_iniFilePath = GetFilePath(iniFileName)
             loadingSuccessful = LoadProgramSettings(m_iniFilePath)
@@ -47,68 +47,71 @@ Namespace ProgramSettings
 
         Public Property DMS_ConnectionString() As String Implements IProgramSettings.DMS_ConnectionString
             Get
-                Return Me.m_DMSconnectionString
+                Return m_DMSconnectionString
             End Get
-            Set(ByVal Value As String)
-                Me.m_DMSconnectionString = Value
+            Set
+                m_DMSconnectionString = Value
             End Set
         End Property
         Public Property DMS_ParamFileTableName() As String Implements IProgramSettings.DMS_ParamFileTableName
             Get
-                Return Me.m_DMSParamFileTableName
+                Return m_DMSParamFileTableName
             End Get
-            Set(ByVal Value As String)
-                Me.m_DMSParamFileTableName = Value
+            Set
+                m_DMSParamFileTableName = Value
             End Set
         End Property
         Public Property MT_ConnectionString() As String Implements IProgramSettings.MT_ConnectionString
             Get
-                Return Me.m_MTConnectionString
+                Return m_MTConnectionString
             End Get
-            Set(ByVal Value As String)
-                Me.m_MTConnectionString = Value
+            Set
+                m_MTConnectionString = Value
             End Set
         End Property
         Public Property MT_ModParamFileTable() As String Implements IProgramSettings.MT_ModParamFileTable
             Get
-                Return Me.m_MTModParamFileTable
+                Return m_MTModParamFileTable
             End Get
-            Set(ByVal Value As String)
-                Me.m_MTModParamFileTable = Value
+            Set
+                m_MTModParamFileTable = Value
             End Set
         End Property
         Public Property MT_GlobalModListTable() As String Implements IProgramSettings.MT_GlobalModListTable
             Get
-                Return Me.m_MTGlobalModListTable
+                Return m_MTGlobalModListTable
             End Get
-            Set(ByVal Value As String)
-                Me.m_MTGlobalModListTable = Value
+            Set
+                m_MTGlobalModListTable = Value
             End Set
         End Property
         Public Property TemplateFileName() As String Implements IProgramSettings.TemplateFileName
             Get
-                Return Me.m_templateFileName
+                Return m_templateFileName
             End Get
-            Set(ByVal Value As String)
-                Me.m_templateFileName = Value
+            Set
+                m_templateFileName = Value
             End Set
         End Property
         Public Property CommonModsCollection() As clsCommonModsCollection Implements IProgramSettings.CommonModsCollection
             Get
-                Return Me.m_commonModsColl
+                Return m_commonModsColl
             End Get
-            Set(ByVal Value As clsCommonModsCollection)
-                Me.m_commonModsColl = Value
+            Set
+                m_commonModsColl = Value
             End Set
         End Property
+
+        <Obsolete("Unused")>
         Public ReadOnly Property FieldMappingsTable() As DataTable Implements IProgramSettings.FieldMappingsTable
             Get
-                Return Me.m_fieldMappingsTable
+                'Return m_fieldMappingsTable
+                Return New DataTable
             End Get
         End Property
         Public ReadOnly Property AAMappingsTable() As DataTable Implements IProgramSettings.AAMappingsTable
             Get
-                Return Me.m_aaMappingsTable
+                Return m_aaMappingsTable
             End Get
         End Property
 
@@ -116,47 +119,47 @@ Namespace ProgramSettings
 
 #Region " Member Functions "
 
-        Private Function LoadProgramSettings(ByVal IniFilePath As String) As Boolean
+        Private Function LoadProgramSettings(IniFilePath As String) As Boolean
             Dim programSettings As New clsRetrieveParams(IniFilePath, True)
+
             'Get connection string settings
-            Dim fi As New FileInfo(IniFilePath)
 
             Try
-                Me.m_DMSconnectionString = programSettings.GetParam("dms_database", "connectionstring")
+                m_DMSconnectionString = programSettings.GetParam("dms_database", "connectionstring")
             Catch ex As Exception
-                programSettings.SetParam("dms_database", "connectionstring", clsSettings.DEF_DMS_CONNSTR)
-                Me.m_DMSconnectionString = clsSettings.DEF_DMS_CONNSTR
+                programSettings.SetParam("dms_database", "connectionstring", DEF_DMS_CONNSTR)
+                m_DMSconnectionString = DEF_DMS_CONNSTR
                 programSettings.SaveSettings()
             End Try
 
             Try
-                Me.m_DMSParamFileTableName = programSettings.GetParam("dms_database", "paramstablename")
+                m_DMSParamFileTableName = programSettings.GetParam("dms_database", "paramstablename")
             Catch ex As Exception
-                programSettings.SetParam("dms_database", "paramstablename", clsSettings.DEF_DMS_PARAM_TABLE_NAME)
-                Me.m_DMSParamFileTableName = clsSettings.DEF_DMS_PARAM_TABLE_NAME
+                programSettings.SetParam("dms_database", "paramstablename", DEF_DMS_PARAM_TABLE_NAME)
+                m_DMSParamFileTableName = DEF_DMS_PARAM_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
 
             Try
-                Me.m_MTConnectionString = programSettings.GetParam("mt_database", "connectionstring")
+                m_MTConnectionString = programSettings.GetParam("mt_database", "connectionstring")
             Catch ex As Exception
-                programSettings.SetParam("mt_database", "connectionstring", clsSettings.DEF_MT_CONNSTR)
-                Me.m_MTConnectionString = clsSettings.DEF_MT_CONNSTR
+                programSettings.SetParam("mt_database", "connectionstring", DEF_MT_CONNSTR)
+                m_MTConnectionString = DEF_MT_CONNSTR
                 programSettings.SaveSettings()
             End Try
 
             Try
-                Me.m_MTModParamFileTable = programSettings.GetParam("mt_database", "modsparamfiletable")
+                m_MTModParamFileTable = programSettings.GetParam("mt_database", "modsparamfiletable")
             Catch ex As Exception
-                programSettings.SetParam("mt_database", "modsparamfiletable", clsSettings.DEF_MT_MOD_PARAM_TABLE_NAME)
-                Me.m_MTModParamFileTable = clsSettings.DEF_MT_MOD_PARAM_TABLE_NAME
+                programSettings.SetParam("mt_database", "modsparamfiletable", DEF_MT_MOD_PARAM_TABLE_NAME)
+                m_MTModParamFileTable = DEF_MT_MOD_PARAM_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
             Try
-                Me.m_MTGlobalModListTable = programSettings.GetParam("mt_database", "globalmodstable")
+                m_MTGlobalModListTable = programSettings.GetParam("mt_database", "globalmodstable")
             Catch ex As Exception
-                programSettings.SetParam("mt_database", "globalmodstable", clsSettings.DEF_MT_GLOBAL_MOD_TABLE_NAME)
-                Me.m_MTGlobalModListTable = clsSettings.DEF_MT_GLOBAL_MOD_TABLE_NAME
+                programSettings.SetParam("mt_database", "globalmodstable", DEF_MT_GLOBAL_MOD_TABLE_NAME)
+                m_MTGlobalModListTable = DEF_MT_GLOBAL_MOD_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
 
@@ -203,23 +206,23 @@ Namespace ProgramSettings
                 Next
             End If
 
-            Me.m_aaMappingsTable = Me.LoadAAMappingsTable(programSettings)
+            m_aaMappingsTable = LoadAAMappingsTable(programSettings)
 
         End Function
-        Private Function GetFilePath(ByVal fileName As String) As String
+        Private Function GetFilePath(fileName As String) As String
             Dim fi As New FileInfo(Application.ExecutablePath)
             Return Path.Combine(fi.DirectoryName, fileName)
         End Function
 
 
-        Private Function LoadAAMappingsTable(ByVal pr As clsRetrieveParams) As DataTable
+        Private Function LoadAAMappingsTable(pr As clsRetrieveParams) As DataTable
             Dim t As DataTable
             Dim dr As DataRow
-            Dim sn As String = "aminoacidmappings"
-            Dim counter As Integer = 1000
+            Dim sn = "aminoacidmappings"
+            Dim counter = 1000
 
-            t = Me.SetupAAMappingsTable
-            Dim sc As System.Collections.Specialized.StringCollection = pr.GetAllKeysInSection(sn)
+            t = SetupAAMappingsTable()
+            Dim sc As StringCollection = pr.GetAllKeysInSection(sn)
             Dim s As String
             Dim tmpSLC As String
             Dim tmpTLC As String
@@ -243,14 +246,16 @@ Namespace ProgramSettings
             Return t
 
         End Function
-        Private Function SetupFieldMappingTable(ByVal tableName As String) As DataTable
+
+        <Obsolete("Unused")>
+        Private Function SetupFieldMappingTable(tableName As String) As DataTable
             Dim t As New DataTable(tableName)
 
             With t.Columns
-                .Add("Internal_Name", System.Type.GetType("System.String"))
-                .Add("SQ_Name", System.Type.GetType("System.String"))
-                .Add("DMS_Name", System.Type.GetType("System.String"))
-                .Add("Value_Type", System.Type.GetType("System.String"))
+                .Add("Internal_Name", Type.GetType("System.String"))
+                .Add("SQ_Name", Type.GetType("System.String"))
+                .Add("DMS_Name", Type.GetType("System.String"))
+                .Add("Value_Type", Type.GetType("System.String"))
             End With
 
             Return t
@@ -259,11 +264,11 @@ Namespace ProgramSettings
         Private Function SetupAAMappingsTable() As DataTable
             Dim t As New DataTable
             With t.Columns
-                .Add("AA_ID", System.Type.GetType("System.Int32"))
-                .Add("Enum_Name", System.Type.GetType("System.String"))
-                .Add("SL_Code", System.Type.GetType("System.String"))
-                .Add("TL_Code", System.Type.GetType("System.String"))
-                .Add("Full_Name", System.Type.GetType("System.String"))
+                .Add("AA_ID", Type.GetType("System.Int32"))
+                .Add("Enum_Name", Type.GetType("System.String"))
+                .Add("SL_Code", Type.GetType("System.String"))
+                .Add("TL_Code", Type.GetType("System.String"))
+                .Add("Full_Name", Type.GetType("System.String"))
             End With
             Return t
         End Function
@@ -274,35 +279,11 @@ Namespace ProgramSettings
     End Class
 
     Public Class clsCommonModDetails
-        Private m_Name As String
-        Private m_Desc As String
-        Private m_Formula As String
+        Public Property Name As String
 
-        Public Property Name() As String
-            Get
-                Return m_Name
-            End Get
-            Set(ByVal Value As String)
-                m_Name = Value
-            End Set
-        End Property
-        Public Property Description() As String
-            Get
-                Return m_Desc
-            End Get
-            Set(ByVal Value As String)
-                m_Desc = Value
-            End Set
-        End Property
-        Public Property Formula() As String
-            Get
-                Return m_Formula
-            End Get
-            Set(ByVal Value As String)
-                m_Formula = Value
-            End Set
-        End Property
+        Public Property Description As String
 
+        Public Property Formula As String
     End Class
 
     Public Class clsCommonModsCollection
@@ -312,19 +293,19 @@ Namespace ProgramSettings
             MyBase.New()
         End Sub
 
-        Public Sub add(ByVal Modification As clsCommonModDetails)
+        Public Sub Add(Modification As clsCommonModDetails)
             MyBase.InnerList.Add(Modification)
         End Sub
 
-        Public Sub sort()
-            MyBase.InnerList.Sort(New ParamFileEditor.clsSimpleComparer("Description"))
+        Public Sub Sort()
+            MyBase.InnerList.Sort(New clsSimpleComparer("Description"))
         End Sub
 
-        Default Public Property item(ByVal index As Integer) As clsCommonModDetails
+        Default Public Property Item(index As Integer) As clsCommonModDetails
             Get
-                Return MyBase.InnerList(index)
+                Return DirectCast(InnerList(index), clsCommonModDetails)
             End Get
-            Set(ByVal Value As clsCommonModDetails)
+            Set
                 MyBase.InnerList(index) = Value
             End Set
         End Property

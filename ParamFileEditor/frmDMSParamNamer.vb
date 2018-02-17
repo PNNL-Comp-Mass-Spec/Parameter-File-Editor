@@ -13,7 +13,7 @@ Public Class frmDMSParamNamer
 
 #Region " Windows Form Designer generated code "
 
-    Public Sub New(ByVal CallingFrm As frmMainGUI, ByVal ParamSetToSave As clsParams)
+    Public Sub New(CallingFrm As frmMainGUI, ParamSetToSave As clsParams)
         MyBase.New()
 
         'This call is required by the Windows Form Designer.
@@ -26,7 +26,7 @@ Public Class frmDMSParamNamer
     End Sub
 
     'Form overrides dispose to clean up the component list.
-    Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+    Protected Overloads Overrides Sub Dispose(disposing As Boolean)
         If disposing Then
             If Not (components Is Nothing) Then
                 components.Dispose()
@@ -142,14 +142,14 @@ Public Class frmDMSParamNamer
 
 #End Region
 
-    Private Sub frmDMSParamNamer_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    Private Sub frmDMSParamNamer_Load(sender As Object, e As System.EventArgs) Handles MyBase.Load
         Me.txtSaveFileName.Text = m_Params.FileName
         m_clsDMSParams = New clsDMSParamUpload(frmMainGUI.mySettings)
         LoadParamDiffs(m_Params)
 
     End Sub
 
-    Private Sub cmdUpload_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdUpload.Click
+    Private Sub cmdUpload_Click(sender As System.Object, e As System.EventArgs) Handles cmdUpload.Click
 
         Dim nameExists As Boolean
         Dim ParamSetID As Integer
@@ -205,12 +205,12 @@ Public Class frmDMSParamNamer
     End Sub
 
 
-    Private Sub LoadParamDiffs(ByVal ParamSet As clsParams)
+    Private Sub LoadParamDiffs(ParamSet As clsParams)
         Dim dms As clsDMSParamUpload = m_clsDMSParams
         Me.txtDiffs.Text = dms.GetDiffsFromTemplate(ParamSet)
     End Sub
 
-    Private Sub txtSaveFileName_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtSaveFileName.TextChanged
+    Private Sub txtSaveFileName_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtSaveFileName.TextChanged
         If Me.txtSaveFileName.Text.Length < 255 Then
             Me.m_SaveName = Me.txtSaveFileName.Text
             Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "")
@@ -219,7 +219,7 @@ Public Class frmDMSParamNamer
         End If
     End Sub
 
-    Private Sub txtSaveFileName_Validating(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles txtSaveFileName.Validating
+    Private Sub txtSaveFileName_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles txtSaveFileName.Validating
         Dim tb As TextBox = DirectCast(sender, TextBox)
         If tb.Text.Length >= 255 Then
             Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "Parameter File names must be < 255 characters in length")

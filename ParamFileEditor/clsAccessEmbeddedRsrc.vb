@@ -19,7 +19,7 @@ Friend Class clsAccessEmbeddedRsrc
 
     End Function
 
-    Private Function GetEmbeddedTextStream(ByVal streamName As String) As System.IO.Stream
+    Private Function GetEmbeddedTextStream(streamName As String) As System.IO.Stream
         Dim executingAssembly As System.Reflection.Assembly = Reflection.Assembly.GetEntryAssembly()
         Dim myNameSpace As String = executingAssembly.GetName().Name.ToString
         'Me.printDebugList()
@@ -29,7 +29,7 @@ Friend Class clsAccessEmbeddedRsrc
         Return ts
     End Function
 
-    Private Function GetEmbeddedBitmap(ByVal pictureName As String) As Bitmap
+    Private Function GetEmbeddedBitmap(pictureName As String) As Bitmap
         Dim bm As Bitmap
         Dim p As Stream
         p = GetEmbeddedTextStream(pictureName)
@@ -39,7 +39,7 @@ Friend Class clsAccessEmbeddedRsrc
         Return bm
     End Function
 
-    Private Sub WriteEmbeddedTextStreamToFile(ByVal ResourceName As String, ByVal OutputFilePath As String)
+    Private Sub WriteEmbeddedTextStreamToFile(ResourceName As String, OutputFilePath As String)
         'Grab embedded stream
         Dim s As String
 
@@ -61,18 +61,18 @@ Friend Class clsAccessEmbeddedRsrc
         outputStream.Close()
 
     End Sub
-    Friend Sub RestoreFromEmbeddedResource(ByVal ResourceName As String)
+    Friend Sub RestoreFromEmbeddedResource(ResourceName As String)
         Me.WriteEmbeddedTextStreamToFile(ResourceName, Path.Combine(Me.myExecutingDirectory, ResourceName))
     End Sub
-    Friend Sub RestoreFromEmbeddedResource(ByVal ResourceName As String, ByVal OutputFilePath As String)
+    Friend Sub RestoreFromEmbeddedResource(ResourceName As String, OutputFilePath As String)
         Me.WriteEmbeddedTextStreamToFile(ResourceName, OutputFilePath)
     End Sub
 
-    Friend Function GetBitmapResource(ByVal pictureName As String) As Bitmap
+    Friend Function GetBitmapResource(pictureName As String) As Bitmap
         Return GetEmbeddedBitmap(pictureName)
     End Function
 
-    Friend Function ResourceExists(ByVal resourceName As String) As Boolean
+    Friend Function ResourceExists(resourceName As String) As Boolean
         Dim fi As New FileInfo(Path.Combine(Me.myExecutingDirectory, resourceName))
         If fi.Exists Then
             Return True

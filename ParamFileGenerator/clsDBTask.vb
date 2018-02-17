@@ -5,9 +5,9 @@ Imports System.Data.OleDb
 
 Public Interface IGetSQLData
     Function GetTable(SelectSQL As String) As DataTable
-    Function GetTable( _
-        SelectSQL As String, _
-        ByRef SQLDataAdapter As SqlClient.SqlDataAdapter, _
+    Function GetTable(
+        SelectSQL As String,
+        ByRef SQLDataAdapter As SqlClient.SqlDataAdapter,
         ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable
 
     Sub OpenConnection()
@@ -127,9 +127,9 @@ Public Class clsDBTask
         End Get
     End Property
 
-    Protected Function GetTable( _
-        SelectSQL As String, _
-        ByRef SQLDataAdapter As SqlClient.SqlDataAdapter, _
+    Protected Function GetTable(
+        SelectSQL As String,
+        ByRef SQLDataAdapter As SqlClient.SqlDataAdapter,
         ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable Implements IGetSQLData.GetTable
 
         Dim tmpIDTable As New DataTable
@@ -179,11 +179,11 @@ Public Class clsDBTask
 
     End Function
 
-    Protected Sub CreateRelationship( _
-        ds As DataSet, _
-        dt1 As DataTable, _
-        dt1_keyFieldName As String, _
-        dt2 As DataTable, _
+    Protected Sub CreateRelationship(
+        ds As DataSet,
+        dt1 As DataTable,
+        dt1_keyFieldName As String,
+        dt2 As DataTable,
         dt2_keyFieldName As String)
 
         Dim dc_dt1_keyField As DataColumn = dt1.Columns(dt1_keyFieldName)
@@ -192,8 +192,8 @@ Public Class clsDBTask
 
     End Sub
 
-    Protected Sub SetPrimaryKey( _
-        keyColumnIndex As Integer, _
+    Protected Sub SetPrimaryKey(
+        keyColumnIndex As Integer,
         dt As DataTable)
 
         Dim pKey(0) As DataColumn

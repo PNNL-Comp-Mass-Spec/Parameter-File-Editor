@@ -7,23 +7,29 @@ ParamFileGenerator
 </assembly>
 <members>
 <member name="M:ParamFileGenerator.MakeParams.clsMakeParameterFile.MakeFileSQ(System.String,ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType,System.String,System.String,System.String,System.Boolean)">
-	<summary>
+ <summary>
  Create Sequest parameter file
  </summary>
-	<param name="ParamFileName"></param>
-	<param name="ParamFileType"></param>
-	<param name="FASTAFilePath"></param>
-	<param name="OutputFilePath"></param>
-	<param name="DMSConnectionString"></param>
-	<param name="forceMonoParentMass"></param>
-	<returns></returns>
-	<remarks></remarks>
-</member><member name="M:ParamFileGenerator.DownloadParams.clsParamsFromDMS.GetAvailableParamSets">
-	<summary>
- Finds parameter file info for Sequest
+ <param name="ParamFileName"></param>
+ <param name="ParamFileType"></param>
+ <param name="FASTAFilePath"></param>
+ <param name="OutputFilePath"></param>
+ <param name="DMSConnectionString"></param>
+ <param name="forceMonoParentMass"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:ParamFileGenerator.clsParams.#ctor">
+ <summary>
+ Constructor
  </summary>
-	<returns></returns>
-	<remarks></remarks>
+</member>
+<member name="M:ParamFileGenerator.DownloadParams.clsParamsFromDMS.GetAvailableParamSets">
+ <summary>
+ Finds parameter file info for Sequest, X!Tandem, MSGF+, MSPathFinder, or MODPlus
+ </summary>
+ <returns></returns>
+ <remarks></remarks>
 </member>
 </members>
 </doc>

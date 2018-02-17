@@ -3,11 +3,11 @@ Imports ParamFileGenerator
 
 'Framework to handle the batch upload and download of templates/parameters to and from DMS
 '
-'   
+'
 Friend Class clsBatchLoadTemplates
     Inherits clsDMSParamUpload
 
-    Public Sub New(ByVal CallingFrm As frmMainGUI)
+    Public Sub New()
         MyBase.New(frmMainGUI.mySettings)
         'm_Main = MainCode
     End Sub
@@ -29,38 +29,27 @@ Friend Class clsBatchLoadTemplates
         End Get
     End Property
 
-    Public ReadOnly Property ParamSetsAddedList() As StringCollection
-        Get
-            Return m_addedList
-        End Get
-    End Property
-    Public ReadOnly Property ParamSetsChangedList() As StringCollection
-        Get
-            Return m_changedList
-        End Get
-    End Property
-    Public ReadOnly Property ParamSetsSkippedList() As StringCollection
-        Get
-            Return m_skippedList
-        End Get
-    End Property
+    <Obsolete("Unused")>
+    Public ReadOnly Property ParamSetsAddedList As StringCollection
+
+    <Obsolete("Unused")>
+    Public ReadOnly Property ParamSetsChangedList As StringCollection
+
+    <Obsolete("Unused")>
+    Public ReadOnly Property ParamSetsSkippedList As StringCollection
+
 #End Region
 
 #Region " Member Variables "
-    Private m_FilePathList As StringCollection
-    Private m_Main As clsMainProcess
     Private m_added As Integer
     Private m_changed As Integer
     Private m_skipped As Integer
-    Private m_addedList As StringCollection
-    Private m_changedList As StringCollection
-    Private m_skippedList As StringCollection
 
 #End Region
 
 #Region " Public Functions "
 
-    Public Function UploadParamSetsToDMS(ByVal FilePathList As StringCollection) As Integer
+    Public Function UploadParamSetsToDMS(FilePathList As StringCollection) As Boolean
         Return BatchUploadParamSetsToDMS(FilePathList)
     End Function
 
@@ -68,7 +57,7 @@ Friend Class clsBatchLoadTemplates
 
 #Region " Member Functions "
 
-    Private Function BatchUploadParamSetsToDMS(ByVal ParamFilePathList As StringCollection) As Boolean
+    Private Function BatchUploadParamSetsToDMS(ParamFilePathList As StringCollection) As Boolean
         'Returns number of param sets uploaded
         Dim ParamFilePath As String
         Dim ParamFileName As String
@@ -79,8 +68,6 @@ Friend Class clsBatchLoadTemplates
         Dim added As Integer
         Dim skipped As Integer
         Dim changed As Integer
-
-        Dim results As New DialogResult
 
         For Each ParamFilePath In ParamFilePathList
             c = New clsParams
@@ -97,8 +84,8 @@ Friend Class clsBatchLoadTemplates
                 If ParamSetDiffs = " --No Change-- " Then
                     skipped = skipped + 1
                 Else
-                    results = MessageBox.Show("A parameter set with the ID " & ParamSetID & " and the name '" & c.FileName & _
-                            "' already exists with the following differences '" & ParamSetDiffs & " Do you want to replace it?", "Parameter Set Exists!", _
+                    Dim results = MessageBox.Show("A parameter set with the ID " & ParamSetID & " and the name '" & c.FileName &
+                            "' already exists with the following differences '" & ParamSetDiffs & " Do you want to replace it?", "Parameter Set Exists!",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
                     If results = DialogResult.Yes Then
                         changed = changed + 1

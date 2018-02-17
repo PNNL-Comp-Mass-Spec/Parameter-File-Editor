@@ -3,10 +3,10 @@ Imports System.Collections.Specialized
 
 Public Class clsWriteOutput
 
-    Public Function WriteOutputFile( _
-        Params As clsParams, _
-        OutputPathName As String, _
-        FileType As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType) As Boolean
+    Public Function WriteOutputFile(
+        Params As clsParams,
+        OutputPathName As String,
+        FileType As MakeParams.IGenerateFile.ParamFileType) As Boolean
 
         Dim paramCollection As StringCollection = DumpToSQStringCollection(Params, FileType)
         Call OutputTextParamFile(paramCollection, OutputPathName)
@@ -14,8 +14,8 @@ Public Class clsWriteOutput
 
     End Function
 
-    Public Function WriteDatatableToOutputFile( _
-        TableToWrite As DataTable, _
+    Public Function WriteDatatableToOutputFile(
+        TableToWrite As DataTable,
         OutputPathName As String) As Boolean
 
         Me.DumpDataTableToOutputFile(TableToWrite, OutputPathName)
@@ -23,13 +23,13 @@ Public Class clsWriteOutput
 
     End Function
 
-    Private Sub DumpDataTableToOutputFile( _
-        dt As DataTable, _
+    Private Sub DumpDataTableToOutputFile(
+        dt As DataTable,
         outputPath As String)
 
         Dim dr As DataRow
         Dim rowElement As Object
-        Dim sb As System.Text.StringBuilder
+        Dim sb As Text.StringBuilder
         Dim elementCount As Integer
 
         Dim sw As New StreamWriter(outputPath)
@@ -37,7 +37,7 @@ Public Class clsWriteOutput
 
         For Each dr In dt.Rows
             elementCount = dr.ItemArray.Length
-            sb = New System.Text.StringBuilder
+            sb = New Text.StringBuilder()
             For Each rowElement In dr.ItemArray
                 sb.Append(rowElement.ToString)
                 elementCount -= 1
@@ -52,11 +52,9 @@ Public Class clsWriteOutput
 
     End Sub
 
-    Private Function DumpToSQStringCollection( _
-        p As clsParams, _
-        type As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType) As StringCollection
-
-        Dim enz As New clsEnzymeDetails
+    Private Function DumpToSQStringCollection(
+        p As clsParams,
+        type As MakeParams.IGenerateFile.ParamFileType) As StringCollection
         Dim sc As New StringCollection
         Dim maxDynMods As Integer
 
@@ -71,8 +69,8 @@ Public Class clsWriteOutput
             .Add(";DMS_Description = " & p.Description)
             If type = clsParams.ParamFileTypes.BioWorks_20 Then
                 .Add("database_name = " & p.DefaultFASTAPath)
-            ElseIf type = clsParams.ParamFileTypes.BioWorks_30 Or _
-                    type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or _
+            ElseIf type = clsParams.ParamFileTypes.BioWorks_30 Or
+                    type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or
                     type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("first_database_name = " & p.DefaultFASTAPath)
                 .Add("second_database_name = " & p.DefaultFASTAPath2)
@@ -105,13 +103,14 @@ Public Class clsWriteOutput
             .Add("show_fragment_ions = " & ConvertBoolToInteger(p.ShowFragmentIons).ToString)
             'End If
             .Add("print_duplicate_references = " & ConvertBoolToInteger(p.PrintDuplicateReferences).ToString)
+
             If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("enzyme_number = " & p.SelectedEnzymeIndex.ToString)
             Else
                 If p.SelectedEnzymeIndex >= p.EnzymeList.Count Then
                     Throw New IndexOutOfRangeException("Enzyme ID " & p.SelectedEnzymeIndex & " is not recognized; template file is out of date")
                 End If
-                enz = p.EnzymeList(p.SelectedEnzymeIndex)
+                Dim enz = p.EnzymeList(p.SelectedEnzymeIndex)
                 .Add("enzyme_info = " + enz.ReturnBW32EnzymeInfoString(p.SelectedEnzymeCleavagePosition))
             End If
             If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
@@ -183,8 +182,8 @@ Public Class clsWriteOutput
 
             If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
                 .Add("[SEQUEST_ENZYME_INFO]")
-                For Each enz In p.EnzymeList
-                    .Add(enz.ReturnEnzymeString)
+                For Each item As clsEnzymeDetails In p.EnzymeList
+                    .Add(item.ReturnEnzymeString)
                 Next
             End If
         End With
@@ -194,16 +193,8 @@ Public Class clsWriteOutput
 
     End Function
 
-    Private Function WriteModificationDefinitionsFile( _
-        Params As clsParams, _
-        OutputPathName As String) As Boolean
-
-
-
-    End Function
-
-    Private Sub OutputTextParamFile( _
-        sc As System.Collections.Specialized.StringCollection, _
+    Private Sub OutputTextParamFile(
+        sc As StringCollection,
         outputPath As String)
 
         Dim sw As New StreamWriter(outputPath)

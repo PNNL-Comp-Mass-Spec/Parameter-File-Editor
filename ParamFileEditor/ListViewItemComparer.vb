@@ -10,16 +10,16 @@ Class ListViewItemComparer
 		col = 0
 	End Sub
 
-	Public Sub New(ByVal column As Integer)
+	Public Sub New(column As Integer)
 		col = column
 	End Sub
 
-	Public Sub New(ByVal column As Integer, ByVal SortOrderAsc As Boolean)
+	Public Sub New(column As Integer, SortOrderAsc As Boolean)
 		col = column
 		m_SortOrderAsc = SortOrderAsc
 	End Sub
 
-	Public Function Compare(ByVal x As Object, ByVal y As Object) As Integer _
+	Public Function Compare(x As Object, y As Object) As Integer _
 	 Implements IComparer.Compare
 
 		Dim TempResult As Integer
@@ -37,7 +37,7 @@ Class ListViewItemComparer
 		Get
 			Return m_SortOrderAsc
 		End Get
-		Set(ByVal Value As Boolean)
+		Set(Value As Boolean)
 			m_SortOrderAsc = False
 		End Set
 	End Property

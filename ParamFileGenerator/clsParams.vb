@@ -1,7 +1,6 @@
+Imports System.Collections.Specialized
 Imports System.IO
-Imports ParamFileGenerator
-Imports ParamFileGenerator.DownloadParams
-
+Imports System.Text
 
 Public Interface IBasicParams
     Enum MassTypeList As Integer
@@ -9,22 +8,22 @@ Public Interface IBasicParams
         Monoisotopic = 1
     End Enum
 
-    ReadOnly Property FileType() As clsParams.ParamFileTypes
-    Property DMS_ID() As Integer
-    Property FileName() As String
-    Property Description() As String
-    Property SelectedEnzymeDetails() As clsEnzymeDetails
-    Property SelectedEnzymeIndex() As Integer
-    Property SelectedEnzymeCleavagePosition() As Integer
-    Property MaximumNumberMissedCleavages() As Integer
-    Property ParentMassType() As MassTypeList
-    Property FragmentMassType() As MassTypeList
-    Property DynamicMods() As clsDynamicMods
-    Property TermDynamicMods() As clsTermDynamicMods
-    Property StaticModificationsList() As clsStaticMods
-    Property IsotopicModificationsList() As clsIsoMods
-    Property PartialSequenceToMatch() As String
-    Property EnzymeList() As clsEnzymeCollection
+    ReadOnly Property FileType As clsParams.ParamFileTypes
+    Property DMS_ID As Integer
+    Property FileName As String
+    Property Description As String
+    Property SelectedEnzymeDetails As clsEnzymeDetails
+    Property SelectedEnzymeIndex As Integer
+    Property SelectedEnzymeCleavagePosition As Integer
+    Property MaximumNumberMissedCleavages As Integer
+    Property ParentMassType As MassTypeList
+    Property FragmentMassType As MassTypeList
+    Property DynamicMods As clsDynamicMods
+    Property TermDynamicMods As clsTermDynamicMods
+    Property StaticModificationsList As clsStaticMods
+    Property IsotopicModificationsList As clsIsoMods
+    Property PartialSequenceToMatch As String
+    Property EnzymeList As clsEnzymeCollection
     Function RetrieveEnzymeDetails(index As Integer) As clsEnzymeDetails
 End Interface
 Public Interface IAdvancedParams
@@ -45,33 +44,33 @@ Public Interface IAdvancedParams
         mmu = 1
         ppm = 2
     End Enum
-    Property DefaultFASTAPath() As String
-    Property DefaultFASTAPath2() As String
-    Property CreateOutputFiles() As Boolean
-    Property IonSeries() As clsIonSeries
-    Property NumberOfResultsToProcess() As Integer
-    Property MaximumNumAAPerDynMod() As Integer
-    Property MaximumDifferentialPerPeptide() As Integer
-    Property PeptideMassTolerance() As Single
-    Property FragmentIonTolerance() As Single
-    Property NumberOfOutputLines() As Integer
-    Property NumberOfDescriptionLines() As Integer
-    Property ShowFragmentIons() As Boolean
-    Property PrintDuplicateReferences() As Boolean
-    Property SelectedNucReadingFrameIndex() As Integer
-    Property SelectedNucReadingFrame() As FrameList
-    Property RemovePrecursorPeak() As Boolean
-    Property IonCutoffPercentage() As Single
-    Property MinimumProteinMassToSearch() As Single
-    Property MaximumProteinMassToSearch() As Single
-    Property NumberOfDetectedPeaksToMatch() As Integer
-    Property NumberOfAllowedDetectedPeakErrors() As Integer
-    Property MatchedPeakMassTolerance() As Single
-    Property AminoAcidsAllUpperCase() As Boolean
-    Property SequenceHeaderInfoToFilter() As String
-    Property UsePhosphoFragmentation() As Integer
-    Property PeptideMassUnits() As Integer
-    Property FragmentMassUnits() As Integer
+    Property DefaultFASTAPath As String
+    Property DefaultFASTAPath2 As String
+    Property CreateOutputFiles As Boolean
+    Property IonSeries As clsIonSeries
+    Property NumberOfResultsToProcess As Integer
+    Property MaximumNumAAPerDynMod As Integer
+    Property MaximumDifferentialPerPeptide As Integer
+    Property PeptideMassTolerance As Single
+    Property FragmentIonTolerance As Single
+    Property NumberOfOutputLines As Integer
+    Property NumberOfDescriptionLines As Integer
+    Property ShowFragmentIons As Boolean
+    Property PrintDuplicateReferences As Boolean
+    Property SelectedNucReadingFrameIndex As Integer
+    Property SelectedNucReadingFrame As FrameList
+    Property RemovePrecursorPeak As Boolean
+    Property IonCutoffPercentage As Single
+    Property MinimumProteinMassToSearch As Single
+    Property MaximumProteinMassToSearch As Single
+    Property NumberOfDetectedPeaksToMatch As Integer
+    Property NumberOfAllowedDetectedPeakErrors As Integer
+    Property MatchedPeakMassTolerance As Single
+    Property AminoAcidsAllUpperCase As Boolean
+    Property SequenceHeaderInfoToFilter As String
+    Property UsePhosphoFragmentation As Integer
+    Property PeptideMassUnits As Integer
+    Property FragmentMassUnits As Integer
 End Interface
 
 Public Class clsParams
@@ -79,10 +78,10 @@ Public Class clsParams
     Implements IAdvancedParams
 
     Public Enum ParamFileTypes
-        BioWorks_20  'Normal BioWorks 2.0 Sequest
-        BioWorks_30  'BioWorks 3.0+ TurboSequest
-        BioWorks_31  'BioWorks 3.1 ClusterQuest
-        BioWorks_32  'BioWorks 3.2 ClusterF***
+        BioWorks_20 = 0 'Normal BioWorks 2.0 Sequest
+        BioWorks_30 = 1 'BioWorks 3.0+ TurboSequest
+        BioWorks_31 = 2 'BioWorks 3.1 ClusterQuest
+        BioWorks_32 = 3 'BioWorks 3.2 ClusterF***
     End Enum
 
     Const DEF_DB_NAME As String = "C:\Xcalibur\database\nr.fasta"     'Not really used, just a placeholder
@@ -91,479 +90,180 @@ Public Class clsParams
     Const DEF_ENZ_SECTION_NAME As String = "SEQUEST_ENZYME_INFO"
 
     'Basic Parameters
-    Private m_ID As Integer
-    Private m_fileName As String
-    Private m_desc As String
     Private m_type As ParamFileTypes
-    Private m_typeIndex As Integer
-    Private m_enzymeNumber As Integer
-    Private m_enzymeCleavagePosition As Integer
-    Private m_enzymeDetails As clsEnzymeDetails
-    Private m_maxICSites As Integer
-    Private m_parentMassType As IBasicParams.MassTypeList
-    Private m_fragMassType As IBasicParams.MassTypeList
-    Private m_parentMassUnits As Integer
-    Private m_fragMassUnits As Integer
-    Private m_dynMods As clsDynamicMods
-    Private m_termDynMods As clsTermDynamicMods ' Peptide terminal dynamic mods
-    Private m_staticModsList As clsStaticMods
-    Private m_partialSeq As String
-
-    Private m_isoMods As clsIsoMods
+    ' Obsolete: Private m_parentMassUnits As Integer
+    ' Peptide terminal dynamic mods
 
     'Advanced Parameters
-    Private m_Path As String
-    Private m_defDBPath1 As String              'A
-    Private m_defDBPath2 As String              'A
-    Private m_numResults As Integer
-    Private m_pepMassTol As Single              'A
-    Private m_createOutputFiles As Boolean      'A
-    Private m_ionSeriesString As String         'A
-    Private m_ionSeries As clsIonSeries         'A
-    Private m_maxAAPerDynMod As Integer         'A
-    Private m_maxDiffPerPeptide As Integer = 3  'A
-    Private m_fragIonTol As Single              'A
-    Private m_numOutLines As Integer            'A
-    Private m_numDescLines As Integer           'A
-    Private m_showFragIons As Boolean           'A
-    Private m_printDupRef As Boolean            'A
-    Private m_readingFrame As IAdvancedParams.FrameList         'A
-    Private m_removePrecursorPeak As Boolean    'A
-    Private m_ionCutoffPer As Single            'A
+    ' Obsolete: Private m_Path As String
+    Private m_ionSeriesString As String
     Private m_protMassFilterString As String
-    Private m_minProtMassFilter As Single       'A
-    Private m_maxProtMassFilter As Single       'A
-    Private m_matchPeakCount As Integer         'A
-    Private m_matchPeakCountErrors As Integer   'A
-    Private m_matchPeakTol As Single
-    Private m_upperCase As Boolean              'A
-    Private m_seqHdrFilter As String            'A
-    Private m_peptideMassUnits As Integer = IAdvancedParams.MassUnitList.amu   'A
-    Private m_fragmentMassUnits As Integer = IAdvancedParams.MassUnitList.amu
-    Private m_usePhosphoFragmentation As Integer = 0
-    Private m_enzymeDetailStorage As clsEnzymeCollection
+    ' Obsolete: Private m_fragmentMassUnits As Integer = IAdvancedParams.MassUnitList.amu
 
     Private m_fullTemplate As clsRetrieveParams
     Private m_templateFilePath As String
     'Shared s_BaseLineParamSet As clsParams
-    Private m_loadedParamEntryNames As Hashtable = New Hashtable
+
 #End Region
 
 #Region " clsParams Properties "
-    Public Shared ReadOnly Property BaseLineParamSet() As clsParams
+    Public Shared ReadOnly Property BaseLineParamSet As clsParams
         Get
-            Return ParamFileGenerator.clsMainProcess.BaseLineParamSet
+            Return clsMainProcess.BaseLineParamSet
         End Get
     End Property
 
-    Public ReadOnly Property FileType() As clsParams.ParamFileTypes Implements IBasicParams.FileType
+    Public ReadOnly Property FileType As ParamFileTypes Implements IBasicParams.FileType
         Get
             Return m_type
         End Get
     End Property
-    Public Property DMS_ID() As Integer Implements IBasicParams.DMS_ID
+
+    Public Property DMS_ID As Integer Implements IBasicParams.DMS_ID
+
+    Public Property FileName As String Implements IBasicParams.FileName
+
+    Public Property FileTypeIndex As Integer
+
+    Public Property Description As String Implements IBasicParams.Description
+
+    Public Property DefaultFASTAPath As String Implements IAdvancedParams.DefaultFASTAPath
+
+    Public Property DefaultFASTAPath2 As String Implements IAdvancedParams.DefaultFASTAPath2
+
+    Public Property NumberOfResultsToProcess As Integer Implements IAdvancedParams.NumberOfResultsToProcess
+
+    Public Property PeptideMassTolerance As Single Implements IAdvancedParams.PeptideMassTolerance
+
+    Public Property CreateOutputFiles As Boolean Implements IAdvancedParams.CreateOutputFiles
+
+    Public Property IonSeries As clsIonSeries Implements IAdvancedParams.IonSeries
+
+    Public Property DynamicMods As clsDynamicMods Implements IBasicParams.DynamicMods
+
+    Public Property TermDynamicMods As clsTermDynamicMods Implements IBasicParams.TermDynamicMods
+
+    Public Property IsotopicMods As clsIsoMods Implements IBasicParams.IsotopicModificationsList
+
+    Public Property MaximumNumAAPerDynMod As Integer Implements IAdvancedParams.MaximumNumAAPerDynMod
+
+    Public Property MaximumNumDifferentialPerPeptide As Integer Implements IAdvancedParams.MaximumDifferentialPerPeptide
+
+    Public Property UsePhosphoFragmentation As Integer Implements IAdvancedParams.UsePhosphoFragmentation
+
+    Public Property FragmentIonTolerance As Single Implements IAdvancedParams.FragmentIonTolerance
+
+    Public Property NumberOfOutputLines As Integer Implements IAdvancedParams.NumberOfOutputLines
+
+    Public Property NumberOfDescriptionLines As Integer Implements IAdvancedParams.NumberOfDescriptionLines
+
+    Public Property ShowFragmentIons As Boolean Implements IAdvancedParams.ShowFragmentIons
+
+    Public Property PrintDuplicateReferences As Boolean Implements IAdvancedParams.PrintDuplicateReferences
+
+    Public Property SelectedEnzymeDetails As clsEnzymeDetails Implements IBasicParams.SelectedEnzymeDetails
+
+    Public Property SelectedEnzymeIndex As Integer Implements IBasicParams.SelectedEnzymeIndex
+
+    Public Property SelectedEnzymeCleavagePosition As Integer Implements IBasicParams.SelectedEnzymeCleavagePosition
+
+    Public Property SelectedNucReadingFrame As IAdvancedParams.FrameList Implements IAdvancedParams.SelectedNucReadingFrame
+
+    Public Property SelectedNucReadingFrameIndex As Integer Implements IAdvancedParams.SelectedNucReadingFrameIndex
         Get
-            Return m_ID
+            Return SelectedNucReadingFrame
         End Get
-        Set(Value As Integer)
-            m_ID = Value
-        End Set
-    End Property
-    Public Property FileName() As String Implements IBasicParams.FileName
-        Get
-            Return m_fileName
-        End Get
-        Set(Value As String)
-            m_fileName = Value
-        End Set
-    End Property
-    Public Property FileTypeIndex() As Integer
-        Get
-            Return m_typeIndex
-        End Get
-        Set(Value As Integer)
-            m_typeIndex = Value
-        End Set
-    End Property
-    Public Property Description() As String Implements IBasicParams.Description
-        Get
-            Return m_desc
-        End Get
-        Set(Value As String)
-            m_desc = Value
-        End Set
-    End Property
-    Public Property DefaultFASTAPath() As String Implements IAdvancedParams.DefaultFASTAPath
-        Get
-            Return m_defDBPath1
-        End Get
-        Set(Value As String)
-            m_defDBPath1 = Value
-        End Set
-    End Property
-    Public Property DefaultFASTAPath2() As String Implements IAdvancedParams.DefaultFASTAPath2
-        Get
-            Return m_defDBPath2
-        End Get
-        Set(Value As String)
-            m_defDBPath2 = Value
-        End Set
-    End Property
-    Public Property NumberOfResultsToProcess() As Integer Implements IAdvancedParams.NumberOfResultsToProcess
-        Get
-            Return m_numResults
-        End Get
-        Set(Value As Integer)
-            m_numResults = Value
-        End Set
-    End Property
-    Public Property PeptideMassTolerance() As Single Implements IAdvancedParams.PeptideMassTolerance
-        Get
-            Return m_pepMassTol
-        End Get
-        Set(Value As Single)
-            m_pepMassTol = Value
-        End Set
-    End Property
-    Public Property CreateOutputFiles() As Boolean Implements IAdvancedParams.CreateOutputFiles
-        Get
-            Return m_createOutputFiles
-        End Get
-        Set(Value As Boolean)
-            m_createOutputFiles = Value
-        End Set
-    End Property
-    Public Property IonSeries() As clsIonSeries Implements IAdvancedParams.IonSeries
-        Get
-            Return m_ionSeries
-        End Get
-        Set(Value As clsIonSeries)
-            m_ionSeries = Value
-        End Set
-    End Property
-    Public Property DynamicMods() As clsDynamicMods Implements IBasicParams.DynamicMods
-        Get
-            Return m_dynMods
-        End Get
-        Set(Value As clsDynamicMods)
-            m_dynMods = Value
-        End Set
-    End Property
-    Public Property TermDynamicMods() As clsTermDynamicMods Implements IBasicParams.TermDynamicMods
-        Get
-            Return Me.m_termDynMods
-        End Get
-        Set(Value As clsTermDynamicMods)
-            Me.m_termDynMods = Value
-        End Set
-    End Property
-    Public Property IsotopicMods() As clsIsoMods Implements IBasicParams.IsotopicModificationsList
-        Get
-            Return Me.m_isoMods
-        End Get
-        Set(Value As clsIsoMods)
-            Me.m_isoMods = Value
-        End Set
-    End Property
-    Public Property MaximumNumAAPerDynMod() As Integer Implements IAdvancedParams.MaximumNumAAPerDynMod
-        Get
-            Return m_maxAAPerDynMod
-        End Get
-        Set(Value As Integer)
-            m_maxAAPerDynMod = Value
-        End Set
-    End Property
-    Public Property MaximumNumDifferentialPerPeptide() As Integer Implements IAdvancedParams.MaximumDifferentialPerPeptide
-        Get
-            Return m_maxDiffPerPeptide
-        End Get
-        Set(Value As Integer)
-            m_maxDiffPerPeptide = Value
-        End Set
-    End Property
-    Public Property UsePhosphoFragmentation() As Integer Implements IAdvancedParams.UsePhosphoFragmentation
-        Get
-            Return m_usePhosphoFragmentation
-        End Get
-        Set(Value As Integer)
-            m_usePhosphoFragmentation = Value
-        End Set
-    End Property
-    Public Property FragmentIonTolerance() As Single Implements IAdvancedParams.FragmentIonTolerance
-        Get
-            Return m_fragIonTol
-        End Get
-        Set(Value As Single)
-            m_fragIonTol = Value
-        End Set
-    End Property
-    Public Property NumberOfOutputLines() As Integer Implements IAdvancedParams.NumberOfOutputLines
-        Get
-            Return m_numOutLines
-        End Get
-        Set(Value As Integer)
-            m_numOutLines = Value
-        End Set
-    End Property
-    Public Property NumberOfDescriptionLines() As Integer Implements IAdvancedParams.NumberOfDescriptionLines
-        Get
-            Return m_numDescLines
-        End Get
-        Set(Value As Integer)
-            m_numDescLines = Value
-        End Set
-    End Property
-    Public Property ShowFragmentIons() As Boolean Implements IAdvancedParams.ShowFragmentIons
-        Get
-            Return m_showFragIons
-        End Get
-        Set(Value As Boolean)
-            m_showFragIons = Value
-        End Set
-    End Property
-    Public Property PrintDuplicateReferences() As Boolean Implements IAdvancedParams.PrintDuplicateReferences
-        Get
-            Return m_printDupRef
-        End Get
-        Set(Value As Boolean)
-            m_printDupRef = Value
-        End Set
-    End Property
-    Public Property SelectedEnzymeDetails() As clsEnzymeDetails Implements IBasicParams.SelectedEnzymeDetails
-        Get
-            Return m_enzymeDetails
-        End Get
-        Set(Value As clsEnzymeDetails)
-            If Me.m_enzymeDetails Is Nothing Then
-                m_enzymeDetails = New clsEnzymeDetails
-            End If
-            m_enzymeDetails = Value
-        End Set
-    End Property
-    Public Property SelectedEnzymeIndex() As Integer Implements IBasicParams.SelectedEnzymeIndex
-        Get
-            Return m_enzymeNumber
-        End Get
-        Set(Value As Integer)
-            m_enzymeNumber = Value
-        End Set
-    End Property
-    Public Property SelectedEnzymeCleavagePosition() As Integer Implements IBasicParams.SelectedEnzymeCleavagePosition
-        Get
-            Return Me.m_enzymeCleavagePosition
-        End Get
-        Set(Value As Integer)
-            Me.m_enzymeCleavagePosition = Value
-        End Set
-    End Property
-    Public Property SelectedNucReadingFrame() As IAdvancedParams.FrameList Implements IAdvancedParams.SelectedNucReadingFrame
-        Get
-            Return m_readingFrame
-        End Get
-        Set(Value As IAdvancedParams.FrameList)
-            m_readingFrame = Value
-        End Set
-    End Property
-    Public Property SelectedNucReadingFrameIndex() As Integer Implements IAdvancedParams.SelectedNucReadingFrameIndex
-        Get
-            Return CInt(SelectedNucReadingFrame)
-        End Get
-        Set(Value As Integer)
-            m_readingFrame = CType(Value, IAdvancedParams.FrameList)
-        End Set
-    End Property
-    Public Property ParentMassType() As IBasicParams.MassTypeList Implements IBasicParams.ParentMassType
-        Get
-            Return m_parentMassType
-        End Get
-        Set(Value As IBasicParams.MassTypeList)
-            m_parentMassType = Value
-        End Set
-    End Property
-    Public Property FragmentMassType() As IBasicParams.MassTypeList Implements IBasicParams.FragmentMassType
-        Get
-            Return m_fragMassType
-        End Get
-        Set(Value As IBasicParams.MassTypeList)
-            m_fragMassType = Value
-        End Set
-    End Property
-    Public Property RemovePrecursorPeak() As Boolean Implements IAdvancedParams.RemovePrecursorPeak
-        Get
-            Return m_removePrecursorPeak
-        End Get
-        Set(Value As Boolean)
-            m_removePrecursorPeak = Value
-        End Set
-    End Property
-    Public Property IonCutoffPercentage() As Single Implements IAdvancedParams.IonCutoffPercentage
-        Get
-            Return m_ionCutoffPer
-        End Get
-        Set(Value As Single)
-            m_ionCutoffPer = Value
-        End Set
-    End Property
-    Public Property MaximumNumberMissedCleavages() As Integer Implements IBasicParams.MaximumNumberMissedCleavages
-        Get
-            Return m_maxICSites
-        End Get
-        Set(Value As Integer)
-            m_maxICSites = Value
-        End Set
-    End Property
-    Public Property MinimumProteinMassToSearch() As Single Implements IAdvancedParams.MinimumProteinMassToSearch
-        Get
-            Return m_minProtMassFilter
-        End Get
-        Set(Value As Single)
-            m_minProtMassFilter = Value
-        End Set
-    End Property
-    Public Property MaximumProteinMassToSearch() As Single Implements IAdvancedParams.MaximumProteinMassToSearch
-        Get
-            Return m_maxProtMassFilter
-        End Get
-        Set(Value As Single)
-            m_maxProtMassFilter = Value
-        End Set
-    End Property
-    Public Property NumberOfDetectedPeaksToMatch() As Integer Implements IAdvancedParams.NumberOfDetectedPeaksToMatch
-        Get
-            Return m_matchPeakCount
-        End Get
-        Set(Value As Integer)
-            m_matchPeakCount = Value
-        End Set
-    End Property
-    Public Property NumberOfAllowedDetectedPeakErrors() As Integer Implements IAdvancedParams.NumberOfAllowedDetectedPeakErrors
-        Get
-            Return m_matchPeakCountErrors
-        End Get
-        Set(Value As Integer)
-            m_matchPeakCountErrors = Value
-        End Set
-    End Property
-    Public Property MatchedPeakMassTolerance() As Single Implements IAdvancedParams.MatchedPeakMassTolerance
-        Get
-            Return m_matchPeakTol
-        End Get
-        Set(Value As Single)
-            m_matchPeakTol = Value
-        End Set
-    End Property
-    Public Property AminoAcidsAllUpperCase() As Boolean Implements IAdvancedParams.AminoAcidsAllUpperCase
-        Get
-            Return m_upperCase
-        End Get
-        Set(Value As Boolean)
-            m_upperCase = Value
-        End Set
-    End Property
-    Public Property PartialSequenceToMatch() As String Implements IBasicParams.PartialSequenceToMatch
-        Get
-            Return m_partialSeq
-        End Get
-        Set(Value As String)
-            m_partialSeq = Value
-        End Set
-    End Property
-    Public Property SequenceHeaderInfoToFilter() As String Implements IAdvancedParams.SequenceHeaderInfoToFilter
-        Get
-            Return m_seqHdrFilter
-        End Get
-        Set(Value As String)
-            m_seqHdrFilter = Value
-        End Set
-    End Property
-    Public Property PeptideMassUnits() As Integer Implements IAdvancedParams.PeptideMassUnits
-        Get
-            Return Me.m_peptideMassUnits
-        End Get
-        Set(Value As Integer)
-            Me.m_peptideMassUnits = Value
-        End Set
-    End Property
-    Public Property FragmentMassUnits() As Integer Implements IAdvancedParams.FragmentMassUnits
-        Get
-            Return m_fragMassUnits
-        End Get
-        Set(value As Integer)
-            m_fragMassUnits = value
-        End Set
-    End Property
-    Public Property StaticModificationsList() As clsStaticMods Implements IBasicParams.StaticModificationsList
-        Get
-            Return m_staticModsList
-        End Get
-        Set(Value As clsStaticMods)
-            If Me.m_staticModsList Is Nothing Then
-                m_staticModsList = New clsStaticMods
-            End If
-            m_staticModsList = Value
-        End Set
-    End Property
-    Public Property EnzymeList() As clsEnzymeCollection Implements IBasicParams.EnzymeList
-        Get
-            Return m_enzymeDetailStorage
-        End Get
-        Set(Value As clsEnzymeCollection)
-            m_enzymeDetailStorage = Value
+        Set
+            SelectedNucReadingFrame = CType(Value, IAdvancedParams.FrameList)
         End Set
     End Property
 
-    Public ReadOnly Property LoadedParamNames() As Hashtable
-        Get
-            Return Me.m_loadedParamEntryNames
-        End Get
-    End Property
+    Public Property ParentMassType As IBasicParams.MassTypeList Implements IBasicParams.ParentMassType
+
+    Public Property FragmentMassType As IBasicParams.MassTypeList Implements IBasicParams.FragmentMassType
+
+    Public Property RemovePrecursorPeak As Boolean Implements IAdvancedParams.RemovePrecursorPeak
+
+    Public Property IonCutoffPercentage As Single Implements IAdvancedParams.IonCutoffPercentage
+
+    Public Property MaximumNumberMissedCleavages As Integer Implements IBasicParams.MaximumNumberMissedCleavages
+
+    Public Property MinimumProteinMassToSearch As Single Implements IAdvancedParams.MinimumProteinMassToSearch
+
+    Public Property MaximumProteinMassToSearch As Single Implements IAdvancedParams.MaximumProteinMassToSearch
+
+    Public Property NumberOfDetectedPeaksToMatch As Integer Implements IAdvancedParams.NumberOfDetectedPeaksToMatch
+
+    Public Property NumberOfAllowedDetectedPeakErrors As Integer Implements IAdvancedParams.NumberOfAllowedDetectedPeakErrors
+
+    Public Property MatchedPeakMassTolerance As Single Implements IAdvancedParams.MatchedPeakMassTolerance
+
+    Public Property AminoAcidsAllUpperCase As Boolean Implements IAdvancedParams.AminoAcidsAllUpperCase
+
+    Public Property PartialSequenceToMatch As String Implements IBasicParams.PartialSequenceToMatch
+
+    Public Property SequenceHeaderInfoToFilter As String Implements IAdvancedParams.SequenceHeaderInfoToFilter
+
+    Public Property PeptideMassUnits As Integer Implements IAdvancedParams.PeptideMassUnits
+
+    Public Property FragmentMassUnits As Integer Implements IAdvancedParams.FragmentMassUnits
+
+    Public Property StaticModificationsList As clsStaticMods Implements IBasicParams.StaticModificationsList
+
+    Public Property EnzymeList As clsEnzymeCollection Implements IBasicParams.EnzymeList
+
+    Public Property LoadedParamNames As Hashtable = New Hashtable
 
     Public Sub AddLoadedParamName(ParameterName As String, ParameterValue As String)
-        If Me.m_loadedParamEntryNames Is Nothing Then
-            Me.m_loadedParamEntryNames = New Hashtable
+        If LoadedParamNames Is Nothing Then
+            LoadedParamNames = New Hashtable
         End If
-        If Not Me.m_loadedParamEntryNames.ContainsKey(ParameterName) Then
-            Me.m_loadedParamEntryNames.Add(ParameterName, ParameterValue)
+        If Not LoadedParamNames.ContainsKey(ParameterName) Then
+            LoadedParamNames.Add(ParameterName, ParameterValue)
         End If
     End Sub
 
     Public Function RetrieveEnzymeDetails(EnzymeListIndex As Integer) As clsEnzymeDetails Implements IBasicParams.RetrieveEnzymeDetails
-        Return m_enzymeDetailStorage.Item(EnzymeListIndex)
+        Return EnzymeList.Item(EnzymeListIndex)
     End Function
 #End Region
 
+    ''' <summary>
+    ''' Constructor
+    ''' </summary>
     Public Sub New()
-        m_ionSeries = New clsIonSeries
-        m_enzymeDetailStorage = New clsEnzymeCollection
-        m_enzymeDetails = New clsEnzymeDetails
-        m_dynMods = New clsDynamicMods
-        m_staticModsList = New clsStaticMods
-        m_isoMods = New clsIsoMods
-        m_termDynMods = New clsTermDynamicMods("0.0 0.0")
+        IonSeries = New clsIonSeries()
+        EnzymeList = New clsEnzymeCollection()
+        SelectedEnzymeDetails = New clsEnzymeDetails()
+        DynamicMods = New clsDynamicMods()
+        StaticModificationsList = New clsStaticMods()
+        IsotopicMods = New clsIsoMods()
+        TermDynamicMods = New clsTermDynamicMods("0.0 0.0")
+
+        MaximumNumDifferentialPerPeptide = 3
+        UsePhosphoFragmentation = 0
+        PeptideMassUnits = IAdvancedParams.MassUnitList.amu
     End Sub
 
     Public Function ReturnMassFilter(MinimumMassToFilter As Single, MaximumMassToFilter As Single) As String
         Return ReturnMassFilterString(MinimumMassToFilter, MaximumMassToFilter)
     End Function
 
-
     Public Sub LoadTemplate(templateFileName As String)
-        Dim loadingSuccessful As Boolean
-        loadingSuccessful = LoadTemplateParams(templateFileName)
+        LoadTemplateParams(templateFileName)
     End Sub
 
-    Private Function LoadTemplateParams(TemplateFileName As String) As Boolean
-        Dim Success As Boolean
+    Private Sub LoadTemplateParams(TemplateFileName As String)
+
         Dim tmpProtMassFilterStringArray() As String
         Dim SectionName As String
         m_templateFilePath = GetFilePath(TemplateFileName)
         Dim m_getEnzymeList As New clsGetEnzymeBlock(m_templateFilePath, DEF_ENZ_SECTION_NAME)
-        m_enzymeDetailStorage = m_getEnzymeList.EnzymeList
-        Dim m_enzymedetails As New clsEnzymeDetails
+        EnzymeList = m_getEnzymeList.EnzymeList
         'Dim m_Compare As New clsParamsFromDMS
 
         'm_desc = GetDescription()
-        m_type = Me.GetTemplateType
+        m_type = GetTemplateType()
 
         'If m_type = ParamFileTypes.BioWorks_20 Then
         SectionName = "SEQUEST"
@@ -575,48 +275,48 @@ Public Class clsParams
         'Retrieve Basic Parameters
         With m_fullTemplate
             .SetSection(SectionName)
-            Me.FileName = System.IO.Path.GetFileName(Me.m_templateFilePath)
-            Me.SelectedEnzymeIndex = CInt(.GetParam("enzyme_number"))
-            Me.SelectedEnzymeDetails = m_enzymeDetailStorage(m_enzymeNumber)
-            Me.SelectedEnzymeCleavagePosition = 1
-            Me.MaximumNumberMissedCleavages = CInt(.GetParam("max_num_internal_cleavage_sites"))
-            Me.ParentMassType = CType(CInt(.GetParam("mass_type_parent")), IBasicParams.MassTypeList)
-            Me.FragmentMassType = CType(CInt(.GetParam("mass_type_fragment")), IBasicParams.MassTypeList)
-            Me.PartialSequenceToMatch = .GetParam("partial_sequence")
-            Me.DynamicMods = New clsDynamicMods(.GetParam("diff_search_options"))
-            Me.TermDynamicMods = New clsTermDynamicMods(.GetParam("term_diff_search_options"))
-            Me.StaticModificationsList = New clsStaticMods
+            FileName = Path.GetFileName(m_templateFilePath)
+            SelectedEnzymeIndex = CInt(.GetParam("enzyme_number"))
+            SelectedEnzymeDetails = EnzymeList(SelectedEnzymeIndex)
+            SelectedEnzymeCleavagePosition = 1
+            MaximumNumberMissedCleavages = CInt(.GetParam("max_num_internal_cleavage_sites"))
+            ParentMassType = CType(CInt(.GetParam("mass_type_parent")), IBasicParams.MassTypeList)
+            FragmentMassType = CType(CInt(.GetParam("mass_type_fragment")), IBasicParams.MassTypeList)
+            PartialSequenceToMatch = .GetParam("partial_sequence")
+            DynamicMods = New clsDynamicMods(.GetParam("diff_search_options"))
+            TermDynamicMods = New clsTermDynamicMods(.GetParam("term_diff_search_options"))
+            StaticModificationsList = New clsStaticMods
 
 
             'Get Static Mods
-            Me.StaticModificationsList.CtermPeptide = CSng(.GetParam("add_Cterm_peptide"))
-            Me.StaticModificationsList.CtermProtein = CSng(.GetParam("add_Cterm_protein"))
-            Me.StaticModificationsList.NtermPeptide = CSng(.GetParam("add_Nterm_peptide"))
-            Me.StaticModificationsList.NtermProtein = CSng(.GetParam("add_Nterm_protein"))
-            Me.StaticModificationsList.G_Glycine = CSng(.GetParam("add_G_Glycine"))
-            Me.StaticModificationsList.A_Alanine = CSng(.GetParam("add_A_Alanine"))
-            Me.StaticModificationsList.S_Serine = CSng(.GetParam("add_S_Serine"))
-            Me.StaticModificationsList.P_Proline = CSng(.GetParam("add_P_Proline"))
-            Me.StaticModificationsList.V_Valine = CSng(.GetParam("add_V_Valine"))
-            Me.StaticModificationsList.T_Threonine = CSng(.GetParam("add_T_Threonine"))
-            Me.StaticModificationsList.C_Cysteine = CSng(.GetParam("add_C_Cysteine"))
-            Me.StaticModificationsList.L_Leucine = CSng(.GetParam("add_L_Leucine"))
-            Me.StaticModificationsList.I_Isoleucine = CSng(.GetParam("add_I_Isoleucine"))
-            Me.StaticModificationsList.X_LorI = CSng(.GetParam("add_X_LorI"))
-            Me.StaticModificationsList.N_Asparagine = CSng(.GetParam("add_N_Asparagine"))
-            Me.StaticModificationsList.O_Ornithine = CSng(.GetParam("add_O_Ornithine"))
-            Me.StaticModificationsList.B_avg_NandD = CSng(.GetParam("add_B_avg_NandD"))
-            Me.StaticModificationsList.D_Aspartic_Acid = CSng(.GetParam("add_D_Aspartic_Acid"))
-            Me.StaticModificationsList.Q_Glutamine = CSng(.GetParam("add_Q_Glutamine"))
-            Me.StaticModificationsList.K_Lysine = CSng(.GetParam("add_K_Lysine"))
-            Me.StaticModificationsList.Z_avg_QandE = CSng(.GetParam("add_Z_avg_QandE"))
-            Me.StaticModificationsList.E_Glutamic_Acid = CSng(.GetParam("add_E_Glutamic_Acid"))
-            Me.StaticModificationsList.M_Methionine = CSng(.GetParam("add_M_Methionine"))
-            Me.StaticModificationsList.H_Histidine = CSng(.GetParam("add_H_Histidine"))
-            Me.StaticModificationsList.F_Phenylalanine = CSng(.GetParam("add_F_Phenylalanine"))
-            Me.StaticModificationsList.R_Arginine = CSng(.GetParam("add_R_Arginine"))
-            Me.StaticModificationsList.Y_Tyrosine = CSng(.GetParam("add_Y_Tyrosine"))
-            Me.StaticModificationsList.W_Tryptophan = CSng(.GetParam("add_W_Tryptophan"))
+            StaticModificationsList.CtermPeptide = CSng(.GetParam("add_Cterm_peptide"))
+            StaticModificationsList.CtermProtein = CSng(.GetParam("add_Cterm_protein"))
+            StaticModificationsList.NtermPeptide = CSng(.GetParam("add_Nterm_peptide"))
+            StaticModificationsList.NtermProtein = CSng(.GetParam("add_Nterm_protein"))
+            StaticModificationsList.G_Glycine = CSng(.GetParam("add_G_Glycine"))
+            StaticModificationsList.A_Alanine = CSng(.GetParam("add_A_Alanine"))
+            StaticModificationsList.S_Serine = CSng(.GetParam("add_S_Serine"))
+            StaticModificationsList.P_Proline = CSng(.GetParam("add_P_Proline"))
+            StaticModificationsList.V_Valine = CSng(.GetParam("add_V_Valine"))
+            StaticModificationsList.T_Threonine = CSng(.GetParam("add_T_Threonine"))
+            StaticModificationsList.C_Cysteine = CSng(.GetParam("add_C_Cysteine"))
+            StaticModificationsList.L_Leucine = CSng(.GetParam("add_L_Leucine"))
+            StaticModificationsList.I_Isoleucine = CSng(.GetParam("add_I_Isoleucine"))
+            StaticModificationsList.X_LorI = CSng(.GetParam("add_X_LorI"))
+            StaticModificationsList.N_Asparagine = CSng(.GetParam("add_N_Asparagine"))
+            StaticModificationsList.O_Ornithine = CSng(.GetParam("add_O_Ornithine"))
+            StaticModificationsList.B_avg_NandD = CSng(.GetParam("add_B_avg_NandD"))
+            StaticModificationsList.D_Aspartic_Acid = CSng(.GetParam("add_D_Aspartic_Acid"))
+            StaticModificationsList.Q_Glutamine = CSng(.GetParam("add_Q_Glutamine"))
+            StaticModificationsList.K_Lysine = CSng(.GetParam("add_K_Lysine"))
+            StaticModificationsList.Z_avg_QandE = CSng(.GetParam("add_Z_avg_QandE"))
+            StaticModificationsList.E_Glutamic_Acid = CSng(.GetParam("add_E_Glutamic_Acid"))
+            StaticModificationsList.M_Methionine = CSng(.GetParam("add_M_Methionine"))
+            StaticModificationsList.H_Histidine = CSng(.GetParam("add_H_Histidine"))
+            StaticModificationsList.F_Phenylalanine = CSng(.GetParam("add_F_Phenylalanine"))
+            StaticModificationsList.R_Arginine = CSng(.GetParam("add_R_Arginine"))
+            StaticModificationsList.Y_Tyrosine = CSng(.GetParam("add_Y_Tyrosine"))
+            StaticModificationsList.W_Tryptophan = CSng(.GetParam("add_W_Tryptophan"))
         End With
 
         'add code to check for existence of isotopic mods
@@ -627,49 +327,49 @@ Public Class clsParams
         With m_fullTemplate
             .SetSection(SectionName)
             If m_type = ParamFileTypes.BioWorks_20 Then
-                Me.DefaultFASTAPath = .GetParam("database_name")
-                Me.DefaultFASTAPath2 = ""
-                Me.NumberOfResultsToProcess = 500
+                DefaultFASTAPath = .GetParam("database_name")
+                DefaultFASTAPath2 = ""
+                NumberOfResultsToProcess = 500
             ElseIf m_type = ParamFileTypes.BioWorks_30 Then
-                Me.DefaultFASTAPath = .GetParam("first_database_name")
-                Me.DefaultFASTAPath2 = .GetParam("second_database_name")
-                Me.NumberOfResultsToProcess = CInt(.GetParam("num_results"))
+                DefaultFASTAPath = .GetParam("first_database_name")
+                DefaultFASTAPath2 = .GetParam("second_database_name")
+                NumberOfResultsToProcess = CInt(.GetParam("num_results"))
             End If
-            Me.PeptideMassTolerance = CSng(.GetParam("peptide_mass_tolerance"))
+            PeptideMassTolerance = CSng(.GetParam("peptide_mass_tolerance"))
             If Not .GetParam("create_output_files") Is Nothing Then
-                Me.CreateOutputFiles = CBool(.GetParam("create_output_files"))
+                CreateOutputFiles = CBool(.GetParam("create_output_files"))
             Else
-                Me.CreateOutputFiles = True
+                CreateOutputFiles = True
             End If
             m_ionSeriesString = .GetParam("ion_series")
-            Me.IonSeries = New clsIonSeries(m_ionSeriesString)
-            Me.MaximumNumAAPerDynMod = CInt(.GetParam("max_num_differential_AA_per_mod"))
-            If Me.m_type = ParamFileTypes.BioWorks_32 Then
-                Me.MaximumNumDifferentialPerPeptide = CInt(.GetParam("max_num_differential_per_peptide"))
+            IonSeries = New clsIonSeries(m_ionSeriesString)
+            MaximumNumAAPerDynMod = CInt(.GetParam("max_num_differential_AA_per_mod"))
+            If m_type = ParamFileTypes.BioWorks_32 Then
+                MaximumNumDifferentialPerPeptide = CInt(.GetParam("max_num_differential_per_peptide"))
             End If
-            Me.FragmentIonTolerance = CSng(.GetParam("fragment_ion_tolerance"))
-            Me.NumberOfOutputLines = CInt(.GetParam("num_output_lines"))
-            Me.NumberOfDescriptionLines = CInt(.GetParam("num_description_lines"))
-            Me.ShowFragmentIons = CBool(.GetParam("show_fragment_ions"))
-            Me.PrintDuplicateReferences = CBool(.GetParam("print_duplicate_references"))
-            Me.SelectedNucReadingFrame = CType(CInt(.GetParam("enzyme_number")), IAdvancedParams.FrameList)
-            Me.RemovePrecursorPeak = CBool(.GetParam("remove_precursor_peak"))
-            Me.IonCutoffPercentage = CSng(.GetParam("ion_cutoff_percentage"))
+            FragmentIonTolerance = CSng(.GetParam("fragment_ion_tolerance"))
+            NumberOfOutputLines = CInt(.GetParam("num_output_lines"))
+            NumberOfDescriptionLines = CInt(.GetParam("num_description_lines"))
+            ShowFragmentIons = CBool(.GetParam("show_fragment_ions"))
+            PrintDuplicateReferences = CBool(.GetParam("print_duplicate_references"))
+            SelectedNucReadingFrame = CType(CInt(.GetParam("enzyme_number")), IAdvancedParams.FrameList)
+            RemovePrecursorPeak = CBool(.GetParam("remove_precursor_peak"))
+            IonCutoffPercentage = CSng(.GetParam("ion_cutoff_percentage"))
             m_protMassFilterString = .GetParam("protein_mass_filter")
             tmpProtMassFilterStringArray = InterpretMassFilterString(m_protMassFilterString)
-            Me.MinimumProteinMassToSearch = CSng(tmpProtMassFilterStringArray(0))
-            Me.MaximumProteinMassToSearch = CSng(tmpProtMassFilterStringArray(1))
-            Me.NumberOfDetectedPeaksToMatch = CInt(.GetParam("match_peak_count"))
-            Me.NumberOfAllowedDetectedPeakErrors = CInt(.GetParam("match_peak_allowed_error"))
-            Me.MatchedPeakMassTolerance = CSng(.GetParam("match_peak_tolerance"))
-            Me.AminoAcidsAllUpperCase = True
-            Me.SequenceHeaderInfoToFilter = .GetParam("sequence_header_filter")
-            Me.DMS_ID = -1
+            MinimumProteinMassToSearch = CSng(tmpProtMassFilterStringArray(0))
+            MaximumProteinMassToSearch = CSng(tmpProtMassFilterStringArray(1))
+            NumberOfDetectedPeaksToMatch = CInt(.GetParam("match_peak_count"))
+            NumberOfAllowedDetectedPeakErrors = CInt(.GetParam("match_peak_allowed_error"))
+            MatchedPeakMassTolerance = CSng(.GetParam("match_peak_tolerance"))
+            AminoAcidsAllUpperCase = True
+            SequenceHeaderInfoToFilter = .GetParam("sequence_header_filter")
+            DMS_ID = -1
         End With
 
-        Return Success
-    End Function
+    End Sub
 
+    <Obsolete("Unused")>
     Private Function GetDescription() As String
 
         Dim s As String
@@ -719,14 +419,12 @@ Public Class clsParams
 
     Private Function InterpretMassFilterString(massFilterString As String) As String()
         Dim s() As String = Nothing
-        Dim counter As Integer = 0
-        Dim placeCounter As Integer = 0
-        Dim currChar As String = ""
-        Dim prevChar As String = ""
-        Dim tmpString As String = ""
+        Dim placeCounter = 0
+        Dim prevChar = ""
+        Dim tmpString = ""
 
         For counter = 1 To Len(massFilterString)
-            currChar = Mid(massFilterString, counter, 1)
+            Dim currChar = Mid(massFilterString, counter, 1)
             If (currChar = " " And prevChar <> " ") Or (counter = Len(massFilterString)) Then
                 ReDim Preserve s(placeCounter)
                 If currChar <> " " Then
@@ -746,8 +444,8 @@ Public Class clsParams
 
     End Function
 
-    Private Function ReturnMassFilterString( _
-        minMass As Single, _
+    Private Function ReturnMassFilterString(
+        minMass As Single,
         maxMass As Single) As String
 
         Return Format(minMass.ToString, "0") & " " & Format(maxMass.ToString, "0")
@@ -764,7 +462,6 @@ End Class
 Public Class clsIonSeries
     Public m_origIonSeriesString As String
 
-    Private m_initialized As Boolean
     Private m_use_a_Ions As Integer
     Private m_use_b_Ions As Integer
     Private m_use_y_Ions As Integer
@@ -785,7 +482,7 @@ Public Class clsIonSeries
 
     Public Sub New()
         m_origIonSeriesString = Nothing
-        m_initialized = True
+        Initialized = True
     End Sub
 
     Public Sub RevertToOriginalIonString()
@@ -796,7 +493,7 @@ Public Class clsIonSeries
 
     Private Sub ParseISS(ionString As String)
         Dim tmpSplit() As String
-        tmpSplit = ionString.Split(System.Convert.ToChar(" "))
+        tmpSplit = ionString.Split(Convert.ToChar(" "))
         m_use_a_Ions = CInt(tmpSplit(0))
         m_use_b_Ions = CInt(tmpSplit(1))
         m_use_y_Ions = CInt(tmpSplit(2))
@@ -813,127 +510,118 @@ Public Class clsIonSeries
 
 #Region " Properties List "
 
-    Public Property Initialized() As Boolean
-        Get
-            Return m_initialized
-        End Get
-        Set(Value As Boolean)
-            m_initialized = Value
-        End Set
-    End Property
-    Public Property Use_a_Ions() As Integer
+    Public Property Initialized As Boolean
+
+    Public Property Use_a_Ions As Integer
         Get
             Return Math.Abs(m_use_a_Ions)
         End Get
-        Set(Value As Integer)
-            m_use_a_Ions = Math.Abs(Value)
+        Set(value As Integer)
+            m_use_a_Ions = Math.Abs(value)
         End Set
     End Property
-    Public Property Use_b_Ions() As Integer
+    Public Property Use_b_Ions As Integer
         Get
             Return Math.Abs(m_use_b_Ions)
         End Get
-        Set(Value As Integer)
+        Set
             m_use_b_Ions = Math.Abs(Value)
         End Set
     End Property
-    Public Property Use_y_Ions() As Integer
+    Public Property Use_y_Ions As Integer
         Get
             Return Math.Abs(m_use_y_Ions)
         End Get
-        Set(Value As Integer)
+        Set
             m_use_y_Ions = Math.Abs(Value)
         End Set
     End Property
-    Public Property a_Ion_Weighting() As Single
+    Public Property a_Ion_Weighting As Single
         Get
             Return m_aWeight
         End Get
-        Set(Value As Single)
+        Set
             m_aWeight = Value
         End Set
     End Property
-    Public Property b_Ion_Weighting() As Single
+    Public Property b_Ion_Weighting As Single
         Get
             Return m_bWeight
         End Get
-        Set(Value As Single)
+        Set
             m_bWeight = Value
         End Set
     End Property
-    Public Property c_Ion_Weighting() As Single
+    Public Property c_Ion_Weighting As Single
         Get
             Return m_cWeight
         End Get
-        Set(Value As Single)
+        Set
             m_cWeight = Value
         End Set
     End Property
-    Public Property d_Ion_Weighting() As Single
+    Public Property d_Ion_Weighting As Single
         Get
             Return m_dWeight
         End Get
-        Set(Value As Single)
+        Set
             m_dWeight = Value
         End Set
     End Property
-    Public Property v_Ion_Weighting() As Single
+    Public Property v_Ion_Weighting As Single
         Get
             Return m_vWeight
         End Get
-        Set(Value As Single)
+        Set
             m_vWeight = Value
         End Set
     End Property
-    Public Property w_Ion_Weighting() As Single
+    Public Property w_Ion_Weighting As Single
         Get
             Return m_wWeight
         End Get
-        Set(Value As Single)
+        Set
             m_wWeight = Value
         End Set
     End Property
-    Public Property x_Ion_Weighting() As Single
+    Public Property x_Ion_Weighting As Single
         Get
             Return m_xWeight
         End Get
-        Set(Value As Single)
+        Set
             m_xWeight = Value
         End Set
     End Property
-    Public Property y_Ion_Weighting() As Single
+    Public Property y_Ion_Weighting As Single
         Get
             Return m_yWeight
         End Get
-        Set(Value As Single)
+        Set
             m_yWeight = Value
         End Set
     End Property
-    Public Property z_Ion_Weighting() As Single
+    Public Property z_Ion_Weighting As Single
         Get
             Return m_zWeight
         End Get
-        Set(Value As Single)
+        Set
             m_zWeight = Value
         End Set
     End Property
 #End Region
 
     Public Function ReturnIonString() As String
-        Dim s As String
-        s = AssembleIonString()
+        Dim s As String = AssembleIonString()
         Return s
     End Function
 
     Private Function AssembleIonString() As String
-        Dim s As String
-
-        s = Use_a_Ions.ToString & " " & Use_b_Ions.ToString & " " & Use_y_Ions.ToString & " "
-        s = s & Format(a_Ion_Weighting, "0.0").ToString & " " & Format(b_Ion_Weighting, "0.0").ToString & " "
-        s = s & Format(c_Ion_Weighting, "0.0").ToString & " " & Format(d_Ion_Weighting, "0.0").ToString & " "
-        s = s & Format(v_Ion_Weighting, "0.0").ToString & " " & Format(w_Ion_Weighting, "0.0").ToString & " "
-        s = s & Format(x_Ion_Weighting, "0.0").ToString & " "
-        s = s & Format(y_Ion_Weighting, "0.0").ToString & " " & Format(z_Ion_Weighting, "0.0").ToString & " "
+        Dim s = Use_a_Ions.ToString & " " & Use_b_Ions.ToString & " " & Use_y_Ions.ToString & " " &
+                Format(a_Ion_Weighting, "0.0").ToString & " " & Format(b_Ion_Weighting, "0.0").ToString & " " &
+                Format(c_Ion_Weighting, "0.0").ToString & " " & Format(d_Ion_Weighting, "0.0").ToString & " " &
+                Format(v_Ion_Weighting, "0.0").ToString & " " & Format(w_Ion_Weighting, "0.0").ToString & " " &
+                Format(x_Ion_Weighting, "0.0").ToString & " " &
+                Format(y_Ion_Weighting, "0.0").ToString & " " & Format(z_Ion_Weighting, "0.0").ToString & " "
 
         Return s
     End Function
@@ -941,10 +629,9 @@ Public Class clsIonSeries
 End Class
 
 
-
 Public Class clsEnzymeDetails
 
-    Private m_EnzymeString As String
+    Private ReadOnly m_EnzymeString As String
 
     Private m_Number As Integer         'Enzyme ID Number
     Private m_Name As String            'Descriptive Name
@@ -963,14 +650,12 @@ Public Class clsEnzymeDetails
 
     Private Sub ParseEnzymeString(enzStr As String)
         Dim s() As String = Nothing
-        Dim counter As Integer = 0
-        Dim placeCounter As Integer = 0
-        Dim currChar As String = ""
-        Dim prevChar As String = ""
-        Dim tmpString As String = ""
+        Dim placeCounter = 0
+        Dim prevChar = ""
+        Dim tmpString = ""
 
         For counter = 1 To Len(enzStr) + 1
-            currChar = Mid(enzStr, counter, 1)
+            Dim currChar = Mid(enzStr, counter, 1)
             If (currChar = " " And prevChar <> " ") Or (counter = Len(enzStr) + 1) Then
                 ReDim Preserve s(placeCounter)
                 s(placeCounter) = tmpString
@@ -983,7 +668,6 @@ Public Class clsEnzymeDetails
             prevChar = currChar
         Next
 
-
         m_Number = CInt(s(0))
         m_Name = s(1)
         m_Offset = CInt(s(2))
@@ -992,43 +676,43 @@ Public Class clsEnzymeDetails
 
     End Sub
 
-    Public Property EnzymeID() As Integer
+    Public Property EnzymeID As Integer
         Get
             Return m_Number
         End Get
-        Set(Value As Integer)
+        Set
             m_Number = Value
         End Set
     End Property
-    Public Property EnzymeName() As String
+    Public Property EnzymeName As String
         Get
             Return m_Name
         End Get
-        Set(Value As String)
+        Set
             m_Name = Value
         End Set
     End Property
-    Public Property EnzymeCleaveOffset() As Integer
+    Public Property EnzymeCleaveOffset As Integer
         Get
             Return m_Offset
         End Get
-        Set(Value As Integer)
+        Set
             m_Offset = Value
         End Set
     End Property
-    Public Property EnzymeCleavePoints() As String
+    Public Property EnzymeCleavePoints As String
         Get
             Return m_CleavePoints
         End Get
-        Set(Value As String)
+        Set
             m_CleavePoints = Value
         End Set
     End Property
-    Public Property EnzymeNoCleavePoints() As String
+    Public Property EnzymeNoCleavePoints As String
         Get
             Return m_NoCleavePoints
         End Get
-        Set(Value As String)
+        Set
             m_NoCleavePoints = Value
         End Set
     End Property
@@ -1037,34 +721,34 @@ Public Class clsEnzymeDetails
         Dim s As String
 
         s = EnzymeID.ToString & "."
-        s = s.PadRight(4, System.Convert.ToChar(" ")) & EnzymeName
-        s = s.PadRight(30, System.Convert.ToChar(" ")) & EnzymeCleaveOffset.ToString
-        s = s.PadRight(35, System.Convert.ToChar(" ")) & EnzymeCleavePoints
-        s = s.PadRight(48, System.Convert.ToChar(" ")) & EnzymeNoCleavePoints
+        s = s.PadRight(4, Convert.ToChar(" ")) & EnzymeName
+        s = s.PadRight(30, Convert.ToChar(" ")) & EnzymeCleaveOffset.ToString
+        s = s.PadRight(35, Convert.ToChar(" ")) & EnzymeCleavePoints
+        s = s.PadRight(48, Convert.ToChar(" ")) & EnzymeNoCleavePoints
 
         Return s
 
     End Function
 
     Public Function ReturnBW32EnzymeInfoString(cleavagePosition As Integer) As String
-        Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
+        Dim sb = New StringBuilder
 
         sb.Append(EnzymeName)
         sb.Append("(")
-        sb.Append(Me.EnzymeCleavePoints)
-        If Me.EnzymeNoCleavePoints.Length > 0 And Me.EnzymeNoCleavePoints <> "-" Then
+        sb.Append(EnzymeCleavePoints)
+        If EnzymeNoCleavePoints.Length > 0 And EnzymeNoCleavePoints <> "-" Then
             sb.Append("/")
-            sb.Append(Me.EnzymeNoCleavePoints)
+            sb.Append(EnzymeNoCleavePoints)
         End If
         sb.Append(")")
         sb.Append(" ")
         sb.Append(cleavagePosition.ToString)
         sb.Append(" ")
-        sb.Append(Me.EnzymeCleaveOffset.ToString)
+        sb.Append(EnzymeCleaveOffset.ToString)
         sb.Append(" ")
-        sb.Append(Me.EnzymeCleavePoints)
+        sb.Append(EnzymeCleavePoints)
         sb.Append(" ")
-        sb.Append(Me.EnzymeNoCleavePoints)
+        sb.Append(EnzymeNoCleavePoints)
 
         Return sb.ToString
     End Function
@@ -1079,50 +763,42 @@ Public Class clsEnzymeCollection
     End Sub
 
     Public Sub add(Enzyme As clsEnzymeDetails)
-        Me.List.Add(Enzyme)
+        List.Add(Enzyme)
     End Sub
 
     Default Public Property Item(index As Integer) As clsEnzymeDetails
         Get
-            Return DirectCast(Me.List(index), clsEnzymeDetails)
+            Return DirectCast(List(index), clsEnzymeDetails)
         End Get
-        Set(Value As clsEnzymeDetails)
-            Me.List(index) = Value
+        Set
+            List(index) = Value
         End Set
     End Property
 End Class
 
 Public Class clsGetEnzymeBlock
 
-    Private m_templateFilePath As String
-    Private m_sectionName As String
-    Private m_EnzymeBlockCollection As System.Collections.Specialized.StringCollection
-    Private m_EnzymeCollection As clsEnzymeCollection
+    Private ReadOnly m_templateFilePath As String
+    Private ReadOnly m_sectionName As String
+    Private ReadOnly m_EnzymeBlockCollection As StringCollection
 
-    Public Property EnzymeList() As clsEnzymeCollection
-        Get
-            Return m_EnzymeCollection
-        End Get
-        Set(Value As clsEnzymeCollection)
-            m_EnzymeCollection = Value
-        End Set
-    End Property
+    Public Property EnzymeList As clsEnzymeCollection
 
-    Public Sub New( _
-        TemplateFilePath As String, _
+    Public Sub New(
+        TemplateFilePath As String,
         SectionName As String)
 
         m_templateFilePath = TemplateFilePath
         m_sectionName = SectionName
 
         m_EnzymeBlockCollection = GetEnzymeBlock()
-        m_EnzymeCollection = InterpretEnzymeBlockCollection(m_EnzymeBlockCollection)
+        EnzymeList = InterpretEnzymeBlockCollection(m_EnzymeBlockCollection)
 
     End Sub
 
-    Private Function GetEnzymeBlock() As System.Collections.Specialized.StringCollection
+    Private Function GetEnzymeBlock() As StringCollection
 
-        Dim sc As New System.Collections.Specialized.StringCollection
+        Dim sc As New StringCollection
 
         Dim fi As FileInfo
         Dim tr As TextReader
@@ -1152,8 +828,8 @@ Public Class clsGetEnzymeBlock
 
     End Function
 
-    Private Function LoadDefaultEnzymes() As System.Collections.Specialized.StringCollection
-        Dim sc As New System.Collections.Specialized.StringCollection
+    Private Function LoadDefaultEnzymes() As StringCollection
+        Dim sc As New StringCollection
 
         sc.Add("0.  No_Enzyme              0      -           -")
         sc.Add("1.  Trypsin                1      KR          -")
@@ -1180,11 +856,11 @@ Public Class clsGetEnzymeBlock
 
     End Function
 
-    Private Function InterpretEnzymeBlockCollection( _
-    enzymeBlock As System.Collections.Specialized.StringCollection) As clsEnzymeCollection
+    Private Function InterpretEnzymeBlockCollection(
+    enzymeBlock As StringCollection) As clsEnzymeCollection
 
         Dim tempEnzyme As clsEnzymeDetails
-        Dim tempStorage As clsEnzymeCollection = New clsEnzymeCollection
+        Dim tempStorage = New clsEnzymeCollection()
         Dim s As String
         Dim sTmp As String
         'Dim counter As Integer

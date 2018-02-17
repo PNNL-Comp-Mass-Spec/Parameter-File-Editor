@@ -6,13 +6,18 @@ ParamFileEditor
 </name>
 </assembly>
 <members>
+<member name="F:ParamFileEditor.frmMainGUI.m_sharedMain">
+ <summary>
+ This class needs to be instantiated so that we can read properties BaseLineParamSet and TemplateFileName
+ </summary>
+</member>
 <member name="M:ParamFileEditor.frmMainGUI.GetExceptionStackTrace(System.Exception,System.Boolean)">
-	<summary>
+ <summary>
  Parses the .StackTrace text of the given expression to return a compact description of the current stack
  </summary>
-	<param name="objException"></param>
-	<returns>String similar to "Stack trace: clsCodeTest.Test-:-clsCodeTest.TestException-:-clsCodeTest.InnerTestException in clsCodeTest.vb:line 86"</returns>
-	<remarks></remarks>
+ <param name="objException"></param>
+ <returns>String similar to "Stack trace: clsCodeTest.Test-:-clsCodeTest.TestException-:-clsCodeTest.InnerTestException in clsCodeTest.vb:line 86"</returns>
+ <remarks></remarks>
 </member>
 </members>
 </doc>

@@ -1,4 +1,6 @@
 Imports System.Collections.Specialized
+Imports System.Text
+Imports System.Text.RegularExpressions
 
 Public Class clsMods
     Inherits CollectionBase
@@ -48,12 +50,12 @@ Public Class clsMods
 #Region " Public Properties "
     Public ReadOnly Property ModCount() As Integer
         Get
-            Return Me.List.Count
+            Return List.Count
         End Get
     End Property
-    public ReadOnly Property Initialized() As Boolean
+    Public ReadOnly Property Initialized() As Boolean
         Get
-            If Me.List.Count > 0 Then
+            If List.Count > 0 Then
                 Return True
             Else
                 Return False
@@ -63,13 +65,13 @@ Public Class clsMods
 
     Public ReadOnly Property GetModEntry(index As Integer) As clsModEntry
         Get
-            Return CType(Me.List.Item(index), clsModEntry)
+            Return CType(List.Item(index), clsModEntry)
         End Get
     End Property
 
     Public ReadOnly Property NumMods() As Integer
         Get
-            Return Me.List.Count()
+            Return List.Count()
         End Get
     End Property
 #End Region
@@ -77,38 +79,38 @@ Public Class clsMods
 #Region " public Procedures "
     Public Sub New()
         MyBase.New()
-        Me.LoadAAMappingColl()
+        LoadAAMappingColl()
     End Sub
 
-    Public Overridable Sub Add( _
-        AffectedResidue As ResidueCode, _
-        MassDifference As Double, _
+    Public Overridable Sub Add(
+        AffectedResidue As ResidueCode,
+        MassDifference As Double,
         Optional GlobalModID As Integer = 0)
 
-        Me.m_Add(Me.ConvertResidueCodeToSLC(AffectedResidue), MassDifference, clsModEntry.ModificationTypes.Static, GlobalModID)
+        m_Add(ConvertResidueCodeToSLC(AffectedResidue), MassDifference, clsModEntry.ModificationTypes.Static, GlobalModID)
     End Sub
 
-    Public Sub Add( _
-        AffectedResidueString As String, _
+    Public Sub Add(
+        AffectedResidueString As String,
         MassDifference As Double)
 
-        Dim sc As StringCollection = Me.ConvertAffectedResStringToSC(AffectedResidueString)
+        Dim sc As StringCollection = ConvertAffectedResStringToSC(AffectedResidueString)
         Dim newMod As New clsModEntry(sc, MassDifference, clsModEntry.ModificationTypes.Static)
-        Me.List.Add(newMod)
+        List.Add(newMod)
     End Sub
 
     Public Sub Insert(index As Integer, newMod As clsModEntry)
-        Me.List.Insert(index, newMod)
+        List.Insert(index, newMod)
     End Sub
     Public Sub Remove(index As Integer)
-        Me.List.RemoveAt(index)
+        List.RemoveAt(index)
     End Sub
     Public Sub Replace(index As Integer, newMod As clsModEntry)
-        Me.List.RemoveAt(index)
-        Me.List.Insert(index, newMod)
+        List.RemoveAt(index)
+        List.Insert(index, newMod)
     End Sub
     Public Function GetMassDiff(index As Integer) As String
-        Dim m As clsModEntry = DirectCast(Me.List.Item(index), clsModEntry)
+        Dim m = DirectCast(List.Item(index), clsModEntry)
         Return Format(m.MassDifference, "0.00000")
     End Function
 
@@ -119,20 +121,20 @@ Public Class clsMods
 #End Region
 
 #Region " Member Procedures "
-    Protected Sub m_Add( _
-        AffectedEntity As String, _
-        MassDifference As Double, _
-        ModType As clsModEntry.ModificationTypes, _
+    Protected Sub m_Add(
+        AffectedEntity As String,
+        MassDifference As Double,
+        ModType As clsModEntry.ModificationTypes,
         Optional GlobalModID As Integer = 0)
 
-        Dim sc As StringCollection = Me.ConvertAffectedResStringToSC(AffectedEntity)
+        Dim sc As StringCollection = ConvertAffectedResStringToSC(AffectedEntity)
         Dim newMod As New clsModEntry(sc, MassDifference, ModType, GlobalModID)
-        Me.List.Add(newMod)
+        List.Add(newMod)
 
     End Sub
 
     Protected Sub LoadAAMappingColl()
-        Dim AAEnums() As String = System.Enum.GetNames(GetType(ResidueCode))
+        Dim AAEnums() As String = [Enum].GetNames(GetType(ResidueCode))
         Dim AA As String
         'C_Term_Protein()
         'C_Term_Peptide()
@@ -143,9 +145,9 @@ Public Class clsMods
 
         For Each AA In AAEnums
             If AA = "C_Term_Protein" Or AA = "C_Term_Peptide" Or AA = "N_Term_Protein" Or AA = "N_Term_Peptide" Then
-                Me.m_AAMappingTable.Add(AA, AA)
+                m_AAMappingTable.Add(AA, AA)
             Else
-                Me.m_AAMappingTable.Add(AA, Left(AA, 1))
+                m_AAMappingTable.Add(AA, Left(AA, 1))
             End If
         Next
     End Sub
@@ -171,17 +173,17 @@ Public Class clsMods
     End Function
     Protected Function ConvertResidueCodeToSLC(Residue As ResidueCode) As String
         Dim tmpRes As String = Residue.ToString
-        Dim tmpSLC As String = Me.m_AAMappingTable.Get(tmpRes)
+        Dim tmpSLC As String = m_AAMappingTable.Get(tmpRes)
         Return tmpSLC
     End Function
 
     Protected Function ConvertSLCToResidueCode(SingleLetterAA As String) As ResidueCode
-        Dim stepper As IEnumerator = Me.m_AAMappingTable.GetEnumerator
+        Dim stepper As IEnumerator = m_AAMappingTable.GetEnumerator
         Dim ResString As String
         Do While stepper.MoveNext = True
             ResString = CStr(stepper.Current)
             If SingleLetterAA = Left(ResString, 1) And InStr(ResString, "Term") = 0 Then
-                Return DirectCast(System.Enum.Parse(GetType(ResidueCode), ResString), ResidueCode)
+                Return DirectCast([Enum].Parse(GetType(ResidueCode), ResString), ResidueCode)
             End If
         Loop
 
@@ -192,10 +194,10 @@ Public Class clsMods
         Dim testCase As String
         Dim tmpEntity As String = modifiedEntity
 
-        For Each statMod In Me.List
+        For Each statMod In List
             testCase = statMod.ReturnResidueAffected(0)
             If testCase = tmpEntity Then
-                Return Me.List.IndexOf(statMod)
+                Return List.IndexOf(statMod)
             End If
         Next
 
@@ -208,7 +210,7 @@ Public Class clsMods
         If ModIndex = -1 Then
             ModEntry = Nothing
         Else
-            ModEntry = DirectCast(Me.List.Item(ModIndex), clsModEntry)
+            ModEntry = DirectCast(List.Item(ModIndex), clsModEntry)
         End If
 
 
@@ -224,23 +226,23 @@ Public Class clsMods
     End Function
 
 
-    Protected Sub m_ChangeMod( _
-        foundMod As clsModEntry, _
-        ModifiedEntity As String, _
-        MassDifference As Double, _
+    Protected Sub m_ChangeMod(
+        foundMod As clsModEntry,
+        ModifiedEntity As String,
+        MassDifference As Double,
         Optional Additive As Boolean = False)
 
         'Dim foundMod As clsModEntry = FindAAMod(ModifiedAA)
-        If foundMod.MassDifference = 0.0 And MassDifference <> 0.0 Then
-            Me.m_Add(ModifiedEntity, MassDifference, foundMod.ModificationType)
+        If Math.Abs(foundMod.MassDifference) < Single.Epsilon And Math.Abs(MassDifference) > Single.Epsilon Then
+            m_Add(ModifiedEntity, MassDifference, foundMod.ModificationType)
             Exit Sub
-        ElseIf foundMod.MassDifference = 0.0 And MassDifference = 0.0 Then
+        ElseIf Math.Abs(foundMod.MassDifference) < Single.Epsilon And Math.Abs(MassDifference) < Single.Epsilon Then
             Exit Sub
-        ElseIf foundMod.MassDifference <> 0.0 Then          'Not an emptyMod
+        ElseIf Math.Abs(foundMod.MassDifference) > Single.Epsilon Then          'Not an emptyMod
             Dim counter As Integer
             Dim tempMod As clsModEntry
-            'Dim modAAString As String = Me.ConvertResidueCodeToSLC(ModifiedAA)
-            Dim sc As StringCollection = Me.ConvertAffectedResStringToSC(ModifiedEntity)
+            'Dim modAAString As String = ConvertResidueCodeToSLC(ModifiedAA)
+            Dim sc As StringCollection = ConvertAffectedResStringToSC(ModifiedEntity)
             Dim changeMod As clsModEntry
 
             If Additive Then
@@ -249,14 +251,14 @@ Public Class clsMods
                 changeMod = New clsModEntry(sc, MassDifference, foundMod.ModificationType)
             End If
 
-            For Each tempMod In Me.List
-                If foundMod.Equals(tempMod) And MassDifference <> 0.0 Then
-                    Me.Replace(counter, changeMod)
+            For Each tempMod In List
+                If foundMod.Equals(tempMod) And Math.Abs(MassDifference) > Single.Epsilon Then
+                    Replace(counter, changeMod)
                     Exit Sub
-                ElseIf foundMod.Equals(tempMod) And MassDifference = 0.0 Then
-                    Me.RemoveAt(counter)
+                ElseIf foundMod.Equals(tempMod) And Math.Abs(MassDifference) < Single.Epsilon Then
+                    RemoveAt(counter)
                 End If
-                If Me.List.Count = 0 Then Exit For
+                If List.Count = 0 Then Exit For
                 counter += 1
             Next
 
@@ -282,10 +284,8 @@ Public Class clsModEntry
 
 #Region " Member Properties "
     Private m_ResiduesAffected As StringCollection
-    Private m_MassDiff As Double
-    Private m_GlobalModID As Integer
-    Private m_IsIsotopic As Boolean
-    Private m_ModType As ModificationTypes
+    ' Unused: Private m_IsIsotopic As Boolean
+    Private ReadOnly m_ModType As ModificationTypes
 
 #End Region
 
@@ -293,59 +293,45 @@ Public Class clsModEntry
 
     Public ReadOnly Property TotalNumResiduesAffected() As Integer
         Get
-            Return Me.m_ResiduesAffected.Count
+            Return m_ResiduesAffected.Count
         End Get
     End Property
     Public ReadOnly Property ReturnResidueAffected(ResidueSCIndex As Integer) As String
         Get
-            Return Me.m_ResiduesAffected(ResidueSCIndex)
+            Return m_ResiduesAffected(ResidueSCIndex)
         End Get
     End Property
     Public ReadOnly Property ReturnAllAffectedResidues() As StringCollection
         Get
-            Return Me.m_ResiduesAffected
+            Return m_ResiduesAffected
         End Get
     End Property
     Public Property ResidueCollection() As StringCollection
         Get
-            Return Me.m_ResiduesAffected
+            Return m_ResiduesAffected
         End Get
         Set(Value As StringCollection)
-            Me.m_ResiduesAffected = Value
+            m_ResiduesAffected = Value
         End Set
     End Property
     Public ReadOnly Property ReturnAllAffectedResiduesString() As String
         Get
-            Return Me.ConvertSCToAAString(Me.m_ResiduesAffected)
+            Return ConvertSCToAAString(m_ResiduesAffected)
         End Get
     End Property
-    Public Property MassDifference() As Double
-        Get
-            Return Me.m_MassDiff
-        End Get
-        Set(Value As Double)
-            Me.m_MassDiff = Value
-        End Set
-    End Property
+    Public Property MassDifference As Double
 
-    Public Property GlobalModID() As Integer
-        Get
-            Return Me.m_GlobalModID
-        End Get
-        Set(Value As Integer)
-            Me.m_GlobalModID = Value
-        End Set
-    End Property
+    Public Property GlobalModID As Integer
 
     Public ReadOnly Property ModificationTypeString() As String
         Get
-            Return Me.GetModTypeSymbol
+            Return GetModTypeSymbol()
         End Get
     End Property
 
     Public ReadOnly Property ModificationType() As ModificationTypes
         Get
-            Return Me.m_ModType
+            Return m_ModType
         End Get
     End Property
 
@@ -353,14 +339,14 @@ Public Class clsModEntry
 
 #Region " Member Procedures "
     Private Sub AddResidue(newResidue As String)
-        Me.m_ResiduesAffected.Add(newResidue)
+        m_ResiduesAffected.Add(newResidue)
     End Sub
     Private Sub RemoveResidue(badResidue As String)
-        Me.m_ResiduesAffected.Remove(badResidue)
+        m_ResiduesAffected.Remove(badResidue)
     End Sub
     Private Function ConvertSCToAAString(resCollection As StringCollection) As String
         Dim s As String
-        Dim returnString As String = ""
+        Dim returnString = ""
         For Each s In resCollection
             s = Left(s, 1)
             returnString = returnString & s
@@ -369,7 +355,7 @@ Public Class clsModEntry
     End Function
 
     Private Function GetModTypeSymbol() As String
-        Select Case Me.m_ModType
+        Select Case m_ModType
             Case ModificationTypes.Dynamic
                 Return "D"
             Case ModificationTypes.Static
@@ -389,22 +375,22 @@ Public Class clsModEntry
 #End Region
 
 #Region " Public Procedures "
-    Public Sub New( _
-        AffectedResidueList As StringCollection, _
-        MassDifference As Double, _
-        ModType As ModificationTypes, _
-        Optional GlobalModID As Integer = 0)
+    Public Sub New(
+        affectedResidueList As StringCollection,
+        massDiff As Double,
+        modType As ModificationTypes,
+        Optional modID As Integer = 0)
 
-        Me.m_ModType = ModType
-        Me.m_ResiduesAffected = AffectedResidueList
-        Me.m_MassDiff = MassDifference
-        Me.m_GlobalModID = GlobalModID
+        m_ModType = modType
+        m_ResiduesAffected = affectedResidueList
+        MassDifference = massDiff
+        GlobalModID = modID
     End Sub
     Public Sub AddAffectedResidue(ResidueToAdd As String)
-        Me.AddResidue(ResidueToAdd)
+        AddResidue(ResidueToAdd)
     End Sub
     Public Sub RemoveAffectedResidue(ResidueToRemove As String)
-        Me.RemoveResidue(ResidueToRemove)
+        RemoveResidue(ResidueToRemove)
     End Sub
 #End Region
 
@@ -420,8 +406,8 @@ Public Class clsTermDynamicMods
 
     Sub New(TermDynModString As String)
         MyBase.New()
-        Me.m_OrigDynModString = TermDynModString
-        ParseDynModString(Me.m_OrigDynModString)
+        m_OrigDynModString = TermDynModString
+        ParseDynModString(m_OrigDynModString)
 
     End Sub
 
@@ -429,8 +415,8 @@ Public Class clsTermDynamicMods
         Get
             Return GetTermDynMod(NTERM_SYMBOL)
         End Get
-        Set(value As Double)
-            UpdateTermDynMod(NTERM_SYMBOL, value)
+        Set
+            UpdateTermDynMod(NTERM_SYMBOL, Value)
         End Set
     End Property
 
@@ -438,14 +424,14 @@ Public Class clsTermDynamicMods
         Get
             Return GetTermDynMod(CTERM_SYMBOL)
         End Get
-        Set(value As Double)
-            UpdateTermDynMod(CTERM_SYMBOL, value)
+        Set
+            UpdateTermDynMod(CTERM_SYMBOL, Value)
         End Set
     End Property
 
     Protected Function GetTermDynMod(strSymbol As String) As Double
         Dim objModEntry As clsModEntry
-        objModEntry = Me.m_FindMod(strSymbol)
+        objModEntry = m_FindMod(strSymbol)
 
         If objModEntry Is Nothing Then
             Return 0
@@ -457,25 +443,25 @@ Public Class clsTermDynamicMods
     Protected Sub UpdateTermDynMod(strSymbol As String, sngMass As Double)
 
         Dim intIndex As Integer
-        intIndex = Me.m_FindModIndex(strSymbol)
+        intIndex = m_FindModIndex(strSymbol)
 
         If intIndex < 0 Then
             ' Mod was not found
             ' Add it (assuming sngMass is non-zero)
-            If sngMass <> 0 Then
+            If Math.Abs(sngMass) > Single.Epsilon Then
                 Dim resCollection As StringCollection
                 resCollection = New StringCollection
                 resCollection.Add(strSymbol)
-                Me.Add(New clsModEntry(resCollection, sngMass, clsModEntry.ModificationTypes.Dynamic))
+                Add(New clsModEntry(resCollection, sngMass, clsModEntry.ModificationTypes.Dynamic))
             End If
         Else
             ' Mod was found
             ' Update the mass (or remove it if sngMass is zero)
-            If sngMass = 0 Then
-                Me.Remove(intIndex)
+            If Math.Abs(sngMass) < Single.Epsilon Then
+                Remove(intIndex)
             Else
                 Dim objModEntry As clsModEntry
-                objModEntry = Me.GetModEntry(intIndex)
+                objModEntry = GetModEntry(intIndex)
                 objModEntry.MassDifference = sngMass
             End If
         End If
@@ -485,9 +471,8 @@ Public Class clsTermDynamicMods
         Dim tmpCTMass As Double
         Dim tmpNTMass As Double
 
-        Dim splitRE As System.Text.RegularExpressions.Regex = _
-            New System.Text.RegularExpressions.Regex("(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)")
-        Dim m As System.Text.RegularExpressions.Match
+        Dim splitRE = New Regex("(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)")
+        Dim m As Match
 
         If DMString Is Nothing Then
             Exit Sub
@@ -500,36 +485,36 @@ Public Class clsTermDynamicMods
             tmpCTMass = CDbl(m.Groups("ctmodmass").Value)
             tmpNTMass = CDbl(m.Groups("ntmodmass").Value)
 
-            Me.Dyn_Mod_NTerm = tmpNTMass
-            Me.Dyn_Mod_CTerm = tmpCTMass
+            Dyn_Mod_NTerm = tmpNTMass
+            Dyn_Mod_CTerm = tmpCTMass
 
         End If
 
     End Sub
 
     Protected Overrides Function AssembleModString(counter As Integer) As String
-        Dim sb As System.Text.StringBuilder = New System.Text.StringBuilder
+        Dim sb = New StringBuilder()
 
         Dim tmpModString As String
-        Dim ctRes As String = ">"
-        Dim ntRes As String = "<"
+        ' Dim ctRes As String = ">"
+        ' Dim ntRes As String = "<"
 
-        Dim ctModMass As Double = 0.0
-        Dim ntModMass As Double = 0.0
+        Dim ctModMass = 0.0
+        Dim ntModMass = 0.0
 
         Dim tmpModMass As Double
 
         Dim dynMod As clsModEntry
 
-        For Each dynMod In Me.List
+        For Each dynMod In List
             tmpModMass = dynMod.MassDifference
             tmpModString = dynMod.ReturnAllAffectedResiduesString
             If tmpModString = ">" Then
                 ctModMass = tmpModMass
-                ctRes = tmpModString
+                ' ctRes = tmpModString
             ElseIf tmpModString = "<" Then
                 ntModMass = tmpModMass
-                ntRes = tmpModString
+                ' ntRes = tmpModString
             End If
         Next
 
@@ -552,32 +537,32 @@ Public Class clsDynamicMods
     '#Region " Public Legacy Functions and Properties "
     '    Public Property Dyn_Mod_1_MassDiff() As Double
     '        Get
-    '            Return Me.Dyn_Mod_n_MassDiff(1)
+    '            Return Dyn_Mod_n_MassDiff(1)
     '        End Get
-    '        Set(Value As Double)
+    '        Set
     '            Dyn_Mod_n_MassDiff(1) = Value
     '        End Set
     '    End Property
     '    Public Property Dyn_Mod_2_MassDiff() As Double
     '        Get
-    '            Return Me.Dyn_Mod_n_MassDiff(2)
+    '            Return Dyn_Mod_n_MassDiff(2)
     '        End Get
-    '        Set(Value As Double)
+    '        Set
     '            Dyn_Mod_n_MassDiff(2) = Value
     '        End Set
     '    End Property
     '    Public Property Dyn_Mod_3_MassDiff() As Double
     '        Get
-    '            Return Me.Dyn_Mod_n_MassDiff(3)
+    '            Return Dyn_Mod_n_MassDiff(3)
     '        End Get
-    '        Set(Value As Double)
+    '        Set
     '            Dyn_Mod_n_MassDiff(3) = Value
     '        End Set
     '    End Property
 
     '    Public Property Dyn_Mod_1_AAList() As String
     '        Get
-    '            Return Me.Dyn_Mod_n_AAList(1)
+    '            Return Dyn_Mod_n_AAList(1)
     '        End Get
     '        Set(Value As String)
     '            Dyn_Mod_n_AAList(1) = Value
@@ -585,7 +570,7 @@ Public Class clsDynamicMods
     '    End Property
     '    Public Property Dyn_Mod_2_AAList() As String
     '        Get
-    '            Return Me.Dyn_Mod_n_AAList(2)
+    '            Return Dyn_Mod_n_AAList(2)
     '        End Get
     '        Set(Value As String)
     '            Dyn_Mod_n_AAList(2) = Value
@@ -593,7 +578,7 @@ Public Class clsDynamicMods
     '    End Property
     '    Public Property Dyn_Mod_3_AAList() As String
     '        Get
-    '            Return Me.Dyn_Mod_n_AAList(3)
+    '            Return Dyn_Mod_n_AAList(3)
     '        End Get
     '        Set(Value As String)
     '            Dyn_Mod_n_AAList(3) = Value
@@ -630,17 +615,17 @@ Public Class clsDynamicMods
     ''    Return "0.0000 0.0000"
     ''End Function
 
-    Public Overloads Sub Add( _
-        AffectedResidueString As String, _
-        MassDifference As Double, _
+    Public Overloads Sub Add(
+        AffectedResidueString As String,
+        MassDifference As Double,
         Optional GlobalModID As Integer = 0)
 
-        Dim sc As StringCollection = Me.ConvertAffectedResStringToSC(AffectedResidueString)
+        Dim sc As StringCollection = ConvertAffectedResStringToSC(AffectedResidueString)
         Dim newDynMod As New clsModEntry(sc, MassDifference, clsModEntry.ModificationTypes.Dynamic)
-        Me.List.Add(newDynMod)
+        List.Add(newDynMod)
     End Sub
     Public Overloads Sub Add(ModToAdd As clsModEntry)
-        Me.List.Add(ModToAdd)
+        List.Add(ModToAdd)
     End Sub
 
     Public Property Dyn_Mod_n_MassDiff(DynModNumber As Integer) As Double
@@ -648,21 +633,21 @@ Public Class clsDynamicMods
             Dim dm As clsModEntry
             Dim index As Integer = DynModNumber - 1
             Try
-                dm = DirectCast(Me.List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), clsModEntry)
             Catch ex As Exception
-                dm = New clsModEntry(Me.ConvertAffectedResStringToSC("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
+                dm = New clsModEntry(ConvertAffectedResStringToSC("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
             End Try
             Return dm.MassDifference
         End Get
-        Set(Value As Double)
+        Set
             Dim index As Integer = DynModNumber - 1
             Dim dm As clsModEntry
-            If index <= Me.List.Count - 1 Then
-                dm = DirectCast(Me.List.Item(index), clsModEntry)
+            If index <= List.Count - 1 Then
+                dm = DirectCast(List.Item(index), clsModEntry)
                 dm.MassDifference = Value
-                Me.Replace(index, dm)
+                Replace(index, dm)
             Else
-                Me.Add("C", Value)
+                Add("C", Value)
             End If
         End Set
     End Property
@@ -671,7 +656,7 @@ Public Class clsDynamicMods
             Dim dm As clsModEntry
             Dim index As Integer = DynModNumber - 1
             Try
-                dm = DirectCast(Me.List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), clsModEntry)
             Catch ex As Exception
                 dm = New clsModEntry(ConvertAffectedResStringToSC("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
             End Try
@@ -680,12 +665,12 @@ Public Class clsDynamicMods
         Set(Value As String)
             Dim index As Integer = DynModNumber - 1
             Dim dm As clsModEntry
-            If index <= Me.List.Count - 1 Then
-                dm = DirectCast(Me.List.Item(index), clsModEntry)
-                dm.ResidueCollection = Me.ConvertAffectedResStringToSC(Value)
-                Me.Replace(index, dm)
+            If index <= List.Count - 1 Then
+                dm = DirectCast(List.Item(index), clsModEntry)
+                dm.ResidueCollection = ConvertAffectedResStringToSC(Value)
+                Replace(index, dm)
             Else
-                Me.Add(Value, CDbl(0.0))
+                Add(Value, CDbl(0.0))
             End If
         End Set
     End Property
@@ -695,21 +680,21 @@ Public Class clsDynamicMods
             Dim dm As clsModEntry
             Dim index As Integer = DynModNumber - 1
             Try
-                dm = DirectCast(Me.List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), clsModEntry)
             Catch ex As Exception
-                dm = New clsModEntry(Me.ConvertAffectedResStringToSC("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
+                dm = New clsModEntry(ConvertAffectedResStringToSC("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
             End Try
             Return dm.GlobalModID
         End Get
         Set(Value As Integer)
             Dim index As Integer = DynModNumber - 1
             Dim dm As clsModEntry
-            If index <= Me.List.Count - 1 Then
-                dm = DirectCast(Me.List.Item(index), clsModEntry)
+            If index <= List.Count - 1 Then
+                dm = DirectCast(List.Item(index), clsModEntry)
                 dm.GlobalModID = Value
-                Me.Replace(index, dm)
+                Replace(index, dm)
             Else
-                Me.Add("C", 0.0, Value)
+                Add("C", 0.0, Value)
             End If
         End Set
     End Property
@@ -717,13 +702,13 @@ Public Class clsDynamicMods
 
 #Region " Member Procedures "
     Protected Overridable Function AssembleModString(counter As Integer) As String
-        Dim s As String = ""
+        Dim s = ""
         Dim tmpModString As String
         Dim tmpModMass As Double
         Dim dynMod As clsModEntry
         Dim padCount As Integer
 
-        For Each dynMod In Me.List
+        For Each dynMod In List
             tmpModMass = dynMod.MassDifference
             tmpModString = dynMod.ReturnAllAffectedResiduesString
             s = s & Format(tmpModMass, "0.0000") & " " & tmpModString & " "
@@ -747,23 +732,22 @@ Public Class clsDynamicMods
         Dim resCounter As Integer
         Dim tmpMass As Double
 
-        Dim splitRE As System.Text.RegularExpressions.Regex = _
-            New System.Text.RegularExpressions.Regex("(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)")
-        Dim matches As System.Text.RegularExpressions.MatchCollection
+        Dim splitRE = New Regex("(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)")
+        Dim matches As MatchCollection
         matches = splitRE.Matches(DMString)
-        Dim m As System.Text.RegularExpressions.Match
+        Dim m As Match
 
         For Each m In matches
             tmpMass = CDbl(m.Groups("modmass").Value)
             tmpResString = m.Groups("residues").ToString
-            If tmpMass <> 0 Then
+            If Math.Abs(tmpMass) > Single.Epsilon Then
                 sc = New StringCollection
                 For resCounter = 1 To Len(tmpResString)
                     tmpRes = Mid(tmpResString, resCounter, 1)
                     sc.Add(tmpRes)
                 Next
                 Dim modEntry As New clsModEntry(sc, tmpMass, clsModEntry.ModificationTypes.Dynamic)
-                Me.Add(modEntry)
+                Add(modEntry)
             End If
         Next
 
@@ -785,227 +769,227 @@ Public Class clsStaticMods
 #Region " Legacy Access "
     Public Property CtermPeptide() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.C_Term_Peptide).MassDifference
+            Return FindAAMod(ResidueCode.C_Term_Peptide).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsStaticMods.ResidueCode.C_Term_Peptide, Value)
+        Set
+            ChangeAAMod(ResidueCode.C_Term_Peptide, Value)
         End Set
     End Property
     Public Property CtermProtein() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.C_Term_Protein).MassDifference
+            Return FindAAMod(ResidueCode.C_Term_Protein).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.C_Term_Protein, Value)
+        Set
+            ChangeAAMod(ResidueCode.C_Term_Protein, Value)
         End Set
     End Property
     Public Property NtermPeptide() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.N_Term_Peptide).MassDifference
+            Return FindAAMod(ResidueCode.N_Term_Peptide).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.N_Term_Peptide, Value)
+        Set
+            ChangeAAMod(ResidueCode.N_Term_Peptide, Value)
         End Set
     End Property
     Public Property NtermProtein() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.N_Term_Protein).MassDifference
+            Return FindAAMod(ResidueCode.N_Term_Protein).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.N_Term_Protein, Value)
+        Set
+            ChangeAAMod(ResidueCode.N_Term_Protein, Value)
         End Set
     End Property
 
     Public Property G_Glycine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.G_Glycine).MassDifference
+            Return FindAAMod(ResidueCode.G_Glycine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.G_Glycine, Value)
+        Set
+            ChangeAAMod(ResidueCode.G_Glycine, Value)
         End Set
     End Property
     Public Property A_Alanine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.A_Alanine).MassDifference
+            Return FindAAMod(ResidueCode.A_Alanine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.A_Alanine, Value)
+        Set
+            ChangeAAMod(ResidueCode.A_Alanine, Value)
         End Set
     End Property
     Public Property S_Serine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.S_Serine).MassDifference
+            Return FindAAMod(ResidueCode.S_Serine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.S_Serine, Value)
+        Set
+            ChangeAAMod(ResidueCode.S_Serine, Value)
         End Set
     End Property
     Public Property P_Proline() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.P_Proline).MassDifference
+            Return FindAAMod(ResidueCode.P_Proline).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.P_Proline, Value)
+        Set
+            ChangeAAMod(ResidueCode.P_Proline, Value)
         End Set
     End Property
     Public Property V_Valine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.V_Valine).MassDifference
+            Return FindAAMod(ResidueCode.V_Valine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.V_Valine, Value)
+        Set
+            ChangeAAMod(ResidueCode.V_Valine, Value)
         End Set
     End Property
     Public Property T_Threonine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.T_Threonine).MassDifference
+            Return FindAAMod(ResidueCode.T_Threonine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.T_Threonine, Value)
+        Set
+            ChangeAAMod(ResidueCode.T_Threonine, Value)
         End Set
     End Property
     Public Property C_Cysteine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.C_Cysteine).MassDifference
+            Return FindAAMod(ResidueCode.C_Cysteine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.C_Cysteine, Value)
+        Set
+            ChangeAAMod(ResidueCode.C_Cysteine, Value)
         End Set
     End Property
     Public Property L_Leucine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.L_Leucine).MassDifference
+            Return FindAAMod(ResidueCode.L_Leucine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.L_Leucine, Value)
+        Set
+            ChangeAAMod(ResidueCode.L_Leucine, Value)
         End Set
     End Property
     Public Property I_Isoleucine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.I_Isoleucine).MassDifference
+            Return FindAAMod(ResidueCode.I_Isoleucine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.I_Isoleucine, Value)
+        Set
+            ChangeAAMod(ResidueCode.I_Isoleucine, Value)
         End Set
     End Property
     Public Property X_LorI() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.X_LorI).MassDifference
+            Return FindAAMod(ResidueCode.X_LorI).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.X_LorI, Value)
+        Set
+            ChangeAAMod(ResidueCode.X_LorI, Value)
         End Set
     End Property
     Public Property N_Asparagine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.N_Asparagine).MassDifference
+            Return FindAAMod(ResidueCode.N_Asparagine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.N_Asparagine, Value)
+        Set
+            ChangeAAMod(ResidueCode.N_Asparagine, Value)
         End Set
     End Property
     Public Property O_Ornithine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.O_Ornithine).MassDifference
+            Return FindAAMod(ResidueCode.O_Ornithine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.O_Ornithine, Value)
+        Set
+            ChangeAAMod(ResidueCode.O_Ornithine, Value)
         End Set
     End Property
     Public Property B_avg_NandD() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.B_avg_NandD).MassDifference
+            Return FindAAMod(ResidueCode.B_avg_NandD).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.B_avg_NandD, Value)
+        Set
+            ChangeAAMod(ResidueCode.B_avg_NandD, Value)
         End Set
     End Property
     Public Property D_Aspartic_Acid() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.D_Aspartic_Acid).MassDifference
+            Return FindAAMod(ResidueCode.D_Aspartic_Acid).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.D_Aspartic_Acid, Value)
+        Set
+            ChangeAAMod(ResidueCode.D_Aspartic_Acid, Value)
         End Set
     End Property
     Public Property Q_Glutamine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.Q_Glutamine).MassDifference
+            Return FindAAMod(ResidueCode.Q_Glutamine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.Q_Glutamine, Value)
+        Set
+            ChangeAAMod(ResidueCode.Q_Glutamine, Value)
         End Set
     End Property
     Public Property K_Lysine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.K_Lysine).MassDifference
+            Return FindAAMod(ResidueCode.K_Lysine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.K_Lysine, Value)
+        Set
+            ChangeAAMod(ResidueCode.K_Lysine, Value)
         End Set
     End Property
     Public Property Z_avg_QandE() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.Z_avg_QandE).MassDifference
+            Return FindAAMod(ResidueCode.Z_avg_QandE).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.Z_avg_QandE, Value)
+        Set
+            ChangeAAMod(ResidueCode.Z_avg_QandE, Value)
         End Set
     End Property
     Public Property E_Glutamic_Acid() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.E_Glutamic_Acid).MassDifference
+            Return FindAAMod(ResidueCode.E_Glutamic_Acid).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.E_Glutamic_Acid, Value)
+        Set
+            ChangeAAMod(ResidueCode.E_Glutamic_Acid, Value)
         End Set
     End Property
     Public Property M_Methionine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.M_Methionine).MassDifference
+            Return FindAAMod(ResidueCode.M_Methionine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.M_Methionine, Value)
+        Set
+            ChangeAAMod(ResidueCode.M_Methionine, Value)
         End Set
     End Property
     Public Property H_Histidine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.H_Histidine).MassDifference
+            Return FindAAMod(ResidueCode.H_Histidine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.H_Histidine, Value)
+        Set
+            ChangeAAMod(ResidueCode.H_Histidine, Value)
         End Set
     End Property
     Public Property F_Phenylalanine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.F_Phenylalanine).MassDifference
+            Return FindAAMod(ResidueCode.F_Phenylalanine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.F_Phenylalanine, Value)
+        Set
+            ChangeAAMod(ResidueCode.F_Phenylalanine, Value)
         End Set
     End Property
     Public Property R_Arginine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.R_Arginine).MassDifference
+            Return FindAAMod(ResidueCode.R_Arginine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.R_Arginine, Value)
+        Set
+            ChangeAAMod(ResidueCode.R_Arginine, Value)
         End Set
     End Property
     Public Property Y_Tyrosine() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.Y_Tyrosine).MassDifference
+            Return FindAAMod(ResidueCode.Y_Tyrosine).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.Y_Tyrosine, Value)
+        Set
+            ChangeAAMod(ResidueCode.Y_Tyrosine, Value)
         End Set
     End Property
     Public Property W_Tryptophan() As Double
         Get
-            Return Me.FindAAMod(clsMods.ResidueCode.W_Tryptophan).MassDifference
+            Return FindAAMod(ResidueCode.W_Tryptophan).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeAAMod(clsMods.ResidueCode.W_Tryptophan, Value)
+        Set
+            ChangeAAMod(ResidueCode.W_Tryptophan, Value)
         End Set
     End Property
 
@@ -1017,26 +1001,26 @@ Public Class clsStaticMods
     End Sub
 
     Public Function GetResidue(index As Integer) As String
-        Dim m As clsModEntry = DirectCast(Me.List.Item(index), clsModEntry)
+        Dim m = DirectCast(List.Item(index), clsModEntry)
         Return m.ReturnResidueAffected(0)
     End Function
     Public Sub ChangeAAModification(ModifiedAA As ResidueCode, MassDifference As Double, Optional Additive As Boolean = False)
-        Me.ChangeAAMod(ModifiedAA, MassDifference, Additive)
+        ChangeAAMod(ModifiedAA, MassDifference, Additive)
     End Sub
     Public Sub EradicateEmptyMods()
-        Me.KillBlankMods()
+        KillBlankMods()
     End Sub
 #End Region
 
 #Region " Member Procedures "
     Private Function FindAAMod(ModifiedAA As ResidueCode) As clsModEntry
-        Return Me.m_FindMod(Me.ConvertResidueCodeToSLC(ModifiedAA))
+        Return m_FindMod(ConvertResidueCodeToSLC(ModifiedAA))
     End Function
 
     Private Sub ChangeAAMod(ModifiedAA As ResidueCode, MassDifference As Double, Optional Additive As Boolean = False)
         Dim foundMod As clsModEntry = FindAAMod(ModifiedAA)
-        Dim ModAAString As String = Me.ConvertResidueCodeToSLC(ModifiedAA)
-        Me.m_ChangeMod(foundMod, ModAAString, MassDifference, Additive)
+        Dim ModAAString As String = ConvertResidueCodeToSLC(ModifiedAA)
+        m_ChangeMod(foundMod, ModAAString, MassDifference, Additive)
 
     End Sub
 
@@ -1044,7 +1028,7 @@ Public Class clsStaticMods
         Dim AA As String
         Dim AASLC As String
         Dim AAEnums() As String
-        AAEnums = System.Enum.GetNames(GetType(ResidueCode))
+        AAEnums = [Enum].GetNames(GetType(ResidueCode))
         Dim currIndex As Integer
         Dim modEntry As clsModEntry
 
@@ -1053,9 +1037,9 @@ Public Class clsStaticMods
                 AASLC = Left(AA, 1)
                 currIndex = m_FindModIndex(AASLC)
                 If currIndex <> -1 Then
-                    modEntry = Me.GetModEntry(currIndex)
-                    If modEntry.MassDifference = 0.0 Then
-                        Me.List.Remove(modEntry)
+                    modEntry = GetModEntry(currIndex)
+                    If Math.Abs(modEntry.MassDifference) < Single.Epsilon Then
+                        List.Remove(modEntry)
                     End If
                 End If
             End If
@@ -1074,12 +1058,12 @@ Public Class clsIsoMods
 
 
     Public Overloads Sub Add(AffectedAtom As IsotopeList, MassDifference As Double, Optional GlobalModID As Integer = 0)
-        Me.m_Add(AffectedAtom.ToString, MassDifference, clsModEntry.ModificationTypes.Isotopic, GlobalModID)
+        m_Add(AffectedAtom.ToString, MassDifference, clsModEntry.ModificationTypes.Isotopic, GlobalModID)
     End Sub
 
 #Region " Public Procedures "
     Public Function GetAtom(index As Integer) As String
-        Dim m As clsModEntry = DirectCast(Me.List.Item(index), clsModEntry)
+        Dim m = DirectCast(List.Item(index), clsModEntry)
         Return m.ReturnResidueAffected(0)
     End Function
 #End Region
@@ -1087,59 +1071,59 @@ Public Class clsIsoMods
 #Region " Legacy Access "
     Public Property Iso_C() As Double
         Get
-            Return Me.FindIsoMod(IsotopeList.C).MassDifference
+            Return FindIsoMod(IsotopeList.C).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeIsoMod(clsMods.IsotopeList.C, Value)
+        Set
+            ChangeIsoMod(IsotopeList.C, Value)
         End Set
     End Property
 
     Public Property Iso_H() As Double
         Get
-            Return Me.FindIsoMod(IsotopeList.H).MassDifference
+            Return FindIsoMod(IsotopeList.H).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeIsoMod(clsMods.IsotopeList.H, Value)
+        Set
+            ChangeIsoMod(IsotopeList.H, Value)
         End Set
     End Property
 
     Public Property Iso_O() As Double
         Get
-            Return Me.FindIsoMod(IsotopeList.O).MassDifference
+            Return FindIsoMod(IsotopeList.O).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeIsoMod(clsMods.IsotopeList.O, Value)
+        Set
+            ChangeIsoMod(IsotopeList.O, Value)
         End Set
     End Property
 
     Public Property Iso_N() As Double
         Get
-            Return Me.FindIsoMod(IsotopeList.N).MassDifference
+            Return FindIsoMod(IsotopeList.N).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeIsoMod(clsMods.IsotopeList.N, Value)
+        Set
+            ChangeIsoMod(IsotopeList.N, Value)
         End Set
     End Property
 
     Public Property Iso_S() As Double
         Get
-            Return Me.FindIsoMod(IsotopeList.S).MassDifference
+            Return FindIsoMod(IsotopeList.S).MassDifference
         End Get
-        Set(Value As Double)
-            ChangeIsoMod(clsMods.IsotopeList.S, Value)
+        Set
+            ChangeIsoMod(IsotopeList.S, Value)
         End Set
     End Property
 
 #End Region
 
-    Private Sub ChangeIsoMod(AffectedAtom As IsotopeList, MassDifference As Double, Optional Additive As Boolean = False)
+    Private Sub ChangeIsoMod(AffectedAtom As IsotopeList, MassDifference As Double)
         Dim foundMod As clsModEntry = FindIsoMod(AffectedAtom)
         Dim ModAAString As String = AffectedAtom.ToString
-        Me.m_ChangeMod(foundMod, ModAAString, MassDifference)
+        m_ChangeMod(foundMod, ModAAString, MassDifference)
     End Sub
 
     Private Function FindIsoMod(AffectedAtom As IsotopeList) As clsModEntry
-        Return Me.m_FindMod(AffectedAtom.ToString)
+        Return m_FindMod(AffectedAtom.ToString)
     End Function
 
 End Class

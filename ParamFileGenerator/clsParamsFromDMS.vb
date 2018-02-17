@@ -1,201 +1,203 @@
+Imports System.Collections.Generic
 Imports System.Collections.Specialized
+Imports System.Data.SqlClient
 Imports System.Reflection
 
 Namespace DownloadParams
 
-	Public Class clsParamsFromDMS
-		Inherits clsDBTask
+    Public Class clsParamsFromDMS
+        Inherits clsDBTask
 #Region " Constants "
-		Protected Const Param_File_Table As String = "T_Param_Files"
-		Protected Const Param_Entry_Table As String = "T_Param_Entries"
-		Protected Const Param_FileTypes_Table As String = "T_Param_File_Types"
-		Protected Const Param_Class_Table As String = "T_Param_Entry_Types"
-		Protected Const Param_MassType_Table As String = "T_Sequest_Params_MassType_Name"
-		Protected Const Param_Mass_Mods_Table As String = "T_Param_File_Mass_Mods"
-		Protected Const Mass_Corr_Factors As String = "T_Mass_Correction_Factors"
-		Protected Const Residues_Table As String = "T_Residues"
+        Protected Const Param_File_Table As String = "T_Param_Files"
+        Protected Const Param_Entry_Table As String = "T_Param_Entries"
+        Protected Const Param_FileTypes_Table As String = "T_Param_File_Types"
+        Protected Const Param_Class_Table As String = "T_Param_Entry_Types"
+        Protected Const Param_MassType_Table As String = "T_Sequest_Params_MassType_Name"
+        Protected Const Param_Mass_Mods_Table As String = "T_Param_File_Mass_Mods"
+        Protected Const Mass_Corr_Factors As String = "T_Mass_Correction_Factors"
+        Protected Const Residues_Table As String = "T_Residues"
 #End Region
 
 #Region " Enums "
-		Public Enum AcceptableParams
-			SelectedEnzymeIndex
-			SelectedEnzymeCleavagePosition
-			MaximumNumberMissedCleavages
-			ParentMassType
-			FragmentMassType
-			DynamicMods
-			TermDynamicMods
-			StaticModificationsList
-			IsotopicMods
-			PartialSequenceToMatch
-			CreateOutputFiles
-			NumberOfResultsToProcess
-			MaximumNumAAPerDynMod
-			MaximumNumDifferentialPerPeptide
-			PeptideMassTolerance
-			FragmentIonTolerance
-			NumberOfOutputLines
-			NumberOfDescriptionLines
-			ShowFragmentIons
-			PrintDuplicateReferences
-			SelectedNucReadingFrameIndex
-			RemovePrecursorPeak
-			IonSeries
-			IonCutoffPercentage
-			MinimumProteinMassToSearch
-			MaximumProteinMassToSearch
-			NumberOfDetectedPeaksToMatch
-			NumberOfAllowedDetectedPeakErrors
-			MatchedPeakMassTolerance
-			AminoAcidsAllUpperCase
-			SequenceHeaderInfoToFilter
-			PeptideMassUnits
-			FragmentMassUnits
-		End Enum
-		Public Enum BasicParams
-			SelectedEnzymeIndex
-			SelectedEnzymeCleavagePosition
-			MaximumNumberMissedCleavages
-			ParentMassType
-			FragmentMassType
-			PartialSequenceToMatch
-		End Enum
-		Public Enum AdvancedParams
-			CreateOutputFiles
-			NumberOfResultsToProcess
-			MaximumNumAAPerDynMod
-			MaximumNumDifferentialPerPeptide
-			PeptideMassTolerance
-			FragmentIonTolerance
-			NumberOfOutputLines
-			NumberOfDescriptionLines
-			ShowFragmentIons
-			PrintDuplicateReferences
-			SelectedNucReadingFrameIndex
-			RemovePrecursorPeak
-			IonSeries
-			IonCutoffPercentage
-			MinimumProteinMassToSearch
-			MaximumProteinMassToSearch
-			NumberOfDetectedPeaksToMatch
-			NumberOfAllowedDetectedPeakErrors
-			MatchedPeakMassTolerance
-			AminoAcidsAllUpperCase
-			SequenceHeaderInfoToFilter
-			PeptideMassUnits
-			FragmentMassUnits
-		End Enum
+        Public Enum AcceptableParams
+            SelectedEnzymeIndex
+            SelectedEnzymeCleavagePosition
+            MaximumNumberMissedCleavages
+            ParentMassType
+            FragmentMassType
+            DynamicMods
+            TermDynamicMods
+            StaticModificationsList
+            IsotopicMods
+            PartialSequenceToMatch
+            CreateOutputFiles
+            NumberOfResultsToProcess
+            MaximumNumAAPerDynMod
+            MaximumNumDifferentialPerPeptide
+            PeptideMassTolerance
+            FragmentIonTolerance
+            NumberOfOutputLines
+            NumberOfDescriptionLines
+            ShowFragmentIons
+            PrintDuplicateReferences
+            SelectedNucReadingFrameIndex
+            RemovePrecursorPeak
+            IonSeries
+            IonCutoffPercentage
+            MinimumProteinMassToSearch
+            MaximumProteinMassToSearch
+            NumberOfDetectedPeaksToMatch
+            NumberOfAllowedDetectedPeakErrors
+            MatchedPeakMassTolerance
+            AminoAcidsAllUpperCase
+            SequenceHeaderInfoToFilter
+            PeptideMassUnits
+            FragmentMassUnits
+        End Enum
+        Public Enum BasicParams
+            SelectedEnzymeIndex
+            SelectedEnzymeCleavagePosition
+            MaximumNumberMissedCleavages
+            ParentMassType
+            FragmentMassType
+            PartialSequenceToMatch
+        End Enum
+        Public Enum AdvancedParams
+            CreateOutputFiles
+            NumberOfResultsToProcess
+            MaximumNumAAPerDynMod
+            MaximumNumDifferentialPerPeptide
+            PeptideMassTolerance
+            FragmentIonTolerance
+            NumberOfOutputLines
+            NumberOfDescriptionLines
+            ShowFragmentIons
+            PrintDuplicateReferences
+            SelectedNucReadingFrameIndex
+            RemovePrecursorPeak
+            IonSeries
+            IonCutoffPercentage
+            MinimumProteinMassToSearch
+            MaximumProteinMassToSearch
+            NumberOfDetectedPeaksToMatch
+            NumberOfAllowedDetectedPeakErrors
+            MatchedPeakMassTolerance
+            AminoAcidsAllUpperCase
+            SequenceHeaderInfoToFilter
+            PeptideMassUnits
+            FragmentMassUnits
+        End Enum
 
-		Public Enum IonSeriesParams
-			Use_a_Ions
-			Use_b_Ions
-			Use_y_Ions
-			a_Ion_Weighting
-			b_Ion_Weighting
-			c_Ion_Weighting
-			d_Ion_Weighting
-			v_Ion_Weighting
-			w_Ion_Weighting
-			x_Ion_Weighting
-			y_Ion_Weighting
-			z_Ion_Weighting
-		End Enum
+        Public Enum IonSeriesParams
+            Use_a_Ions
+            Use_b_Ions
+            Use_y_Ions
+            a_Ion_Weighting
+            b_Ion_Weighting
+            c_Ion_Weighting
+            d_Ion_Weighting
+            v_Ion_Weighting
+            w_Ion_Weighting
+            x_Ion_Weighting
+            y_Ion_Weighting
+            z_Ion_Weighting
+        End Enum
 
-		Public Enum eParamFileTypeConstants
-			Unknown = 0
-			None = 1
-			Sequest = 1000
-			QTOFPek = 1001
-			DeNovoPeak = 1002
-			icr2ls = 1003
-			MLynxPek = 1004
-			AgilentTOFPek = 1005
-			LTQ_FTPek = 1006
-			MASIC = 1007
-			XTandem = 1008
-			Decon2LS = 1010
-			TIC_D2L = 1011
-			Inspect = 1012
-			MSXML_Gen = 1013
-			DTA_Gen = 1014
-			MSClusterDAT_Gen = 1015
-			OMSSA = 1016
-			MultiAlign = 1017
-			MSGFDB = 1018
-			MSAlign = 1019
-			SMAQC = 1020
-			LipidMapSearch = 1021
-			MSAlign_Histone = 1022
-			MODa = 1023
-			GlyQIQ = 1024
+        Public Enum eParamFileTypeConstants
+            Unknown = 0
+            None = 1
+            Sequest = 1000
+            QTOFPek = 1001
+            DeNovoPeak = 1002
+            icr2ls = 1003
+            MLynxPek = 1004
+            AgilentTOFPek = 1005
+            LTQ_FTPek = 1006
+            MASIC = 1007
+            XTandem = 1008
+            Decon2LS = 1010
+            TIC_D2L = 1011
+            Inspect = 1012
+            MSXML_Gen = 1013
+            DTA_Gen = 1014
+            MSClusterDAT_Gen = 1015
+            OMSSA = 1016
+            MultiAlign = 1017
+            MSGFDB = 1018
+            MSAlign = 1019
+            SMAQC = 1020
+            LipidMapSearch = 1021
+            MSAlign_Histone = 1022
+            MODa = 1023
+            GlyQIQ = 1024
             MSPathFinder = 1025
             MODPlus = 1028
-		End Enum
+        End Enum
 
 #End Region
 
 #Region " Member Properties "
-		Protected m_ID As Integer
-		Protected m_Name As String
-		Protected m_ParamFileType As eParamFileTypeConstants
-		Protected m_Params As clsParams
-		Protected m_ParamsSet As DataSet
-		Protected m_ParamSetCount As Integer
-		Protected m_BaseLineParamSet As clsParams
-		Protected m_AcceptableParams As StringCollection
-		Protected m_BasicParams As StringCollection
-		Protected m_AdvancedParams As StringCollection
-		Protected m_IonSeriesParams As StringCollection
-		Protected m_GetID_DA As SqlClient.SqlDataAdapter
-		Protected m_GetID_DB As SqlClient.SqlCommandBuilder
-		Protected m_GetEntries_DA As SqlClient.SqlDataAdapter
-		Protected m_GetEntries_CB As SqlClient.SqlCommandBuilder
-		Protected m_MassMods As DataTable
+        Protected m_ID As Integer
+        Protected m_Name As String
+        Protected m_ParamFileType As eParamFileTypeConstants
+        Protected m_Params As clsParams
+        Protected m_ParamsSet As DataSet
+        Protected m_ParamSetCount As Integer
+        Protected m_BaseLineParamSet As clsParams
+        Protected m_AcceptableParams As StringCollection
+        Protected m_BasicParams As StringCollection
+        Protected m_AdvancedParams As StringCollection
+        Protected m_IonSeriesParams As StringCollection
+        Protected m_GetID_DA As SqlDataAdapter
+        Protected m_GetID_DB As SqlCommandBuilder
+        Protected m_GetEntries_DA As SqlDataAdapter
+        Protected m_GetEntries_CB As SqlCommandBuilder
+        Protected m_MassMods As DataTable
 
 #End Region
 
 #Region " public Properties "
-		Public ReadOnly Property ParamFileTable() As DataTable
-			Get
-				Return Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_File_Table)
-			End Get
-		End Property
-		Public ReadOnly Property ParamEntryTable() As DataTable
-			Get
-				Return Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_Entry_Table)
-			End Get
-		End Property
+        Public ReadOnly Property ParamFileTable() As DataTable
+            Get
+                Return m_ParamsSet.Tables(Param_File_Table)
+            End Get
+        End Property
+        Public ReadOnly Property ParamEntryTable() As DataTable
+            Get
+                Return m_ParamsSet.Tables(Param_Entry_Table)
+            End Get
+        End Property
 
-		Public ReadOnly Property ParamSetCount() As Integer
-			Get
-				Return m_ParamSetCount
-			End Get
-		End Property
+        Public ReadOnly Property ParamSetCount() As Integer
+            Get
+                Return m_ParamSetCount
+            End Get
+        End Property
 
-		Public ReadOnly Property ParamFileType() As eParamFileTypeConstants
-			Get
-				Return m_ParamFileType
-			End Get
-		End Property
+        Public ReadOnly Property ParamFileType() As eParamFileTypeConstants
+            Get
+                Return m_ParamFileType
+            End Get
+        End Property
 #End Region
 
 
 #Region " public Functions "
         Public Sub New(ConnectionString As String)
             MyBase.New(ConnectionString, True)
-            Me.m_AcceptableParams = Me.LoadAcceptableParamList
-            Me.m_BasicParams = Me.LoadBasicParams
-            Me.m_AdvancedParams = Me.LoadAdvancedParams
-            Me.m_IonSeriesParams = Me.LoadIonSeriesParams
-            Me.m_BaseLineParamSet = clsMainProcess.BaseLineParamSet
-            Me.m_ParamsSet = GetParamsFromDMS()
-            If Me.m_ParamsSet Is Nothing Then
+            m_AcceptableParams = LoadAcceptableParamList()
+            m_BasicParams = LoadBasicParams()
+            m_AdvancedParams = LoadAdvancedParams()
+            m_IonSeriesParams = LoadIonSeriesParams()
+            m_BaseLineParamSet = clsMainProcess.BaseLineParamSet
+            m_ParamsSet = GetParamsFromDMS()
+            If m_ParamsSet Is Nothing Then
                 Exit Sub
             End If
         End Sub
 
         Public Sub RefreshParamsFromDMS()
-            Me.m_ParamsSet = GetParamsFromDMS()
+            m_ParamsSet = GetParamsFromDMS()
         End Sub
 
         Public Function ReadParamsFromDMS(ParamSetName As String) As clsParams
@@ -205,7 +207,7 @@ Namespace DownloadParams
             m_ParamFileType = GetTypeWithName(ParamSetName)
 
             If m_ParamFileType = eParamFileTypeConstants.Unknown Then
-                Throw New System.Exception("Parameter file " & ParamSetName & " was not found in table " & Param_File_Table)
+                Throw New Exception("Parameter file " & ParamSetName & " was not found in table " & Param_File_Table)
             End If
 
             If m_ParamFileType <> eParamFileTypeConstants.Sequest Then
@@ -215,7 +217,7 @@ Namespace DownloadParams
                     paramFileTypeName = "Unknown"
                 End If
 
-                Throw New System.NotSupportedException("Parameter file " & ParamSetName & " is of type " & paramfileTypeName & ", which isn't support for export from DMS")
+                Throw New NotSupportedException("Parameter file " & ParamSetName & " is of type " & paramFileTypeName & ", which isn't support for export from DMS")
             End If
 
             m_ID = GetIDWithName(m_Name, m_ParamFileType)
@@ -230,12 +232,12 @@ Namespace DownloadParams
             m_ParamFileType = GetTypeWithID(m_ID)
 
             If m_ParamFileType = eParamFileTypeConstants.Unknown Then
-                Throw New System.Exception("Parameter file ID " & ParamSetID & " was not found in table " & Param_File_Table)
+                Throw New Exception("Parameter file ID " & ParamSetID & " was not found in table " & Param_File_Table)
             End If
 
             If m_ParamFileType <> eParamFileTypeConstants.Sequest Then
                 ' This param file type is not supported for export from DMS
-                Throw New System.NotSupportedException("Parameter file ID " & ParamSetID & " is of type " & [Enum].GetName(GetType(eParamFileTypeConstants), m_ParamFileType) & ", which isn't support for export from DMS")
+                Throw New NotSupportedException("Parameter file ID " & ParamSetID & " is of type " & [Enum].GetName(GetType(eParamFileTypeConstants), m_ParamFileType) & ", which isn't support for export from DMS")
             End If
 
             m_Params = RetrieveParams(m_ID, m_ParamFileType)
@@ -243,11 +245,11 @@ Namespace DownloadParams
         End Function
 
         Public Function RetrieveAvailableParams() As DataTable
-            Return Me.GetAvailableParamSets()
+            Return GetAvailableParamSets()
         End Function
 
         Public Function RetrieveParamFileTypes() As DataTable
-            Return Me.GetParamFileTypes
+            Return GetParamFileTypes()
         End Function
 
         Public Function ParamSetNameExists(ParamSetName As String) As Boolean
@@ -255,7 +257,7 @@ Namespace DownloadParams
         End Function
 
         Public Function ParamSetIDExists(ParamSetID As Integer) As Boolean
-            Return Me.DoesParamSetIDExist(ParamSetID)
+            Return DoesParamSetIDExist(ParamSetID)
         End Function
 
         Public Function GetParamSetIDFromName(Name As String) As Integer
@@ -267,14 +269,14 @@ Namespace DownloadParams
                 Return -1
             End If
 
-            Return Me.GetIDWithName(Name, eParamFileType)
+            Return GetIDWithName(Name, eParamFileType)
         End Function
 
 #End Region
 
 #Region " Member Functions "
         Protected Function LoadAcceptableParamList() As StringCollection
-            Dim ParamEnum() As String = System.Enum.GetNames(GetType(AcceptableParams))
+            Dim ParamEnum() As String = [Enum].GetNames(GetType(AcceptableParams))
             Dim Param As String
             Dim sc As New StringCollection
             For Each Param In ParamEnum
@@ -283,7 +285,7 @@ Namespace DownloadParams
             Return sc
         End Function
         Protected Function LoadBasicParams() As StringCollection
-            Dim ParamEnum() As String = System.Enum.GetNames(GetType(BasicParams))
+            Dim ParamEnum() As String = [Enum].GetNames(GetType(BasicParams))
             Dim Param As String
             Dim sc As New StringCollection
             For Each Param In ParamEnum
@@ -292,7 +294,7 @@ Namespace DownloadParams
             Return sc
         End Function
         Protected Function LoadAdvancedParams() As StringCollection
-            Dim ParamEnum() As String = System.Enum.GetNames(GetType(AdvancedParams))
+            Dim ParamEnum() As String = [Enum].GetNames(GetType(AdvancedParams))
             Dim Param As String
             Dim sc As New StringCollection
             For Each Param In ParamEnum
@@ -302,7 +304,7 @@ Namespace DownloadParams
         End Function
 
         Protected Function LoadIonSeriesParams() As StringCollection
-            Dim paramenum() As String = System.Enum.GetNames(GetType(IonSeriesParams))
+            Dim paramenum() As String = [Enum].GetNames(GetType(IonSeriesParams))
             Dim param As String
             Dim sc As New StringCollection
             For Each param In paramenum
@@ -318,19 +320,19 @@ Namespace DownloadParams
             Dim tmpSet As New DataSet
 
             'SQL to grab param file table
-            SQL = "SELECT * FROM " & clsParamsFromDMS.Param_File_Table ' & " WHERE [Param_File_Type_ID] = 1000"
+            SQL = "SELECT * FROM " & Param_File_Table ' & " WHERE [Param_File_Type_ID] = 1000"
 
-            tmpFileTable = GetTable(SQL, Me.m_GetID_DA, Me.m_GetID_DB)
-            tmpFileTable.TableName = clsParamsFromDMS.Param_File_Table
+            tmpFileTable = GetTable(SQL, m_GetID_DA, m_GetID_DB)
+            tmpFileTable.TableName = Param_File_Table
             SetPrimaryKey(0, tmpFileTable)
 
             tmpSet.Tables.Add(tmpFileTable)
 
             'SQL to grab param entry table
-            SQL = "SELECT * FROM " & clsParamsFromDMS.Param_Entry_Table & " WHERE [Entry_Type] not like '%Modification'"
+            SQL = "SELECT * FROM " & Param_Entry_Table & " WHERE [Entry_Type] not like '%Modification'"
 
-            tmpEntryTable = GetTable(SQL, Me.m_GetEntries_DA, Me.m_GetEntries_CB)
-            tmpEntryTable.TableName = clsParamsFromDMS.Param_Entry_Table
+            tmpEntryTable = GetTable(SQL, m_GetEntries_DA, m_GetEntries_CB)
+            tmpEntryTable.TableName = Param_Entry_Table
 
             tmpSet.Tables.Add(tmpEntryTable)
 
@@ -357,17 +359,17 @@ Namespace DownloadParams
                 Return New clsParams()
             End If
 
-            Dim foundrows As DataRow() = Me.m_ParamsSet.Tables(clsParamsFromDMS.Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
+            Dim foundrows As DataRow() = m_ParamsSet.Tables(Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
 
-            Dim storageSet As clsDMSParamStorage = Me.MakeStorageClassFromTableRowSet(foundrows)
+            Dim storageSet As clsDMSParamStorage = MakeStorageClassFromTableRowSet(foundrows)
 
             If Not DisableMassLookup Then
                 storageSet = GetMassModsFromDMS(ParamSetID, eParamFileType, storageSet)
             End If
 
-            Dim p As clsParams = Me.UpdateParamSetFromDataCollection(storageSet)
+            Dim p As clsParams = UpdateParamSetFromDataCollection(storageSet)
             p.FileName = DirectCast(dr.Item("Param_File_Name"), String)
-            p.Description = Me.SummarizeDiffColl(storageSet)
+            p.Description = SummarizeDiffColl(storageSet)
 
             For Each paramRow As DataRow In foundrows
                 p.AddLoadedParamName(paramRow.Item("Entry_Specifier").ToString, paramRow.Item("Entry_Value").ToString)
@@ -387,7 +389,7 @@ Namespace DownloadParams
             For Each foundRow In foundRows
                 tmpSpec = DirectCast(foundRow.Item("Entry_Specifier"), String)
                 tmpValue = DirectCast(foundRow.Item("Entry_Value"), String)
-                tmpType = DirectCast(System.Enum.Parse(GetType(clsDMSParamStorage.ParamTypes), foundRow.Item("Entry_Type").ToString), ParamFileGenerator.clsDMSParamStorage.ParamTypes)
+                tmpType = DirectCast([Enum].Parse(GetType(clsDMSParamStorage.ParamTypes), foundRow.Item("Entry_Type").ToString), clsDMSParamStorage.ParamTypes)
 
                 storageClass.Add(tmpSpec, tmpValue, tmpType)
             Next
@@ -398,7 +400,7 @@ Namespace DownloadParams
         End Function
         'Todo Adding mass mod grabber
         Protected Function GetMassModsFromDMS(ParamSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef sc As clsDMSParamStorage) As clsDMSParamStorage
-            Const MaxDynMods As Integer = 15
+            Const MaxDynMods = 15
 
             Dim foundRow As DataRow
             Dim foundRows() As DataRow
@@ -406,26 +408,25 @@ Namespace DownloadParams
             Dim tmpValue As String
             'Dim tmpTypeString As String
             Dim tmpType As clsDMSParamStorage.ParamTypes
-            Dim tmpRes As String
 
-            'If Me.m_MassMods Is Nothing Or Me.m_MassMods.Rows.Count = 0 Then
+            'If m_MassMods Is Nothing Or m_MassMods.Rows.Count = 0 Then
             Dim SQL As String
 
-            SQL = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " & _
-              "mc.Monoisotopic_Mass_Correction as Monoisotopic_Mass_Correction, " & _
-              "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " & _
-              "FROM " & clsParamsFromDMS.Param_Mass_Mods_Table & " mm INNER JOIN " & _
-              clsParamsFromDMS.Mass_Corr_Factors & " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " & _
-              clsParamsFromDMS.Residues_Table & " r ON mm.Residue_ID = r.Residue_ID " & _
+            SQL = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " &
+              "mc.Monoisotopic_Mass_Correction as Monoisotopic_Mass_Correction, " &
+              "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " &
+              "FROM " & Param_Mass_Mods_Table & " mm INNER JOIN " &
+              Mass_Corr_Factors & " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " &
+              Residues_Table & " r ON mm.Residue_ID = r.Residue_ID " &
               "WHERE mm.Param_File_ID = " & ParamSetID
 
-            Me.m_MassMods = GetTable(SQL)
+            m_MassMods = GetTable(SQL)
             'End If
             'Look for Dynamic mods
 
             'Dim dt As DataTable = GetTable(SQL)
 
-            Dim lstLocalSymbolIDs As Generic.List(Of Integer) = New Generic.List(Of Integer)
+            Dim lstLocalSymbolIDs = New List(Of Integer)
 
             Select Case eParamFileType
                 Case eParamFileTypeConstants.Sequest
@@ -442,29 +443,28 @@ Namespace DownloadParams
                     lstLocalSymbolIDs.Add(4)    ' $
                     lstLocalSymbolIDs.Add(5)    ' &
                     lstLocalSymbolIDs.Add(6)    ' !
-                    lstLocalSymbolIDs.Add(7)    ' %					
+                    lstLocalSymbolIDs.Add(7)    ' %
             End Select
 
-            For intSymbolID As Integer = 1 To MaxDynMods
+            For intSymbolID = 1 To MaxDynMods
                 If Not lstLocalSymbolIDs.Contains(intSymbolID) Then
                     lstLocalSymbolIDs.Add(intSymbolID)
                 End If
             Next
 
             For Each intSymbolID As Integer In lstLocalSymbolIDs
-                foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & intSymbolID & " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]")
+                foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & intSymbolID & " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]")
                 If foundRows.Length > 0 Then
                     tmpSpec = GetDynModSpecifier(foundRows)
                     tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
                     tmpType = clsDMSParamStorage.ParamTypes.DynamicModification
-                    tmpRes = foundRows(0).Item("Residue_Symbol").ToString
                     sc.Add(tmpSpec, tmpValue, tmpType)
                 End If
 
             Next
 
             'Find N-Term Dyn Mods
-            foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'")
+            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'")
             If foundRows.Length > 0 Then
                 For Each foundRow In foundRows
                     tmpSpec = GetDynModSpecifier(foundRows)
@@ -475,7 +475,7 @@ Namespace DownloadParams
             End If
 
             'Find C-Term Dyn Mods
-            foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'")
+            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'")
             If foundRows.Length > 0 Then
                 For Each foundRow In foundRows
                     tmpSpec = GetDynModSpecifier(foundRows)
@@ -487,7 +487,7 @@ Namespace DownloadParams
 
             'Look for Static and terminal mods
 
-            foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'S' OR [Mod_Type_Symbol] = 'P' or [Mod_Type_Symbol] = 'T'")
+            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'S' OR [Mod_Type_Symbol] = 'P' or [Mod_Type_Symbol] = 'T'")
 
             For Each foundRow In foundRows
                 tmpSpec = foundRow.Item("Residue_Symbol").ToString
@@ -508,7 +508,7 @@ Namespace DownloadParams
 
             'TODO Still need code to handle import/export of isotopic mods
 
-            foundRows = Me.m_MassMods.Select("[Mod_Type_Symbol] = 'I'")
+            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'I'")
 
             For Each foundRow In foundRows
                 tmpSpec = foundRow.Item("Affected_Atom").ToString
@@ -525,7 +525,7 @@ Namespace DownloadParams
         Protected Function GetDynModSpecifier(rowSet As DataRow()) As String
             Dim foundrow As DataRow
 
-            Dim tmpSpec As String = ""
+            Dim tmpSpec = ""
 
             If rowSet.Length > 0 Then               'We have dynamic mods
                 For Each foundrow In rowSet
@@ -633,23 +633,20 @@ Namespace DownloadParams
         ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Function GetAvailableParamSets() As DataTable
-
-            Dim tmpIDTable As New DataTable
-            Dim paramTableSQL As String
-            paramTableSQL = _
-              "SELECT " & _
-              "Param_File_ID as ID, " & _
-              "Param_File_Name AS Filename, " & _
-              "Param_File_Description as Diffs, " & _
-              "Param_File_Type_ID as Type_ID " & _
-              "FROM T_Param_Files " & _
+            Dim paramTableSQL As String =
+              "SELECT " &
+              "Param_File_ID as ID, " &
+              "Param_File_Name AS Filename, " &
+              "Param_File_Description as Diffs, " &
+              "Param_File_Type_ID as Type_ID " &
+              "FROM T_Param_Files " &
               "WHERE Param_File_Type_ID = " & eParamFileTypeConstants.Sequest &
               " or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem &
               " or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB &
               " or Param_File_Type_ID = " & eParamFileTypeConstants.MSPathFinder &
               " or Param_File_Type_ID = " & eParamFileTypeConstants.MODPlus
 
-            tmpIDTable = Me.GetTable(paramTableSQL)
+            Dim tmpIDTable = Me.GetTable(paramTableSQL)
 
             ''Load tmpIDTable
             Dim tmpID As Integer
@@ -687,8 +684,8 @@ Namespace DownloadParams
         Protected Function GetParamFileTypes() As DataTable
             Dim tmpTypeTable As DataTable
             Dim tableTypesSQL As String
-            tableTypesSQL = _
-                "SELECT Param_File_Type_ID as ID, Param_File_Type AS Type " & _
+            tableTypesSQL =
+                "SELECT Param_File_Type_ID as ID, Param_File_Type AS Type " &
                 "FROM T_Param_File_Types"
 
             tmpTypeTable = Me.GetTable(tableTypesSQL)
@@ -715,7 +712,7 @@ Namespace DownloadParams
         End Function
 
         Protected Function WriteDataCollectionFromParamSet(ParamSet As clsParams) As clsDMSParamStorage      'Upload
-            Dim c As clsDMSParamStorage = New clsDMSParamStorage
+            Dim c = New clsDMSParamStorage()
 
             Dim pType As Type = ParamSet.GetType
             Dim tmpType As Type
@@ -783,7 +780,7 @@ Namespace DownloadParams
                 tmpValue = paramEntry.Value
                 tmpType = paramEntry.Type
 
-                If tmpType = clsDMSParamStorage.ParamTypes.BasicParam And _
+                If tmpType = clsDMSParamStorage.ParamTypes.BasicParam And
                     Me.m_BasicParams.Contains(tmpSpec) Then
 
                     For Each pField In pFields
@@ -814,7 +811,7 @@ Namespace DownloadParams
                         End If
                     Next
 
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.AdvancedParam And _
+                ElseIf tmpType = clsDMSParamStorage.ParamTypes.AdvancedParam And
                     Me.m_AdvancedParams.Contains(tmpSpec) Then
 
                     For Each pField In pFields
@@ -840,7 +837,7 @@ Namespace DownloadParams
                         End If
                     Next
 
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.AdvancedParam And _
+                ElseIf tmpType = clsDMSParamStorage.ParamTypes.AdvancedParam And
                     Me.m_IonSeriesParams.Contains(tmpSpec) Then
 
                     For Each ionField In ionFields
@@ -880,9 +877,9 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function UpdateParamSetMember( _
-            ByRef ParamSet As clsParams, _
-            Specifier As String, _
+        Protected Function UpdateParamSetMember(
+            ByRef ParamSet As clsParams,
+            Specifier As String,
             Value As String) As Integer
 
 
@@ -899,7 +896,7 @@ Namespace DownloadParams
                 Return ParamCollection
             End If
 
-            If eDynModType <> clsDMSParamStorage.ParamTypes.DynamicModification And _
+            If eDynModType <> clsDMSParamStorage.ParamTypes.DynamicModification And
                eDynModType <> clsDMSParamStorage.ParamTypes.TermDynamicModification Then
                 ' This is unexpected; force eDynModType to be .DynamicModification
                 eDynModType = clsDMSParamStorage.ParamTypes.DynamicModification
@@ -1011,6 +1008,7 @@ Namespace DownloadParams
             Dim diffCollection As clsDMSParamStorage = GetDiffColl(templateSet, checkSet)
             Return SummarizeDiffColl(diffCollection)
         End Function
+
         Protected Function GetDiffColl(ByRef templateSet As clsParams, ByRef checkSet As clsParams) As clsDMSParamStorage
             Dim templateColl As clsDMSParamStorage = Me.WriteDataCollectionFromParamSet(templateSet)
             Dim checkColl As clsDMSParamStorage = Me.WriteDataCollectionFromParamSet(checkSet)
@@ -1024,10 +1022,9 @@ Namespace DownloadParams
             Dim maxIndex As Integer = diffColl.Count - 1
             Dim index As Integer
             Dim tmpString As String
-            Dim tmpElement As String = ""
 
-            Dim tmpIsoMods As String = ""
-            Dim tmpOtherParams As String = ""
+            Dim tmpIsoMods = ""
+            Dim tmpOtherParams = ""
 
             Dim tmpDynModsList As Queue = Nothing
             Dim tmpTermDynModsList As Queue = Nothing
@@ -1035,23 +1032,17 @@ Namespace DownloadParams
             Dim tmpIsoModsList As Queue = Nothing
             Dim tmpOtherParamsList As Queue = Nothing
 
-            Dim tmpType As clsDMSParamStorage.ParamTypes
-            Dim tmpSpec As String = ""
-            Dim tmpValue As String = ""
-            Dim tmpValueFormatted As String = ""
-            Dim dblValue As Double
-
-            Dim tmpSign As String = ""
-
-            Dim intDynModCount As Integer = 0
-            Dim intTermDynModCount As Integer = 0
+            Dim intDynModCount = 0
+            Dim intTermDynModCount = 0
 
             For index = 0 To maxIndex
-                With diffColl.Item(index)
-                    tmpType = .Type
-                    tmpSpec = .Specifier
-                    tmpValue = .Value
-                End With
+                Dim tmpType = diffColl.Item(index).Type
+                Dim tmpSpec = diffColl.Item(index).Specifier
+                Dim tmpValue = diffColl.Item(index).Value
+
+                Dim dblValue As Double
+                Dim tmpValueFormatted As String
+                Dim tmpSign As String
 
                 If Double.TryParse(tmpValue, dblValue) Then
                     tmpValueFormatted = dblValue.ToString("0.0000")
@@ -1153,24 +1144,21 @@ Namespace DownloadParams
 
         End Function
 
-        Private Function MakeListOfMods(strModDescriptionPrevious As String, _
-                                        objModList As Queue, _
+        Private Function MakeListOfMods(strModDescriptionPrevious As String,
+                                        objModList As Queue,
                                         blnAddTitlePrefix As Boolean) As String
-
-            Dim tmpElement As String = ""
 
             If strModDescriptionPrevious Is Nothing Then strModDescriptionPrevious = ""
             If objModList Is Nothing Then
                 Return strModDescriptionPrevious
             End If
 
-            Dim subitem As String = Nothing
-            Dim elementTitle As String = ""
+            Dim subitem As String
             If objModList.Count > 0 Then
                 If strModDescriptionPrevious.Length > 0 Then strModDescriptionPrevious += ", "
 
-                tmpElement = ""
-                elementTitle = objModList.Dequeue.ToString
+                Dim tmpElement = ""
+                Dim elementTitle = objModList.Dequeue.ToString
                 While objModList.Count > 0
                     subitem = objModList.Dequeue().ToString
                     If tmpElement.Length > 0 Then tmpElement += ", "
@@ -1190,39 +1178,23 @@ Namespace DownloadParams
         End Function
 
         Protected Function CompareDataCollections(templateColl As clsDMSParamStorage, checkColl As clsDMSParamStorage) As clsDMSParamStorage        'Neither
-            Dim diffColl As New clsDMSParamStorage
+            Dim diffColl As New clsDMSParamStorage()
             Dim maxIndex As Integer = checkColl.Count - 1
-            Dim templateIndex As Integer = 0
-            Dim checkIndex As Integer = 0
-
-            Dim tmpTemp As String = ""
-            Dim tmpCheck As String = ""
-
-            Dim tmpCType As clsDMSParamStorage.ParamTypes
-            Dim tmpCSpec As String = ""
-            Dim tmpCVal As String = ""
-
-            Dim tmpTType As clsDMSParamStorage.ParamTypes
-            Dim tmpTSpec As String = ""
-            Dim tmpTVal As String = ""
 
             For checkIndex = 0 To maxIndex
-                With checkColl.Item(checkIndex)
-                    tmpCType = .Type
-                    tmpCSpec = .Specifier
-                    tmpCVal = .Value
-                End With
+                Dim tmpCType = checkColl.Item(checkIndex).Type
+                Dim tmpCSpec = checkColl.Item(checkIndex).Specifier
+                Dim tmpCVal = checkColl.Item(checkIndex).Value
 
-                templateIndex = templateColl.IndexOf(tmpCSpec, tmpCType)
+
+                Dim templateIndex = templateColl.IndexOf(tmpCSpec, tmpCType)
 
                 If templateIndex >= 0 Then
-                    With templateColl.Item(templateIndex)
-                        tmpTType = .Type
-                        tmpTSpec = .Specifier
-                        tmpTVal = .Value
-                        tmpTemp = tmpTType.ToString & " - " & tmpTSpec & " = " & tmpTVal
-                        tmpCheck = tmpCType.ToString & " - " & tmpCSpec & " = " & tmpCVal
-                    End With
+                    Dim tmpTType = templateColl.Item(templateIndex).Type
+                    Dim tmpTSpec = templateColl.Item(templateIndex).Specifier
+                    Dim tmpTVal = templateColl.Item(templateIndex).Value
+                    ' Dim tmpTemp = tmpTType.ToString & " - " & tmpTSpec & " = " & tmpTVal
+                    ' Dim tmpCheck = tmpCType.ToString & " - " & tmpCSpec & " = " & tmpCVal
 
                     If tmpTType.ToString & tmpTSpec = tmpCType.ToString & tmpCSpec Then
                         If tmpTVal.Equals(tmpCVal) Then
@@ -1244,6 +1216,6 @@ Namespace DownloadParams
 
 #End Region
 
-	End Class
+    End Class
 
 End Namespace

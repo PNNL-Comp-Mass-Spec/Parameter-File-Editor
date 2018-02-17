@@ -1,58 +1,53 @@
 Public Class clsSimpleComparer
     Implements IComparer
 
-        Private _propertyToSort As String
-        Private _sortOrder As SortOrder
+    Public Sub New(propertyToSort As String)
+        Me.New(propertyToSort, System.Windows.Forms.SortOrder.Ascending)
+    End Sub
 
-        Public Sub New(ByVal propertyToSort As String)
-            Me.new(propertyToSort, System.Windows.Forms.SortOrder.Ascending)
-        End Sub
+    Public Sub New(propertyToSort As String, sortOrder As SortOrder)
+        MyBase.New()
+        Me.PropertyToSort = propertyToSort
+        Me.SortOrder = sortOrder
+    End Sub
 
-        Public Sub New(ByVal propertyToSort As String, ByVal sortOrder As SortOrder)
-            MyBase.new()
-            _propertyToSort = propertyToSort
-            _sortOrder = sortOrder
-        End Sub
+    Public Function Compare(x As Object, y As Object) As Integer Implements System.Collections.IComparer.Compare
+        Dim prop As Reflection.PropertyInfo = x.GetType.GetProperty(Me.PropertyToSort)
 
-        Public Function Compare(ByVal x As Object, ByVal y As Object) As Integer _
-            Implements System.Collections.IComparer.Compare
-            Dim prop As Reflection.PropertyInfo = x.GetType.GetProperty(Me.PropertyToSort)
+        Dim xValue = prop.GetValue(x, Nothing)
+        Dim yValue = prop.GetValue(y, Nothing)
 
-            If Me.SortOrder = SortOrder.None OrElse prop.GetValue(x, Nothing) = _
-                prop.GetValue(y, Nothing) Then
-                Return 0
+        If SortOrder = SortOrder.None OrElse
+           xValue Is yValue OrElse
+           xValue Is Nothing AndAlso yValue Is Nothing Then
+            Return 0
+        Else
+            Dim xGreater As Boolean
+            If Not xValue Is Nothing AndAlso yValue Is Nothing Then
+                xGreater = True
+            ElseIf xValue Is Nothing AndAlso Not yValue Is Nothing Then
+                xGreater = False
             Else
-                If prop.GetValue(x, Nothing) > prop.GetValue(y, Nothing) Then
-                    If Me.SortOrder = System.Windows.Forms.SortOrder.Ascending Then
-                        Return 1
-                    Else
-                        Return -1
-                    End If
+                xGreater = xValue.ToString() > yValue.ToString()
+            End If
+
+            If xGreater Then
+                If Me.SortOrder = SortOrder.Ascending Then
+                    Return 1
                 Else
-                    If Me.SortOrder = System.Windows.Forms.SortOrder.Ascending Then
-                        Return -1
-                    Else
-                        Return 1
-                    End If
+                    Return -1
+                End If
+            Else
+                If Me.SortOrder = SortOrder.Ascending Then
+                    Return -1
+                Else
+                    Return 1
                 End If
             End If
-        End Function
+        End If
+    End Function
 
-        Public Property SortOrder() As SortOrder
-            Get
-                Return _sortOrder
-            End Get
-            Set(ByVal Value As SortOrder)
-                _sortOrder = Value
-            End Set
-        End Property
+    Public Property SortOrder As SortOrder
 
-        Public Property PropertyToSort() As String
-            Get
-                Return _propertyToSort
-            End Get
-            Set(ByVal Value As String)
-                _propertyToSort = Value
-            End Set
-        End Property
-    End Class
+    Public Property PropertyToSort As String
+End Class

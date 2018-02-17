@@ -6,7 +6,7 @@ Friend Class clsTransferParamEntriesToMassModList
     Private m_AutoTweak As IMassTweaker
     Private m_IsoFix As IDeconvolveIsoMods
 
-    Public Sub New(ByVal mgrParams As ParamFileEditor.ProgramSettings.IProgramSettings)
+    Public Sub New(mgrParams As ParamFileEditor.ProgramSettings.IProgramSettings)
         MyBase.New(mgrParams)
         Me.m_mgrParams = mgrParams
         Me.m_AutoTweak = New clsMassTweaker(Me.m_mgrParams)
@@ -18,7 +18,7 @@ Friend Class clsTransferParamEntriesToMassModList
         Me.SyncMassModList2PETable()
     End Sub
 
-    Public Sub SyncOneJob(ByVal paramFileID As Integer)
+    Public Sub SyncOneJob(paramFileID As Integer)
         Me.SyncSingleJob(paramFileID)
     End Sub
 
@@ -50,7 +50,7 @@ Friend Class clsTransferParamEntriesToMassModList
         Next
     End Sub
 
-    Private Sub SyncSingleJob(ByVal paramFileID As Integer)
+    Private Sub SyncSingleJob(paramFileID As Integer)
         Dim tmpParams As ParamFileGenerator.clsParams
 
 
@@ -68,11 +68,11 @@ Friend Class clsTransferParamEntriesToMassModList
     End Sub
 
     Private Sub SyncDesc(ByRef BaseLineParams As ParamFileGenerator.clsParams)
-		Dim ParamFileTable As DataTable
-		Dim eParamFileType As ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants
-		eParamFileType = ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants.Sequest
+        Dim ParamFileTable As DataTable
+        Dim eParamFileType As ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants
+        eParamFileType = ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants.Sequest
 
-		Dim PFSQL As String = "SELECT * FROM T_Param_Files WHERE [Param_File_Type_ID] = " & eParamFileType
+        Dim PFSQL As String = "SELECT * FROM T_Param_Files WHERE [Param_File_Type_ID] = " & eParamFileType
 
         Dim tmpDA As SqlClient.SqlDataAdapter = Nothing
         Dim tmpCB As SqlClient.SqlCommandBuilder = Nothing
@@ -93,7 +93,7 @@ Friend Class clsTransferParamEntriesToMassModList
                 Debug.WriteLine("")
             End If
             Debug.Write("Param File = " & currParamFileID & " | CS = " & filerow.RowState.ToString & ", ")
-			testparams = Me.GetParamSetWithID(currParamFileID, eParamFileType)
+            testparams = Me.GetParamSetWithID(currParamFileID, eParamFileType)
 
             filerow.Item("Param_File_Description") = testparams.Description
 

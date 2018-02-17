@@ -77,7 +77,7 @@ Public Class frmMain
         Me.txtOutputPath.Name = "txtOutputPath"
         Me.txtOutputPath.Size = New System.Drawing.Size(400, 20)
         Me.txtOutputPath.TabIndex = 0
-        Me.txtOutputPath.Text = "E:\Temp\"
+        Me.txtOutputPath.Text = "F:\Temp\"
         '
         'txtDMSConnectionString
         '
@@ -158,7 +158,7 @@ Public Class frmMain
         Me.txtFASTAPath.Name = "txtFASTAPath"
         Me.txtFASTAPath.Size = New System.Drawing.Size(396, 20)
         Me.txtFASTAPath.TabIndex = 11
-        Me.txtFASTAPath.Text = "D:\Org_DB\Bovine\FASTA\bsa.fasta"
+        Me.txtFASTAPath.Text = "C:\DMS_Temp_Org\bsa.fasta"
         '
         'txtDatasetID
         '
@@ -279,16 +279,16 @@ Public Class frmMain
             Case 1000
                 Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.BioWorks_32
             Case 1008
-				Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.X_Tandem
-			Case 1018
-				Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSGFPlus
-			Case 1019
-				Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlign
-			Case 1022
-				Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlignHistone
-			Case Else
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.X_Tandem
+            Case 1018
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSGFPlus
+            Case 1019
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlign
+            Case 1022
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlignHistone
+            Case Else
 
-		End Select
+        End Select
         'Me.m_ParamFileType = _
         '    CType([Enum].Parse(GetType(ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType), _
         '    Me.cboFileTypes.Text), _
@@ -316,16 +316,16 @@ Public Class frmMain
         txtParamFileName.Text = String.Empty
 
         For Each dr In foundrows
-            Me.cboAvailableParams.Items.Add(New ParamFileEntry( _
+            Me.cboAvailableParams.Items.Add(New ParamFileEntry(
                 CInt(dr.Item("ID")), dr.Item("Filename").ToString))
-		Next
-		
+        Next
+
         Me.cboAvailableParams.DisplayMember = "Description"
         Me.cboAvailableParams.ValueMember = "Value"
 
-		If Me.cboAvailableParams.Items.Count > 0 Then
-			Me.cboAvailableParams.SelectedIndex = 0
-		End If
+        If Me.cboAvailableParams.Items.Count > 0 Then
+            Me.cboAvailableParams.SelectedIndex = 0
+        End If
 
         Me.cboAvailableParams.EndUpdate()
 
