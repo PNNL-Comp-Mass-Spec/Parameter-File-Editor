@@ -466,23 +466,19 @@ Namespace DownloadParams
             'Find N-Term Dyn Mods
             foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'")
             If foundRows.Length > 0 Then
-                For Each foundRow In foundRows
-                    tmpSpec = GetDynModSpecifier(foundRows)
-                    tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
-                    tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
-                    sc.Add(tmpSpec, tmpValue, tmpType)
-                Next
+                tmpSpec = GetDynModSpecifier(foundRows)
+                tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
+                tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
+                sc.Add(tmpSpec, tmpValue, tmpType)
             End If
 
             'Find C-Term Dyn Mods
             foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'")
             If foundRows.Length > 0 Then
-                For Each foundRow In foundRows
-                    tmpSpec = GetDynModSpecifier(foundRows)
-                    tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
-                    tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
-                    sc.Add(tmpSpec, tmpValue, tmpType)
-                Next
+                tmpSpec = GetDynModSpecifier(foundRows)
+                tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
+                tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
+                sc.Add(tmpSpec, tmpValue, tmpType)
             End If
 
             'Look for Static and terminal mods
