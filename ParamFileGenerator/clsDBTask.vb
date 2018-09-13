@@ -1,7 +1,5 @@
 Imports System.Collections.Specialized
-Imports System.Data
 Imports System.Data.SqlClient
-Imports System.Data.OleDb
 
 Public Interface IGetSQLData
     Function GetTable(SelectSQL As String) As DataTable
@@ -11,7 +9,7 @@ Public Interface IGetSQLData
         ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable
 
     Sub OpenConnection()
-    Sub OpenConnection(ConnectionString As String)
+    Sub OpenConnection(dbConnectionString As String)
     Sub CloseConnection()
 
     Property ConnectionString() As String
@@ -34,8 +32,8 @@ Public Class clsDBTask
 #End Region
 
     ' constructor
-    Public Sub New(ConnectionString As String, Optional PersistConnection As Boolean = False)
-        Me.m_connection_str = ConnectionString
+    Public Sub New(dbConnectionString As String, Optional PersistConnection As Boolean = False)
+        Me.m_connection_str = dbConnectionString
         Me.SetupNew(PersistConnection)
 
     End Sub
@@ -50,7 +48,7 @@ Public Class clsDBTask
             Me.OpenConnection(Me.m_connection_str)
         Else
 
-            'if 
+            'if
 
         End If
     End Sub
@@ -64,10 +62,10 @@ Public Class clsDBTask
         OpenConnection(Me.m_connection_str)
     End Sub
 
-    Protected Sub OpenConnection(ConnectionString As String) Implements IGetSQLData.OpenConnection
-        Dim retryCount As Integer = 3
+    Protected Sub OpenConnection(dbConnectionString As String) Implements IGetSQLData.OpenConnection
+        Dim retryCount = 3
         If m_DBCn Is Nothing Then
-            m_DBCn = New SqlConnection(ConnectionString & "Connect Timeout=30")
+            m_DBCn = New SqlConnection(dbConnectionString & "Connect Timeout=30")
         End If
         If m_DBCn.State <> ConnectionState.Open Then
             While retryCount > 0
@@ -133,7 +131,7 @@ Public Class clsDBTask
         ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable Implements IGetSQLData.GetTable
 
         Dim tmpIDTable As New DataTable
-        Dim GetID_CMD As SqlClient.SqlCommand = New SqlClient.SqlCommand(SelectSQL)
+        Dim GetID_CMD = New SqlClient.SqlCommand(SelectSQL)
 
         Dim numTries As Integer = 3
         'Dim tryCount As Integer

@@ -30,7 +30,7 @@ Friend Class clsTransferParamEntriesToMassModList
     Private Sub SyncMassModList2PETable()
 
         Dim ParamEntryTable As DataTable
-        Dim PESQL As String = "SELECT * FROM T_Param_Entries WHERE ([Entry_Type] like '%Modification')"
+        Dim PESQL = "SELECT * FROM T_Param_Entries WHERE ([Entry_Type] like '%Modification')"
         ParamEntryTable = Me.GetTable(PESQL)
 
         Dim AffectedParamFiles As DataTable
@@ -69,8 +69,7 @@ Friend Class clsTransferParamEntriesToMassModList
 
     Private Sub SyncDesc(ByRef BaseLineParams As ParamFileGenerator.clsParams)
         Dim ParamFileTable As DataTable
-        Dim eParamFileType As ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants
-        eParamFileType = ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants.Sequest
+        Dim eParamFileType = ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants.Sequest
 
         Dim PFSQL As String = "SELECT * FROM T_Param_Files WHERE [Param_File_Type_ID] = " & eParamFileType
 

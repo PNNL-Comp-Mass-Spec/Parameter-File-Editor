@@ -1,10 +1,11 @@
+
 Public Interface IReconstituteIsoMods
 
-    Function ReconstitueIsoMods(ParamsClass As clsParams) As clsParams
+    Function ReconstituteIsoMods(ParamsClass As clsParams) As clsParams
 
 End Interface
 
-Public Class clsReconstitueIsoMods
+Public Class clsReconstituteIsoMods
     Implements IReconstituteIsoMods
     Public Enum AvailableAtoms
         N
@@ -63,11 +64,9 @@ Public Class clsReconstitueIsoMods
 
         Dim tmpAtom As String
         Dim tmpIsoMass As Double
-        Dim tmpAtomCount As Integer
 
         Dim AAEnums() As String = [Enum].GetNames(GetType(clsMods.ResidueCode))
         Dim tmpAA As String
-        Dim tmpAASLC As String
 
 
         For Each im In IsoMods
@@ -76,8 +75,8 @@ Public Class clsReconstitueIsoMods
 
             For Each tmpAA In AAEnums
                 If InStr(tmpAA, "Term") = 0 Then
-                    tmpAASLC = Left(tmpAA, 1)
-                    tmpAtomCount = CInt(getMultiplier(tmpAASLC, DirectCast([Enum].Parse(GetType(AvailableAtoms), tmpAtom), AvailableAtoms)))
+                    Dim tmpAASLC = Left(tmpAA, 1).Chars(0)
+                    Dim tmpAtomCount = GetMultiplier(tmpAASLC, DirectCast([Enum].Parse(GetType(AvailableAtoms), tmpAtom), AvailableAtoms))
                     ParamsClass.StaticModificationsList.ChangeAAModification(
                         DirectCast([Enum].Parse(GetType(clsMods.ResidueCode), tmpAA), clsMods.ResidueCode),
                         tmpIsoMass * tmpAtomCount, True)

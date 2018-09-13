@@ -359,9 +359,9 @@ Namespace DownloadParams
                 Return New clsParams()
             End If
 
-            Dim foundrows As DataRow() = m_ParamsSet.Tables(Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
+            Dim foundRows As DataRow() = m_ParamsSet.Tables(Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
 
-            Dim storageSet As clsDMSParamStorage = MakeStorageClassFromTableRowSet(foundrows)
+            Dim storageSet As clsDMSParamStorage = MakeStorageClassFromTableRowSet(foundRows)
 
             If Not DisableMassLookup Then
                 storageSet = GetMassModsFromDMS(ParamSetID, eParamFileType, storageSet)
@@ -371,7 +371,7 @@ Namespace DownloadParams
             p.FileName = DirectCast(dr.Item("Param_File_Name"), String)
             p.Description = SummarizeDiffColl(storageSet)
 
-            For Each paramRow As DataRow In foundrows
+            For Each paramRow As DataRow In foundRows
                 p.AddLoadedParamName(paramRow.Item("Entry_Specifier").ToString, paramRow.Item("Entry_Value").ToString)
             Next
 
@@ -519,13 +519,12 @@ Namespace DownloadParams
         End Function
 
         Protected Function GetDynModSpecifier(rowSet As DataRow()) As String
-            Dim foundrow As DataRow
 
             Dim tmpSpec = ""
 
             If rowSet.Length > 0 Then               'We have dynamic mods
-                For Each foundrow In rowSet
-                    tmpSpec = tmpSpec & foundrow.Item("Residue_Symbol").ToString
+                For Each foundRow As DataRow In rowSet
+                    tmpSpec = tmpSpec & foundRow.Item("Residue_Symbol").ToString
                 Next
                 Return tmpSpec
             Else
@@ -562,10 +561,9 @@ Namespace DownloadParams
         'End Function
 
         Protected Function GetNameWithID(ID As Integer) As String
-            Dim foundrows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
-            Dim foundrow As DataRow
-            If foundrows.Length <> 0 Then
-                foundrow = foundrows(0)
+            Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
+            If foundRows.Length <> 0 Then
+                Dim foundRow = foundRows(0)
                 Return CStr(foundrow.Item("Param_File_Name"))
             Else
                 Return Nothing
@@ -602,11 +600,10 @@ Namespace DownloadParams
         End Function
 
         Protected Function GetDescriptionWithID(ID As Integer) As String
-            Dim foundrows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
-            Dim foundrow As DataRow
+            Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
             Dim tmpString As String
             If foundrows.Length <> 0 Then
-                foundrow = foundrows(0)
+                Dim foundRow = foundrows(0)
                 tmpString = CStr(foundrow.Item("Param_File_Description"))
                 If tmpString = "" Then
                     Return ""
@@ -951,13 +948,11 @@ Namespace DownloadParams
             Dim pType As Type = GetType(clsIonSeries)
             Dim pFields As PropertyInfo() = pType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
             Dim pField As PropertyInfo
-            Dim tmpname As String
-            Dim tmpvalue As String
 
             For Each pField In pFields
-                tmpname = pField.Name
-                tmpvalue = pField.GetValue(IonSeriesSet, Nothing).ToString
-                ParamCollection.Add(tmpname, tmpvalue, clsDMSParamStorage.ParamTypes.AdvancedParam)
+                Dim tmpName As String = pField.Name
+                Dim tmpValue As String = pField.GetValue(IonSeriesSet, Nothing).ToString
+                ParamCollection.Add(tmpName, tmpValue, clsDMSParamStorage.ParamTypes.AdvancedParam)
             Next
 
             Return ParamCollection
@@ -1149,16 +1144,15 @@ Namespace DownloadParams
                 Return strModDescriptionPrevious
             End If
 
-            Dim subitem As String
             If objModList.Count > 0 Then
                 If strModDescriptionPrevious.Length > 0 Then strModDescriptionPrevious += ", "
 
                 Dim tmpElement = ""
                 Dim elementTitle = objModList.Dequeue.ToString
                 While objModList.Count > 0
-                    subitem = objModList.Dequeue().ToString
+                    Dim subItem = objModList.Dequeue().ToString
                     If tmpElement.Length > 0 Then tmpElement += ", "
-                    tmpElement += subitem
+                    tmpElement += subItem
                 End While
 
                 If blnAddTitlePrefix Then

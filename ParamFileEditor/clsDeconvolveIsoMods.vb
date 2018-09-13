@@ -6,7 +6,7 @@ Public Interface IDeconvolveIsoMods
 End Interface
 
 Public Class clsDeconvolveIsoMods
-    Inherits ParamFileGenerator.clsReconstitueIsoMods
+    Inherits ParamFileGenerator.clsReconstituteIsoMods
     Implements IDeconvolveIsoMods
 
     Private Const allowedDifference As Single = 0.05
@@ -33,7 +33,7 @@ Public Class clsDeconvolveIsoMods
         Dim tmpAA As String
         Dim tmpIsoMod As Single
         Dim matchCount As Integer
-        Dim maxMatchcount As Integer
+        Dim maxMatchCount As Integer
         'Dim isoMatch As Boolean
         Dim maxIsoAtom As AvailableAtoms
         Dim usedIsoMod As Single
@@ -57,8 +57,8 @@ Public Class clsDeconvolveIsoMods
                 End If
             Next modEntry
             matchCount = CorrelateIsoMods(imCollection, usedIsoMod)
-            If matchCount > maxMatchcount Then
-                maxMatchcount = matchCount
+            If matchCount > maxMatchCount Then
+                maxMatchCount = matchCount
                 maxIsoAtom = eAtom
                 maxIsoMod = CSng(Math.Round(usedIsoMod, 4))
             End If
@@ -69,7 +69,7 @@ Public Class clsDeconvolveIsoMods
         If maxMatchcount >= 5 Then
             'Rip out the existing version...
             Me.StripStaticIsoMod(ParamsClass, maxIsoMod, maxIsoAtom)
-            '...and replace it with the new isomod entity
+            '...and replace it with the new isoMod entity
             Dim at As IMassTweaker
             at = New clsMassTweaker(Me.m_ConnectionString)
             maxIsoMod = CSng(at.GetTweakedMass(maxIsoMod, maxIsoAtom.ToString()))
@@ -88,7 +88,7 @@ Public Class clsDeconvolveIsoMods
     Private Function getIsoModValue(AA As String, Atom As AvailableAtoms, StaticModMass As Single) As Single
         Dim m_PossibleIsoMod As Single
 
-        m_PossibleIsoMod = CSng(StaticModMass / CDbl(getMultiplier(AA, Atom)))
+        m_PossibleIsoMod = CSng(StaticModMass / CDbl(GetMultiplier(AA, Atom)))
 
         Return m_PossibleIsoMod
     End Function
@@ -122,27 +122,23 @@ Public Class clsDeconvolveIsoMods
     End Function
 
     Private Sub StripStaticIsoMod(
-        ByRef Paramsclass As ParamFileGenerator.clsParams,
-        ModMassToRemove As Single,
-        Atom As AvailableAtoms)
+        ByRef paramsClass As ParamFileGenerator.clsParams,
+        modMassToRemove As Single,
+        atom As AvailableAtoms)
 
         Dim entry As ParamFileGenerator.clsModEntry
 
-        Dim AA As String
-        Dim NumAtoms As Integer
-
-
-        For Each entry In Paramsclass.StaticModificationsList
-            AA = entry.ReturnResidueAffected(0)
-            NumAtoms = CInt(getMultiplier(AA, Atom))
+        For Each entry In paramsClass.StaticModificationsList
+            Dim AA = entry.ReturnResidueAffected(0).Chars(0)
+            Dim NumAtoms = GetMultiplier(AA, atom)
             If entry.MassDifference > 0.0 Then
-                entry.MassDifference = CSng(Math.Round(entry.MassDifference - (ModMassToRemove * NumAtoms), 4))
+                entry.MassDifference = CSng(Math.Round(entry.MassDifference - (modMassToRemove * NumAtoms), 4))
             End If
             If (Math.Abs(entry.MassDifference) < allowedDifference) Or (entry.MassDifference < 0) Then
                 entry.MassDifference = 0
             End If
         Next
-        Paramsclass.StaticModificationsList.EradicateEmptyMods()
+        paramsClass.StaticModificationsList.EradicateEmptyMods()
 
     End Sub
 
