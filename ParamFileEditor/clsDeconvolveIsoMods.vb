@@ -50,7 +50,7 @@ Public Class clsDeconvolveIsoMods
 
                 If tmpAA.Length = 1 Then
                     tmpIsoMod = getIsoModValue(
-                        tmpAA,
+                        tmpAA.Chars(0),
                         eAtom,
                         CSng(modEntry.MassDifference))
                     imCollection.Add(tmpAA, tmpIsoMod)
@@ -85,7 +85,7 @@ Public Class clsDeconvolveIsoMods
 
     End Function
 
-    Private Function getIsoModValue(AA As String, Atom As AvailableAtoms, StaticModMass As Single) As Single
+    Private Function getIsoModValue(AA As Char, Atom As AvailableAtoms, StaticModMass As Single) As Single
         Dim m_PossibleIsoMod As Single
 
         m_PossibleIsoMod = CSng(StaticModMass / CDbl(GetMultiplier(AA, Atom)))

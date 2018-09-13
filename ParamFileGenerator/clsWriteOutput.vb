@@ -1,3 +1,4 @@
+Imports System.Collections.Generic
 Imports System.IO
 Imports System.Collections.Specialized
 
@@ -14,41 +15,16 @@ Public Class clsWriteOutput
 
     End Function
 
-    Public Function WriteDatatableToOutputFile(
-        TableToWrite As DataTable,
-        OutputPathName As String) As Boolean
+    Public Sub WriteDataTableToOutputFile(
+        tableToWrite As List(Of List(Of String)),
+        outputFilePath As String)
 
-        Me.DumpDataTableToOutputFile(TableToWrite, OutputPathName)
-        Return True
-
-    End Function
-
-    Private Sub DumpDataTableToOutputFile(
-        dt As DataTable,
-        outputPath As String)
-
-        Dim dr As DataRow
-        Dim rowElement As Object
-        Dim sb As Text.StringBuilder
-        Dim elementCount As Integer
-
-        Dim sw As New StreamWriter(outputPath)
-
-
-        For Each dr In dt.Rows
-            elementCount = dr.ItemArray.Length
-            sb = New Text.StringBuilder()
-            For Each rowElement In dr.ItemArray
-                sb.Append(rowElement.ToString)
-                elementCount -= 1
-                If elementCount > 0 Then
-                    sb.Append(Chr(9))
-                End If
+        Using writer As New StreamWriter(New FileStream(outputFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+            For Each tableRow In tableToWrite
+                writer.WriteLine(String.Join(Chr(9), tableRow))
             Next
-            sw.WriteLine(sb.ToString)
-        Next
 
-        sw.Close()
+        End Using
 
     End Sub
 

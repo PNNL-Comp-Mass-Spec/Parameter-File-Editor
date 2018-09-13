@@ -1,3 +1,4 @@
+Imports System.Collections.Generic
 
 Public Interface IReconstituteIsoMods
 
@@ -15,47 +16,37 @@ Public Class clsReconstituteIsoMods
         S
     End Enum
 
-
-    Private ReadOnly m_ResTable As DataTable
+    ''' <summary>
+    ''' Dictionary where keys are amino acid residue (one letter abbreviation)
+    ''' and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
+    ''' </summary>
+    Private ReadOnly m_ResidueAtomCounts As Dictionary(Of Char, Dictionary(Of Char, Integer))
 
     Public Sub New(connectionString As String)
         Dim getResTable As New clsGetResiduesList(connectionString)
-        m_ResTable = getResTable.ResiduesTable
-        ' Unused: m_ConnectionString = connectionString
-
+        m_ResidueAtomCounts = getResTable.ResidueAtomCounts
     End Sub
 
-    Friend Function ReconIsoMods(ParamsClass As clsParams) As clsParams Implements IReconstituteIsoMods.ReconstitueIsoMods
+    Friend Function ReconIsoMods(ParamsClass As clsParams) As clsParams Implements IReconstituteIsoMods.ReconstituteIsoMods
         Return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods)
     End Function
-    Protected Function getMultiplier(AA As String, Atom As AvailableAtoms) As Integer
 
-        Dim m_Atomrows() As DataRow = m_ResTable.Select("[Residue_Symbol] = '" & AA & "'")
-        Dim m_AtomRow As DataRow = m_Atomrows(0)
-        Dim m_AtomCount = CInt(m_AtomRow.Item(getAtomCountColumn(Atom)))
+    Protected Function GetMultiplier(AA As Char, Atom As AvailableAtoms) As Integer
 
-        Return m_AtomCount
+        Dim atomCounts As Dictionary(Of Char, Integer) = Nothing
+        If m_ResidueAtomCounts.TryGetValue(AA, atomCounts) Then
+            Dim atomSymbol = Atom.ToString().Chars(0)
 
-    End Function
+            Dim atomCount As Integer
+            If atomCounts.TryGetValue(atomSymbol, atomCount) Then
+                Return atomCount
+            End If
+        End If
 
-    Protected Function getAtomCountColumn(Atom As AvailableAtoms) As String
-
-        Select Case Atom
-            Case AvailableAtoms.C
-                Return "Num_C"
-            Case AvailableAtoms.H
-                Return "Num_H"
-            Case AvailableAtoms.O
-                Return "Num_O"
-            Case AvailableAtoms.N
-                Return "Num_N"
-            Case AvailableAtoms.S
-                Return "Num_S"
-            Case Else
-                Return Nothing
-        End Select
+        Return 0
 
     End Function
+
     Protected Function StreamlineIsoModsToStatics(
         ParamsClass As clsParams,
         IsoMods As clsIsoMods) As clsParams
