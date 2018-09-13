@@ -6,6 +6,13 @@ ParamFileGenerator
 </name>
 </assembly>
 <members>
+<member name="P:ParamFileGenerator.clsGetResiduesList.ResidueAtomCounts">
+ <summary>
+ Dictionary where keys are amino acid residue (one letter abbreviation)
+ and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
+ </summary>
+ <returns></returns>
+</member>
 <member name="M:ParamFileGenerator.MakeParams.clsMakeParameterFile.MakeFileSQ(System.String,ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType,System.String,System.String,System.String,System.Boolean)">
  <summary>
  Create Sequest parameter file
@@ -30,6 +37,12 @@ ParamFileGenerator
  </summary>
  <returns></returns>
  <remarks></remarks>
+</member>
+<member name="F:ParamFileGenerator.clsReconstituteIsoMods.m_ResidueAtomCounts">
+ <summary>
+ Dictionary where keys are amino acid residue (one letter abbreviation)
+ and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
+ </summary>
 </member>
 </members>
 </doc>
