@@ -4,10 +4,7 @@ Imports System
 Imports System.Collections
 Imports System.Collections.Specialized
 Imports System.IO
-'Imports System.Windows.Forms
 Imports System.Xml
-Imports System.Xml.Xsl
-Imports System.Xml.XPath
 Imports System.Text
 
 Enum IniItemTypeEnum
@@ -35,36 +32,36 @@ Public Class IniFileReader
     Private m_SaveFilename As String
     Private m_initialized As Boolean = False
 
-    Public Sub New(IniFilename As String)
-        InitIniFileReader(Inifilename, False)
+    Public Sub New(settingsFileName As String)
+        InitIniFileReader(settingsFileName, False)
     End Sub
 
-    Public Sub New(IniFileName As String, IsCaseSensitive As Boolean)
-        InitIniFileReader(IniFileName, IsCaseSensitive)
+    Public Sub New(settingsFileName As String, isCaseSensitive As Boolean)
+        InitIniFileReader(settingsFileName, isCaseSensitive)
     End Sub
 
-    Private Sub InitIniFileReader(IniFileName As String, IsCaseSensitive As Boolean)
+    Private Sub InitIniFileReader(settingsFileName As String, isCaseSensitive As Boolean)
         Dim fi As FileInfo
         Dim s As String
         Dim tr As TextReader = Nothing
-        m_CaseSensitive = IsCaseSensitive
+        m_CaseSensitive = isCaseSensitive
         m_XmlDoc = New XmlDocument
 
-        If ((IniFileName Is Nothing) OrElse (IniFileName.Trim() = "")) Then
+        If ((settingsFileName Is Nothing) OrElse (settingsFileName.Trim() = "")) Then
             Return
         End If
         ' try to load the file as an XML file
         Try
-            m_XmlDoc.Load(IniFileName)
+            m_XmlDoc.Load(settingsFileName)
             UpdateSections()
-            m_IniFilename = IniFileName
+            m_IniFilename = settingsFileName
             m_initialized = True
 
         Catch
             ' load the default XML
             m_XmlDoc.LoadXml("<?xml version=""1.0"" encoding=""UTF-8""?><sections></sections>")
             Try
-                fi = New FileInfo(IniFileName)
+                fi = New FileInfo(settingsFileName)
                 If fi.Exists Then
                     tr = fi.OpenText
                     s = tr.ReadLine()
@@ -75,11 +72,11 @@ Public Class IniFileReader
                         ParseLineXml(s, m_XmlDoc)
                         s = tr.ReadLine()
                     Loop
-                    m_IniFilename = IniFileName
+                    m_IniFilename = settingsFileName
                     m_initialized = True
                 Else
-                    m_XmlDoc.Save(IniFileName)
-                    m_IniFilename = IniFileName
+                    m_XmlDoc.Save(settingsFileName)
+                    m_IniFilename = settingsFileName
                     m_initialized = True
                 End If
             Catch e As Exception
@@ -91,7 +88,6 @@ Public Class IniFileReader
             End Try
         End Try
     End Sub
-
 
     Public ReadOnly Property IniFilename() As String
         Get

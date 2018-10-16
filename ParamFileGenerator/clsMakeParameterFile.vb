@@ -13,10 +13,10 @@ Namespace MakeParams
             BioWorks_20 = 0  'Normal BioWorks 2.0 Sequest
             BioWorks_30 = 1  'BioWorks 3.0+ TurboSequest
             BioWorks_31 = 2  'BioWorks 3.1 ClusterQuest
-            BioWorks_32 = 3  'Bioworks 3.2 Cluster
+            BioWorks_32 = 3  'BioWorks 3.2 Cluster
             BioWorks_Current = 4
             X_Tandem = 5     'X!Tandem XML file
-            Inspect = 6      'InSpect
+            Inspect = 6      'Inspect
             MSGFPlus = 7     'MSGF-DB or MSGF+
             MSAlign = 8      'MSAlign
             MSAlignHistone = 9      'MSAlign_Histone (which is MS-Align+)
@@ -58,12 +58,12 @@ Namespace MakeParams
 
 
     Public Class clsMakeParameterFile
-        Inherits PRISM.clsEventNotifier
+        Inherits PRISM.EventNotifier
         Implements IGenerateFile
 
         Private m_TemplateFilePathString As String
 
-        Private m_DbTools As PRISM.clsDBTools
+        Private m_DbTools As PRISM.DBTools
         Private m_FileWriter As clsWriteOutput
 
         Public Property TemplateFilePath() As String Implements IGenerateFile.TemplateFilePath
@@ -212,7 +212,7 @@ Namespace MakeParams
         Private Function GetMonoParentStatusWorker(LookupSQL As String, DMSConnectionString As String) As Boolean
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.clsDBTools(DMSConnectionString)
+                m_DbTools = New PRISM.DBTools(DMSConnectionString)
             End If
 
             Dim typeCheckTable As List(Of List(Of String)) = Nothing
@@ -255,7 +255,7 @@ Namespace MakeParams
             forceMonoParentMass As Boolean) As Boolean
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.clsDBTools(DMSConnectionString)
+                m_DbTools = New PRISM.DBTools(DMSConnectionString)
             End If
 
             Const DEF_TEMPLATE_FILEPATH = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
@@ -376,7 +376,7 @@ Namespace MakeParams
             Dim mdSQL As String
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.clsDBTools(DMSConnectionString)
+                m_DbTools = New PRISM.DBTools(DMSConnectionString)
             End If
 
             Dim baseParamfileName As String
@@ -420,7 +420,7 @@ Namespace MakeParams
             Dim paramFilePath As String
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.clsDBTools(DMSConnectionString)
+                m_DbTools = New PRISM.DBTools(DMSConnectionString)
             End If
 
             Dim paramFilePathSQL =

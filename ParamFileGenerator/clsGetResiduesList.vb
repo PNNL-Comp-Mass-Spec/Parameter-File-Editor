@@ -15,7 +15,7 @@ Public Class clsGetResiduesList
 
         Dim SQL = "SELECT * FROM T_Residues WHERE [Num_C] > 0"
 
-        Dim dbTools = New PRISM.clsDBTools(connectionString)
+        Dim dbTools = New PRISM.DBTools(connectionString)
 
         Dim residuesTable As List(Of List(Of String)) = Nothing
         dbTools.GetQueryResults(SQL, residuesTable, "clsGetResiduesList")

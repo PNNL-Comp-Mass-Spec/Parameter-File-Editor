@@ -304,10 +304,10 @@ Namespace DownloadParams
         End Function
 
         Protected Function LoadIonSeriesParams() As StringCollection
-            Dim paramenum() As String = [Enum].GetNames(GetType(IonSeriesParams))
+            Dim paramEnum() As String = [Enum].GetNames(GetType(IonSeriesParams))
             Dim param As String
             Dim sc As New StringCollection
-            For Each param In paramenum
+            For Each param In paramEnum
                 sc.Add(param)
             Next
             Return sc
@@ -648,7 +648,6 @@ Namespace DownloadParams
 
             Dim dr As DataRow
 
-
             For Each dr In tmpIDTable.Rows
 
                 tmpType = DirectCast(dr.Item("Type_ID"), Integer)
@@ -670,7 +669,7 @@ Namespace DownloadParams
 
             Return tmpIDTable
 
-            'Need filtering code for tmpidtable here...
+            'Need filtering code for tmpIDTable here...
 
         End Function
 

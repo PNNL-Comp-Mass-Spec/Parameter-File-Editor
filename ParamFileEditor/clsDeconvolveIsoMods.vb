@@ -96,22 +96,22 @@ Public Class clsDeconvolveIsoMods
     Private Function CorrelateIsoMods(IsoModCollection As IDictionary, ByRef commonMass As Single) As Integer
         Dim stepper As IDictionaryEnumerator = IsoModCollection.GetEnumerator
         Dim matchCount As Integer
-        Dim currIsoMod As Single
+        Dim currentIsoMod As Single
         Dim lastIsoMod As Single = 0
 
 
         If IsoModCollection.Count = 0 Then Return 0
 
         Do While stepper.MoveNext = True
-            currIsoMod = CSng(stepper.Value)
-            If Math.Abs(currIsoMod - lastIsoMod) <= allowedDifference Then
+            currentIsoMod = CSng(stepper.Value)
+            If Math.Abs(currentIsoMod - lastIsoMod) <= allowedDifference Then
                 matchCount += 1
-                commonMass += currIsoMod
-                lastIsoMod = currIsoMod
+                commonMass += currentIsoMod
+                lastIsoMod = currentIsoMod
             Else
             End If
             If Math.Abs(lastIsoMod) < Single.Epsilon Then
-                lastIsoMod = currIsoMod
+                lastIsoMod = currentIsoMod
             End If
             'stepper.MoveNext()
         Loop

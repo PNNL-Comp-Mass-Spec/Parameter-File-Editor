@@ -43,8 +43,8 @@ Public Class clsRetrieveParams
         m_iniFileReader.OutputFilename = m_IniFilePath
         m_iniFileReader.Save()
     End Sub
-    Public Function LoadSettings(IniFilePath As String) As Boolean
-        m_IniFilePath = IniFilePath
+    Public Function LoadSettings(settingsFilePath As String) As Boolean
+        m_IniFilePath = settingsFilePath
         Return LoadSettings()
     End Function
 
