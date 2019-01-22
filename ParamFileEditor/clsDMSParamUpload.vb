@@ -33,8 +33,8 @@ Friend Class clsDMSParamUpload
         Return success
     End Function
 
-    Friend Function WriteParamsToLocalStructure(Paramset As clsParams, ParamSetIDToUpdate As Integer) As Boolean
-        Return SaveParams(Paramset, True)
+    Friend Function WriteParamsToLocalStructure(ParamSet As clsParams, ParamSetIDToUpdate As Integer) As Boolean
+        Return SaveParams(ParamSet, True)
     End Function
 
     Friend Function GetDiffsFromTemplate(paramSetID As Integer, eParamFileTypeID As eParamFileTypeConstants) As String
@@ -189,34 +189,22 @@ Friend Class clsDMSParamUpload
 
             sp_Save.CommandType = CommandType.StoredProcedure
 
-            'Define parameters
-            Dim myParam As SqlParameter
+            ' Define the stored procedure return value
+            sp_Save.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
 
-            'Define parameter for sp's return value
-            myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.ReturnValue
+            ' Define parameters for the stored procedure arguments
+            sp_Save.Parameters.Add("@paramFileName", SqlDbType.VarChar, 255).Value = paramFileName
 
-            'Define parameters for the sp's arguments
-            myParam = sp_Save.Parameters.Add("@paramFileName", SqlDbType.VarChar, 255)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = paramFileName
+            sp_Save.Parameters.Add("@paramFileDesc", SqlDbType.VarChar, 1024).Value = paramFileDescription
 
-            myParam = sp_Save.Parameters.Add("@paramFileDesc", SqlDbType.VarChar, 1024)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = paramFileDescription
+            sp_Save.Parameters.Add("@ParamFileTypeID", SqlDbType.Int).Value = 1000
 
-            myParam = sp_Save.Parameters.Add("@ParamFileTypeID", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = 1000
+            sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
 
-            myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
-            myParam.Direction = ParameterDirection.Output
-
-
-            'Execute the sp
+            ' Execute the stored procedure
             sp_Save.ExecuteNonQuery()
 
-            'Get return value
+            ' Get return value
             Dim ret = CInt(sp_Save.Parameters("@Return").Value)
 
             If ret <> 0 Then
@@ -262,46 +250,28 @@ Friend Class clsDMSParamUpload
 
             sp_Save.CommandType = CommandType.StoredProcedure
 
-            'Define parameters
-            Dim myParam As SqlParameter
+            ' Define the stored procedure return value
+            sp_Save.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
 
-            'Define parameter for sp's return value
-            myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.ReturnValue
+            ' Define parameters for the stored procedure arguments
+            sp_Save.Parameters.Add("@paramFileID", SqlDbType.Int).Value = paramFileID
 
-            'Define parameters for the sp's arguments
-            myParam = sp_Save.Parameters.Add("@paramFileID", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = paramFileID
+            sp_Save.Parameters.Add("@entrySeqOrder", SqlDbType.Int).Value = entrySeqOrder
 
-            myParam = sp_Save.Parameters.Add("@entrySeqOrder", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = entrySeqOrder
+            sp_Save.Parameters.Add("@entryType", SqlDbType.VarChar, 32).Value = entryType.ToString
 
-            myParam = sp_Save.Parameters.Add("@entryType", SqlDbType.VarChar, 32)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = entryType.ToString
+            sp_Save.Parameters.Add("@entrySpecifier", SqlDbType.VarChar, 32).Value = entrySpecifier
 
-            myParam = sp_Save.Parameters.Add("@entrySpecifier", SqlDbType.VarChar, 32)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = entrySpecifier
+            sp_Save.Parameters.Add("@entryValue", SqlDbType.VarChar, 32).Value = entryValue
 
-            myParam = sp_Save.Parameters.Add("@entryValue", SqlDbType.VarChar, 32)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = entryValue
+            sp_Save.Parameters.Add("@mode", SqlDbType.VarChar, 12).Value = "Add"
 
-            myParam = sp_Save.Parameters.Add("@mode", SqlDbType.VarChar, 12)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = "Add"
+            sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
 
-            myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
-            myParam.Direction = ParameterDirection.Output
-
-
-            'Execute the sp
+            ' Execute the stored procedure
             sp_Save.ExecuteNonQuery()
 
-            'Get return value
+            ' Get return value
             Dim ret = CInt(sp_Save.Parameters("@Return").Value)
 
             If ret <> 0 Then
@@ -345,31 +315,19 @@ Friend Class clsDMSParamUpload
 
     ''        sp_Save.CommandType = CommandType.StoredProcedure
 
-    ''        'Define parameters
-    ''        Dim myParam As SqlClient.SqlParameter
+    ''        ' Define the stored procedure return value
+    ''        sp_Save.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
 
-    ''        'Define parameter for sp's return value
-    ''        myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
-    ''        myParam.Direction = ParameterDirection.ReturnValue
+    ''        ' Define parameters for the stored procedure arguments
+    ''        sp_Save.Parameters.Add("@paramFileID", SqlDbType.Int).Value = paramFileID
 
-    ''        'Define parameters for the sp's arguments
-    ''        myParam = sp_Save.Parameters.Add("@paramFileID", SqlDbType.Int)
-    ''        myParam.Direction = ParameterDirection.Input
-    ''        myParam.Value = paramFileID
+    ''        sp_Save.Parameters.Add("@globalModID", SqlDbType.Int).Value = globalModID
 
-    ''        myParam = sp_Save.Parameters.Add("@globalModID", SqlDbType.Int)
-    ''        myParam.Direction = ParameterDirection.Input
-    ''        myParam.Value = globalModID
+    ''        sp_Save.Parameters.Add("@localSymbolID", SqlDbType.Int).Value = localSymbolID
 
-    ''        myParam = sp_Save.Parameters.Add("@localSymbolID", SqlDbType.Int)
-    ''        myParam.Direction = ParameterDirection.Input
-    ''        myParam.Value = localSymbolID
+    ''        sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
 
-    ''        myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
-    ''        myParam.Direction = ParameterDirection.Output
-
-
-    ''        'Execute the sp
+    ''        ' Execute the stored procedure
     ''        sp_Save.ExecuteNonQuery()
 
     ''        'Get return value
@@ -413,17 +371,11 @@ Friend Class clsDMSParamUpload
             sp_Delete = New SqlCommand(SP_NAME, m_DBCn)
             sp_Delete.CommandType = CommandType.StoredProcedure
 
-            Dim myParam As SqlParameter
+            sp_Delete.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
 
-            myParam = sp_Delete.Parameters.Add("@Return", SqlDbType.Int)
-            myParam.Direction = ParameterDirection.ReturnValue
+            sp_Delete.Parameters.Add("@ParamFileName", SqlDbType.VarChar, 255).Value = paramFileName
 
-            myParam = sp_Delete.Parameters.Add("@ParamFileName", SqlDbType.VarChar, 255)
-            myParam.Direction = ParameterDirection.Input
-            myParam.Value = paramFileName
-
-            myParam = sp_Delete.Parameters.Add("@message", SqlDbType.VarChar, 512)
-            myParam.Direction = ParameterDirection.Output
+            sp_Delete.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
 
             sp_Delete.ExecuteNonQuery()
 
@@ -484,18 +436,11 @@ Friend Class clsDMSParamUpload
             sp_Delete = New SqlCommand(SP_NAME, m_DBCn)
             sp_Delete.CommandType = CommandType.StoredProcedure
 
-            Dim myparam As SqlParameter
+            sp_Delete.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
 
-            myparam = sp_Delete.Parameters.Add("@Return", SqlDbType.Int)
-            myparam.Direction = ParameterDirection.ReturnValue
+            sp_Delete.Parameters.Add("@ParamFileID", SqlDbType.Int).Value = paramFileID
 
-            myparam = sp_Delete.Parameters.Add("@ParamFileID", SqlDbType.Int)
-            myparam.Direction = ParameterDirection.Input
-            myparam.Value = paramFileID
-
-            myparam = sp_Delete.Parameters.Add("@message", SqlDbType.VarChar, 512)
-            myparam.Direction = ParameterDirection.Output
-
+            sp_Delete.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
 
             sp_Delete.ExecuteNonQuery()
 
@@ -538,14 +483,9 @@ Friend Class clsDMSParamUpload
             sp_Lookup = New SqlCommand(SP_NAME, m_DBCn)
             sp_Lookup.CommandType = CommandType.StoredProcedure
 
-            Dim myparam As SqlParameter
+            sp_Lookup.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
 
-            myparam = sp_Lookup.Parameters.Add("@Return", SqlDbType.Int)
-            myparam.Direction = ParameterDirection.ReturnValue
-
-            myparam = sp_Lookup.Parameters.Add("@ParamFileName", SqlDbType.VarChar, 255)
-            myparam.Direction = ParameterDirection.Input
-            myparam.Value = paramFileName
+            sp_Lookup.Parameters.Add("@ParamFileName", SqlDbType.VarChar, 255).Value = paramFileName
 
             sp_Lookup.ExecuteNonQuery()
 

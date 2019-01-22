@@ -130,43 +130,26 @@ Public Class clsMassTweaker
     Optional modAffectedAtom As String = "-") Implements IMassTweaker.AddMassCorrection
 
 
-        Dim sp_Save As SqlClient.SqlCommand
-
         OpenConnection()
-        sp_Save = New SqlClient.SqlCommand("AddMassCorrectionEntry", m_DBCn)
+        Dim sp_Save = New SqlClient.SqlCommand("AddMassCorrectionEntry", m_DBCn)
 
         sp_Save.CommandType = CommandType.StoredProcedure
 
-        'Define parameters
-        Dim myParam As SqlClient.SqlParameter
+        ' Define the stored procedure return value
+        sp_Save.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
 
-        'Define parameter for sp's return value
-        myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
-        myParam.Direction = ParameterDirection.ReturnValue
+        ' Define parameters for the stored procedure arguments
+        sp_Save.Parameters.Add("@modName", SqlDbType.VarChar, 8).Value = modName
 
-        'Define parameters for the sp's arguments
-        myParam = sp_Save.Parameters.Add("@modName", SqlDbType.VarChar, 8)
-        myParam.Direction = ParameterDirection.Input
-        myParam.Value = modName
+        sp_Save.Parameters.Add("@modDescription", SqlDbType.VarChar, 64).Value = modDescription
 
-        myParam = sp_Save.Parameters.Add("@modDescription", SqlDbType.VarChar, 64)
-        myParam.Direction = ParameterDirection.Input
-        myParam.Value = modDescription
+        sp_Save.Parameters.Add("@modMassChange", SqlDbType.Float, 8).Value = modMassChange
 
-        myParam = sp_Save.Parameters.Add("@modMassChange", SqlDbType.Float, 8)
-        myParam.Direction = ParameterDirection.Input
-        myParam.Value = modMassChange
+        sp_Save.Parameters.Add("@modAffectedAtom", SqlDbType.Char, 1).Value = modAffectedAtom
 
-        myParam = sp_Save.Parameters.Add("@modAffectedAtom", SqlDbType.Char, 1)
-        myParam.Direction = ParameterDirection.Input
-        myParam.Value = modAffectedAtom
+        sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
 
-
-        myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
-        myParam.Direction = ParameterDirection.Output
-
-
-        'Execute the sp
+        'Execute the stored procedure
         sp_Save.ExecuteNonQuery()
 
         'Get return value
@@ -204,40 +187,23 @@ Public Class clsMassTweaker
 
     '    sp_Save.CommandType = CommandType.StoredProcedure
 
-    '    'Define parameters
-    '    Dim myParam As SqlClient.SqlParameter
+    '    ' Define the stored procedure return value
+    '    myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
 
-    '    'Define parameter for sp's return value
-    '    myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int)
-    '    myParam.Direction = ParameterDirection.ReturnValue
+    '    ' Define parameters for the stored procedure arguments
+    '    sp_Save.Parameters.Add("@modSymbol", SqlDbType.VarChar, 8).Value = modSymbol
 
-    '    'Define parameters for the sp's arguments
-    '    myParam = sp_Save.Parameters.Add("@modSymbol", SqlDbType.VarChar, 8)
-    '    myParam.Direction = ParameterDirection.Input
-    '    myParam.Value = modSymbol
+    '    sp_Save.Parameters.Add("@modDescription", SqlDbType.VarChar, 64).Value = modDescription
 
-    '    myParam = sp_Save.Parameters.Add("@modDescription", SqlDbType.VarChar, 64)
-    '    myParam.Direction = ParameterDirection.Input
-    '    myParam.Value = modDescription
+    '    sp_Save.Parameters.Add("@modType", SqlDbType.Char, 1).Value = CChar(modChar)
 
-    '    myParam = sp_Save.Parameters.Add("@modType", SqlDbType.Char, 1)
-    '    myParam.Direction = ParameterDirection.Input
-    '    myParam.Value = CChar(modChar)
+    '    sp_Save.Parameters.Add("@modMassChange", SqlDbType.Float, 8).Value = modMassChange
 
-    '    myParam = sp_Save.Parameters.Add("@modMassChange", SqlDbType.Float, 8)
-    '    myParam.Direction = ParameterDirection.Input
-    '    myParam.Value = modMassChange
+    '    sp_Save.Parameters.Add("@modResidues", SqlDbType.VarChar, 50).Value = modResidues
 
-    '    myParam = sp_Save.Parameters.Add("@modResidues", SqlDbType.VarChar, 50)
-    '    myParam.Direction = ParameterDirection.Input
-    '    myParam.Value = modResidues
+    '    sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
 
-
-    '    myParam = sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512)
-    '    myParam.Direction = ParameterDirection.Output
-
-
-    '    'Execute the sp
+    '    ' Execute the stored procedure
     '    sp_Save.ExecuteNonQuery()
 
     '    'Get return value
