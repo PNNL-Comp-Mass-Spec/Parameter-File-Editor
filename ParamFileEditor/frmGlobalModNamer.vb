@@ -274,10 +274,10 @@ Public Class frmGlobalModNamer
     Friend Property AffectedResidues As String
 
     Friend Sub LoadGlobalMods(ModMass As Double, AffectedAtom As String)
-        LoadExistingModsListview(lvwExistingMods, ModMass, AffectedAtom)
+        LoadExistingModsListView(lvwExistingMods, ModMass, AffectedAtom)
     End Sub
 
-    Private Sub LoadExistingModsListview(
+    Private Sub LoadExistingModsListView(
         lvw As ListView,
         ModMass As Double,
         AffectedAtom As String)
@@ -291,11 +291,11 @@ Public Class frmGlobalModNamer
 
         Do
 
-            filterString = "([Monoisotopic_Mass_Correction] >= " & ModMass - MassVariance * counter & " AND " &
-                            "[Monoisotopic_Mass_Correction] <= " & ModMass + MassVariance * counter & ") AND " &
+            filterString = "([Monoisotopic_Mass] >= " & ModMass - MassVariance * counter & " AND " &
+                            "[Monoisotopic_Mass] <= " & ModMass + MassVariance * counter & ") AND " &
                             "([Affected_Atom] = '" & AffectedAtom & "')"
 
-            modRows = MassCorrectionsTable.Select(filterString, "[Monoisotopic_Mass_Correction]")
+            modRows = MassCorrectionsTable.Select(filterString, "[Monoisotopic_Mass]")
 
             counter += 1
 
@@ -457,7 +457,7 @@ Public Class frmGlobalModNamer
 
     Private Function SelectedModExists(modMass As Double) As Boolean
 
-        Dim rows() As DataRow = MassCorrectionsTable.Select("[Monoisotopic_Mass_Correction] = " & modMass)
+        Dim rows() As DataRow = MassCorrectionsTable.Select("[Monoisotopic_Mass] = " & modMass)
 
         If rows.Length > 0 Then
             Return True

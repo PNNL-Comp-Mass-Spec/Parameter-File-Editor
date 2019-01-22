@@ -20,10 +20,6 @@ Public Interface IMassTweaker
     Sub RefreshGlobalModsTableCache(connectionString As String)
 End Interface
 
-
-
-
-
 Public Class clsMassTweaker
     Inherits ParamFileGenerator.clsDBTask
     Implements IMassTweaker
@@ -101,16 +97,16 @@ Public Class clsMassTweaker
         Dim smallestDiff As Double = MaxTweakDifference
         Dim newMass As Double
 
-        rows = MassCorrectionsTable.Select("[Monoisotopic_Mass_Correction] > " & ModMass - smallestDiff &
-                " AND [Monoisotopic_Mass_Correction] < " & ModMass + smallestDiff & " AND [Affected_Atom] = '" & AffectedAtom & "'")
+        rows = MassCorrectionsTable.Select("[Monoisotopic_Mass] > " & ModMass - smallestDiff &
+                " AND [Monoisotopic_Mass] < " & ModMass + smallestDiff & " AND [Affected_Atom] = '" & AffectedAtom & "'")
 
         For Each row In rows
-            diff = Math.Abs(CDbl(row.Item("Monoisotopic_Mass_Correction")) - ModMass)
+            diff = Math.Abs(CDbl(row.Item("Monoisotopic_Mass")) - ModMass)
             If diff < MaxTweakDifference Then
                 If diff < smallestDiff Then
                     smallestDiff = diff
                     smallestDiffID = DirectCast(row.Item("Mass_Correction_ID"), Int32)
-                    newMass = CDbl(row.Item("Monoisotopic_Mass_Correction"))
+                    newMass = CDbl(row.Item("Monoisotopic_Mass"))
                     TweakedDescription = CStr(row.Item("Description"))
                     TweakedSymbol = CStr(row.Item("Mass_Correction_Tag"))
                 End If

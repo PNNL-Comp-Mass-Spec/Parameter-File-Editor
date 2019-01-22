@@ -379,20 +379,19 @@ Namespace MakeParams
                 m_DbTools = New PRISM.DBTools(DMSConnectionString)
             End If
 
-            Dim baseParamfileName As String
-            baseParamfileName = Path.GetFileNameWithoutExtension(paramFileName)
+            Dim baseParamFileName As String = Path.GetFileNameWithoutExtension(paramFileName)
 
             If m_FileWriter Is Nothing Then
                 m_FileWriter = New clsWriteOutput
             End If
 
             mctSQL =
-                "SELECT Mass_Correction_Tag, Monoisotopic_Mass_Correction, Affected_Atom " &
+                "SELECT Mass_Correction_Tag, Monoisotopic_Mass, Affected_Atom " &
                 "FROM T_Mass_Correction_Factors " &
                 "ORDER BY Mass_Correction_Tag"
 
             mdSQL =
-                "SELECT Local_Symbol, Monoisotopic_Mass_Correction, Residue_Symbol, Mod_Type_Symbol, Mass_Correction_Tag " &
+                "SELECT Local_Symbol, Monoisotopic_Mass, Residue_Symbol, Mod_Type_Symbol, Mass_Correction_Tag " &
                 "FROM V_Param_File_Mass_Mod_Info " &
                 "WHERE Param_File_Name = '" & paramFileName & "'"
 
@@ -407,7 +406,7 @@ Namespace MakeParams
             m_FileWriter.WriteDataTableToOutputFile(mctTable, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"))
 
             'Dump the param file specific Mod Defs file to the working directory
-            m_FileWriter.WriteDataTableToOutputFile(mdTable, Path.Combine(targetDirectory, baseParamfileName & "_ModDefs.txt"))
+            m_FileWriter.WriteDataTableToOutputFile(mdTable, Path.Combine(targetDirectory, baseParamFileName & "_ModDefs.txt"))
 
         End Function
 

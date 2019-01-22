@@ -413,7 +413,7 @@ Namespace DownloadParams
             Dim SQL As String
 
             SQL = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " &
-              "mc.Monoisotopic_Mass_Correction as Monoisotopic_Mass_Correction, " &
+              "mc.Monoisotopic_Mass as Monoisotopic_Mass, " &
               "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " &
               "FROM " & Param_Mass_Mods_Table & " mm INNER JOIN " &
               Mass_Corr_Factors & " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " &
@@ -456,7 +456,7 @@ Namespace DownloadParams
                 foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & intSymbolID & " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]")
                 If foundRows.Length > 0 Then
                     tmpSpec = GetDynModSpecifier(foundRows)
-                    tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
+                    tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
                     tmpType = clsDMSParamStorage.ParamTypes.DynamicModification
                     sc.Add(tmpSpec, tmpValue, tmpType)
                 End If
@@ -467,7 +467,7 @@ Namespace DownloadParams
             foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'")
             If foundRows.Length > 0 Then
                 tmpSpec = GetDynModSpecifier(foundRows)
-                tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
+                tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
                 tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
                 sc.Add(tmpSpec, tmpValue, tmpType)
             End If
@@ -476,7 +476,7 @@ Namespace DownloadParams
             foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'")
             If foundRows.Length > 0 Then
                 tmpSpec = GetDynModSpecifier(foundRows)
-                tmpValue = foundRows(0).Item("Monoisotopic_Mass_Correction").ToString
+                tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
                 tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
                 sc.Add(tmpSpec, tmpValue, tmpType)
             End If
@@ -497,7 +497,7 @@ Namespace DownloadParams
                     Case "]"
                         tmpSpec = "C_Term_Protein"
                 End Select
-                tmpValue = foundRow.Item("Monoisotopic_Mass_Correction").ToString
+                tmpValue = foundRow.Item("Monoisotopic_Mass").ToString
                 tmpType = clsDMSParamStorage.ParamTypes.StaticModification
                 sc.Add(tmpSpec, tmpValue, tmpType)
             Next
@@ -508,7 +508,7 @@ Namespace DownloadParams
 
             For Each foundRow In foundRows
                 tmpSpec = foundRow.Item("Affected_Atom").ToString
-                tmpValue = foundRow.Item("Monoisotopic_Mass_Correction").ToString
+                tmpValue = foundRow.Item("Monoisotopic_Mass").ToString
                 tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification
                 sc.Add(tmpSpec, tmpValue, tmpType)
             Next
