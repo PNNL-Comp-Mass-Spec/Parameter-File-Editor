@@ -245,58 +245,6 @@ Public Class IniFileReader
         Return Nothing
     End Function
 
-    Public Function GetIniComments(sectionName As String) As StringCollection
-        If Not Initialized Then Throw New IniFileReaderNotInitializedException
-        Dim sc As StringCollection = New StringCollection
-        Dim target As XmlNode
-        Dim nodes As XmlNodeList
-        Dim N As XmlNode
-        If sectionName Is Nothing Then
-            target = m_XmlDoc.DocumentElement
-        Else
-            target = GetSection(sectionName)
-        End If
-        If Not target Is Nothing Then
-            nodes = target.SelectNodes("comment")
-            If nodes.Count > 0 Then
-                For Each N In nodes
-                    sc.Add(N.InnerText)
-                Next
-            End If
-        End If
-        Return sc
-    End Function
-
-    Public Function SetIniComments(sectionName As String, comments As StringCollection) As Boolean
-        If Not Initialized Then Throw New IniFileReaderNotInitializedException
-        Dim target As XmlNode
-        Dim nodes As XmlNodeList
-        Dim N As XmlNode
-        Dim s As String
-        Dim NLastComment As XmlElement
-        If sectionName Is Nothing Then
-            target = m_XmlDoc.DocumentElement
-        Else
-            target = GetSection(sectionName)
-        End If
-        If Not target Is Nothing Then
-            nodes = target.SelectNodes("comment")
-            For Each N In nodes
-                target.RemoveChild(N)
-            Next
-            For Each s In comments
-                N = m_XmlDoc.CreateElement("comment")
-                N.InnerText = s
-                NLastComment = CType(target.SelectSingleNode("comment[last()]"), XmlElement)
-                If NLastComment Is Nothing Then
-                    target.PrependChild(N)
-                Else
-                    target.InsertAfter(N, NLastComment)
-                End If
-            Next
-            Return True
-        End If
-        Return False
     Private Sub UpdateSections()
         sections = New List(Of String)
 

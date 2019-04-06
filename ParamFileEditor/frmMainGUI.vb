@@ -4164,16 +4164,6 @@ Public Class frmMainGUI
     End Sub
 
     Private Sub mnuFileUploadDMS_Click(sender As Object, e As EventArgs) Handles mnuFileUploadDMS.Click
-        'Gonna need security stuff in here to keep morons outa DMS
-        'Dim DMSParams As New clsParamsFromDMS(MainCode.mySettings)
-
-        'Dim ident As System.Security.Principal.WindowsIdentity
-
-        'ident = ident.GetCurrent
-
-        'If m_clsParamsFromDMS Is Nothing Then
-        '    m_clsParamsFromDMS = LoadDMSParamUploadClass(MainCode.mySettings)
-        'End If
         Try
             Dim SaveFrm As New frmDMSParamNamer(Me, newParams)
             SaveFrm.Show()
@@ -4181,9 +4171,6 @@ Public Class frmMainGUI
         Catch ex As Exception
             MessageBox.Show("Error in mnuFileUploadDMS_Click: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
-        'Dim success As Boolean = dmsparams.ParamSetNameExists(testName)
-
-        'Call m_clsParamsFromDMS.WriteParamsToDMS(newParams, True)
 
     End Sub
 

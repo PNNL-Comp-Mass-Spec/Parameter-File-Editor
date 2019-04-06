@@ -92,18 +92,13 @@ Public Class clsParams
 
     'Basic Parameters
     Private m_type As ParamFileTypes
-    ' Obsolete: Private m_parentMassUnits As Integer
-    ' Peptide terminal dynamic mods
 
     'Advanced Parameters
-    ' Obsolete: Private m_Path As String
     Private m_ionSeriesString As String
     Private m_protMassFilterString As String
-    ' Obsolete: Private m_fragmentMassUnits As Integer = IAdvancedParams.MassUnitList.amu
 
     Private m_fullTemplate As clsRetrieveParams
     Private m_templateFilePath As String
-    'Shared s_BaseLineParamSet As clsParams
 
 #End Region
 
