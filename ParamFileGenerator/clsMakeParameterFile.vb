@@ -1,9 +1,9 @@
 Imports System.Collections.Generic
-Imports System.Collections.Specialized
 Imports System.IO
 Imports System.Linq
 Imports ParamFileGenerator.DownloadParams
 
+' ReSharper disable once CheckNamespace
 Namespace MakeParams
 
     Public Interface IGenerateFile
@@ -44,11 +44,12 @@ Namespace MakeParams
              OutputFilePath As String,
              DMSConnectionString As String,
              DatasetName As String) As Boolean
+             datasetName As String) As Boolean
 
-        Function GetAvailableParamSetNames(DMSConnectionString As String) As StringCollection
-        Function GetAvailableParamSetTable(DMSConnectionString As String) As DataTable
+        Function GetAvailableParamSetNames(dmsConnectionString As String) As List(Of String)
+        Function GetAvailableParamSetTable(dmsConnectionString As String) As DataTable
 
-        Function GetAvailableParamFileTypes(DMSConnectionString As String) As DataTable
+        Function GetAvailableParamFileTypes(dmsConnectionString As String) As DataTable
 
         ReadOnly Property LastError() As String
 
@@ -460,10 +461,10 @@ Namespace MakeParams
 
         End Function
 
-        Protected Function GetAvailableParamSetNames(DMSConnectionString As String) As StringCollection Implements IGenerateFile.GetAvailableParamSetNames
+        Private Function GetAvailableParamSetNames(dmsConnectionString As String) As List(Of String) Implements IGenerateFile.GetAvailableParamSetNames
 
-            Dim l_ParamSetsAvailable As New StringCollection
-            Dim l_DMS As New clsParamsFromDMS(DMSConnectionString)
+            Dim l_ParamSetsAvailable As New List(Of String)
+            Dim l_DMS As New clsParamsFromDMS(dmsConnectionString)
             Dim d_ParamSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams()
             Dim dr As DataRow
             For Each dr In d_ParamSetsAvailable.Rows

@@ -76,11 +76,11 @@ Public Class clsRetrieveParams
         m_defaultSection = Name
     End Sub
 
-    Public Function GetAllKeysInSection(Section As String) As System.Collections.Specialized.StringCollection
-        Dim sc As System.Collections.Specialized.StringCollection
-        sc = m_iniFileReader.AllKeysInSection(Section)
-        If sc Is Nothing Then Throw New Exception("No Keys in Section '" & Section & "'")
-        Return sc
+    Public Function GetAllKeysInSection(section As String) As List(Of String)
+        Dim keyNames As List(Of String)
+        keyNames = m_iniFileReader.AllKeysInSection(section)
+        If keyNames Is Nothing Then Throw New Exception("No Keys in section '" & section & "'")
+        Return keyNames
     End Function
 
 End Class

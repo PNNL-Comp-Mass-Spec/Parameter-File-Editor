@@ -144,10 +144,10 @@ Namespace DownloadParams
         Protected m_ParamsSet As DataSet
         Protected m_ParamSetCount As Integer
         Protected m_BaseLineParamSet As clsParams
-        Protected m_AcceptableParams As StringCollection
-        Protected m_BasicParams As StringCollection
-        Protected m_AdvancedParams As StringCollection
-        Protected m_IonSeriesParams As StringCollection
+        Protected m_AcceptableParams As List(Of String)
+        Protected m_BasicParams As List(Of String)
+        Protected m_AdvancedParams As List(Of String)
+        Protected m_IonSeriesParams As List(Of String)
         Protected m_GetID_DA As SqlDataAdapter
         Protected m_GetID_DB As SqlCommandBuilder
         Protected m_GetEntries_DA As SqlDataAdapter
@@ -275,42 +275,40 @@ Namespace DownloadParams
 #End Region
 
 #Region " Member Functions "
-        Protected Function LoadAcceptableParamList() As StringCollection
-            Dim ParamEnum() As String = [Enum].GetNames(GetType(AcceptableParams))
-            Dim Param As String
-            Dim sc As New StringCollection
-            For Each Param In ParamEnum
-                sc.Add(Param)
+        Protected Function LoadAcceptableParamList() As List(Of String)
+            Dim paramEnum() As String = [Enum].GetNames(GetType(AcceptableParams))
+            Dim paramList As New List(Of String)
+            For Each param In paramEnum
+                paramList.Add(param)
             Next
-            Return sc
-        End Function
-        Protected Function LoadBasicParams() As StringCollection
-            Dim ParamEnum() As String = [Enum].GetNames(GetType(BasicParams))
-            Dim Param As String
-            Dim sc As New StringCollection
-            For Each Param In ParamEnum
-                sc.Add(Param)
-            Next
-            Return sc
-        End Function
-        Protected Function LoadAdvancedParams() As StringCollection
-            Dim ParamEnum() As String = [Enum].GetNames(GetType(AdvancedParams))
-            Dim Param As String
-            Dim sc As New StringCollection
-            For Each Param In ParamEnum
-                sc.Add(Param)
-            Next
-            Return sc
+            Return paramList
         End Function
 
-        Protected Function LoadIonSeriesParams() As StringCollection
-            Dim paramEnum() As String = [Enum].GetNames(GetType(IonSeriesParams))
-            Dim param As String
-            Dim sc As New StringCollection
+        Protected Function LoadBasicParams() As List(Of String)
+            Dim paramEnum() As String = [Enum].GetNames(GetType(BasicParams))
+            Dim paramList As New List(Of String)
             For Each param In paramEnum
-                sc.Add(param)
+                paramList.Add(param)
             Next
-            Return sc
+            Return paramList
+        End Function
+
+        Protected Function LoadAdvancedParams() As List(Of String)
+            Dim paramEnum() As String = [Enum].GetNames(GetType(AdvancedParams))
+            Dim paramList As New List(Of String)
+            For Each param In paramEnum
+                paramList.Add(param)
+            Next
+            Return paramList
+        End Function
+
+        Protected Function LoadIonSeriesParams() As List(Of String)
+            Dim paramEnum() As String = [Enum].GetNames(GetType(IonSeriesParams))
+            Dim paramList As New List(Of String)
+            For Each param In paramEnum
+                paramList.Add(param)
+            Next
+            Return paramList
         End Function
 
         Protected Function GetParamsFromDMS() As DataSet      'Common
@@ -383,7 +381,7 @@ Namespace DownloadParams
             Dim storageClass As New clsDMSParamStorage
             Dim tmpSpec As String
             Dim tmpValue As String
-            'Dim tmpTypeString As String
+
             Dim tmpType As clsDMSParamStorage.ParamTypes
 
             For Each foundRow In foundRows
@@ -399,7 +397,7 @@ Namespace DownloadParams
 
         End Function
         'Todo Adding mass mod grabber
-        Protected Function GetMassModsFromDMS(ParamSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef sc As clsDMSParamStorage) As clsDMSParamStorage
+        Protected Function GetMassModsFromDMS(ParamSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef params As clsDMSParamStorage) As clsDMSParamStorage
             Const MaxDynMods = 15
 
             Dim foundRow As DataRow
@@ -458,7 +456,7 @@ Namespace DownloadParams
                     tmpSpec = GetDynModSpecifier(foundRows)
                     tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
                     tmpType = clsDMSParamStorage.ParamTypes.DynamicModification
-                    sc.Add(tmpSpec, tmpValue, tmpType)
+                    params.Add(tmpSpec, tmpValue, tmpType)
                 End If
 
             Next
@@ -469,7 +467,7 @@ Namespace DownloadParams
                 tmpSpec = GetDynModSpecifier(foundRows)
                 tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
                 tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
-                sc.Add(tmpSpec, tmpValue, tmpType)
+                params.Add(tmpSpec, tmpValue, tmpType)
             End If
 
             'Find C-Term Dyn Mods
@@ -478,7 +476,7 @@ Namespace DownloadParams
                 tmpSpec = GetDynModSpecifier(foundRows)
                 tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
                 tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
-                sc.Add(tmpSpec, tmpValue, tmpType)
+                params.Add(tmpSpec, tmpValue, tmpType)
             End If
 
             'Look for Static and terminal mods
@@ -499,7 +497,7 @@ Namespace DownloadParams
                 End Select
                 tmpValue = foundRow.Item("Monoisotopic_Mass").ToString
                 tmpType = clsDMSParamStorage.ParamTypes.StaticModification
-                sc.Add(tmpSpec, tmpValue, tmpType)
+                params.Add(tmpSpec, tmpValue, tmpType)
             Next
 
             'TODO Still need code to handle import/export of isotopic mods
@@ -510,11 +508,11 @@ Namespace DownloadParams
                 tmpSpec = foundRow.Item("Affected_Atom").ToString
                 tmpValue = foundRow.Item("Monoisotopic_Mass").ToString
                 tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification
-                sc.Add(tmpSpec, tmpValue, tmpType)
+                params.Add(tmpSpec, tmpValue, tmpType)
             Next
 
 
-            Return sc
+            Return params
 
         End Function
 

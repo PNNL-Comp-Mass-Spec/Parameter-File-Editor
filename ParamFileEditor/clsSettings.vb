@@ -1,4 +1,4 @@
-Imports System.Collections.Specialized
+Imports System.Collections.Generic
 Imports ParamFileGenerator
 Imports System.IO
 
@@ -9,7 +9,7 @@ Namespace ProgramSettings
         Property MT_ConnectionString() As String
         Property MT_ModParamFileTable() As String
         Property MT_GlobalModListTable() As String
-        Property TemplateFileName() As String
+        Property templateFileName() As String
         Property CommonModsCollection() As clsCommonModsCollection
         ReadOnly Property FieldMappingsTable() As DataTable
         ReadOnly Property AAMappingsTable() As DataTable
@@ -23,8 +23,8 @@ Namespace ProgramSettings
         Private m_MTModParamFileTable As String
         Private m_MTGlobalModListTable As String
         Private m_templateFileName As String
-        Private m_tmpCommonMods As StringCollection
         Private m_commonModsColl As clsCommonModsCollection
+        Private m_tmpCommonMods As List(Of String)
         ' Unused: Private m_fieldMappingsTable As DataTable
         Private m_aaMappingsTable As DataTable
         Private m_iniFilePath As String
@@ -214,28 +214,21 @@ Namespace ProgramSettings
             Return Path.Combine(fi.DirectoryName, fileName)
         End Function
 
-
         Private Function LoadAAMappingsTable(pr As clsRetrieveParams) As DataTable
-            Dim t As DataTable
-            Dim dr As DataRow
             Dim sn = "aminoacidmappings"
             Dim counter = 1000
 
-            t = SetupAAMappingsTable()
-            Dim sc As StringCollection = pr.GetAllKeysInSection(sn)
-            Dim s As String
-            Dim tmpSLC As String
-            Dim tmpTLC As String
-            Dim tmpFN As String
+            Dim t = SetupAAMappingsTable()
+            Dim keyNames = pr.GetAllKeysInSection(sn)
 
-            For Each s In sc
-                tmpSLC = pr.GetParam(sn, s)
-                tmpTLC = pr.GetParam(sn, s, "threeletter")
-                tmpFN = pr.GetParam(sn, s, "fullname")
+            For Each keyName In keyNames
+                Dim tmpSLC = pr.GetParam(sn, keyName)
+                Dim tmpTLC = pr.GetParam(sn, keyName, "threeletter")
+                Dim tmpFN = pr.GetParam(sn, keyName, "fullname")
 
-                dr = t.NewRow
+                Dim dr = t.NewRow
                 dr("AA_ID") = counter
-                dr("Enum_Name") = s
+                dr("Enum_Name") = keyName
                 dr("SL_Code") = tmpSLC
                 dr("TL_Code") = tmpTLC
                 dr("Full_Name") = tmpFN

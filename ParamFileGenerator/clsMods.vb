@@ -94,8 +94,8 @@ Public Class clsMods
         AffectedResidueString As String,
         MassDifference As Double)
 
-        Dim sc As StringCollection = ConvertAffectedResStringToSC(AffectedResidueString)
-        Dim newMod As New clsModEntry(sc, MassDifference, clsModEntry.ModificationTypes.Static)
+        Dim residueList = ConvertAffectedResStringToList(AffectedResidueString)
+        Dim newMod As New clsModEntry(residueList, MassDifference, clsModEntry.ModificationTypes.Static)
         List.Add(newMod)
     End Sub
 
@@ -117,7 +117,12 @@ Public Class clsMods
 #End Region
 
 #Region " Member Properties "
-    Protected m_AAMappingTable As NameValueCollection
+    ''' <summary>
+    ''' Keys are residue names from ResidueCode (e.g. P_Proline)
+    ''' Values are the single letter abbreviation if an amino acid
+    ''' Or, if not an amino acid, one of: C_Term_Protein, C_Term_Peptide, N_Term_Protein, or N_Term_Peptide
+    ''' </summary>
+    Protected m_AAMappingTable As Dictionary(Of String, String)
 #End Region
 
 #Region " Member Procedures "
@@ -127,76 +132,75 @@ Public Class clsMods
         ModType As clsModEntry.ModificationTypes,
         Optional GlobalModID As Integer = 0)
 
-        Dim sc As StringCollection = ConvertAffectedResStringToSC(AffectedEntity)
-        Dim newMod As New clsModEntry(sc, MassDifference, ModType, GlobalModID)
+        Dim residueList = ConvertAffectedResStringToList(AffectedEntity)
+        Dim newMod As New clsModEntry(residueList, MassDifference, ModType, GlobalModID)
         List.Add(newMod)
 
     End Sub
 
     Protected Sub LoadAAMappingColl()
-        Dim AAEnums() As String = [Enum].GetNames(GetType(ResidueCode))
-        Dim AA As String
-        'C_Term_Protein()
-        'C_Term_Peptide()
-        'N_Term_Protein()
-        'N_Term_Peptide()
+        Dim AAEnums = [Enum].GetNames(GetType(ResidueCode)).ToList()
 
-        m_AAMappingTable = New NameValueCollection
+        m_AAMappingTable = New Dictionary(Of String, String)
 
         For Each AA In AAEnums
             If AA = "C_Term_Protein" Or AA = "C_Term_Peptide" Or AA = "N_Term_Protein" Or AA = "N_Term_Peptide" Then
                 m_AAMappingTable.Add(AA, AA)
             Else
-                m_AAMappingTable.Add(AA, Left(AA, 1))
+                m_AAMappingTable.Add(AA, AA.Substring(0, 1))
             End If
         Next
     End Sub
 
-    Protected Function ConvertAffectedResStringToSC(AffectedResidueString As String) As StringCollection
-        Dim counter As Integer
-        Dim AA As String = AffectedResidueString
-        Dim tmpAA As String
-        Dim sc As New StringCollection
+    Protected Function ConvertAffectedResStringToList(affectedResidueString As String) As List(Of String)
+        Dim aaList As New List(Of String)
 
-        If AA = "C_Term_Protein" Or AA = "C_Term_Peptide" Or AA = "N_Term_Protein" Or AA = "N_Term_Peptide" Then
-            sc.Add(AA)
+        If affectedResidueString = "C_Term_Protein" OrElse
+           affectedResidueString = "C_Term_Peptide" OrElse
+           affectedResidueString = "N_Term_Protein" OrElse
+           affectedResidueString = "N_Term_Peptide" Then
+            aaList.Add(affectedResidueString)
         Else
-            For counter = 1 To Len(AffectedResidueString)
-                tmpAA = Mid(AffectedResidueString, counter, 1)
+            For counter = 1 To Len(affectedResidueString)
+                Dim tmpAA = Mid(affectedResidueString, counter, 1)
                 'If InStr("><[]",tmpAA) = 0 Then
-                sc.Add(tmpAA)
+                aaList.Add(tmpAA)
                 'End If
 
             Next
         End If
-        Return sc
+
+        Return aaList
     End Function
+
     Protected Function ConvertResidueCodeToSLC(Residue As ResidueCode) As String
-        Dim tmpRes As String = Residue.ToString
-        Dim tmpSLC As String = m_AAMappingTable.Get(tmpRes)
-        Return tmpSLC
+        Dim tmpRes As String = Residue.ToString()
+
+        Dim tmpSLC As String = Nothing
+        If m_AAMappingTable.TryGetValue(tmpRes, tmpSLC) Then
+            Return tmpSLC
+        End If
+
+        Return String.Empty
     End Function
 
     Protected Function ConvertSLCToResidueCode(SingleLetterAA As String) As ResidueCode
-        Dim stepper As IEnumerator = m_AAMappingTable.GetEnumerator
-        Dim ResString As String
-        Do While stepper.MoveNext = True
-            ResString = CStr(stepper.Current)
-            If SingleLetterAA = Left(ResString, 1) And InStr(ResString, "Term") = 0 Then
+
+        For Each item In m_AAMappingTable
+            Dim ResString = item.Key
+            If SingleLetterAA = ResString.Substring(0, 1) And Not ResString.Contains("Term") Then
                 Return DirectCast([Enum].Parse(GetType(ResidueCode), ResString), ResidueCode)
             End If
-        Loop
-
+        Next
 
     End Function
+
     Protected Function m_FindModIndex(modifiedEntity As String) As Integer
         Dim statMod As clsModEntry
-        Dim testCase As String
-        Dim tmpEntity As String = modifiedEntity
 
         For Each statMod In List
-            testCase = statMod.ReturnResidueAffected(0)
-            If testCase = tmpEntity Then
+            Dim testCase = statMod.ReturnResidueAffected(0)
+            If testCase = modifiedEntity Then
                 Return List.IndexOf(statMod)
             End If
         Next
@@ -213,10 +217,11 @@ Public Class clsMods
             ModEntry = DirectCast(List.Item(ModIndex), clsModEntry)
         End If
 
-
         If ModEntry Is Nothing Then
-            Dim sc As New StringCollection
-            sc.Add(ModifiedEntity)
+            Dim sc As New List(Of String) From {
+                ModifiedEntity
+            }
+
             Dim emptyMod As New clsModEntry(sc, 0.0, clsModEntry.ModificationTypes.Dynamic)
             Return emptyMod
         Else
@@ -225,14 +230,12 @@ Public Class clsMods
 
     End Function
 
-
     Protected Sub m_ChangeMod(
         foundMod As clsModEntry,
         ModifiedEntity As String,
         MassDifference As Double,
         Optional Additive As Boolean = False)
 
-        'Dim foundMod As clsModEntry = FindAAMod(ModifiedAA)
         If Math.Abs(foundMod.MassDifference) < Single.Epsilon And Math.Abs(MassDifference) > Single.Epsilon Then
             m_Add(ModifiedEntity, MassDifference, foundMod.ModificationType)
             Exit Sub
@@ -241,14 +244,14 @@ Public Class clsMods
         ElseIf Math.Abs(foundMod.MassDifference) > Single.Epsilon Then          'Not an emptyMod
             Dim counter As Integer
             Dim tempMod As clsModEntry
-            'Dim modAAString As String = ConvertResidueCodeToSLC(ModifiedAA)
-            Dim sc As StringCollection = ConvertAffectedResStringToSC(ModifiedEntity)
+
+            Dim residueList As List(Of String) = ConvertAffectedResStringToList(ModifiedEntity)
             Dim changeMod As clsModEntry
 
             If Additive Then
-                changeMod = New clsModEntry(sc, MassDifference + foundMod.MassDifference, foundMod.ModificationType)
+                changeMod = New clsModEntry(residueList, MassDifference + foundMod.MassDifference, foundMod.ModificationType)
             Else
-                changeMod = New clsModEntry(sc, MassDifference, foundMod.ModificationType)
+                changeMod = New clsModEntry(residueList, MassDifference, foundMod.ModificationType)
             End If
 
             For Each tempMod In List
@@ -268,9 +271,6 @@ Public Class clsMods
 #End Region
 
 End Class
-
-
-
 
 Public Class clsModEntry
 
@@ -296,29 +296,27 @@ Public Class clsModEntry
             Return m_ResiduesAffected.Count
         End Get
     End Property
-    Public ReadOnly Property ReturnResidueAffected(ResidueSCIndex As Integer) As String
+
+    Public ReadOnly Property ReturnResidueAffected(residueSCIndex As Integer) As String
         Get
-            Return m_ResiduesAffected(ResidueSCIndex)
+            Return ResidueCollection(residueSCIndex)
         End Get
     End Property
-    Public ReadOnly Property ReturnAllAffectedResidues() As StringCollection
+
+    Public ReadOnly Property ReturnAllAffectedResidues As List(Of String)
         Get
-            Return m_ResiduesAffected
+            Return ResidueCollection
         End Get
     End Property
-    Public Property ResidueCollection() As StringCollection
+
+    Public Property ResidueCollection As List(Of String)
+
+    Public ReadOnly Property ReturnAllAffectedResiduesString As String
         Get
-            Return m_ResiduesAffected
-        End Get
-        Set(Value As StringCollection)
-            m_ResiduesAffected = Value
-        End Set
-    End Property
-    Public ReadOnly Property ReturnAllAffectedResiduesString() As String
-        Get
-            Return ConvertSCToAAString(m_ResiduesAffected)
+            Return ConvertListToAAString(ResidueCollection)
         End Get
     End Property
+
     Public Property MassDifference As Double
 
     Public Property GlobalModID As Integer
@@ -344,7 +342,8 @@ Public Class clsModEntry
     Private Sub RemoveResidue(badResidue As String)
         m_ResiduesAffected.Remove(badResidue)
     End Sub
-    Private Function ConvertSCToAAString(resCollection As StringCollection) As String
+
+    Private Function ConvertListToAAString(resCollection As IEnumerable(Of String)) As String
         Dim s As String
         Dim returnString = ""
         For Each s In resCollection
@@ -376,19 +375,21 @@ Public Class clsModEntry
 
 #Region " Public Procedures "
     Public Sub New(
-        affectedResidueList As StringCollection,
+        affectedResidueList As List(Of String),
         massDiff As Double,
         modType As ModificationTypes,
         Optional modID As Integer = 0)
 
-        m_ModType = modType
-        m_ResiduesAffected = affectedResidueList
+        ModificationType = modType
+        ResidueCollection = affectedResidueList
         MassDifference = massDiff
         GlobalModID = modID
     End Sub
-    Public Sub AddAffectedResidue(ResidueToAdd As String)
-        AddResidue(ResidueToAdd)
+
+    Public Sub AddAffectedResidue(residueToAdd As String)
+        AddResidue(residueToAdd)
     End Sub
+
     Public Sub RemoveAffectedResidue(ResidueToRemove As String)
         RemoveResidue(ResidueToRemove)
     End Sub
@@ -449,8 +450,7 @@ Public Class clsTermDynamicMods
             ' Mod was not found
             ' Add it (assuming sngMass is non-zero)
             If Math.Abs(sngMass) > Single.Epsilon Then
-                Dim resCollection As StringCollection
-                resCollection = New StringCollection
+                Dim resCollection = New List(Of String)
                 resCollection.Add(strSymbol)
                 Add(New clsModEntry(resCollection, sngMass, clsModEntry.ModificationTypes.Dynamic))
             End If
@@ -620,8 +620,8 @@ Public Class clsDynamicMods
         MassDifference As Double,
         Optional GlobalModID As Integer = 0)
 
-        Dim sc As StringCollection = ConvertAffectedResStringToSC(AffectedResidueString)
-        Dim newDynMod As New clsModEntry(sc, MassDifference, clsModEntry.ModificationTypes.Dynamic)
+        Dim residueList = ConvertAffectedResStringToList(AffectedResidueString)
+        Dim newDynMod As New clsModEntry(residueList, MassDifference, clsModEntry.ModificationTypes.Dynamic)
         List.Add(newDynMod)
     End Sub
     Public Overloads Sub Add(ModToAdd As clsModEntry)
@@ -635,7 +635,7 @@ Public Class clsDynamicMods
             Try
                 dm = DirectCast(List.Item(index), clsModEntry)
             Catch ex As Exception
-                dm = New clsModEntry(ConvertAffectedResStringToSC("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
+                dm = New clsModEntry(ConvertAffectedResStringToList("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
             End Try
             Return dm.MassDifference
         End Get
@@ -682,7 +682,7 @@ Public Class clsDynamicMods
             Try
                 dm = DirectCast(List.Item(index), clsModEntry)
             Catch ex As Exception
-                dm = New clsModEntry(ConvertAffectedResStringToSC("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
+                dm = New clsModEntry(ConvertAffectedResStringToList("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
             End Try
             Return dm.GlobalModID
         End Get
@@ -725,28 +725,23 @@ Public Class clsDynamicMods
 
         Return s.Trim()
     End Function
+
     Protected Overridable Sub ParseDynModString(DMString As String)
-        Dim sc As StringCollection
-        Dim tmpResString As String
-        Dim tmpRes As String
-        Dim resCounter As Integer
-        Dim tmpMass As Double
 
         Dim splitRE = New Regex("(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)")
-        Dim matches As MatchCollection
-        matches = splitRE.Matches(DMString)
-        Dim m As Match
+        Dim matches = splitRE.Matches(DMString)
 
-        For Each m In matches
-            tmpMass = CDbl(m.Groups("modmass").Value)
-            tmpResString = m.Groups("residues").ToString
+        For Each m As Match In matches
+            Dim tmpMass = CDbl(m.Groups("modmass").Value)
+            Dim tmpResString = m.Groups("residues").ToString()
+
             If Math.Abs(tmpMass) > Single.Epsilon Then
-                sc = New StringCollection
+                Dim residueList = New List(Of String)
                 For resCounter = 1 To Len(tmpResString)
-                    tmpRes = Mid(tmpResString, resCounter, 1)
-                    sc.Add(tmpRes)
+                    Dim tmpRes = Mid(tmpResString, resCounter, 1)
+                    residueList.Add(tmpRes)
                 Next
-                Dim modEntry As New clsModEntry(sc, tmpMass, clsModEntry.ModificationTypes.Dynamic)
+                Dim modEntry As New clsModEntry(residueList, tmpMass, clsModEntry.ModificationTypes.Dynamic)
                 Add(modEntry)
             End If
         Next
@@ -760,7 +755,6 @@ Public Class clsDynamicMods
 #End Region
 
 End Class
-
 
 
 Public Class clsStaticMods

@@ -1,4 +1,3 @@
-Imports System.Collections.Specialized
 Imports System.Data.SqlClient
 
 Public Interface IGetSQLData
@@ -26,7 +25,6 @@ Public Class clsDBTask
     ' DB access
     Protected m_connection_str As String
     Protected m_DBCn As SqlConnection
-    Protected m_error_list As New StringCollection
     Protected m_PersistConnection As Boolean
 
 #End Region

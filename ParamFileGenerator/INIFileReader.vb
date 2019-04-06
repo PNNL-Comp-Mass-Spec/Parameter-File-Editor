@@ -1,8 +1,6 @@
 Option Strict Off
 
-Imports System
-Imports System.Collections
-Imports System.Collections.Specialized
+Imports System.Collections.Generic
 Imports System.IO
 Imports System.Xml
 Imports System.Text
@@ -26,8 +24,7 @@ End Class
 Public Class IniFileReader
     Private m_IniFilename As String
     Private m_XmlDoc As XmlDocument
-    Private unattachedComments As ArrayList = New ArrayList()
-    Private sections As StringCollection = New StringCollection()
+    Private sections As List(Of String) = New List(Of String)
     Private m_CaseSensitive As Boolean = False
     Private m_SaveFilename As String
     Private m_initialized As Boolean = False
@@ -300,17 +297,15 @@ Public Class IniFileReader
             Return True
         End If
         Return False
-    End Function
-
     Private Sub UpdateSections()
-        sections = New StringCollection
-        Dim N As XmlElement
-        For Each N In m_XmlDoc.SelectNodes("sections/section")
-            sections.Add(N.GetAttribute("name"))
+        sections = New List(Of String)
+
+        For Each item As XmlElement In m_XmlDoc.SelectNodes("sections/section")
+            sections.Add(item.GetAttribute("name"))
         Next
     End Sub
 
-    Public ReadOnly Property AllSections() As StringCollection
+    Public ReadOnly Property AllSections() As List(Of String)
         Get
             If Not Initialized Then
                 Throw New IniFileReaderNotInitializedException
@@ -319,43 +314,44 @@ Public Class IniFileReader
         End Get
     End Property
 
-    Private Function GetItemsInSection(sectionName As String, itemType As IniItemTypeEnum) As StringCollection
+    Private Function GetItemsInSection(sectionName As String, itemType As IniItemTypeEnum) As List(Of String)
         Dim nodes As XmlNodeList
-        Dim items As StringCollection = New StringCollection
+        Dim items = New List(Of String)
         Dim section As XmlNode = GetSection(sectionName)
-        Dim N As XmlNode
+
         If section Is Nothing Then
             Return Nothing
-        Else
-            nodes = section.SelectNodes("item")
-            If nodes.Count > 0 Then
-                For Each N In nodes
-                    Select Case itemType
-                        Case IniItemTypeEnum.GetKeys
-                            items.Add(N.Attributes.GetNamedItem("key").Value)
-                        Case IniItemTypeEnum.GetValues
-                            items.Add(N.Attributes.GetNamedItem("value").Value)
-                        Case IniItemTypeEnum.GetKeysAndValues
-                            items.Add(N.Attributes.GetNamedItem("key").Value & "=" &
-                            N.Attributes.GetNamedItem("value").Value)
-                    End Select
-                Next
-            End If
-            Return items
         End If
+
+        nodes = section.SelectNodes("item")
+        If nodes.Count > 0 Then
+            For Each currentNode As XmlNode In nodes
+                Select Case itemType
+                    Case IniItemTypeEnum.GetKeys
+                        items.Add(currentNode.Attributes.GetNamedItem("key").Value)
+                    Case IniItemTypeEnum.GetValues
+                        items.Add(currentNode.Attributes.GetNamedItem("value").Value)
+                    Case IniItemTypeEnum.GetKeysAndValues
+                        items.Add(currentNode.Attributes.GetNamedItem("key").Value & "=" &
+                                  currentNode.Attributes.GetNamedItem("value").Value)
+                End Select
+            Next
+        End If
+        Return items
+
     End Function
 
-    Public Function AllKeysInSection(sectionName As String) As StringCollection
+    Public Function AllKeysInSection(sectionName As String) As List(Of String)
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Return GetItemsInSection(sectionName, IniItemTypeEnum.GetKeys)
     End Function
 
-    Public Function AllValuesInSection(sectionName As String) As StringCollection
+    Public Function AllValuesInSection(sectionName As String) As List(Of String)
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Return GetItemsInSection(sectionName, IniItemTypeEnum.GetValues)
     End Function
 
-    Public Function AllItemsInSection(sectionName As String) As StringCollection
+    Public Function AllItemsInSection(sectionName As String) As List(Of String)
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Return (GetItemsInSection(sectionName, IniItemTypeEnum.GetKeysAndValues))
     End Function
@@ -374,42 +370,46 @@ Public Class IniFileReader
     End Function
 
     Public Function SetCustomIniAttribute(sectionName As String, keyName As String, attributeName As String, attributeValue As String) As Boolean
-        Dim N As XmlElement
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
-        If attributeName <> "" Then
-            N = GetItem(sectionName, keyName)
-            If Not N Is Nothing Then
-                Try
-                    If attributeValue Is Nothing Then
-                        ' delete the attribute
-                        N.RemoveAttribute(attributeName)
-                        Return True
-                    Else
-                        attributeName = SetNameCase(attributeName)
-                        N.SetAttribute(attributeName, attributeValue)
-                        Return True
-                    End If
-
-                Catch e As Exception
-                    'MessageBox.Show(e.Message)
-                End Try
-            End If
+        If attributeName = "" Then
             Return False
         End If
+
+
+        Dim item = GetItem(sectionName, keyName)
+        If Not item Is Nothing Then
+            Try
+                If attributeValue Is Nothing Then
+                    ' delete the attribute
+                    item.RemoveAttribute(attributeName)
+                    Return True
+                Else
+                    attributeName = SetNameCase(attributeName)
+                    item.SetAttribute(attributeName, attributeValue)
+                    Return True
+                End If
+
+            Catch e As Exception
+                'MessageBox.Show(e.Message)
+            End Try
+        End If
+
+        Return False
+
     End Function
 
     Private Function CreateSection(sectionName As String) As Boolean
-        Dim N As XmlElement
-        Dim Natt As XmlAttribute
+        Dim item As XmlElement
+        Dim itemAttribute As XmlAttribute
         If (Not sectionName Is Nothing) AndAlso (sectionName <> "") Then
             sectionName = SetNameCase(sectionName)
             Try
-                N = m_XmlDoc.CreateElement("section")
-                Natt = m_XmlDoc.CreateAttribute("name")
-                Natt.Value = SetNameCase(sectionName)
-                N.Attributes.SetNamedItem(Natt)
-                m_XmlDoc.DocumentElement.AppendChild(N)
-                sections.Add(Natt.Value)
+                item = m_XmlDoc.CreateElement("section")
+                itemAttribute = m_XmlDoc.CreateAttribute("name")
+                itemAttribute.Value = SetNameCase(sectionName)
+                item.Attributes.SetNamedItem(itemAttribute)
+                m_XmlDoc.DocumentElement.AppendChild(item)
+                sections.Add(itemAttribute.Value)
                 Return True
             Catch e As Exception
                 'MessageBox.Show(e.Message)
@@ -438,48 +438,51 @@ Public Class IniFileReader
         End Try
     End Function
 
-    Private Sub ParseLineXml(s As String, doc As XmlDocument)
-        Dim key As String
-        Dim value As String
-        Dim N As XmlElement
-        Dim Natt As XmlAttribute
-        Dim parts() As String
-        s.TrimStart()
+    Private Sub ParseLineXml(dataLine As String, doc As XmlDocument)
 
-        If s.Length = 0 Then
+        dataLine = dataLine.TrimStart()
+
+        If String.IsNullOrWhiteSpace(dataLine) Then
             Return
         End If
-        Select Case (s.Substring(0, 1))
+
+        Select Case (dataLine.Substring(0, 1))
             Case "["
                 ' this is a section
                 ' trim the first and last characters
-                s = s.TrimStart("[")
-                s = s.TrimEnd("]")
+                dataLine = dataLine.TrimStart("[")
+                dataLine = dataLine.TrimEnd("]")
                 ' create a new section element
-                CreateSection(s)
+                CreateSection(dataLine)
             Case ";"
                 ' new comment
-                N = doc.CreateElement("comment")
-                N.InnerText = s.Substring(1)
-                GetLastSection().AppendChild(N)
+                Dim newComment = doc.CreateElement("comment")
+                newComment.InnerText = dataLine.Substring(1)
+                GetLastSection().AppendChild(newComment)
             Case Else
                 ' split the string on the "=" sign, if present
-                If (s.IndexOf("=") > 0) Then
-                    parts = s.Split("=")
+                Dim key As String
+                Dim value As String
+
+                If (dataLine.IndexOf("=", StringComparison.Ordinal) > 0) Then
+                    Dim parts = dataLine.Split("=")
                     key = parts(0).Trim()
                     value = parts(1).Trim()
                 Else
-                    key = s
+                    key = dataLine
                     value = ""
                 End If
-                N = doc.CreateElement("item")
-                Natt = doc.CreateAttribute("key")
-                Natt.Value = SetNameCase(key)
-                N.Attributes.SetNamedItem(Natt)
-                Natt = doc.CreateAttribute("value")
-                Natt.Value = value
-                N.Attributes.SetNamedItem(Natt)
-                GetLastSection().AppendChild(N)
+
+                Dim newItem = doc.CreateElement("item")
+                Dim keyAttribute = doc.CreateAttribute("key")
+                keyAttribute.Value = SetNameCase(key)
+                newItem.Attributes.SetNamedItem(keyAttribute)
+
+                Dim valueAttribute = doc.CreateAttribute("value")
+                valueAttribute.Value = value
+                newItem.Attributes.SetNamedItem(valueAttribute)
+
+                GetLastSection().AppendChild(newItem)
         End Select
 
     End Sub
@@ -489,7 +492,7 @@ Public Class IniFileReader
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             Return m_SaveFilename
         End Get
-        Set(Value As String)
+        Set
             Dim fi As FileInfo
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             fi = New FileInfo(Value)
@@ -504,7 +507,7 @@ Public Class IniFileReader
     Public Sub Save()
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         If Not OutputFilename Is Nothing AndAlso Not m_XmlDoc Is Nothing Then
-            Dim fi As FileInfo = New FileInfo(OutputFilename)
+            Dim fi = New FileInfo(OutputFilename)
             If Not fi.Directory.Exists Then
                 'MessageBox.Show("Invalid path.")
                 Return
@@ -544,11 +547,12 @@ Public Class IniFileReader
     Public ReadOnly Property XML() As String
         Get
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
-            Dim sb As StringBuilder = New StringBuilder
-            Dim sw As StringWriter = New StringWriter(sb)
-            Dim xw As XmlTextWriter = New XmlTextWriter(sw)
-            xw.Indentation = 3
-            xw.Formatting = Formatting.Indented
+            Dim sb = New StringBuilder
+            Dim sw = New StringWriter(sb)
+            Dim xw = New XmlTextWriter(sw) With {
+                .Indentation = 3,
+                .Formatting = Formatting.Indented
+            }
             m_XmlDoc.WriteContentTo(xw)
             xw.Close()
             sw.Close()

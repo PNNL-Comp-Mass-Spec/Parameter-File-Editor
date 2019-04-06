@@ -1,5 +1,6 @@
-Imports System.Collections.Specialized
+Imports System.Collections.Generic
 Imports System.IO
+Imports System.Linq
 Imports System.Text
 
 Public Interface IBasicParams
@@ -780,7 +781,7 @@ Public Class clsGetEnzymeBlock
 
     Private ReadOnly m_templateFilePath As String
     Private ReadOnly m_sectionName As String
-    Private ReadOnly m_EnzymeBlockCollection As StringCollection
+    Private ReadOnly m_EnzymeBlockCollection As List(Of String)
 
     Public Property EnzymeList As clsEnzymeCollection
 
@@ -796,84 +797,83 @@ Public Class clsGetEnzymeBlock
 
     End Sub
 
-    Private Function GetEnzymeBlock() As StringCollection
+    Private Function GetEnzymeBlock() As List(Of String)
 
-        Dim sc As New StringCollection
+        Dim enzymesFromFile As New List(Of String)
 
-        Dim fi As FileInfo
-        Dim tr As TextReader
-        Dim s As String
+        Dim fi = New FileInfo(m_templateFilePath)
 
-        fi = New FileInfo(m_templateFilePath)
-        tr = fi.OpenText
-        s = tr.ReadLine
-        'Find the correct section block)
-        Do While Not s Is Nothing
-            If s = "[" & m_sectionName & "]" Then
-                s = tr.ReadLine
-                Do While Not s Is Nothing
-                    sc.Add(s)
-                    s = tr.ReadLine
-                Loop
-                Exit Do
-            End If
-            s = tr.ReadLine
-        Loop
+        Using reader = New StreamReader(New FileStream(fi.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            While Not reader.EndOfStream
+                Dim dataLine = reader.ReadLine()
+                If String.IsNullOrWhiteSpace(dataLine) Then
+                    Continue While
+                End If
 
-        If sc.Count = 0 Then
-            sc = LoadDefaultEnzymes()
+                If dataLine = "[" & m_sectionName & "]" Then
+                    While Not reader.EndOfStream
+                        Dim enzymeLine = reader.ReadLine()
+                        If String.IsNullOrWhiteSpace(enzymeLine) Then
+                            Continue While
+                        End If
+
+                        enzymesFromFile.Add(enzymeLine)
+                    End While
+                    Exit While
+                End If
+            End While
+        End Using
+
+        If enzymesFromFile.Count = 0 Then
+            enzymesFromFile = LoadDefaultEnzymes()
         End If
 
-        Return sc
+        Return enzymesFromFile
 
     End Function
 
-    Private Function LoadDefaultEnzymes() As StringCollection
-        Dim sc As New StringCollection
+    Private Function LoadDefaultEnzymes() As List(Of String)
 
-        sc.Add("0.  No_Enzyme              0      -           -")
-        sc.Add("1.  Trypsin                1      KR          -")
-        sc.Add("2.  Trypsin_modified       1      KRLNH       -")
-        sc.Add("3.  Chymotrypsin           1      FWYL        -")
-        sc.Add("4.  Chymotrypsin__modified 1      FWY         -")
-        sc.Add("5.  Clostripain            1      R           -")
-        sc.Add("6.  Cyanogen_Bromide       1      M           -")
-        sc.Add("7.  IodosoBenzoate         1      W           -")
-        sc.Add("8.  Proline_Endopept       1      P           -")
-        sc.Add("9.  Staph_Protease         1      E           -")
-        sc.Add("10. Trypsin_K              1      K           P")
-        sc.Add("11. Trypsin_R              1      R           P")
-        sc.Add("12. GluC                   1      ED          -")
-        sc.Add("13. LysC                   1      K           -")
-        sc.Add("14. AspN                   0      D           -")
-        sc.Add("15. Elastase               1      ALIV        P")
-        sc.Add("16. Elastase/Tryp/Chymo    1      ALIVKRWFY   P")
-        sc.Add("17. ArgC                   1      R-          P")
-        sc.Add("18. Do_not_cleave          1      B           -")
-        sc.Add("19. LysN                   0      K           -")
+        Dim defaultEnzymes As New List(Of String) From {
+            "0.  No_Enzyme              0      -           -",
+            "1.  Trypsin                1      KR          -",
+            "2.  Trypsin_modified       1      KRLNH       -",
+            "3.  Chymotrypsin           1      FWYL        -",
+            "4.  Chymotrypsin__modified 1      FWY         -",
+            "5.  Clostripain            1      R           -",
+            "6.  Cyanogen_Bromide       1      M           -",
+            "7.  IodosoBenzoate         1      W           -",
+            "8.  Proline_Endopept       1      P           -",
+            "9.  Staph_Protease         1      E           -",
+            "10. Trypsin_K              1      K           P",
+            "11. Trypsin_R              1      R           P",
+            "12. GluC                   1      ED          -",
+            "13. LysC                   1      K           -",
+            "14. AspN                   0      D           -",
+            "15. Elastase               1      ALIV        P",
+            "16. Elastase/Tryp/Chymo    1      ALIVKRWFY   P",
+            "17. ArgC                   1      R-          P",
+            "18. Do_not_cleave          1      B           -",
+            "19. LysN                   0      K           -"
+        }
 
-        Return sc
+        Return defaultEnzymes
 
     End Function
 
-    Private Function InterpretEnzymeBlockCollection(
-    enzymeBlock As StringCollection) As clsEnzymeCollection
+    Private Function InterpretEnzymeBlockCollection(enzymeBlock As IEnumerable(Of String)) As clsEnzymeCollection
 
-        Dim tempEnzyme As clsEnzymeDetails
-        Dim tempStorage = New clsEnzymeCollection()
-        Dim s As String
-        Dim sTmp As String
-        'Dim counter As Integer
+        Dim enzymeInfo = New clsEnzymeCollection()
 
         For Each s In enzymeBlock
-            sTmp = s.Substring(0, InStr(s, " "))
+            Dim sTmp = s.Substring(0, InStr(s, " "))
             If InStr(sTmp, ". ") > 0 Then
-                tempEnzyme = New clsEnzymeDetails(s)
-                tempStorage.add(tempEnzyme)
+                Dim tempEnzyme = New clsEnzymeDetails(s)
+                enzymeInfo.add(tempEnzyme)
             End If
         Next
 
-        Return tempStorage
+        Return enzymeInfo
 
     End Function
 

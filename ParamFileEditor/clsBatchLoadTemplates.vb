@@ -1,4 +1,4 @@
-Imports System.Collections.Specialized
+Imports System.Collections.Generic
 Imports ParamFileGenerator
 
 'Framework to handle the batch upload and download of templates/parameters to and from DMS
@@ -13,30 +13,23 @@ Friend Class clsBatchLoadTemplates
     End Sub
 
 #Region " Public Properties "
-    Public ReadOnly Property NumParamSetsAdded() As Integer
+    Public ReadOnly Property NumParamSetsAdded As Integer
         Get
             Return m_added
         End Get
     End Property
-    Public ReadOnly Property NumParamSetsChanged() As Integer
+
+    Public ReadOnly Property NumParamSetsChanged As Integer
         Get
             Return m_changed
         End Get
     End Property
-    Public ReadOnly Property NumParamSetsSkipped() As Integer
+
+    Public ReadOnly Property NumParamSetsSkipped As Integer
         Get
             Return m_skipped
         End Get
     End Property
-
-    <Obsolete("Unused")>
-    Public ReadOnly Property ParamSetsAddedList As StringCollection
-
-    <Obsolete("Unused")>
-    Public ReadOnly Property ParamSetsChangedList As StringCollection
-
-    <Obsolete("Unused")>
-    Public ReadOnly Property ParamSetsSkippedList As StringCollection
 
 #End Region
 
@@ -49,47 +42,45 @@ Friend Class clsBatchLoadTemplates
 
 #Region " Public Functions "
 
-    Public Function UploadParamSetsToDMS(FilePathList As StringCollection) As Boolean
-        Return BatchUploadParamSetsToDMS(FilePathList)
+    Public Function UploadParamSetsToDMS(filePaths As List(Of String)) As Boolean
+        Return BatchUploadParamSetsToDMS(filePaths)
     End Function
 
 #End Region
 
 #Region " Member Functions "
 
-    Private Function BatchUploadParamSetsToDMS(ParamFilePathList As StringCollection) As Boolean
-        'Returns number of param sets uploaded
-        Dim ParamFilePath As String
-        Dim ParamFileName As String
-        Dim ParamSetID As Integer
-        Dim ParamSetDiffs As String
-        Dim c As clsParams
-        Dim checkSet As clsParams
-        Dim added As Integer
-        Dim skipped As Integer
-        Dim changed As Integer
+    ''' <summary>
+    ''' Batch upload a list of parameter files
+    ''' </summary>
+    ''' <param name="paramFileList"></param>
+    ''' <returns>Number of param sets uploaded</returns>
+    Private Function BatchUploadParamSetsToDMS(paramFileList As List(Of String)) As Boolean
+        Dim added = 0
+        Dim skipped = 0
+        Dim changed = 0
 
-        For Each ParamFilePath In ParamFilePathList
-            c = New clsParams
+        For Each paramFilePath In paramFileList
+            Dim params = New clsParams()
             'Try
-            ParamFileName = Mid(ParamFilePath, InStrRev(ParamFilePath, "\") + 1).ToString
-            Console.WriteLine("Working on: " & ParamFileName)
-            c.LoadTemplate(ParamFilePath)
-            c.Description = Me.GetDiffsBetweenSets(clsMainProcess.BaseLineParamSet, c)
-            c.FileName = ParamFileName
-            If Me.ParamSetNameExists(c.FileName) Then
-                ParamSetID = Me.GetParamSetIDFromName(c.FileName)
-                checkSet = Me.ReadParamsFromDMS(ParamSetID)
-                ParamSetDiffs = Me.GetDiffsBetweenSets(c, checkSet)
+            Dim paramFileName = Mid(paramFilePath, InStrRev(paramFilePath, "\") + 1).ToString
+            Console.WriteLine("Working on: " & paramFileName)
+            params.LoadTemplate(paramFilePath)
+            params.Description = Me.GetDiffsBetweenSets(clsMainProcess.BaseLineParamSet, params)
+            params.FileName = paramFileName
+            If Me.ParamSetNameExists(params.FileName) Then
+                Dim ParamSetID = Me.GetParamSetIDFromName(params.FileName)
+                Dim checkSet = Me.ReadParamsFromDMS(ParamSetID)
+                Dim ParamSetDiffs = Me.GetDiffsBetweenSets(params, checkSet)
                 If ParamSetDiffs = " --No Change-- " Then
-                    skipped = skipped + 1
+                    skipped += 1
                 Else
-                    Dim results = MessageBox.Show("A parameter set with the ID " & ParamSetID & " and the name '" & c.FileName &
+                    Dim results = MessageBox.Show("A parameter set with the ID " & ParamSetID & " and the name '" & params.FileName &
                             "' already exists with the following differences '" & ParamSetDiffs & " Do you want to replace it?", "Parameter Set Exists!",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
                     If results = DialogResult.Yes Then
-                        changed = changed + 1
-                        Me.WriteParamsToDMS(c, True)
+                        changed += 1
+                        Me.WriteParamsToDMS(params, True)
                     ElseIf results = DialogResult.No Then
 
                     End If
@@ -97,7 +88,7 @@ Friend Class clsBatchLoadTemplates
             Else
                 'ParamSetID = Me.GetNextParamSetID
                 'Me.WriteParamsToLocalStructure(c, ParamSetID)
-                added = added + 1
+                added += 1
             End If
 
 

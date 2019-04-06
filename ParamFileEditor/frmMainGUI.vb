@@ -2,7 +2,6 @@ Option Strict On
 Option Infer On
 
 Imports System.Collections.Generic
-Imports System.Collections.Specialized
 Imports System.ComponentModel
 Imports ParamFileEditor.ProgramSettings
 Imports ParamFileGenerator
@@ -4213,32 +4212,30 @@ Public Class frmMainGUI
 
     Private Sub mnuBatchUploadDMS_Click(sender As Object, e As EventArgs) Handles mnuBatchUploadDMS.Click
         Try
-            Dim batch = New clsBatchLoadTemplates()
-            Dim openDialog As New OpenFileDialog
-            Dim fc As StringCollection
-            Dim numAdded As Integer
-            Dim numChanged As Integer
-            Dim numSkipped As Integer
 
-            With openDialog
-                .Multiselect = True
-                .InitialDirectory = "\\gigasax\DMS_Parameter_Files\Sequest\"
-                .Filter = "Sequest Param files (*.params)|*.params|All files (*.*)|*.*"
-                .FilterIndex = 1
+            Dim openDialog = New OpenFileDialog With {
+                .Multiselect = True,
+                .InitialDirectory = "\\gigasax\DMS_Parameter_Files\Sequest\",
+                .Filter = "Sequest Param files (*.params)|*.params|All files (*.*)|*.*",
+                .FilterIndex = 1,
                 .RestoreDirectory = True
-            End With
+            }
+
 
             If openDialog.ShowDialog = DialogResult.OK Then
                 Dim fileNameList As List(Of String) = openDialog.FileNames.ToList()
-                fc = ConvertStringArrayToSC(fileNameList)
-                batch.UploadParamSetsToDMS(fc)
-                numAdded = batch.NumParamSetsAdded
-                numChanged = batch.NumParamSetsChanged
-                numSkipped = batch.NumParamSetsSkipped
+
+                Dim batch = New clsBatchLoadTemplates()
+                batch.UploadParamSetsToDMS(fileNameList)
+                Dim numAdded = batch.NumParamSetsAdded
+                Dim numChanged = batch.NumParamSetsChanged
+                Dim numSkipped = batch.NumParamSetsSkipped
+
+                MessageBox.Show(numAdded & " new Parameter sets added; " & numChanged & " Parameter sets changed; " & numSkipped & " Parameter sets skipped",
+                                "Operation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
             End If
 
-            MessageBox.Show(numAdded & " new Parameter sets added; " & numChanged & " Parameter sets changed; " & numSkipped & " Parameter sets skipped",
-                "Operation Complete", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         Catch ex As Exception
             MessageBox.Show("Error in mnuBatchUploadDMS_Click: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -4246,18 +4243,6 @@ Public Class frmMainGUI
 
     End Sub
 
-    Private Function ConvertStringArrayToSC(stringArray As IList(Of String)) As StringCollection
-        Dim sc As New StringCollection
-        Dim count As Integer
-
-        If Not stringArray Is Nothing Then
-            For count = 0 To stringArray.Count - 1
-                sc.Add(stringArray(count))
-            Next
-        End If
-
-        Return sc
-    End Function
 #End Region
 
     Private Sub CheckForParamFileExistence()
