@@ -1,7 +1,7 @@
 Public Class frmMain
     Inherits System.Windows.Forms.Form
 
-#Region " Windows Form Designer generated code "
+#Region "Windows Form Designer generated code"
 
     Public Sub New()
         MyBase.New()

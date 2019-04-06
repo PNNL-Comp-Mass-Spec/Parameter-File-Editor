@@ -7,13 +7,13 @@ Imports ParamFileGenerator.DownloadParams
 Friend Class clsDMSParamUpload
     Inherits clsParamsFromDMS
 
-#Region " Member Properties "
+#Region "Member Properties"
     'Private m_clsUpdateModsTable As clsUpdateModsTable
     Private m_SPError As String = String.Empty
 
 #End Region
 
-#Region " Friend Procedures "
+#Region "Friend Procedures"
 
     Public ReadOnly Property ErrorMessage As String
         Get

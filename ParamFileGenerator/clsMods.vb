@@ -6,7 +6,7 @@ Imports System.Text.RegularExpressions
 Public Class clsMods
     Inherits CollectionBase
 
-#Region " Enums "
+#Region "Enums"
     Public Enum ResidueCode
         C_Term_Protein
         C_Term_Peptide
@@ -48,7 +48,7 @@ Public Class clsMods
 
 #End Region
 
-#Region " Public Properties "
+#Region "Public Properties"
     Public ReadOnly Property ModCount As Integer
         Get
             Return List.Count
@@ -77,7 +77,7 @@ Public Class clsMods
     End Property
 #End Region
 
-#Region " public Procedures "
+#Region "Public Procedures"
     Public Sub New()
         MyBase.New()
         LoadAAMappingColl()
@@ -120,7 +120,7 @@ Public Class clsMods
 
 #End Region
 
-#Region " Member Properties "
+#Region "Member Properties"
     ''' <summary>
     ''' Keys are residue names from ResidueCode (e.g. P_Proline)
     ''' Values are the single letter abbreviation if an amino acid
@@ -129,7 +129,7 @@ Public Class clsMods
     Protected m_AAMappingTable As Dictionary(Of String, String)
 #End Region
 
-#Region " Member Procedures "
+#Region "Member Procedures"
     Protected Sub m_Add(
         AffectedEntity As String,
         MassDifference As Double,
@@ -286,7 +286,7 @@ Public Class clsModEntry
         TermPep
     End Enum
 
-#Region " Public Properties "
+#Region "Public Properties"
 
     Public ReadOnly Property TotalNumResiduesAffected As Integer
         Get
@@ -328,7 +328,7 @@ Public Class clsModEntry
 
 #End Region
 
-#Region " Member Procedures "
+#Region "Member Procedures"
     Private Sub AddResidue(newResidue As String)
         ResidueCollection.Add(newResidue)
     End Sub
@@ -366,7 +366,7 @@ Public Class clsModEntry
 
 #End Region
 
-#Region " Public Procedures "
+#Region "Public Procedures"
     Public Sub New(
         affectedResidueList As List(Of String),
         massDiff As Double,
@@ -393,7 +393,7 @@ End Class
 Public Class clsTermDynamicMods
     Inherits clsDynamicMods
 
-#Region " Public Procedures "
+#Region "Public Procedures"
     Public Const NTERM_SYMBOL As String = "<"
     Public Const CTERM_SYMBOL As String = ">"
 
@@ -526,7 +526,7 @@ End Class
 
 Public Class clsDynamicMods
     Inherits clsMods
-    '#Region " Public Legacy Functions and Properties "
+    '#Region "Public Legacy Functions and Properties"
     '    Public Property Dyn_Mod_1_MassDiff As Double
     '        Get
     '            Return Dyn_Mod_n_MassDiff(1)
@@ -578,7 +578,7 @@ Public Class clsDynamicMods
     '    End Property
     '#End Region
 
-#Region " Public Procedures "
+#Region "Public Procedures"
 
     Public Sub New(DynamicModString As String)
         MyBase.New()
@@ -693,7 +693,7 @@ Public Class clsDynamicMods
     End Property
 #End Region
 
-#Region " Member Procedures "
+#Region "Member Procedures"
     Protected Overridable Function AssembleModString(counter As Integer) As String
         Dim s = ""
         Dim tmpModString As String
@@ -742,7 +742,7 @@ Public Class clsDynamicMods
     End Sub
 #End Region
 
-#Region " Member Properties "
+#Region "Member Properties"
     Protected m_OrigDynModString As String
     'private m_EmptyMod as New clsModEntry(
 #End Region
@@ -753,7 +753,7 @@ End Class
 Public Class clsStaticMods
     Inherits clsMods
 
-#Region " Legacy Access "
+#Region "Legacy Access"
     Public Property CtermPeptide As Double
         Get
             Return FindAAMod(ResidueCode.C_Term_Peptide).MassDifference
@@ -1006,7 +1006,7 @@ Public Class clsStaticMods
 
 #End Region
 
-#Region " Public Procedures "
+#Region "Public Procedures"
     Public Sub New()
         MyBase.New()
     End Sub
@@ -1023,7 +1023,7 @@ Public Class clsStaticMods
     End Sub
 #End Region
 
-#Region " Member Procedures "
+#Region "Member Procedures"
     Private Function FindAAMod(ModifiedAA As ResidueCode) As clsModEntry
         Return m_FindMod(ConvertResidueCodeToSLC(ModifiedAA))
     End Function
@@ -1067,14 +1067,14 @@ Public Class clsIsoMods
         m_Add(AffectedAtom.ToString, MassDifference, clsModEntry.ModificationTypes.Isotopic, GlobalModID)
     End Sub
 
-#Region " Public Procedures "
+#Region "Public Procedures"
     Public Function GetAtom(index As Integer) As String
         Dim m = DirectCast(List.Item(index), clsModEntry)
         Return m.ReturnResidueAffected(0)
     End Function
 #End Region
 
-#Region " Legacy Access "
+#Region "Legacy Access"
     Public Property Iso_C As Double
         Get
             Return FindIsoMod(IsotopeList.C).MassDifference

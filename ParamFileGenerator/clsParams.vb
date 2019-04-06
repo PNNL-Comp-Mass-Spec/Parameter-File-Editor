@@ -87,7 +87,7 @@ Public Class clsParams
 
     Const DEF_DB_NAME As String = "C:\Xcalibur\database\nr.fasta"     'Not really used, just a placeholder
 
-#Region " Private Variables "
+#Region "Private Variables"
     Const DEF_ENZ_SECTION_NAME As String = "SEQUEST_ENZYME_INFO"
 
     'Basic Parameters
@@ -102,7 +102,7 @@ Public Class clsParams
 
 #End Region
 
-#Region " clsParams Properties "
+#Region "clsParams Properties"
     Public Shared ReadOnly Property BaseLineParamSet As clsParams
         Get
             Return clsMainProcess.BaseLineParamSet
@@ -476,7 +476,7 @@ Public Class clsIonSeries
         m_zWeight = CSng(tmpSplit(11))
     End Sub
 
-#Region " Properties List "
+#Region "Properties"
 
     Public Property Initialized As Boolean
 

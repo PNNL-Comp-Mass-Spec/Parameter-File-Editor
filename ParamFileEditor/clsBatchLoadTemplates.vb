@@ -12,7 +12,7 @@ Friend Class clsBatchLoadTemplates
         'm_Main = MainCode
     End Sub
 
-#Region " Public Properties "
+#Region "Public Properties"
     Public ReadOnly Property NumParamSetsAdded As Integer
         Get
             Return m_added
@@ -33,14 +33,14 @@ Friend Class clsBatchLoadTemplates
 
 #End Region
 
-#Region " Member Variables "
+#Region "Member Variables"
     Private m_added As Integer
     Private m_changed As Integer
     Private m_skipped As Integer
 
 #End Region
 
-#Region " Public Functions "
+#Region "Public Functions"
 
     Public Function UploadParamSetsToDMS(filePaths As List(Of String)) As Boolean
         Return BatchUploadParamSetsToDMS(filePaths)
@@ -48,7 +48,7 @@ Friend Class clsBatchLoadTemplates
 
 #End Region
 
-#Region " Member Functions "
+#Region "Member Functions"
 
     ''' <summary>
     ''' Batch upload a list of parameter files

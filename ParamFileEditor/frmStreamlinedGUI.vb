@@ -1,7 +1,7 @@
 Public Class frmStreamlinedGUI
     Inherits System.Windows.Forms.Form
 
-#Region " Windows Form Designer generated code "
+#Region "Windows Form Designer generated code"
 
     Public Sub New()
         MyBase.New()
@@ -27,7 +27,7 @@ Public Class frmStreamlinedGUI
     Private components As System.ComponentModel.IContainer
 
     'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
+    'It can be modified using the Windows Form Designer.
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         '

@@ -25,7 +25,7 @@ Public Class frmMainGUI
     ''' </summary>
     Private m_sharedMain As clsMainProcess
 
-#Region " Windows Form Designer generated code "
+#Region "Windows Form Designer generated code"
 
     Public Sub New()
         MyBase.New()
@@ -3372,7 +3372,7 @@ Public Class frmMainGUI
 
     End Sub
 
-#Region " [Basic] Name and Description Handlers "
+#Region "[Basic] Name and Description Handlers"
 
     Private Sub txtDescription_Leave(sender As Object, e As EventArgs)
         newParams.Description = txtDescription.Text
@@ -3380,7 +3380,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " [Basic] Search Settings Handlers "
+#Region "[Basic] Search Settings Handlers"
 
     Private Sub cboParentMassType_SelectedIndexChanged(sender As Object, e As EventArgs)
         Try
@@ -3463,7 +3463,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " [Basic] Dynamic Modification Handlers "
+#Region "[Basic] Dynamic Modification Handlers"
 
     Private Sub txtDynMod1List_Validated(sender As Object, e As EventArgs)
         UpdateDynamicModAA(sender, txtDynMod1List, txtDynMod1MassDiff, 1)
@@ -3590,7 +3590,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " [Basic] Static Modification Handlers "
+#Region "[Basic] Static Modification Handlers"
 
     Private Sub txtCTPep_Validated(sender As Object, e As EventArgs)
         Try
@@ -3819,7 +3819,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " [Basic] Isotopic Modification Handlers "
+#Region "[Basic] Isotopic Modification Handlers"
     Private Sub txtIsoC_Validated(sender As Object, e As EventArgs)
         Dim thisControl = DirectCast(sender, Control)
         Try
@@ -3873,7 +3873,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " [Advanced] Searching Tolerances "
+#Region "[Advanced] Searching Tolerances"
 
     Private Sub txtPepMassTol_Leave(sender As Object, e As EventArgs)
         Try
@@ -3926,7 +3926,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " [Advanced] Miscellaneous Options "
+#Region "[Advanced] Miscellaneous Options"
 
     Private Sub txtNumOutputLines_Leave(sender As Object, e As EventArgs)
         Try
@@ -3999,7 +3999,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " [Advanced] Option Checkboxes "
+#Region "[Advanced] Option Checkboxes"
 
     Private Sub chkUseAIons_CheckedChanged(sender As Object, e As EventArgs)
         newParams.IonSeries.Use_a_Ions = CInt(IIf(chkUseAIons.Checked, 1, 0))
@@ -4043,7 +4043,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " [Advanced] Ion Weighting Constants"
+#Region "[Advanced] Ion Weighting Constants"
 
     Private Sub txtAWeight_Leave(sender As Object, e As EventArgs)
         Try
@@ -4128,7 +4128,7 @@ Public Class frmMainGUI
 
 #End Region
 
-#Region " Menu Handlers "
+#Region "Menu Handlers"
 
     Private Sub mnuFileSaveBW2_Click(sender As Object, e As EventArgs) Handles mnuFileSaveBW2.Click
         SaveSequestFile("Save Sequest/BioWorks v2.0 Parameter File", clsParams.ParamFileTypes.BioWorks_20)

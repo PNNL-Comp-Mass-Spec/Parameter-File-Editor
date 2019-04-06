@@ -24,7 +24,7 @@ Public Class clsMassTweaker
     Inherits ParamFileGenerator.clsDBTask
     Implements IMassTweaker
 
-#Region " Constants "
+#Region "Constants"
     Protected Const Mass_Corrections_Table_Name As String = "T_Mass_Correction_Factors"
     Protected Const Max_Tweak_Difference As Double = 0.005
 #End Region

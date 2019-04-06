@@ -14,7 +14,7 @@ Public Class frmDMSPicker
     Friend WithEvents cmdSearch As Button
     'Friend WithEvents SearchTimer As New System.Timers.Timer(2000)
 
-#Region " Windows Form Designer generated code "
+#Region "Windows Form Designer generated code"
 
     Public Sub New(ByRef Callingfrm As frmMainGUI)
         MyBase.New()

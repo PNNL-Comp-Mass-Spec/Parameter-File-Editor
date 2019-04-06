@@ -6,7 +6,7 @@ Namespace DownloadParams
 
     Public Class clsParamsFromDMS
         Inherits clsDBTask
-#Region " Constants "
+#Region "Constants"
         Protected Const Param_File_Table As String = "T_Param_Files"
         Protected Const Param_Entry_Table As String = "T_Param_Entries"
         Protected Const Param_FileTypes_Table As String = "T_Param_File_Types"
@@ -17,7 +17,7 @@ Namespace DownloadParams
         Protected Const Residues_Table As String = "T_Residues"
 #End Region
 
-#Region " Enums "
+#Region "Enums"
         Public Enum AcceptableParams
             SelectedEnzymeIndex
             SelectedEnzymeCleavagePosition
@@ -137,7 +137,7 @@ Namespace DownloadParams
 
 #End Region
 
-#Region " Member Properties "
+#Region "Member Properties"
         Protected m_ID As Integer
         Protected m_Name As String
         Protected m_ParamFileType As eParamFileTypeConstants
@@ -157,7 +157,7 @@ Namespace DownloadParams
 
 #End Region
 
-#Region "Public Properties "
+#Region "Public Properties"
         Public ReadOnly Property ParamFileTable As DataTable
             Get
                 Return m_ParamsSet.Tables(Param_File_Table)
@@ -183,7 +183,7 @@ Namespace DownloadParams
 #End Region
 
 
-#Region " public Functions "
+#Region "Public Functions"
         Public Sub New(ConnectionString As String)
             MyBase.New(ConnectionString, True)
             m_AcceptableParams = LoadAcceptableParamList()
@@ -275,7 +275,7 @@ Namespace DownloadParams
 
 #End Region
 
-#Region " Member Functions "
+#Region "Member Functions"
         Protected Function LoadAcceptableParamList() As List(Of String)
             Dim paramEnum() As String = [Enum].GetNames(GetType(AcceptableParams))
             Dim paramList As New List(Of String)

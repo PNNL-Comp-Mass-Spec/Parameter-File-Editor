@@ -30,7 +30,7 @@ Namespace ProgramSettings
         Private Const DEF_MT_GLOBAL_MOD_TABLE_NAME As String = "T_Peptide_Global_Mod_List"
         Private Const DEF_TEMPLATE_FILENAME As String = "sequest_N14_NE_Template.params"
 
-#Region " Public Properties and Functions "
+#Region "Public Properties and Functions"
 
         Public Sub LoadSettings(iniFileName As String)
             m_iniFilePath = GetFilePath(iniFileName)
@@ -61,7 +61,7 @@ Namespace ProgramSettings
 
 #End Region
 
-#Region " Member Functions "
+#Region "Member Functions"
 
         Private Function LoadProgramSettings(IniFilePath As String) As Boolean
             Dim programSettings As New clsRetrieveParams(IniFilePath, True)

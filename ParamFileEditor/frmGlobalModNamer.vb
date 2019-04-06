@@ -1,7 +1,7 @@
 Public Class frmGlobalModNamer
     Inherits Form
 
-#Region " Windows Form Designer generated code "
+#Region "Windows Form Designer generated code"
 
     Public Sub New()
         MyBase.New()
@@ -314,7 +314,7 @@ Public Class frmGlobalModNamer
 
     End Sub
 
-#Region " Validation Stuff "
+#Region "Validation Stuff"
 
     Private Sub txtModMass_Validating(sender As Object, e As ComponentModel.CancelEventArgs)
         Dim thisControl = DirectCast(sender, TextBox)

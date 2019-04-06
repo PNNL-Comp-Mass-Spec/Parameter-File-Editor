@@ -3,7 +3,7 @@ Imports System.Reflection
 
 Public Class clsMainProcess
 
-#Region " Member Properties "
+#Region "Member Properties"
     'Private basicTemplate As IBasicParams
     ' Private advTemplate As IAdvancedParams
 
@@ -20,7 +20,7 @@ Public Class clsMainProcess
 
 #End Region
 
-#Region " Public Properties "
+#Region "Public Properties"
     'Public Shared mySettings As clsSettings
 
     Public Shared ReadOnly Property BaseLineParamSet As clsParams

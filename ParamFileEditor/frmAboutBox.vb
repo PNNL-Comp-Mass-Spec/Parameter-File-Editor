@@ -5,7 +5,7 @@ Public Class frmAboutBox
 
     Private m_ConnectionString As String
 
-#Region " Windows Form Designer generated code "
+#Region "Windows Form Designer generated code"
 
     Public Sub New()
         MyBase.New()
@@ -31,7 +31,7 @@ Public Class frmAboutBox
     Private components As System.ComponentModel.IContainer
 
     'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
+    'It can be modified using the Windows Form Designer.
     'Do not modify it using the code editor.
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
