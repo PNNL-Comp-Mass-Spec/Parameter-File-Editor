@@ -11,9 +11,9 @@ Public Interface IGetSQLData
     Sub OpenConnection(dbConnectionString As String)
     Sub CloseConnection()
 
-    Property ConnectionString() As String
-    ReadOnly Property Connected() As Boolean
-    ReadOnly Property Connection() As SqlClient.SqlConnection
+    Property ConnectionString As String
+    ReadOnly Property Connected As Boolean
+    ReadOnly Property Connection As SqlClient.SqlConnection
 
 End Interface
 
@@ -89,7 +89,7 @@ Public Class clsDBTask
         End If
     End Sub
 
-    Protected ReadOnly Property Connected() As Boolean Implements IGetSQLData.Connected
+    Protected ReadOnly Property Connected As Boolean Implements IGetSQLData.Connected
         Get
             If m_DBCn Is Nothing Then
                 Return False
@@ -103,16 +103,16 @@ Public Class clsDBTask
         End Get
     End Property
 
-    Protected Property ConnectionString() As String Implements IGetSQLData.ConnectionString
+    Protected Property ConnectionString As String Implements IGetSQLData.ConnectionString
         Get
             Return Me.m_connection_str
         End Get
-        Set(Value As String)
+        Set
             Me.m_connection_str = Value
         End Set
     End Property
 
-    Protected ReadOnly Property Connection() As SqlClient.SqlConnection Implements IGetSQLData.Connection
+    Protected ReadOnly Property Connection As SqlClient.SqlConnection Implements IGetSQLData.Connection
         Get
             If Me.Connected Then
                 Return Me.m_DBCn
@@ -131,7 +131,7 @@ Public Class clsDBTask
         Dim tmpIDTable As New DataTable
         Dim GetID_CMD = New SqlClient.SqlCommand(SelectSQL)
 
-        Dim numTries As Integer = 3
+        Dim numTries = 3
         'Dim tryCount As Integer
         'Try
         If Not Me.m_PersistConnection Then Me.OpenConnection()

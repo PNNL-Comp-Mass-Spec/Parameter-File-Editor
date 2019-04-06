@@ -81,13 +81,13 @@ Friend Class clsAccessEmbeddedRsrc
         End If
     End Function
 
-    Friend ReadOnly Property AvailableEmbeddedResources() As Array
+    Friend ReadOnly Property AvailableEmbeddedResources As Array
         Get
             Return Me.m_EmbeddedRsrcList
         End Get
     End Property
 
-    Friend ReadOnly Property ExecutingDirectory() As String
+    Friend ReadOnly Property ExecutingDirectory As String
         Get
             Return Me.myExecutingDirectory
         End Get

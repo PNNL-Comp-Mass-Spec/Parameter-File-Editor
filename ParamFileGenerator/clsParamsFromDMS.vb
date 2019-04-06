@@ -1,5 +1,4 @@
 Imports System.Collections.Generic
-Imports System.Collections.Specialized
 Imports System.Data.SqlClient
 Imports System.Reflection
 
@@ -158,25 +157,25 @@ Namespace DownloadParams
 
 #End Region
 
-#Region " public Properties "
-        Public ReadOnly Property ParamFileTable() As DataTable
+#Region "Public Properties "
+        Public ReadOnly Property ParamFileTable As DataTable
             Get
                 Return m_ParamsSet.Tables(Param_File_Table)
             End Get
         End Property
-        Public ReadOnly Property ParamEntryTable() As DataTable
+        Public ReadOnly Property ParamEntryTable As DataTable
             Get
                 Return m_ParamsSet.Tables(Param_Entry_Table)
             End Get
         End Property
 
-        Public ReadOnly Property ParamSetCount() As Integer
+        Public ReadOnly Property ParamSetCount As Integer
             Get
                 Return m_ParamSetCount
             End Get
         End Property
 
-        Public ReadOnly Property ParamFileType() As eParamFileTypeConstants
+        Public ReadOnly Property ParamFileType As eParamFileTypeConstants
             Get
                 Return m_ParamFileType
             End Get
@@ -406,7 +405,7 @@ Namespace DownloadParams
             Dim foundRows() As DataRow
             Dim tmpSpec As String
             Dim tmpValue As String
-            'Dim tmpTypeString As String
+
             Dim tmpType As clsDMSParamStorage.ParamTypes
 
             'If m_MassMods Is Nothing Or m_MassMods.Rows.Count = 0 Then
@@ -564,7 +563,7 @@ Namespace DownloadParams
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
             If foundRows.Length <> 0 Then
                 Dim foundRow = foundRows(0)
-                Return CStr(foundrow.Item("Param_File_Name"))
+                Return CStr(foundRow.Item("Param_File_Name"))
             Else
                 Return Nothing
             End If
@@ -602,9 +601,9 @@ Namespace DownloadParams
         Protected Function GetDescriptionWithID(ID As Integer) As String
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
             Dim tmpString As String
-            If foundrows.Length <> 0 Then
-                Dim foundRow = foundrows(0)
-                tmpString = CStr(foundrow.Item("Param_File_Description"))
+            If foundRows.Length <> 0 Then
+                Dim foundRow = foundRows(0)
+                tmpString = CStr(foundRow.Item("Param_File_Description"))
                 If tmpString = "" Then
                     Return ""
                 Else

@@ -36,7 +36,7 @@ Public Class frmMain
     Private components As System.ComponentModel.IContainer
 
     'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
+    'It can be modified using the Windows Form Designer.
     'Do not modify it using the code editor.
     Friend WithEvents txtOutputPath As System.Windows.Forms.TextBox
     Friend WithEvents txtDMSConnectionString As System.Windows.Forms.TextBox
@@ -223,7 +223,7 @@ Public Class frmMain
 
     Dim m_OutputPath As String
     Dim m_DMSConnectString As String
-    Dim m_ParamFileType As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType
+    Dim m_ParamFileType As ParamFileGenerator.MakeParams.IGenerateFile.paramFileType
     Dim m_ParamTypeID As Integer
     Dim m_ParamFileName As String
     Dim m_FASTAPath As String
@@ -231,7 +231,7 @@ Public Class frmMain
 
     Dim m_DMS As ParamFileGenerator.MakeParams.IGenerateFile
 
-    Private Sub cmdDoIt_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdDoIt.Click
+    Private Sub cmdDoIt_Click(sender As System.Object, e As System.EventArgs) Handles cmdDoIt.Click
         'If m_DMS Is Nothing Then
         '    Me.m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile
         'End If
@@ -259,30 +259,30 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub txtOutputPath_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtOutputPath.TextChanged
+    Private Sub txtOutputPath_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtOutputPath.TextChanged
         Me.m_OutputPath = Me.txtOutputPath.Text
     End Sub
 
-    Private Sub cboAvailableParams_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboAvailableParams.SelectedIndexChanged
+    Private Sub cboAvailableParams_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cboAvailableParams.SelectedIndexChanged
         PopulateParamFileNameTextbox()
     End Sub
 
-    Private Sub txtDMSConnectionString_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtDMSConnectionString.TextChanged
+    Private Sub txtDMSConnectionString_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtDMSConnectionString.TextChanged
         Me.m_DMSConnectString = Me.txtDMSConnectionString.Text
     End Sub
 
-    Private Sub cboFileTypes_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboFileTypes.SelectedIndexChanged
+    Private Sub cboFileTypes_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cboFileTypes.SelectedIndexChanged
         Me.m_ParamTypeID = CInt(Me.cboFileTypes.SelectedValue)
 
         Select Case Me.m_ParamTypeID
             Case 1000
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.BioWorks_32
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.BioWorks_32
             Case 1008
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.X_Tandem
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.X_Tandem
             Case 1018
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSGFPlus
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSGFPlus
             Case 1019
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlign
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSAlign
             Case 1022
                 Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSAlignHistone
             Case 1025
@@ -360,37 +360,20 @@ Public Class frmMain
         Me.m_ParamFileName = txtParamFileName.Text
     End Sub
 
-    Private Sub txtFASTAPath_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtFASTAPath.TextChanged
+    Private Sub txtFASTAPath_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtFASTAPath.TextChanged
         Me.m_FASTAPath = Me.txtFASTAPath.Text
     End Sub
 
 
     Class ParamFileEntry
-        Private m_Value As Integer
-        Private m_Description As String
-
-        Sub New(ByVal Value As Integer, ByVal Description As String)
-            Me.m_Value = Value
-            Me.m_Description = Description
+        Sub New(Value As Integer, Description As String)
+            Me.Value = Value
+            Me.Description = Description
         End Sub
 
-        Property Value() As Integer
-            Get
-                Return Me.m_Value
-            End Get
-            Set(ByVal Value As Integer)
-                Me.m_Value = Value
-            End Set
-        End Property
+        Property Value As Integer
 
-        Property Description() As String
-            Get
-                Return Me.m_Description
-            End Get
-            Set(ByVal Value As String)
-                me.m_Description = value    
-            End Set
-        End Property
+        Property Description As String
 
     End Class
 

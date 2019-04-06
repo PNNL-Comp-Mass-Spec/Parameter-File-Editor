@@ -241,30 +241,30 @@ Public Class frmGlobalModNamer
 
     Friend Property MassCorrectionsTable As DataTable
 
-    Friend Property NewSymbol() As String
+    Friend Property NewSymbol As String
         Get
             Return txtSymbolName.Text
         End Get
-        Set(Value As String)
+        Set
             txtSymbolName.Text = Value
         End Set
     End Property
 
-    Friend Property NewModMass() As Double
+    Friend Property NewModMass As Double
         Get
             Return CDbl(txtModMass.Text)
         End Get
-        Set(Value As Double)
+        Set
             txtModMass.Text = Format(CDbl(Value), "0.00000")
             ' m_origMass = Value
         End Set
     End Property
 
-    Friend Property NewDescription() As String
+    Friend Property NewDescription As String
         Get
             Return txtDescription.Text
         End Get
-        Set(Value As String)
+        Set
             txtDescription.Text = Value
         End Set
     End Property

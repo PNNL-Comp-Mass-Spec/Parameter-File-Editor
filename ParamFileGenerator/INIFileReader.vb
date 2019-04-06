@@ -13,7 +13,7 @@ End Enum
 
 Public Class IniFileReaderNotInitializedException
     Inherits System.ApplicationException
-    Public Overrides ReadOnly Property Message() As String
+    Public Overrides ReadOnly Property Message As String
         Get
             Return "The IniFileReader instance has not been properly initialized."
 
@@ -86,20 +86,20 @@ Public Class IniFileReader
         End Try
     End Sub
 
-    Public ReadOnly Property IniFilename() As String
+    Public ReadOnly Property IniFilename As String
         Get
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             Return (m_IniFilename)
         End Get
     End Property
 
-    Public ReadOnly Property Initialized() As Boolean
+    Public ReadOnly Property Initialized As Boolean
         Get
             Return m_initialized
         End Get
     End Property
 
-    Public ReadOnly Property CaseSensitive() As Boolean
+    Public ReadOnly Property CaseSensitive As Boolean
         Get
             Return m_CaseSensitive
         End Get
@@ -305,7 +305,7 @@ Public Class IniFileReader
         Next
     End Sub
 
-    Public ReadOnly Property AllSections() As List(Of String)
+    Public ReadOnly Property AllSections As List(Of String)
         Get
             If Not Initialized Then
                 Throw New IniFileReaderNotInitializedException
@@ -487,7 +487,7 @@ Public Class IniFileReader
 
     End Sub
 
-    Public Property OutputFilename() As String
+    Public Property OutputFilename As String
         Get
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             Return m_SaveFilename
@@ -537,14 +537,14 @@ Public Class IniFileReader
     '    End Try
     'End Function
 
-    Public ReadOnly Property XmlDoc() As XmlDocument
+    Public ReadOnly Property XmlDoc As XmlDocument
         Get
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             Return m_XmlDoc
         End Get
     End Property
 
-    Public ReadOnly Property XML() As String
+    Public ReadOnly Property XML As String
         Get
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             Dim sb = New StringBuilder

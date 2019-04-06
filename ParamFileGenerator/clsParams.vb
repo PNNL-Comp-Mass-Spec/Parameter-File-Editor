@@ -254,23 +254,15 @@ Public Class clsParams
         LoadTemplateParams(templateFileName)
     End Sub
 
-    Private Sub LoadTemplateParams(TemplateFileName As String)
+    Private Sub LoadTemplateParams(templateFileName As String)
 
-        Dim tmpProtMassFilterStringArray() As String
-        Dim SectionName As String
-        m_templateFilePath = GetFilePath(TemplateFileName)
+        m_templateFilePath = GetFilePath(templateFileName)
         Dim m_getEnzymeList As New clsGetEnzymeBlock(m_templateFilePath, DEF_ENZ_SECTION_NAME)
         EnzymeList = m_getEnzymeList.EnzymeList
-        'Dim m_Compare As New clsParamsFromDMS
 
-        'm_desc = GetDescription()
         m_type = GetTemplateType()
 
-        'If m_type = ParamFileTypes.BioWorks_20 Then
-        SectionName = "SEQUEST"
-        'ElseIf m_type = ParamFileTypes.BioWorks_30 Or m_type = ParamFileTypes.BioWorks_31 Then
-        '    SectionName = "SEQUEST"
-        'End If
+        Dim SectionName = "SEQUEST"
 
         m_fullTemplate = New clsRetrieveParams(m_templateFilePath)
         'Retrieve Basic Parameters
@@ -517,8 +509,8 @@ Public Class clsIonSeries
         Get
             Return Math.Abs(m_use_a_Ions)
         End Get
-        Set(value As Integer)
-            m_use_a_Ions = Math.Abs(value)
+        Set
+            m_use_a_Ions = Math.Abs(Value)
         End Set
     End Property
     Public Property Use_b_Ions As Integer

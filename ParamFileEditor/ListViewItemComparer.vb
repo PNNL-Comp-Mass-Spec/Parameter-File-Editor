@@ -33,14 +33,14 @@ Class ListViewItemComparer
 
 	End Function
 
-	Public Property SortOrder() As Boolean
-		Get
-			Return m_SortOrderAsc
-		End Get
-		Set(Value As Boolean)
-			m_SortOrderAsc = False
-		End Set
-	End Property
+    Public Property SortOrder As Boolean
+        Get
+            Return m_SortOrderAsc
+        End Get
+        Set
+            m_SortOrderAsc = False
+        End Set
+    End Property
 
 End Class
 

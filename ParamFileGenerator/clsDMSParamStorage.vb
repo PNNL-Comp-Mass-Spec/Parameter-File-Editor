@@ -27,7 +27,7 @@ Public Class clsDMSParamStorage
         Get
             Return DirectCast(List(index), ParamsEntry)
         End Get
-        Set(Value As ParamsEntry)
+        Set
             List(index) = Value
         End Set
     End Property
@@ -41,7 +41,7 @@ Public Class clsDMSParamStorage
                 Return Nothing
             End If
         End Get
-        Set(Value As ParamsEntry)
+        Set
 
         End Set
     End Property
@@ -72,17 +72,17 @@ Public Class clsDMSParamStorage
             m_Type = ParamType
         End Sub
 
-        Public ReadOnly Property Specifier() As String
+        Public ReadOnly Property Specifier As String
             Get
                 Return m_Spec
             End Get
         End Property
-        Public ReadOnly Property Value() As String
+        Public ReadOnly Property Value As String
             Get
                 Return m_Value
             End Get
         End Property
-        Public ReadOnly Property Type() As ParamTypes
+        Public ReadOnly Property Type As ParamTypes
             Get
                 Return m_Type
             End Get

@@ -4,15 +4,15 @@ Imports System.IO
 
 Namespace ProgramSettings
     Public Interface IProgramSettings
-        Property DMS_ConnectionString() As String
-        Property DMS_ParamFileTableName() As String
-        Property MT_ConnectionString() As String
-        Property MT_ModParamFileTable() As String
-        Property MT_GlobalModListTable() As String
-        Property templateFileName() As String
-        Property CommonModsCollection() As clsCommonModsCollection
-        ReadOnly Property FieldMappingsTable() As DataTable
-        ReadOnly Property AAMappingsTable() As DataTable
+        Property DMS_ConnectionString As String
+        Property DMS_ParamFileTableName As String
+        Property MT_ConnectionString As String
+        Property MT_ModParamFileTable As String
+        Property MT_GlobalModListTable As String
+        Property templateFileName As String
+        Property CommonModsCollection As clsCommonModsCollection
+        ReadOnly Property FieldMappingsTable As DataTable
+        ReadOnly Property AAMappingsTable As DataTable
     End Interface
 
     Public Class clsSettings
@@ -181,28 +181,21 @@ Namespace ProgramSettings
                 m_tmpCommonMods = Nothing
             End Try
 
-
             'Get details for the common mods listed above
-            Dim s As String
-            Dim m_tmpDesc As String
-            Dim m_tmpFormula As String
-            Dim m_modDetails As clsCommonModDetails
-            m_commonModsColl = New clsCommonModsCollection
+            CommonModsCollection = New clsCommonModsCollection
 
             If m_tmpCommonMods.Count > 0 Then
-                For Each s In m_tmpCommonMods
-                    With programSettings
-                        m_tmpDesc = .GetParam("commonmods", s)
-                        m_tmpFormula = .GetParam("commonmods", s, "formula")
-                    End With
-                    m_modDetails = New clsCommonModDetails
-                    With m_modDetails
-                        .Name = s
-                        .Description = m_tmpDesc
-                        .Formula = m_tmpFormula
-                    End With
+                For Each commonMod In m_tmpCommonMods
+                    Dim tmpDesc = programSettings.GetParam("commonmods", commonMod)
+                    Dim tmpFormula = programSettings.GetParam("commonmods", commonMod, "formula")
 
-                    m_commonModsColl.add(m_modDetails)
+                    Dim modDetails = New clsCommonModDetails With {
+                        .Name = commonMod,
+                        .Description = tmpDesc,
+                        .Formula = tmpFormula
+                    }
+
+                    CommonModsCollection.Add(modDetails)
                 Next
             End If
 

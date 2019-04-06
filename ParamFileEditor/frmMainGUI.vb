@@ -21,7 +21,7 @@ Public Class frmMainGUI
 
     ' ReSharper disable once NotAccessedField.Local
     ''' <summary>
-    ''' This class needs to be instantiated so that we can read properties BaseLineParamSet and TemplateFileName
+    ''' This class needs to be instantiated so that we can read properties BaseLineParamSet and templateFileName
     ''' </summary>
     Private m_sharedMain As clsMainProcess
 
@@ -2474,7 +2474,7 @@ Public Class frmMainGUI
         System.Windows.Forms.Application.EnableVisualStyles()
         System.Windows.Forms.Application.DoEvents()
         Try
-            System.Windows.Forms.Application.Run(New frmMainGUI)  ' replace frmDecode by the name of your form!!!
+            System.Windows.Forms.Application.Run(New frmMainGUI)
         Catch ex As Exception
             System.Windows.Forms.MessageBox.Show("Last-chance exception caught: " & ex.Message & "; " & GetExceptionStackTrace(ex, True), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             Console.WriteLine("")
@@ -4143,15 +4143,17 @@ Public Class frmMainGUI
     End Sub
 
     Private Sub mnuHelpAbout_Click(sender As Object, e As EventArgs) Handles mnuHelpAbout.Click
-        Dim AboutBox As New frmAboutBox
-        AboutBox.ConnectionStringInUse = mySettings.DMS_ConnectionString
+        Dim AboutBox As New frmAboutBox With {
+            .ConnectionStringInUse = mySettings.DMS_ConnectionString
+        }
         AboutBox.Show()
     End Sub
 
     Private Sub mnuFileLoadFromDMS_Click(sender As Object, e As EventArgs) Handles mnuFileLoadFromDMS.Click
         Try
-            Dim frmPicker As New frmDMSPicker(Me)
-            frmPicker.MySettings = mySettings
+            Dim frmPicker As New frmDMSPicker(Me) With {
+                .MySettings = mySettings
+            }
 
             frmPicker.txtLiveSearch.Focus()
             frmPicker.Show()
@@ -4288,9 +4290,6 @@ Public Class frmMainGUI
                         Dim tmpModType As IMassTweaker.ModTypes = GetModTypeFromControlName(sender)
                         Dim tmpAtom As String
                         Dim tmpAA = ""
-                        'Dim tmpSymbol As String = ""
-                        'Dim tmpDesc As String = ""
-                        'Dim tmpGMID As Integer = 0
                         Dim dr As DialogResult
 
                         If tmpModType = IMassTweaker.ModTypes.IsotopicMod Then
@@ -4535,7 +4534,7 @@ Public Class frmMainGUI
             If SaveDialog.ShowDialog = DialogResult.OK Then
                 Dim newFilePath = SaveDialog.FileName
                 If newFilePath.Length > 0 Then
-                    Dim iFileType = CType(eFileType, MakeParams.IGenerateFile.ParamFileType)
+                    Dim iFileType = CType(eFileType, MakeParams.IGenerateFile.paramFileType)
                     Call FileOutput.WriteOutputFile(newParams, newFilePath, iFileType)
                     MessageBox.Show("Param File: " & newFilePath & " written successfully", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If

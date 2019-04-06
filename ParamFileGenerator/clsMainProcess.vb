@@ -23,13 +23,13 @@ Public Class clsMainProcess
 #Region " Public Properties "
     'Public Shared mySettings As clsSettings
 
-    Public Shared ReadOnly Property BaseLineParamSet() As clsParams
+    Public Shared ReadOnly Property BaseLineParamSet As clsParams
         Get
             Return m_BaseLineParams
         End Get
     End Property
 
-    Public Shared ReadOnly Property TemplateFileName() As String
+    Public Shared ReadOnly Property TemplateFileName As String
         Get
             Return Path.Combine(m_TemplateFilePath, Path.GetFileName(m_TemplateFileName))
         End Get

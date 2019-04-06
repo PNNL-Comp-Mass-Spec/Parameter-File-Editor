@@ -26,25 +26,24 @@ Namespace MakeParams
             TopPIC = 13
         End Enum
 
-        Function MakeFile(ParamFileName As String,
-             ParamFileType As ParamFileType,
-             FASTAFilePath As String,
-             OutputFilePath As String,
-             DMSConnectionString As String) As Boolean
+        Function MakeFile(paramFileName As String,
+             paramFileType As paramFileType,
+             fastaFilePath As String,
+             outputFilePath As String,
+             dmsConnectionString As String) As Boolean
 
-        Function MakeFile(ParamFileName As String,
-             ParamFileType As ParamFileType,
-             FASTAFilePath As String,
-             OutputFilePath As String,
-             DMSConnectionString As String,
+        Function MakeFile(paramFileName As String,
+             paramFileType As paramFileType,
+             fastaFilePath As String,
+             outputFilePath As String,
+             dmsConnectionString As String,
              DatasetID As Integer) As Boolean
 
-        Function MakeFile(ParamFileName As String,
-             ParamFileType As ParamFileType,
-             FASTAFilePath As String,
-             OutputFilePath As String,
-             DMSConnectionString As String,
-             DatasetName As String) As Boolean
+        Function MakeFile(paramFileName As String,
+             paramFileType As paramFileType,
+             fastaFilePath As String,
+             outputFilePath As String,
+             dmsConnectionString As String,
              datasetName As String) As Boolean
 
         Function GetAvailableParamSetNames(dmsConnectionString As String) As List(Of String)
@@ -52,9 +51,9 @@ Namespace MakeParams
 
         Function GetAvailableParamFileTypes(dmsConnectionString As String) As DataTable
 
-        ReadOnly Property LastError() As String
+        ReadOnly Property LastError As String
 
-        Property TemplateFilePath() As String
+        Property TemplateFilePath As String
 
     End Interface
 
@@ -68,53 +67,53 @@ Namespace MakeParams
         Private m_DbTools As PRISM.DBTools
         Private m_FileWriter As clsWriteOutput
 
-        Public Property TemplateFilePath() As String Implements IGenerateFile.TemplateFilePath
+        Public Property TemplateFilePath As String Implements IGenerateFile.TemplateFilePath
             Get
                 Return m_TemplateFilePathString
             End Get
-            Set(Value As String)
+            Set
                 m_TemplateFilePathString = Value
             End Set
         End Property
 
-        Protected Property LastErrorMsg As String = String.Empty
+        Private Property LastErrorMsg As String = String.Empty
 
-        Protected Function MakeFile(
-            ParamFileName As String,
-            ParamFileType As IGenerateFile.ParamFileType,
-            FASTAFilePath As String,
-            OutputFilePath As String,
-            DMSConnectionString As String) As Boolean Implements IGenerateFile.MakeFile
+        Private Function MakeFile(
+            paramFileName As String,
+            paramFileType As IGenerateFile.paramFileType,
+            fastaFilePath As String,
+            outputFilePath As String,
+            dmsConnectionString As String) As Boolean Implements IGenerateFile.MakeFile
 
-            Return MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, False)
-
-        End Function
-
-        Protected Function MakeFile(
-            ParamFileName As String,
-            ParamFileType As IGenerateFile.ParamFileType,
-            FASTAFilePath As String,
-            OutputFilePath As String,
-            DMSConnectionString As String,
-            DatasetName As String) As Boolean Implements IGenerateFile.MakeFile
-
-            Dim ForceMonoStatus As Boolean = GetMonoMassStatus(DatasetName, DMSConnectionString)
-
-            Return MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, ForceMonoStatus)
+            Return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, False)
 
         End Function
 
-        Protected Function MakeFile(
-            ParamFileName As String,
-            ParamFileType As IGenerateFile.ParamFileType,
-            FASTAFilePath As String,
-            OutputFilePath As String,
-            DMSConnectionString As String,
+        Private Function MakeFile(
+            paramFileName As String,
+            paramFileType As IGenerateFile.paramFileType,
+            fastaFilePath As String,
+            outputFilePath As String,
+            dmsConnectionString As String,
+            datasetName As String) As Boolean Implements IGenerateFile.MakeFile
+
+            Dim forceMonoStatus As Boolean = GetMonoMassStatus(datasetName, dmsConnectionString)
+
+            Return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus)
+
+        End Function
+
+        Private Function MakeFile(
+            paramFileName As String,
+            paramFileType As IGenerateFile.paramFileType,
+            fastaFilePath As String,
+            outputFilePath As String,
+            dmsConnectionString As String,
             DatasetID As Integer) As Boolean Implements IGenerateFile.MakeFile
 
-            Dim ForceMonoStatus As Boolean = GetMonoMassStatus(DatasetID, DMSConnectionString)
+            Dim forceMonoStatus As Boolean = GetMonoMassStatus(DatasetID, dmsConnectionString)
 
-            Return MakeFile(ParamFileName, ParamFileType, FASTAFilePath, OutputFilePath, DMSConnectionString, ForceMonoStatus)
+            Return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus)
 
         End Function
 
@@ -180,20 +179,20 @@ Namespace MakeParams
 
         End Function
 
-        Protected Function GetMonoMassStatus(DatasetID As Integer, DMSConnectionString As String) As Boolean
+        Private Function GetMonoMassStatus(DatasetID As Integer, dmsConnectionString As String) As Boolean
             Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_ID = " + DatasetID.ToString
-            Return GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
+            Return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString)
         End Function
 
-        Protected Function GetMonoMassStatus(DatasetName As String, DMSConnectionString As String) As Boolean
-            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = '" + DatasetName + "'"
-            Return GetMonoParentStatusWorker(TypeCheckSQL, DMSConnectionString)
+        Private Function GetMonoMassStatus(datasetName As String, dmsConnectionString As String) As Boolean
+            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = '" + datasetName + "'"
+            Return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString)
         End Function
 
-        Private Function GetMonoParentStatusWorker(LookupSQL As String, DMSConnectionString As String) As Boolean
+        Private Function GetMonoParentStatusWorker(LookupSQL As String, dmsConnectionString As String) As Boolean
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.DBTools(DMSConnectionString)
+                m_DbTools = New PRISM.DBTools(dmsConnectionString)
             End If
 
             Dim typeCheckTable As List(Of List(Of String)) = Nothing
@@ -219,24 +218,24 @@ Namespace MakeParams
         ''' <summary>
         ''' Create Sequest parameter file
         ''' </summary>
-        ''' <param name="ParamFileName"></param>
-        ''' <param name="ParamFileType"></param>
-        ''' <param name="FASTAFilePath"></param>
-        ''' <param name="OutputFilePath"></param>
-        ''' <param name="DMSConnectionString"></param>
+        ''' <param name="paramFileName"></param>
+        ''' <param name="paramFileType"></param>
+        ''' <param name="fastaFilePath"></param>
+        ''' <param name="outputFilePath"></param>
+        ''' <param name="dmsConnectionString"></param>
         ''' <param name="forceMonoParentMass"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Protected Function MakeFileSQ(
-            ParamFileName As String,
-            ParamFileType As IGenerateFile.ParamFileType,
-            FASTAFilePath As String,
-            OutputFilePath As String,
-            DMSConnectionString As String,
+        Private Function MakeFileSQ(
+            paramFileName As String,
+            paramFileType As IGenerateFile.paramFileType,
+            fastaFilePath As String,
+            outputFilePath As String,
+            dmsConnectionString As String,
             forceMonoParentMass As Boolean) As Boolean
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.DBTools(DMSConnectionString)
+                m_DbTools = New PRISM.DBTools(dmsConnectionString)
             End If
 
             Const DEF_TEMPLATE_FILEPATH = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
@@ -257,21 +256,21 @@ Namespace MakeParams
             Dim l_MainCode As New clsMainProcess(m_TemplateFilePathString)
 
             Dim l_LoadedParams As clsParams
-            Dim l_DMS As New clsParamsFromDMS(DMSConnectionString)
+            Dim l_DMS As New clsParamsFromDMS(dmsConnectionString)
             Dim l_ReconIsoMods As IReconstituteIsoMods
-            l_ReconIsoMods = New clsReconstituteIsoMods(DMSConnectionString)
+            l_ReconIsoMods = New clsReconstituteIsoMods(dmsConnectionString)
 
             If l_DMS.ParamFileTable Is Nothing Then
                 ReportError("Could Not Establish Database Connection")
                 Return False
             End If
 
-            If Not l_DMS.ParamSetNameExists(ParamFileName) Then
-                ReportError("Parameter File '" & ParamFileName & "' does not exist in the database")
+            If Not l_DMS.ParamSetNameExists(paramFileName) Then
+                ReportError("Parameter File '" & paramFileName & "' does not exist in the database")
                 Return False
             End If
 
-            l_LoadedParams = l_DMS.ReadParamsFromDMS(ParamFileName)
+            l_LoadedParams = l_DMS.ReadParamsFromDMS(paramFileName)
             l_LoadedParams = l_ReconIsoMods.ReconstituteIsoMods(l_LoadedParams)
 
             If forceMonoParentMass And Not l_LoadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
@@ -286,15 +285,15 @@ Namespace MakeParams
                 l_LoadedParams.FragmentMassUnits = IAdvancedParams.MassUnitList.amu
             End If
 
-            l_LoadedParams.DefaultFASTAPath = FASTAFilePath
+            l_LoadedParams.DefaultFASTAPath = fastaFilePath
 
             If m_FileWriter Is Nothing Then
                 m_FileWriter = New clsWriteOutput
             End If
 
-            Dim writeSuccess = m_FileWriter.WriteOutputFile(l_LoadedParams, Path.Combine(OutputFilePath, ParamFileName), ParamFileType)
+            Dim writeSuccess = m_FileWriter.WriteOutputFile(l_LoadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType)
 
-            Dim successExtra = MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
+            Dim successExtra = MakeSeqInfoRelatedFiles(paramFileName, outputFilePath, dmsConnectionString)
 
             Return writeSuccess
 
@@ -303,13 +302,13 @@ Namespace MakeParams
         Private Function MakeSeqInfoRelatedFiles(
             paramFileName As String,
             targetDirectory As String,
-            DMSConnectionString As String) As Boolean
+            dmsConnectionString As String) As Boolean
 
             Dim mctSQL As String
             Dim mdSQL As String
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.DBTools(DMSConnectionString)
+                m_DbTools = New PRISM.DBTools(dmsConnectionString)
             End If
 
             Dim baseParamFileName As String = Path.GetFileNameWithoutExtension(paramFileName)
@@ -343,16 +342,16 @@ Namespace MakeParams
 
         End Function
 
-        Protected Function RetrieveStaticPSMParameterFile(
+        Private Function RetrieveStaticPSMParameterFile(
            analysisToolName As String,
            paramFileName As String,
            targetDirectory As String,
-           DMSConnectionString As String) As Boolean
+           dmsConnectionString As String) As Boolean
 
             Dim paramFilePath As String
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.DBTools(DMSConnectionString)
+                m_DbTools = New PRISM.DBTools(dmsConnectionString)
             End If
 
             Dim paramFilePathSQL =
@@ -387,7 +386,7 @@ Namespace MakeParams
             ' Copy the param file from Gigasax to the working directory
             fiSource.CopyTo(Path.Combine(targetDirectory, paramFileName), True)
 
-            MakeSeqInfoRelatedFiles(paramFileName, targetDirectory, DMSConnectionString)
+            MakeSeqInfoRelatedFiles(paramFileName, targetDirectory, dmsConnectionString)
 
             Return True
 
@@ -405,21 +404,21 @@ Namespace MakeParams
             Return l_ParamSetsAvailable
         End Function
 
-        Protected Function GetAvailableParamSetTable(DMSConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamSetTable
-            Dim l_DMS As New clsParamsFromDMS(DMSConnectionString)
+        Private Function GetAvailableParamSetTable(dmsConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamSetTable
+            Dim l_DMS As New clsParamsFromDMS(dmsConnectionString)
             Dim paramSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams
 
             Return paramSetsAvailable
 
         End Function
 
-        Protected Function GetAvailableParamSetTypes(DMSConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamFileTypes
-            Dim l_DMS As New clsParamsFromDMS(DMSConnectionString)
+        Private Function GetAvailableParamSetTypes(dmsConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamFileTypes
+            Dim l_DMS As New clsParamsFromDMS(dmsConnectionString)
             Dim paramTypesAvailable As DataTable = l_DMS.RetrieveParamFileTypes
             Return paramTypesAvailable
         End Function
 
-        Public ReadOnly Property LastError() As String Implements IGenerateFile.LastError
+        Public ReadOnly Property LastError As String Implements IGenerateFile.LastError
             Get
                 Return LastErrorMsg
             End Get

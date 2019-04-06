@@ -5,11 +5,11 @@ Public Interface IMassTweaker
         IsotopicMod
     End Enum
 
-    Property MaxTweakDifference() As Double
-    ReadOnly Property TweakedSymbol() As String
-    ReadOnly Property TweakedDescription() As String
-    ReadOnly Property TweakedModID() As Integer
-    ReadOnly Property MassCorrectionsTable() As DataTable
+    Property MaxTweakDifference As Double
+    ReadOnly Property TweakedSymbol As String
+    ReadOnly Property TweakedDescription As String
+    ReadOnly Property TweakedModID As Integer
+    ReadOnly Property MassCorrectionsTable As DataTable
 
     Function GetTweakedMass(ModMass As Double, Optional AffectedAtom As String = "-") As Double
 

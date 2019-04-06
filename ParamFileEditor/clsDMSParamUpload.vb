@@ -15,7 +15,7 @@ Friend Class clsDMSParamUpload
 
 #Region " Friend Procedures "
 
-    Public ReadOnly Property ErrorMessage() As String
+    Public ReadOnly Property ErrorMessage As String
         Get
             Return m_SPError
         End Get

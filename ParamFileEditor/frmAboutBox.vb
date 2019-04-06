@@ -151,11 +151,11 @@ Public Class frmAboutBox
         Me.ttProviderAboutBox.SetToolTip(Me.Label1, Me.m_ConnectionString)
     End Sub
 
-    Property ConnectionStringInUse() As String
+    Property ConnectionStringInUse As String
         Get
             Return Me.m_ConnectionString
         End Get
-        Set(Value As String)
+        Set
             Me.m_ConnectionString = Value
         End Set
     End Property

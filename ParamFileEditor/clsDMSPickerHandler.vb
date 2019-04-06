@@ -64,8 +64,8 @@ Public Class clsDMSPickerHandler
 
     Public Property ProgramSettings As clsSettings
 
-    Public WriteOnly Property ForceIDTableReload() As Boolean
-        Set(Value As Boolean)
+    Public WriteOnly Property ForceIDTableReload As Boolean
+        Set
             m_forceReload = Value
         End Set
     End Property
