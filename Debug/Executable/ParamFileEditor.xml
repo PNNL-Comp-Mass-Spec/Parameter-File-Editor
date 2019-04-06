@@ -6,9 +6,16 @@ ParamFileEditor
 </name>
 </assembly>
 <members>
+<member name="M:ParamFileEditor.clsBatchLoadTemplates.BatchUploadParamSetsToDMS(System.Collections.Generic.List{System.String})">
+ <summary>
+ Batch upload a list of parameter files
+ </summary>
+ <param name="paramFileList"></param>
+ <returns>Number of param sets uploaded</returns>
+</member>
 <member name="F:ParamFileEditor.frmMainGUI.m_sharedMain">
  <summary>
- This class needs to be instantiated so that we can read properties BaseLineParamSet and TemplateFileName
+ This class needs to be instantiated so that we can read properties BaseLineParamSet and templateFileName
  </summary>
 </member>
 <member name="M:ParamFileEditor.frmMainGUI.GetExceptionStackTrace(System.Exception,System.Boolean)">

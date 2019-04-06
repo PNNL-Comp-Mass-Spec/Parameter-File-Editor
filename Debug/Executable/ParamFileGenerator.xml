@@ -13,18 +13,25 @@ ParamFileGenerator
  </summary>
  <returns></returns>
 </member>
-<member name="M:ParamFileGenerator.MakeParams.clsMakeParameterFile.MakeFileSQ(System.String,ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType,System.String,System.String,System.String,System.Boolean)">
+<member name="M:ParamFileGenerator.MakeParams.clsMakeParameterFile.MakeFileSQ(System.String,ParamFileGenerator.MakeParams.IGenerateFile.paramFileType,System.String,System.String,System.String,System.Boolean)">
  <summary>
  Create Sequest parameter file
  </summary>
- <param name="ParamFileName"></param>
- <param name="ParamFileType"></param>
- <param name="FASTAFilePath"></param>
- <param name="OutputFilePath"></param>
- <param name="DMSConnectionString"></param>
+ <param name="paramFileName"></param>
+ <param name="paramFileType"></param>
+ <param name="fastaFilePath"></param>
+ <param name="outputFilePath"></param>
+ <param name="dmsConnectionString"></param>
  <param name="forceMonoParentMass"></param>
  <returns></returns>
  <remarks></remarks>
+</member>
+<member name="F:ParamFileGenerator.clsMods.m_AAMappingTable">
+ <summary>
+ Keys are residue names from ResidueCode (e.g. P_Proline)
+ Values are the single letter abbreviation if an amino acid
+ Or, if not an amino acid, one of: C_Term_Protein, C_Term_Peptide, N_Term_Protein, or N_Term_Peptide
+ </summary>
 </member>
 <member name="M:ParamFileGenerator.clsParams.#ctor">
  <summary>
@@ -42,6 +49,11 @@ ParamFileGenerator
  <summary>
  Dictionary where keys are amino acid residue (one letter abbreviation)
  and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
+ </summary>
+</member>
+<member name="F:ParamFileGenerator.clsRetrieveParams.m_defaultSection">
+ <summary>
+ Default section name
  </summary>
 </member>
 </members>
