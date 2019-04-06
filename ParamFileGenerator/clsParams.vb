@@ -344,9 +344,16 @@ Public Class clsParams
             RemovePrecursorPeak = CBool(.GetParam("remove_precursor_peak"))
             IonCutoffPercentage = CSng(.GetParam("ion_cutoff_percentage"))
             m_protMassFilterString = .GetParam("protein_mass_filter")
-            tmpProtMassFilterStringArray = InterpretMassFilterString(m_protMassFilterString)
-            MinimumProteinMassToSearch = CSng(tmpProtMassFilterStringArray(0))
-            MaximumProteinMassToSearch = CSng(tmpProtMassFilterStringArray(1))
+
+            Dim protMassFilterList = m_protMassFilterString.Split(" "c)
+            If (protMassFilterList.Count > 0) Then
+                MinimumProteinMassToSearch = CSng(protMassFilterList(0))
+            End If
+
+            If (protMassFilterList.Count > 1) Then
+                MaximumProteinMassToSearch = CSng(protMassFilterList(1))
+            End If
+
             NumberOfDetectedPeaksToMatch = CInt(.GetParam("match_peak_count"))
             NumberOfAllowedDetectedPeakErrors = CInt(.GetParam("match_peak_allowed_error"))
             MatchedPeakMassTolerance = CSng(.GetParam("match_peak_tolerance"))
@@ -402,33 +409,6 @@ Public Class clsParams
                 Return type
             End If
         Loop
-
-    End Function
-
-    Private Function InterpretMassFilterString(massFilterString As String) As String()
-        Dim s() As String = Nothing
-        Dim placeCounter = 0
-        Dim prevChar = ""
-        Dim tmpString = ""
-
-        For counter = 1 To Len(massFilterString)
-            Dim currChar = Mid(massFilterString, counter, 1)
-            If (currChar = " " And prevChar <> " ") Or (counter = Len(massFilterString)) Then
-                ReDim Preserve s(placeCounter)
-                If currChar <> " " Then
-                    tmpString = tmpString + currChar
-                End If
-                s(placeCounter) = tmpString
-                placeCounter = placeCounter + 1
-                tmpString = ""
-            ElseIf currChar <> " " Then
-                tmpString = tmpString + currChar
-            End If
-
-            prevChar = currChar
-        Next
-
-        Return s
 
     End Function
 
