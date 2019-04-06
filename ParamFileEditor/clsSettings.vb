@@ -17,99 +17,43 @@ Namespace ProgramSettings
 
     Public Class clsSettings
         Implements IProgramSettings
-        Private m_DMSconnectionString As String
-        Private m_DMSParamFileTableName As String
-        Private m_MTConnectionString As String
-        Private m_MTModParamFileTable As String
-        Private m_MTGlobalModListTable As String
-        Private m_templateFileName As String
-        Private m_commonModsColl As clsCommonModsCollection
+
         Private m_tmpCommonMods As List(Of String)
         ' Unused: Private m_fieldMappingsTable As DataTable
         Private m_aaMappingsTable As DataTable
         Private m_iniFilePath As String
 
-        Private Const DEF_DMS_CONNSTR As String = "Data Source=gigasax;Initial Catalog=DMS5;Integrated Security=SSPI;"
+        Private Const DEF_DMS_CONNECTION_STRING As String = "Data Source=gigasax;Initial Catalog=DMS5;Integrated Security=SSPI;"
         Private Const DEF_DMS_PARAM_TABLE_NAME As String = "T_Sequest_Params"
-        Private Const DEF_MT_CONNSTR As String = "Data Source=pogo;Initial Catalog=MT_Main;Integrated Security=SSPI;"
+        Private Const DEF_MT_CONNECTION_STRING As String = "Data Source=pogo;Initial Catalog=MT_Main;Integrated Security=SSPI;"
         Private Const DEF_MT_MOD_PARAM_TABLE_NAME As String = "T_Peptide_Mod_Param_File_List"
         Private Const DEF_MT_GLOBAL_MOD_TABLE_NAME As String = "T_Peptide_Global_Mod_List"
-        Private Const DEF_TEMPLATEFILENAME As String = "sequest_N14_NE_Template.params"
+        Private Const DEF_TEMPLATE_FILENAME As String = "sequest_N14_NE_Template.params"
 
 #Region " Public Properties and Functions "
 
         Public Sub LoadSettings(iniFileName As String)
-            Dim loadingSuccessful As Boolean
             m_iniFilePath = GetFilePath(iniFileName)
-            loadingSuccessful = LoadProgramSettings(m_iniFilePath)
+            Dim loadingSuccessful = LoadProgramSettings(m_iniFilePath)
 
         End Sub
 
-        Public Property DMS_ConnectionString() As String Implements IProgramSettings.DMS_ConnectionString
-            Get
-                Return m_DMSconnectionString
-            End Get
-            Set
-                m_DMSconnectionString = Value
-            End Set
-        End Property
-        Public Property DMS_ParamFileTableName() As String Implements IProgramSettings.DMS_ParamFileTableName
-            Get
-                Return m_DMSParamFileTableName
-            End Get
-            Set
-                m_DMSParamFileTableName = Value
-            End Set
-        End Property
-        Public Property MT_ConnectionString() As String Implements IProgramSettings.MT_ConnectionString
-            Get
-                Return m_MTConnectionString
-            End Get
-            Set
-                m_MTConnectionString = Value
-            End Set
-        End Property
-        Public Property MT_ModParamFileTable() As String Implements IProgramSettings.MT_ModParamFileTable
-            Get
-                Return m_MTModParamFileTable
-            End Get
-            Set
-                m_MTModParamFileTable = Value
-            End Set
-        End Property
-        Public Property MT_GlobalModListTable() As String Implements IProgramSettings.MT_GlobalModListTable
-            Get
-                Return m_MTGlobalModListTable
-            End Get
-            Set
-                m_MTGlobalModListTable = Value
-            End Set
-        End Property
-        Public Property TemplateFileName() As String Implements IProgramSettings.TemplateFileName
-            Get
-                Return m_templateFileName
-            End Get
-            Set
-                m_templateFileName = Value
-            End Set
-        End Property
-        Public Property CommonModsCollection() As clsCommonModsCollection Implements IProgramSettings.CommonModsCollection
-            Get
-                Return m_commonModsColl
-            End Get
-            Set
-                m_commonModsColl = Value
-            End Set
-        End Property
+        Public Property DMS_ConnectionString As String Implements IProgramSettings.DMS_ConnectionString
+        Public Property DMS_ParamFileTableName As String Implements IProgramSettings.DMS_ParamFileTableName
+        Public Property MT_ConnectionString As String Implements IProgramSettings.MT_ConnectionString
+        Public Property MT_ModParamFileTable As String Implements IProgramSettings.MT_ModParamFileTable
+        Public Property MT_GlobalModListTable As String Implements IProgramSettings.MT_GlobalModListTable
+        Public Property TemplateFileName As String Implements IProgramSettings.templateFileName
+        Public Property CommonModsCollection As clsCommonModsCollection Implements IProgramSettings.CommonModsCollection
 
         <Obsolete("Unused")>
-        Public ReadOnly Property FieldMappingsTable() As DataTable Implements IProgramSettings.FieldMappingsTable
+        Public ReadOnly Property FieldMappingsTable As DataTable Implements IProgramSettings.FieldMappingsTable
             Get
                 'Return m_fieldMappingsTable
                 Return New DataTable
             End Get
         End Property
-        Public ReadOnly Property AAMappingsTable() As DataTable Implements IProgramSettings.AAMappingsTable
+        Public ReadOnly Property AAMappingsTable As DataTable Implements IProgramSettings.AAMappingsTable
             Get
                 Return m_aaMappingsTable
             End Get
@@ -125,52 +69,52 @@ Namespace ProgramSettings
             'Get connection string settings
 
             Try
-                m_DMSconnectionString = programSettings.GetParam("dms_database", "connectionstring")
+                DMS_ConnectionString = programSettings.GetParam("dms_database", "connectionstring")
             Catch ex As Exception
-                programSettings.SetParam("dms_database", "connectionstring", DEF_DMS_CONNSTR)
-                m_DMSconnectionString = DEF_DMS_CONNSTR
+                programSettings.SetParam("dms_database", "connectionstring", DEF_DMS_CONNECTION_STRING)
+                DMS_ConnectionString = DEF_DMS_CONNECTION_STRING
                 programSettings.SaveSettings()
             End Try
 
             Try
-                m_DMSParamFileTableName = programSettings.GetParam("dms_database", "paramstablename")
+                DMS_ParamFileTableName = programSettings.GetParam("dms_database", "paramstablename")
             Catch ex As Exception
                 programSettings.SetParam("dms_database", "paramstablename", DEF_DMS_PARAM_TABLE_NAME)
-                m_DMSParamFileTableName = DEF_DMS_PARAM_TABLE_NAME
+                DMS_ParamFileTableName = DEF_DMS_PARAM_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
 
             Try
-                m_MTConnectionString = programSettings.GetParam("mt_database", "connectionstring")
+                MT_ConnectionString = programSettings.GetParam("mt_database", "connectionstring")
             Catch ex As Exception
-                programSettings.SetParam("mt_database", "connectionstring", DEF_MT_CONNSTR)
-                m_MTConnectionString = DEF_MT_CONNSTR
+                programSettings.SetParam("mt_database", "connectionstring", DEF_MT_CONNECTION_STRING)
+                MT_ConnectionString = DEF_MT_CONNECTION_STRING
                 programSettings.SaveSettings()
             End Try
 
             Try
-                m_MTModParamFileTable = programSettings.GetParam("mt_database", "modsparamfiletable")
+                MT_ModParamFileTable = programSettings.GetParam("mt_database", "modsparamfiletable")
             Catch ex As Exception
                 programSettings.SetParam("mt_database", "modsparamfiletable", DEF_MT_MOD_PARAM_TABLE_NAME)
-                m_MTModParamFileTable = DEF_MT_MOD_PARAM_TABLE_NAME
+                MT_ModParamFileTable = DEF_MT_MOD_PARAM_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
             Try
-                m_MTGlobalModListTable = programSettings.GetParam("mt_database", "globalmodstable")
+                MT_GlobalModListTable = programSettings.GetParam("mt_database", "globalmodstable")
             Catch ex As Exception
                 programSettings.SetParam("mt_database", "globalmodstable", DEF_MT_GLOBAL_MOD_TABLE_NAME)
-                m_MTGlobalModListTable = DEF_MT_GLOBAL_MOD_TABLE_NAME
+                MT_GlobalModListTable = DEF_MT_GLOBAL_MOD_TABLE_NAME
                 programSettings.SaveSettings()
             End Try
 
 
             'Get Template file name and path
             Try
-                m_templateFileName = programSettings.GetParam("programcontrol", "templatefilename")
+                templateFileName = programSettings.GetParam("programcontrol", "templateFileName")
             Catch ex As Exception
-                programSettings.SetParam("programcontrol", "templatefilename", DEF_TEMPLATEFILENAME)
+                programSettings.SetParam("programcontrol", "templateFileName", DEF_TEMPLATE_FILENAME)
                 programSettings.SaveSettings()
-                m_templateFileName = DEF_TEMPLATEFILENAME
+                templateFileName = DEF_TEMPLATE_FILENAME
             End Try
 
             'Get common modifications list keys for mass calc helper
