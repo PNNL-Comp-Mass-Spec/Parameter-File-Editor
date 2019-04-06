@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -284,7 +284,9 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>if not exist "$(TargetDir)sequest_N14_NE.params" copy "$(ProjectDir)sequest_N14_NE.params" "$(TargetDir)" /Y
+if not exist "$(TargetDir)sequest_N14_NE_Template.params" copy "$(ProjectDir)sequest_N14_NE.params" "$(TargetDir)sequest_N14_NE_Template.params" /Y
+
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
