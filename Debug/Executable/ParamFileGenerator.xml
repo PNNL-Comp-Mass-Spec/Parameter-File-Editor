@@ -13,7 +13,7 @@ ParamFileGenerator
  </summary>
  <returns></returns>
 </member>
-<member name="M:ParamFileGenerator.MakeParams.clsMakeParameterFile.MakeFileSQ(System.String,ParamFileGenerator.MakeParams.IGenerateFile.paramFileType,System.String,System.String,System.String,System.Boolean)">
+<member name="M:ParamFileGenerator.MakeParams.clsMakeParameterFile.MakeFileSQ(System.String,ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType,System.String,System.String,System.String,System.Boolean)">
  <summary>
  Create Sequest parameter file
  </summary>

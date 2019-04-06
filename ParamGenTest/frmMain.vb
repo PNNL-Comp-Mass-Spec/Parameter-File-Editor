@@ -223,7 +223,7 @@ Public Class frmMain
 
     Dim m_OutputPath As String
     Dim m_DMSConnectString As String
-    Dim m_ParamFileType As ParamFileGenerator.MakeParams.IGenerateFile.paramFileType
+    Dim m_ParamFileType As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType
     Dim m_ParamTypeID As Integer
     Dim m_ParamFileName As String
     Dim m_FASTAPath As String
@@ -276,19 +276,19 @@ Public Class frmMain
 
         Select Case Me.m_ParamTypeID
             Case 1000
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.BioWorks_32
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.BioWorks_32
             Case 1008
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.X_Tandem
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.X_Tandem
             Case 1018
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSGFPlus
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSGFPlus
             Case 1019
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSAlign
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlign
             Case 1022
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSAlignHistone
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlignHistone
             Case 1025
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSPathFinder
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSPathFinder
             Case 1032
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.TopPIC
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.TopPIC
             Case Else
 
         End Select

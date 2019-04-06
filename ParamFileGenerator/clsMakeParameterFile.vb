@@ -8,7 +8,7 @@ Namespace MakeParams
 
     Public Interface IGenerateFile
 
-        Enum paramFileType
+        Enum ParamFileType
             Invalid = -1            ' Other stuff not currently handled
             BioWorks_20 = 0         ' Normal BioWorks 2.0 Sequest
             BioWorks_30 = 1         ' BioWorks 3.0+ TurboSequest
@@ -27,20 +27,20 @@ Namespace MakeParams
         End Enum
 
         Function MakeFile(paramFileName As String,
-             paramFileType As paramFileType,
+             paramFileType As ParamFileType,
              fastaFilePath As String,
              outputFilePath As String,
              dmsConnectionString As String) As Boolean
 
         Function MakeFile(paramFileName As String,
-             paramFileType As paramFileType,
+             paramFileType As ParamFileType,
              fastaFilePath As String,
              outputFilePath As String,
              dmsConnectionString As String,
              DatasetID As Integer) As Boolean
 
         Function MakeFile(paramFileName As String,
-             paramFileType As paramFileType,
+             paramFileType As ParamFileType,
              fastaFilePath As String,
              outputFilePath As String,
              dmsConnectionString As String,
@@ -80,7 +80,7 @@ Namespace MakeParams
 
         Private Function MakeFile(
             paramFileName As String,
-            paramFileType As IGenerateFile.paramFileType,
+            paramFileType As IGenerateFile.ParamFileType,
             fastaFilePath As String,
             outputFilePath As String,
             dmsConnectionString As String) As Boolean Implements IGenerateFile.MakeFile
@@ -91,7 +91,7 @@ Namespace MakeParams
 
         Private Function MakeFile(
             paramFileName As String,
-            paramFileType As IGenerateFile.paramFileType,
+            paramFileType As IGenerateFile.ParamFileType,
             fastaFilePath As String,
             outputFilePath As String,
             dmsConnectionString As String,
@@ -105,7 +105,7 @@ Namespace MakeParams
 
         Private Function MakeFile(
             paramFileName As String,
-            paramFileType As IGenerateFile.paramFileType,
+            paramFileType As IGenerateFile.ParamFileType,
             fastaFilePath As String,
             outputFilePath As String,
             dmsConnectionString As String,
@@ -119,7 +119,7 @@ Namespace MakeParams
 
         Private Function MakeFile(
           paramFileName As String,
-          paramFileType As IGenerateFile.paramFileType,
+          paramFileType As IGenerateFile.ParamFileType,
           fastaFilePath As String,
           outputFilePath As String,
           dmsConnectionString As String,
@@ -129,38 +129,38 @@ Namespace MakeParams
 
             Try
                 Select Case paramFileType
-                    Case IGenerateFile.paramFileType.X_Tandem
+                    Case IGenerateFile.ParamFileType.X_Tandem
                         Return RetrieveStaticPSMParameterFile("XTandem", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.Inspect
+                    Case IGenerateFile.ParamFileType.Inspect
                         Return RetrieveStaticPSMParameterFile("Inspect", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.MODa
+                    Case IGenerateFile.ParamFileType.MODa
                         Return RetrieveStaticPSMParameterFile("MODa", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.MSGFPlus
+                    Case IGenerateFile.ParamFileType.MSGFPlus
                         Return RetrieveStaticPSMParameterFile("MSGFPlus", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.MSAlign
+                    Case IGenerateFile.ParamFileType.MSAlign
                         Return RetrieveStaticPSMParameterFile("MSAlign", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.MSAlignHistone
+                    Case IGenerateFile.ParamFileType.MSAlignHistone
                         Return RetrieveStaticPSMParameterFile("MSAlign_Histone", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.MSPathFinder
+                    Case IGenerateFile.ParamFileType.MSPathFinder
                         Return RetrieveStaticPSMParameterFile("MSPathFinder", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.MODPlus
+                    Case IGenerateFile.ParamFileType.MODPlus
                         Return RetrieveStaticPSMParameterFile("MODPlus", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.TopPIC
+                    Case IGenerateFile.ParamFileType.TopPIC
                         Return RetrieveStaticPSMParameterFile("TopPIC", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.paramFileType.Invalid
+                    Case IGenerateFile.ParamFileType.Invalid
                         Exit Function
 
                     Case Else
-                        paramFileType = IGenerateFile.paramFileType.BioWorks_32
+                        paramFileType = IGenerateFile.ParamFileType.BioWorks_32
                         Return MakeFileSQ(
                          paramFileName,
                          paramFileType,
@@ -228,7 +228,7 @@ Namespace MakeParams
         ''' <remarks></remarks>
         Private Function MakeFileSQ(
             paramFileName As String,
-            paramFileType As IGenerateFile.paramFileType,
+            paramFileType As IGenerateFile.ParamFileType,
             fastaFilePath As String,
             outputFilePath As String,
             dmsConnectionString As String,

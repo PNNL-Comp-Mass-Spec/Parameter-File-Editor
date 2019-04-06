@@ -4521,7 +4521,7 @@ Public Class frmMainGUI
             If SaveDialog.ShowDialog = DialogResult.OK Then
                 Dim newFilePath = SaveDialog.FileName
                 If newFilePath.Length > 0 Then
-                    Dim iFileType = CType(eFileType, MakeParams.IGenerateFile.paramFileType)
+                    Dim iFileType = CType(eFileType, MakeParams.IGenerateFile.ParamFileType)
                     Call FileOutput.WriteOutputFile(newParams, newFilePath, iFileType)
                     MessageBox.Show("Param File: " & newFilePath & " written successfully", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If
