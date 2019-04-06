@@ -229,7 +229,6 @@ Public Class frmMain
     Dim m_FASTAPath As String
     Dim m_AvailableParamFiles As DataTable
 
-    'Dim m_DMS As New ParamFileGenerator.MakeParams.clsMakeParameterFile
     Dim m_DMS As ParamFileGenerator.MakeParams.IGenerateFile
 
     Private Sub cmdDoIt_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdDoIt.Click
@@ -285,7 +284,11 @@ Public Class frmMain
             Case 1019
                 Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlign
             Case 1022
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlignHistone
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSAlignHistone
+            Case 1025
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.MSPathFinder
+            Case 1032
+                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.paramFileType.TopPIC
             Case Else
 
         End Select

@@ -132,6 +132,8 @@ Namespace DownloadParams
             GlyQIQ = 1024
             MSPathFinder = 1025
             MODPlus = 1028
+            TopFD = 1031
+            TopPIC = 1032
         End Enum
 
 #End Region
@@ -635,7 +637,8 @@ Namespace DownloadParams
               " or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem &
               " or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB &
               " or Param_File_Type_ID = " & eParamFileTypeConstants.MSPathFinder &
-              " or Param_File_Type_ID = " & eParamFileTypeConstants.MODPlus
+              " or Param_File_Type_ID = " & eParamFileTypeConstants.MODPlus &
+              " or Param_File_Type_ID = " & eParamFileTypeConstants.TopPic
 
             Dim tmpIDTable = Me.GetTable(paramTableSQL)
 

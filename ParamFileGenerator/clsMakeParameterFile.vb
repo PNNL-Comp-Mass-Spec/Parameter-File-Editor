@@ -8,21 +8,22 @@ Namespace MakeParams
 
     Public Interface IGenerateFile
 
-        Enum ParamFileType
-            Invalid = -1     'Other stuff not currently handled
-            BioWorks_20 = 0  'Normal BioWorks 2.0 Sequest
-            BioWorks_30 = 1  'BioWorks 3.0+ TurboSequest
-            BioWorks_31 = 2  'BioWorks 3.1 ClusterQuest
-            BioWorks_32 = 3  'BioWorks 3.2 Cluster
+        Enum paramFileType
+            Invalid = -1            ' Other stuff not currently handled
+            BioWorks_20 = 0         ' Normal BioWorks 2.0 Sequest
+            BioWorks_30 = 1         ' BioWorks 3.0+ TurboSequest
+            BioWorks_31 = 2         ' BioWorks 3.1 ClusterQuest
+            BioWorks_32 = 3         ' BioWorks 3.2 Cluster
             BioWorks_Current = 4
-            X_Tandem = 5     'X!Tandem XML file
-            Inspect = 6      'Inspect
-            MSGFPlus = 7     'MSGF-DB or MSGF+
-            MSAlign = 8      'MSAlign
-            MSAlignHistone = 9      'MSAlign_Histone (which is MS-Align+)
+            X_Tandem = 5            ' X!Tandem XML file
+            Inspect = 6             ' Inspect
+            MSGFPlus = 7            ' MSGF-DB or MSGF+
+            MSAlign = 8             ' MSAlign
+            MSAlignHistone = 9      ' MSAlign_Histone (which is MS-Align+)
             MODa = 10
             MSPathFinder = 11
             MODPlus = 12
+            TopPIC = 13
         End Enum
 
         Function MakeFile(ParamFileName As String,
@@ -117,78 +118,57 @@ Namespace MakeParams
 
         End Function
 
-        Protected Function MakeFile(
-          ParamFileName As String,
-          ParamFileType As IGenerateFile.ParamFileType,
-          FASTAFilePath As String,
-          OutputFilePath As String,
-          DMSConnectionString As String,
-          ForceMonoParentMass As Boolean) As Boolean
+        Private Function MakeFile(
+          paramFileName As String,
+          paramFileType As IGenerateFile.paramFileType,
+          fastaFilePath As String,
+          outputFilePath As String,
+          dmsConnectionString As String,
+          forceMonoParentMass As Boolean) As Boolean
 
             LastErrorMsg = String.Empty
 
             Try
-                Select Case ParamFileType
-                    Case IGenerateFile.ParamFileType.X_Tandem
-                        Return MakeFileXT(
-                         ParamFileName,
-                         OutputFilePath,
-                         DMSConnectionString)
+                Select Case paramFileType
+                    Case IGenerateFile.paramFileType.X_Tandem
+                        Return RetrieveStaticPSMParameterFile("XTandem", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.ParamFileType.Inspect
-                        Return MakeFileInspect(
-                         ParamFileName,
-                         OutputFilePath,
-                         DMSConnectionString)
+                    Case IGenerateFile.paramFileType.Inspect
+                        Return RetrieveStaticPSMParameterFile("Inspect", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.ParamFileType.MODa
-                        Return MakeFileMODa(
-                          ParamFileName,
-                          OutputFilePath,
-                          DMSConnectionString)
+                    Case IGenerateFile.paramFileType.MODa
+                        Return RetrieveStaticPSMParameterFile("MODa", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.ParamFileType.MSGFPlus
-                        Return MakeFileMSGFPlus(
-                           ParamFileName,
-                           OutputFilePath,
-                           DMSConnectionString)
+                    Case IGenerateFile.paramFileType.MSGFPlus
+                        Return RetrieveStaticPSMParameterFile("MSGFPlus", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.ParamFileType.MSAlign
-                        Return MakeFileMSAlign(
-                          ParamFileName,
-                          OutputFilePath,
-                          DMSConnectionString)
+                    Case IGenerateFile.paramFileType.MSAlign
+                        Return RetrieveStaticPSMParameterFile("MSAlign", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.ParamFileType.MSAlignHistone
-                        Return MakeFileMSAlignHistone(
-                          ParamFileName,
-                          OutputFilePath,
-                          DMSConnectionString)
+                    Case IGenerateFile.paramFileType.MSAlignHistone
+                        Return RetrieveStaticPSMParameterFile("MSAlign_Histone", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.ParamFileType.MSPathFinder
-                        Return MakeFileMSPathFinder(
-                          ParamFileName,
-                          OutputFilePath,
-                          DMSConnectionString)
+                    Case IGenerateFile.paramFileType.MSPathFinder
+                        Return RetrieveStaticPSMParameterFile("MSPathFinder", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.ParamFileType.MODPlus
-                        Return MakeFileMODPlus(
-                          ParamFileName,
-                          OutputFilePath,
-                          DMSConnectionString)
+                    Case IGenerateFile.paramFileType.MODPlus
+                        Return RetrieveStaticPSMParameterFile("MODPlus", paramFileName, outputFilePath, dmsConnectionString)
 
-                    Case IGenerateFile.ParamFileType.Invalid
+                    Case IGenerateFile.paramFileType.TopPIC
+                        Return RetrieveStaticPSMParameterFile("TopPIC", paramFileName, outputFilePath, dmsConnectionString)
+
+                    Case IGenerateFile.paramFileType.Invalid
                         Exit Function
 
                     Case Else
-                        ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
+                        paramFileType = IGenerateFile.paramFileType.BioWorks_32
                         Return MakeFileSQ(
-                         ParamFileName,
-                         ParamFileType,
-                         FASTAFilePath,
-                         OutputFilePath,
-                         DMSConnectionString,
-                         ForceMonoParentMass)
+                         paramFileName,
+                         paramFileType,
+                         fastaFilePath,
+                         outputFilePath,
+                         dmsConnectionString,
+                         forceMonoParentMass)
                 End Select
 
             Catch ex As Exception
@@ -317,54 +297,6 @@ Namespace MakeParams
             Dim successExtra = MakeSeqInfoRelatedFiles(ParamFileName, OutputFilePath, DMSConnectionString)
 
             Return writeSuccess
-
-        End Function
-
-        Protected Function MakeFileInspect(ParamFileName As String, OutputFilePath As String, DMSConnectionString As String) As Boolean
-
-            Return RetrieveStaticPSMParameterFile("Inspect", ParamFileName, OutputFilePath, DMSConnectionString)
-
-        End Function
-
-        Protected Function MakeFileMODa(ParamFileName As String, OutputFilePath As String, DMSConnectionString As String) As Boolean
-
-            Return RetrieveStaticPSMParameterFile("MODa", ParamFileName, OutputFilePath, DMSConnectionString)
-
-        End Function
-
-        Protected Function MakeFileMODPlus(ParamFileName As String, OutputFilePath As String, DMSConnectionString As String) As Boolean
-
-            Return RetrieveStaticPSMParameterFile("MODPlus", ParamFileName, OutputFilePath, DMSConnectionString)
-
-        End Function
-
-        Protected Function MakeFileMSAlign(ParamFileName As String, OutputFilePath As String, DMSConnectionString As String) As Boolean
-
-            Return RetrieveStaticPSMParameterFile("MSAlign", ParamFileName, OutputFilePath, DMSConnectionString)
-
-        End Function
-
-        Protected Function MakeFileMSAlignHistone(ParamFileName As String, OutputFilePath As String, DMSConnectionString As String) As Boolean
-
-            Return RetrieveStaticPSMParameterFile("MSAlign_Histone", ParamFileName, OutputFilePath, DMSConnectionString)
-
-        End Function
-
-        Protected Function MakeFileMSGFPlus(ParamFileName As String, OutputFilePath As String, DMSConnectionString As String) As Boolean
-
-            Return RetrieveStaticPSMParameterFile("MSGFPlus", ParamFileName, OutputFilePath, DMSConnectionString)
-
-        End Function
-
-        Protected Function MakeFileMSPathFinder(ParamFileName As String, OutputFilePath As String, DMSConnectionString As String) As Boolean
-
-            Return RetrieveStaticPSMParameterFile("MSPathFinder", ParamFileName, OutputFilePath, DMSConnectionString)
-
-        End Function
-
-        Protected Function MakeFileXT(ParamFileName As String, OutputFilePath As String, DMSConnectionString As String) As Boolean
-
-            Return RetrieveStaticPSMParameterFile("XTandem", ParamFileName, OutputFilePath, DMSConnectionString)
 
         End Function
 
