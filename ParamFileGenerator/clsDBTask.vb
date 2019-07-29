@@ -152,7 +152,7 @@ Public Class clsDBTask
                 Catch ex As Exception
                     numTries -= 1
                     If numTries = 0 Then
-                        Throw New Exception("could not get records after three tries")
+                        Throw New Exception("could not get records after three tries; query: " & selectSQL)
                     End If
                     System.Threading.Thread.Sleep(10000)
                 End Try
