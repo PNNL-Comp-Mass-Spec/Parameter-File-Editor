@@ -1,11 +1,11 @@
 Imports System.Data.SqlClient
 
 Public Interface IGetSQLData
-    Function GetTable(SelectSQL As String) As DataTable
+    Function GetTable(selectSQL As String) As DataTable
     Function GetTable(
-        SelectSQL As String,
-        ByRef SQLDataAdapter As SqlClient.SqlDataAdapter,
-        ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable
+                      selectSQL As String,
+        ByRef sqlDataAdapter As SqlClient.SqlDataAdapter,
+        ByRef sqlCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable
 
     Sub OpenConnection()
     Sub OpenConnection(dbConnectionString As String)
@@ -124,12 +124,12 @@ Public Class clsDBTask
     End Property
 
     Protected Function GetTable(
-        SelectSQL As String,
-        ByRef SQLDataAdapter As SqlClient.SqlDataAdapter,
+        selectSQL As String,
+        ByRef sqlDataAdapter As SqlClient.SqlDataAdapter,
         ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable Implements IGetSQLData.GetTable
 
         Dim tmpIDTable As New DataTable
-        Dim GetID_CMD = New SqlClient.SqlCommand(SelectSQL)
+        Dim GetID_CMD = New SqlClient.SqlCommand(selectSQL)
 
         Dim numTries = 3
         'Dim tryCount As Integer
@@ -141,13 +141,13 @@ Public Class clsDBTask
 
         If Me.Connected = True Then
 
-            SQLDataAdapter = New SqlClient.SqlDataAdapter
-            SQLCommandBuilder = New SqlClient.SqlCommandBuilder(SQLDataAdapter)
-            SQLDataAdapter.SelectCommand = GetID_CMD
+            sqlDataAdapter = New SqlClient.SqlDataAdapter
+            SQLCommandBuilder = New SqlClient.SqlCommandBuilder(sqlDataAdapter)
+            sqlDataAdapter.SelectCommand = GetID_CMD
 
             While numTries > 0
                 Try
-                    SQLDataAdapter.Fill(tmpIDTable)
+                    sqlDataAdapter.Fill(tmpIDTable)
                     Exit While
                 Catch ex As Exception
                     numTries -= 1
