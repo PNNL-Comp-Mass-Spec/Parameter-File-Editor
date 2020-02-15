@@ -6,6 +6,12 @@ ParamFileGenerator
 </name>
 </assembly>
 <members>
+<member name="M:ParamFileGenerator.clsDBTask.#ctor(System.String)">
+ <summary>
+ Constructor
+ </summary>
+ <param name="connectionString"></param>
+</member>
 <member name="P:ParamFileGenerator.clsGetResiduesList.ResidueAtomCounts">
  <summary>
  Dictionary where keys are amino acid residue (one letter abbreviation)
@@ -50,6 +56,12 @@ ParamFileGenerator
  Dictionary where keys are amino acid residue (one letter abbreviation)
  and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
  </summary>
+</member>
+<member name="M:ParamFileGenerator.clsReconstituteIsoMods.#ctor(PRISMDatabaseUtils.IDBTools)">
+ <summary>
+ Constructor
+ </summary>
+ <param name="dbTools"></param>
 </member>
 <member name="F:ParamFileGenerator.clsRetrieveParams.m_defaultSection">
  <summary>

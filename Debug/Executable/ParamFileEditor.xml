@@ -6,7 +6,7 @@ ParamFileEditor
 </name>
 </assembly>
 <members>
-<member name="M:ParamFileEditor.clsBatchLoadTemplates.BatchUploadParamSetsToDMS(System.Collections.Generic.List{System.String})">
+<member name="M:ParamFileEditor.clsBatchLoadTemplates.BatchUploadParamSetsToDMS(System.Collections.Generic.IEnumerable{System.String})">
  <summary>
  Batch upload a list of parameter files
  </summary>
