@@ -1,3 +1,5 @@
+Imports PRISMDatabaseUtils
+
 Public Interface IMassTweaker
     Enum ModTypes
         StaticMod
@@ -41,7 +43,6 @@ Public Class clsMassTweaker
 
     Friend Property TweakedModID As Integer Implements IMassTweaker.TweakedModID
 
-
     Public Sub New(mgrParams As ProgramSettings.IProgramSettings)
         MyBase.New(mgrParams.DMS_ConnectionString)
 
@@ -55,9 +56,11 @@ Public Class clsMassTweaker
         End If
     End Sub
 
-    Public Sub New(connectionString As String)
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+    Public Sub New(dbTools As IDBTools)
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
-        MyBase.New(connectionString)
+        MyBase.New(dbTools)
 
         'Load T_Global_Mods Table from DMS
         If Not Initialized Then
@@ -71,14 +74,10 @@ Public Class clsMassTweaker
     End Sub
 
     Private Function GetMassCorrectionsTable() As DataTable
-        Dim m_GetGlobalMods_DA As SqlClient.SqlDataAdapter = Nothing
-        Dim m_GetGlobalMods_CB As SqlClient.SqlCommandBuilder = Nothing
-
         Dim sql As String = "SELECT * FROM " & Mass_Corrections_Table_Name
 
-        Dim tmpTable As DataTable = GetTable(sql, m_GetGlobalMods_DA, m_GetGlobalMods_CB)
+        Dim tmpTable As DataTable = GetTable(sql)
         tmpTable.TableName = Mass_Corrections_Table_Name
-        SetPrimaryKey(0, tmpTable)
 
         Return tmpTable
     End Function
@@ -125,38 +124,33 @@ Public Class clsMassTweaker
     modMassChange As Double,
     Optional modAffectedAtom As String = "-") Implements IMassTweaker.AddMassCorrection
 
-
-        OpenConnection()
-        Dim sp_Save = New SqlClient.SqlCommand("AddMassCorrectionEntry", m_DBCn)
-
-        sp_Save.CommandType = CommandType.StoredProcedure
+        Dim cmdSave = mDBTools.CreateCommand("AddMassCorrectionEntry", CommandType.StoredProcedure)
 
         ' Define the stored procedure return value
-        sp_Save.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
+        mDBTools.AddParameter(cmdSave, "@Return", SqlType.BigInt, ParameterDirection.ReturnValue)
 
         ' Define parameters for the stored procedure arguments
-        sp_Save.Parameters.Add("@modName", SqlDbType.VarChar, 8).Value = modName
+        mDBTools.AddParameter(cmdSave, "@modName", SqlType.VarChar, 8).Value = modName
 
-        sp_Save.Parameters.Add("@modDescription", SqlDbType.VarChar, 64).Value = modDescription
+        mDBTools.AddParameter(cmdSave, "@modDescription", SqlType.VarChar, 64).Value = modDescription
 
-        sp_Save.Parameters.Add("@modMassChange", SqlDbType.Float, 8).Value = modMassChange
+        mDBTools.AddParameter(cmdSave, "@modMassChange", SqlType.Float).Value = modMassChange
 
-        sp_Save.Parameters.Add("@modAffectedAtom", SqlDbType.Char, 1).Value = modAffectedAtom
+        mDBTools.AddParameter(cmdSave, "@modAffectedAtom", SqlType.Char, 1).Value = modAffectedAtom
 
-        sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
+        Dim messageParam = mDBTools.AddParameter(cmdSave, "@message", SqlType.VarChar, 512, ParameterDirection.Output)
+
+        Dim errorMessage As String = String.Empty
 
         'Execute the stored procedure
-        sp_Save.ExecuteNonQuery()
+        Dim returnValue = mDBTools.ExecuteSP(cmdSave, errorMessage)
 
-        'Get return value
-        Dim ret = CInt(sp_Save.Parameters("@Return").Value)
-
-        If ret <> 0 Then
+        If returnValue <> 0 Then
             ' Stored procedure error
-            Console.WriteLine(CStr(sp_Save.Parameters("@message").Value))
+            Console.WriteLine("Failed executing procedure " & cmdSave.CommandText)
+            Console.WriteLine(messageParam.CastDBVal(String.Empty))
         End If
 
-        CloseConnection()
 
     End Sub
 
@@ -184,20 +178,20 @@ Public Class clsMassTweaker
     '    sp_Save.CommandType = CommandType.StoredProcedure
 
     '    ' Define the stored procedure return value
-    '    myParam = sp_Save.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.ReturnValue
+    '    myParam = mDBTools.AddParameter("@Return", SqlType.Int).Direction = ParameterDirection.ReturnValue
 
     '    ' Define parameters for the stored procedure arguments
-    '    sp_Save.Parameters.Add("@modSymbol", SqlDbType.VarChar, 8).Value = modSymbol
+    '    mDBTools.AddParameter("@modSymbol", SqlType.VarChar, 8).Value = modSymbol
 
-    '    sp_Save.Parameters.Add("@modDescription", SqlDbType.VarChar, 64).Value = modDescription
+    '    mDBTools.AddParameter("@modDescription", SqlType.VarChar, 64).Value = modDescription
 
-    '    sp_Save.Parameters.Add("@modType", SqlDbType.Char, 1).Value = CChar(modChar)
+    '    mDBTools.AddParameter("@modType", SqlType.Char, 1).Value = CChar(modChar)
 
-    '    sp_Save.Parameters.Add("@modMassChange", SqlDbType.Float, 8).Value = modMassChange
+    '    mDBTools.AddParameter("@modMassChange", SqlType.Float, 8).Value = modMassChange
 
-    '    sp_Save.Parameters.Add("@modResidues", SqlDbType.VarChar, 50).Value = modResidues
+    '    mDBTools.AddParameter("@modResidues", SqlType.VarChar, 50).Value = modResidues
 
-    '    sp_Save.Parameters.Add("@message", SqlDbType.VarChar, 512).Direction = ParameterDirection.Output
+    '    mDBTools.AddParameter("@message", SqlType.VarChar, 512).Direction = ParameterDirection.Output
 
     '    ' Execute the stored procedure
     '    sp_Save.ExecuteNonQuery()

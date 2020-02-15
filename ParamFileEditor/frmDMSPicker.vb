@@ -1,10 +1,14 @@
 Imports ParamFileEditor.ProgramSettings
+Imports PRISMDatabaseUtils
 
 Public Class frmDMSPicker
     Inherits Form
 
     Private m_SelectedIndex As Integer
+
     Private ReadOnly m_frmMainGUI As frmMainGUI
+    Private ReadOnly m_DBTools As IDBTools
+
     Private m_SortOrderAsc As Boolean = True
     Private m_SelectedCol As Integer = 0
     'Private m_SearchActive As Boolean = False
@@ -16,14 +20,18 @@ Public Class frmDMSPicker
 
 #Region "Windows Form Designer generated code"
 
-    Public Sub New(ByRef Callingfrm As frmMainGUI)
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+    Public Sub New(ByRef Callingfrm As frmMainGUI, dbTools As IDBTools)
         MyBase.New()
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
         'This call is required by the Windows Form Designer.
         InitializeComponent()
 
         'Add any initialization after the InitializeComponent() call
         m_frmMainGUI = Callingfrm
+        m_DBTools = dbTools
+
         'SearchTimer.AutoReset = False
     End Sub
 
@@ -156,16 +164,16 @@ Public Class frmDMSPicker
 #End Region
 
     Private Sub SearchNow()
-        Me.m_Loader.FillFilteredListView(Me.lvwDMSPicklist, txtLiveSearch.Text)
+        Me.m_Loader.FillFilteredListView(m_DBTools, Me.lvwDMSPicklist, txtLiveSearch.Text)
     End Sub
 
     Private Sub frmDMSPicker_Load(sender As System.Object, e As EventArgs) Handles MyBase.Load
         m_Loader = New clsDMSPickerHandler
         m_Loader.ProgramSettings = Me.MySettings
-        m_Loader.FillListView(Me.lvwDMSPicklist)
+        m_Loader.FillListView(m_DBTools, Me.lvwDMSPicklist)
     End Sub
 
-    Private Sub lvwDMSPicklist_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles lvwDMSPicklist.ColumnClick
+    Private Sub lvwDMSPickList_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles lvwDMSPicklist.ColumnClick
 
         'If selected column is same as previously selected column, then reverse sort order. Otherwise,
         '	sort newly selected column in ascending order
@@ -238,7 +246,7 @@ Public Class frmDMSPicker
             'SearchTimer.Stop()
             'txtLiveSearch.ForeColor = System.Drawing.SystemColors.InactiveCaption
             'txtLiveSearch.Text = "Search"
-            Me.m_Loader.FillListView(Me.lvwDMSPicklist)
+            Me.m_Loader.FillListView(m_DBTools, Me.lvwDMSPicklist)
         End If
     End Sub
 
@@ -246,7 +254,7 @@ Public Class frmDMSPicker
     '    SearchNow
     'End Sub
 
-    Private Sub lvwDMSPicklist_DoubleClick(sender As Object, e As EventArgs) Handles lvwDMSPicklist.DoubleClick
+    Private Sub lvwDMSPickList_DoubleClick(sender As Object, e As EventArgs) Handles lvwDMSPicklist.DoubleClick
         Me.cmdLoadParam_Click(Me.cmdLoadParam, Nothing)
     End Sub
 

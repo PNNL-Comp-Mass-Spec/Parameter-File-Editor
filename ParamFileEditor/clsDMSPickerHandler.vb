@@ -1,13 +1,14 @@
 Imports ParamFileGenerator.DownloadParams
 Imports ParamFileEditor.ProgramSettings
+Imports PRISMDatabaseUtils
 
 Public Class clsDMSPickerHandler
     Private m_tmpIDTable As DataTable
     Private m_forceReload As Boolean = False
 
-    Private Sub SetupPickerListView(lvw As ListView, Optional filterCriteria As String = "")
-        'Load up available Paramsets from DMS
-        Dim c As New clsParamsFromDMS(ProgramSettings.DMS_ConnectionString)
+    Private Sub SetupPickerListView(dbTools As IDBTools, lvw As ListView, Optional filterCriteria As String = "")
+        'Load up available Param sets from DMS
+        Dim c As New clsParamsFromDMS(dbTools)
         'Dim availableParams As DataTable = c.RetrieveAvailableParams
         Dim paramRow As DataRow
         Dim paramRows() As DataRow
@@ -30,7 +31,7 @@ Public Class clsDMSPickerHandler
         'Dim index As Integer
         'Dim maxIndex As Integer = availableParams.Rows.Count - 1
 
-        'Fill listview
+        'Fill ListView
         'For index = 0 To maxIndex
         '    Dim item As New ListViewItem
         '    item.Text = availableParams.Rows(index).Item(0)
@@ -52,15 +53,17 @@ Public Class clsDMSPickerHandler
         lvw.EndUpdate()
     End Sub
 
-    Public Sub FillListView(ListViewToFill As ListView)
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+    Public Sub FillListView(dbTools As IDBTools, ListViewToFill As ListView)
         ListViewToFill.Items.Clear()
-        SetupPickerListView(ListViewToFill)
+        SetupPickerListView(dbTools, ListViewToFill)
     End Sub
 
-    Public Sub FillFilteredListView(ListViewToFill As ListView, FilterString As String)
+    Public Sub FillFilteredListView(dbTools As IDBTools, ListViewToFill As ListView, FilterString As String)
         ListViewToFill.Items.Clear()
-        SetupPickerListView(ListViewToFill, FilterString)
+        SetupPickerListView(dbTools, ListViewToFill, FilterString)
     End Sub
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
     Public Property ProgramSettings As clsSettings
 

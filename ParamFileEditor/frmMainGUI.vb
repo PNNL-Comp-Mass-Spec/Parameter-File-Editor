@@ -9,6 +9,7 @@ Imports ParamFileGenerator.DownloadParams
 Imports System.IO
 Imports System.Linq
 Imports System.Text.RegularExpressions
+Imports PRISMDatabaseUtils
 
 Public Class frmMainGUI
     Inherits Form
@@ -25,6 +26,21 @@ Public Class frmMainGUI
     ''' </summary>
     Private m_sharedMain As clsMainProcess
 
+    Private m_CurrentDBTools As IDBTools
+
+#Disable Warning BC40027 ' Return type of function is not CLS-compliant
+    'Public Property CurrentDBTools As IDBTools
+    '    Get
+    '        Return m_CurrentDBTools
+    '    End Get
+    '    Private Set(value As IDBTools)
+    '        m_CurrentDBTools = value
+    '    End Set
+    'End Property
+#Enable Warning BC40027 ' Return type of function is not CLS-compliant
+
+    Private m_CurrentConnectionString As String = String.Empty
+
 #Region "Windows Form Designer generated code"
 
     Public Sub New()
@@ -38,6 +54,7 @@ Public Class frmMainGUI
         CheckForParamFileExistence()
         m_sharedMain = New clsMainProcess()
 
+        ValidateDBTools(mySettings.DMS_ConnectionString)
     End Sub
 
     'Form overrides dispose to clean up the component list.
@@ -2506,9 +2523,11 @@ Public Class frmMainGUI
 
         mySettings = New clsSettings
         mySettings.LoadSettings(m_SettingsFileName)
-        newParams = New clsParams
-        m_DMSUpload = New clsDMSParamUpload(mySettings)
 
+        ValidateDBTools(mySettings.DMS_ConnectionString)
+
+        newParams = New clsParams()
+        m_DMSUpload = New clsDMSParamUpload(m_CurrentDBTools)
 
         With newParams
             .FileName = Mid(clsMainProcess.TemplateFileName, InStrRev(clsMainProcess.TemplateFileName, "\") + 1)
@@ -2527,7 +2546,7 @@ Public Class frmMainGUI
 
         Try
 
-            'Load comboboxes
+            'Load combo boxes
             With frm.cboParentMassType
                 .BeginUpdate()
                 .Items.Clear()
@@ -3297,29 +3316,29 @@ Public Class frmMainGUI
 
     End Sub
 
-    Private Sub LoadParamsetFromDMS(ParamSetID As Integer)
+    Private Sub LoadParamSetFromDMS(ParamSetID As Integer)
         Try
             If m_clsParamsFromDMS Is Nothing Then
-                m_clsParamsFromDMS = LoadDMSParamsClass(mySettings)
+                m_clsParamsFromDMS = LoadDMSParamsClass()
             Else
                 ' Need to run a Refresh of m_clsParamsFromDMS so that it knows about any newly imported param files
                 m_clsParamsFromDMS.RefreshParamsFromDMS()
             End If
             newParams = m_clsParamsFromDMS.ReadParamsFromDMS(ParamSetID)
 
-            Dim iso As New clsDeconvolveIsoMods(mySettings.DMS_ConnectionString)
+            Dim iso As New clsDeconvolveIsoMods(m_CurrentDBTools)
             newParams = iso.DeriveIsoMods(newParams)
 
             RefreshTabs(Me, newParams)
         Catch ex As Exception
-            MessageBox.Show("Error in LoadParamsetFromDMS: " & ex.Message)
+            MessageBox.Show("Error in LoadParamSetFromDMS: " & ex.Message)
         End Try
 
     End Sub
 
-    Private Sub LoadParamsetFromFile(FilePath As String)
+    Private Sub LoadParamSetFromFile(FilePath As String)
         newParams.LoadTemplate(FilePath)
-        Dim iso As New clsDeconvolveIsoMods(mySettings.DMS_ConnectionString)
+        Dim iso As New clsDeconvolveIsoMods(m_CurrentDBTools)
         newParams = iso.DeriveIsoMods(newParams)
         RefreshTabs(Me, newParams)
     End Sub
@@ -3341,8 +3360,8 @@ Public Class frmMainGUI
 
     End Function
 
-    Private Function LoadDMSParamsClass(Settings As IProgramSettings) As clsParamsFromDMS
-        Dim dms As New clsParamsFromDMS(Settings.DMS_ConnectionString)
+    Private Function LoadDMSParamsClass() As clsParamsFromDMS
+        Dim dms As New clsParamsFromDMS(m_CurrentDBTools)
         Return dms
     End Function
 
@@ -3353,11 +3372,21 @@ Public Class frmMainGUI
     'End Function
 
     Public Sub LoadDMSParamsFromID(ParamSetID As Integer)
-        LoadParamsetFromDMS(ParamSetID)
+        LoadParamSetFromDMS(ParamSetID)
     End Sub
 
     Public Sub LoadParamsFromFile(FilePath As String)
-        LoadParamsetFromFile(FilePath)
+        LoadParamSetFromFile(FilePath)
+    End Sub
+
+    Private Sub ValidateDBTools(newConnectionString As String)
+        If m_CurrentDBTools Is Nothing OrElse
+           String.IsNullOrWhiteSpace(m_CurrentConnectionString) OrElse
+           Not m_CurrentConnectionString.Equals(newConnectionString) Then
+
+            m_CurrentConnectionString = String.Copy(newConnectionString)
+            m_CurrentDBTools = DbToolsFactory.GetDBTools(m_CurrentConnectionString)
+        End If
     End Sub
 
     Private Sub chkAutoTweak_CheckedChanged(sender As Object, e As EventArgs) Handles chkAutoTweak.CheckedChanged
@@ -3507,20 +3536,20 @@ Public Class frmMainGUI
     End Sub
 
     Private Sub UpdateDynamicModAA(sender As Object,
-                                   ByRef txtModAATextbox As TextBox,
-                                   ByRef txtModMassTextbox As NumericTextBox,
+                                   ByRef txtModAATextBox As TextBox,
+                                   ByRef txtModMassTextBox As NumericTextBox,
                                    intModNumber As Integer)
 
         Try
-            If txtModAATextbox.TextLength = 0 Then
-                txtModAATextbox.Text = "C"
+            If txtModAATextBox.TextLength = 0 Then
+                txtModAATextBox.Text = "C"
             End If
 
             StatModErrorProvider.SetError(DirectCast(sender, Control), "")
-            txtModAATextbox.Text = txtModAATextbox.Text.ToUpper
-            If Math.Abs(CSng(txtModMassTextbox.Text)) > Single.Epsilon Then
+            txtModAATextBox.Text = txtModAATextBox.Text.ToUpper
+            If Math.Abs(CSng(txtModMassTextBox.Text)) > Single.Epsilon Then
                 ' Only update this mod if the mass is non-zero
-                newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber) = txtModAATextbox.Text
+                newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber) = txtModAATextBox.Text
             Else
                 ' If this mod, and all other mods after this mod are 0, then remove this mod and all subsequent mods
                 If newParams.DynamicMods.Count = intModNumber Then
@@ -3535,16 +3564,16 @@ Public Class frmMainGUI
 
     End Sub
 
-    Private Sub UpdateDynamicModMass(ByRef txtModMassTextbox As NumericTextBox,
-                                     ByRef txtModAATextbox As TextBox,
+    Private Sub UpdateDynamicModMass(ByRef txtModMassTextBox As NumericTextBox,
+                                     ByRef txtModAATextBox As TextBox,
                                      intModNumber As Integer)
         Dim dblModMass As Double
 
         Try
-            dblModMass = CDbl(txtModMassTextbox.Text)
+            dblModMass = CDbl(txtModMassTextBox.Text)
             If Math.Abs(dblModMass) > Single.Epsilon Then
                 ' Make sure this mod is defined
-                newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber) = txtModAATextbox.Text
+                newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber) = txtModAATextBox.Text
             End If
 
             If newParams.DynamicMods.Count < intModNumber And Math.Abs(dblModMass) < Single.Epsilon Then
@@ -4151,7 +4180,7 @@ Public Class frmMainGUI
 
     Private Sub mnuFileLoadFromDMS_Click(sender As Object, e As EventArgs) Handles mnuFileLoadFromDMS.Click
         Try
-            Dim frmPicker As New frmDMSPicker(Me) With {
+            Dim frmPicker As New frmDMSPicker(Me, m_CurrentDBTools) With {
                 .MySettings = mySettings
             }
 
@@ -4165,7 +4194,7 @@ Public Class frmMainGUI
 
     Private Sub mnuFileUploadDMS_Click(sender As Object, e As EventArgs) Handles mnuFileUploadDMS.Click
         Try
-            Dim SaveFrm As New frmDMSParamNamer(Me, newParams)
+            Dim SaveFrm As New frmDMSParamNamer(m_CurrentDBTools, newParams)
             SaveFrm.Show()
 
         Catch ex As Exception
@@ -4214,7 +4243,7 @@ Public Class frmMainGUI
             If openDialog.ShowDialog = DialogResult.OK Then
                 Dim fileNameList As List(Of String) = openDialog.FileNames.ToList()
 
-                Dim batch = New clsBatchLoadTemplates()
+                Dim batch = New clsBatchLoadTemplates(m_CurrentDBTools)
                 batch.UploadParamSetsToDMS(fileNameList)
                 Dim numAdded = batch.NumParamSetsAdded
                 Dim numChanged = batch.NumParamSetsChanged
@@ -4250,7 +4279,7 @@ Public Class frmMainGUI
         End If
     End Sub
 
-    Private Sub numericTextbox_Validating(sender As Object, e As CancelEventArgs)
+    Private Sub NumericTextBox_Validating(sender As Object, e As CancelEventArgs)
 
         Dim thisControl = DirectCast(sender, Control)
         Try
@@ -4309,10 +4338,10 @@ Public Class frmMainGUI
 
                                     m_clsMassTweaker.AddMassCorrection(tmpSymbol, tmpDesc, tmpNewModMass)
                                     m_clsMassTweaker.RefreshGlobalModsTableCache(mySettings.DMS_ConnectionString)
-                                    numericTextbox_Validating(sender, e)
+                                    NumericTextBox_Validating(sender, e)
                                 ElseIf dr = DialogResult.Yes Then   'Use existing
                                     thisControl.Text = tmpNewModMass.ToString()
-                                    numericTextbox_Validating(sender, e)
+                                    NumericTextBox_Validating(sender, e)
                                     Exit Sub
                                 ElseIf dr = DialogResult.Cancel Then
                                     StatModErrorProvider.SetError(thisControl, "You must either choose an existing global mod, or define a new one!")
@@ -4571,7 +4600,7 @@ Public Class frmMainGUI
 
     Private Sub mnuDebugSyncAll_Click(sender As Object, e As EventArgs) Handles mnuDebugSyncAll.Click
         Try
-            Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
+            Dim sync As New clsTransferParamEntriesToMassModList(m_CurrentDBTools)
 
             sync.SyncAll()
 
@@ -4582,13 +4611,13 @@ Public Class frmMainGUI
     End Sub
 
     Private Sub mnuDebugSyncSingle_Click(sender As Object, e As EventArgs) Handles mnuDebugSyncSingle.Click
-        Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
-        Dim paramFileID = CInt(InputBox("Enter an Parameter File ID to be Sync'ed", "Param File to Sync"))
+        Dim sync As New clsTransferParamEntriesToMassModList(m_CurrentDBTools)
+        Dim paramFileID = CInt(InputBox("Enter a Parameter File ID to be Sync'd", "Param File to Sync"))
         sync.SyncOneJob(paramFileID)
     End Sub
 
     Private Sub mnuDebugSyncDesc_Click(sender As Object, e As EventArgs) Handles mnuDebugSyncDesc.Click
-        Dim sync As New clsTransferParamEntriesToMassModList(mySettings)
+        Dim sync As New clsTransferParamEntriesToMassModList(m_CurrentDBTools)
         sync.SyncDescriptions(clsMainProcess.BaseLineParamSet)
 
     End Sub

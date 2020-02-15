@@ -1,4 +1,5 @@
 Imports System.Collections.Generic
+Imports PRISMDatabaseUtils
 
 Public Interface IReconstituteIsoMods
 
@@ -22,10 +23,16 @@ Public Class clsReconstituteIsoMods
     ''' </summary>
     Private ReadOnly m_ResidueAtomCounts As Dictionary(Of Char, Dictionary(Of Char, Integer))
 
-    Public Sub New(connectionString As String)
-        Dim getResTable As New clsGetResiduesList(connectionString)
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+    ''' <summary>
+    ''' Constructor
+    ''' </summary>
+    ''' <param name="dbTools"></param>
+    Public Sub New(dbTools As IDBTools)
+        Dim getResTable As New clsGetResiduesList(dbTools)
         m_ResidueAtomCounts = getResTable.ResidueAtomCounts
     End Sub
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
     Friend Function ReconIsoMods(ParamsClass As clsParams) As clsParams Implements IReconstituteIsoMods.ReconstituteIsoMods
         Return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods)

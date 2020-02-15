@@ -1,6 +1,7 @@
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.Reflection
+Imports PRISMDatabaseUtils
 
 Namespace DownloadParams
 
@@ -142,8 +143,10 @@ Namespace DownloadParams
         Protected m_Name As String
         Protected m_ParamFileType As eParamFileTypeConstants
         Protected m_Params As clsParams
-        Protected m_ParamsSet As DataSet
-        Protected m_ParamSetCount As Integer
+
+        Protected m_ParamFileTable As DataTable
+        Protected m_ParamEntryTable As DataTable
+
         Protected m_BaseLineParamSet As clsParams
         Protected m_AcceptableParams As List(Of String)
         Protected m_BasicParams As List(Of String)
@@ -160,18 +163,13 @@ Namespace DownloadParams
 #Region "Public Properties"
         Public ReadOnly Property ParamFileTable As DataTable
             Get
-                Return m_ParamsSet.Tables(Param_File_Table)
-            End Get
-        End Property
-        Public ReadOnly Property ParamEntryTable As DataTable
-            Get
-                Return m_ParamsSet.Tables(Param_Entry_Table)
+                Return m_ParamFileTable
             End Get
         End Property
 
-        Public ReadOnly Property ParamSetCount As Integer
+        Public ReadOnly Property ParamEntryTable As DataTable
             Get
-                Return m_ParamSetCount
+                Return m_ParamEntryTable
             End Get
         End Property
 
@@ -184,21 +182,26 @@ Namespace DownloadParams
 
 
 #Region "Public Functions"
-        Public Sub New(ConnectionString As String)
-            MyBase.New(ConnectionString, True)
+
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+        Public Sub New(dbTools As IDBTools)
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
+            MyBase.New(dbTools)
+
             m_AcceptableParams = LoadAcceptableParamList()
             m_BasicParams = LoadBasicParams()
             m_AdvancedParams = LoadAdvancedParams()
             m_IonSeriesParams = LoadIonSeriesParams()
             m_BaseLineParamSet = clsMainProcess.BaseLineParamSet
-            m_ParamsSet = GetParamsFromDMS()
-            If m_ParamsSet Is Nothing Then
-                Exit Sub
+
+            Dim success = GetParamsFromDMS()
+            If Not success Then
+                Throw New Exception("Unable to obtain data from " & Param_File_Table & " and/or " & Param_Entry_Table)
             End If
         End Sub
 
         Public Sub RefreshParamsFromDMS()
-            m_ParamsSet = GetParamsFromDMS()
+            GetParamsFromDMS()
         End Sub
 
         Public Function ReadParamsFromDMS(ParamSetName As String) As clsParams
@@ -312,30 +315,19 @@ Namespace DownloadParams
             Return paramList
         End Function
 
-        Protected Function GetParamsFromDMS() As DataSet      'Common
-            Dim SQL As String
-            Dim tmpFileTable As DataTable
-            Dim tmpEntryTable As DataTable
-            Dim tmpSet As New DataSet
+        Protected Function GetParamsFromDMS() As Boolean
 
             'SQL to grab param file table
-            SQL = "SELECT * FROM " & Param_File_Table ' & " WHERE [Param_File_Type_ID] = 1000"
+            Dim query1 = "SELECT * FROM " & Param_File_Table ' & " WHERE [Param_File_Type_ID] = 1000"
 
-            tmpFileTable = GetTable(SQL, m_GetID_DA, m_GetID_DB)
-            tmpFileTable.TableName = Param_File_Table
-            SetPrimaryKey(0, tmpFileTable)
-
-            tmpSet.Tables.Add(tmpFileTable)
+            m_ParamFileTable = GetTable(query1)
 
             'SQL to grab param entry table
-            SQL = "SELECT * FROM " & Param_Entry_Table & " WHERE [Entry_Type] not like '%Modification'"
+            Dim query2 = "SELECT * FROM " & Param_Entry_Table & " WHERE [Entry_Type] not like '%Modification'"
 
-            tmpEntryTable = GetTable(SQL, m_GetEntries_DA, m_GetEntries_CB)
-            tmpEntryTable.TableName = Param_Entry_Table
+            m_ParamEntryTable = GetTable(query2)
 
-            tmpSet.Tables.Add(tmpEntryTable)
-
-            Return tmpSet
+            Return True
 
         End Function
 
@@ -358,7 +350,7 @@ Namespace DownloadParams
                 Return New clsParams()
             End If
 
-            Dim foundRows As DataRow() = m_ParamsSet.Tables(Param_Entry_Table).Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
+            Dim foundRows As DataRow() = m_ParamEntryTable.Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
 
             Dim storageSet As clsDMSParamStorage = MakeStorageClassFromTableRowSet(foundRows)
 
@@ -397,6 +389,7 @@ Namespace DownloadParams
             Return storageClass
 
         End Function
+
         'Todo Adding mass mod grabber
         Protected Function GetMassModsFromDMS(ParamSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef params As clsDMSParamStorage) As clsDMSParamStorage
             Const MaxDynMods = 15
@@ -420,10 +413,8 @@ Namespace DownloadParams
               "WHERE mm.Param_File_ID = " & ParamSetID
 
             m_MassMods = GetTable(SQL)
-            'End If
-            'Look for Dynamic mods
 
-            'Dim dt As DataTable = GetTable(SQL)
+            'Look for Dynamic mods
 
             Dim lstLocalSymbolIDs = New List(Of Integer)
 
@@ -532,7 +523,7 @@ Namespace DownloadParams
         End Function
 
         Protected Function GetIDWithName(Name As String, eParamFileType As eParamFileTypeConstants) As Integer            'Common
-            Me.OpenConnection()
+
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = " & eParamFileType)
             Dim foundRow As DataRow
             Dim tmpID As Integer
@@ -571,7 +562,6 @@ Namespace DownloadParams
         End Function
 
         Protected Function GetTypeWithID(ID As Integer) As eParamFileTypeConstants
-            Me.OpenConnection()
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID.ToString())
             Dim foundRow As DataRow
             Dim tmpID As eParamFileTypeConstants
@@ -585,7 +575,7 @@ Namespace DownloadParams
         End Function
 
         Protected Function GetTypeWithName(ParamFileName As String) As eParamFileTypeConstants
-            Me.OpenConnection()
+
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & ParamFileName & "'")
             Dim foundRow As DataRow
             Dim tmpID As eParamFileTypeConstants
@@ -637,9 +627,9 @@ Namespace DownloadParams
               " or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB &
               " or Param_File_Type_ID = " & eParamFileTypeConstants.MSPathFinder &
               " or Param_File_Type_ID = " & eParamFileTypeConstants.MODPlus &
-              " or Param_File_Type_ID = " & eParamFileTypeConstants.TopPic
+              " or Param_File_Type_ID = " & eParamFileTypeConstants.TopPIC
 
-            Dim tmpIDTable = Me.GetTable(paramTableSQL)
+            Dim tmpIDTable = GetTable(paramTableSQL)
 
             ''Load tmpIDTable
             Dim tmpID As Integer
@@ -680,7 +670,7 @@ Namespace DownloadParams
                 "SELECT Param_File_Type_ID as ID, Param_File_Type AS Type " &
                 "FROM T_Param_File_Types"
 
-            tmpTypeTable = Me.GetTable(tableTypesSQL)
+            tmpTypeTable = GetTable(tableTypesSQL)
 
             Return tmpTypeTable
 

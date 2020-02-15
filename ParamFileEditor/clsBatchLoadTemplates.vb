@@ -1,5 +1,6 @@
 Imports System.Collections.Generic
 Imports ParamFileGenerator
+Imports PRISMDatabaseUtils
 
 'Framework to handle the batch upload and download of templates/parameters to and from DMS
 '
@@ -7,8 +8,8 @@ Imports ParamFileGenerator
 Friend Class clsBatchLoadTemplates
     Inherits clsDMSParamUpload
 
-    Public Sub New()
-        MyBase.New(frmMainGUI.mySettings)
+    Public Sub New(dbTools As IDBTools)
+        MyBase.New(dbTools)
         'm_Main = MainCode
     End Sub
 
@@ -55,7 +56,7 @@ Friend Class clsBatchLoadTemplates
     ''' </summary>
     ''' <param name="paramFileList"></param>
     ''' <returns>Number of param sets uploaded</returns>
-    Private Function BatchUploadParamSetsToDMS(paramFileList As List(Of String)) As Boolean
+    Private Function BatchUploadParamSetsToDMS(paramFileList As IEnumerable(Of String)) As Boolean
         Dim added = 0
         Dim skipped = 0
         Dim changed = 0

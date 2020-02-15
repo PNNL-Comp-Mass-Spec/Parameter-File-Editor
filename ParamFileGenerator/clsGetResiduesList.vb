@@ -1,4 +1,5 @@
 Imports System.Collections.Generic
+Imports PRISMDatabaseUtils
 
 Public Class clsGetResiduesList
 
@@ -9,16 +10,17 @@ Public Class clsGetResiduesList
     ''' <returns></returns>
     Public ReadOnly Property ResidueAtomCounts As Dictionary(Of Char, Dictionary(Of Char, Integer))
 
-    Public Sub New(connectionString As String)
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+    Public Sub New(dbTools As IDBTools)
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
         ResidueAtomCounts = New Dictionary(Of Char, Dictionary(Of Char, Integer))
 
         Dim SQL = "SELECT * FROM T_Residues WHERE [Num_C] > 0"
 
-        Dim dbTools = New PRISM.DBTools(connectionString)
 
         Dim residuesTable As List(Of List(Of String)) = Nothing
-        dbTools.GetQueryResults(SQL, residuesTable, "clsGetResiduesList")
+        dbTools.GetQueryResults(SQL, residuesTable)
 
         Dim columnNames = New List(Of String) From {
             "Residue_ID",

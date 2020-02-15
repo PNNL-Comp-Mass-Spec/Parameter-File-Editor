@@ -1,5 +1,9 @@
+Imports System.IO
+Imports ParamFileGenerator.MakeParams
+Imports PRISMDatabaseUtils
+
 Public Class frmMain
-    Inherits System.Windows.Forms.Form
+    Inherits Form
 
 #Region "Windows Form Designer generated code"
 
@@ -10,15 +14,15 @@ Public Class frmMain
         InitializeComponent()
 
         'Add any initialization after the InitializeComponent() call
-        Me.m_DMSConnectString = Me.txtDMSConnectionString.Text
-        Me.m_OutputPath = Me.txtOutputPath.Text
-        Me.m_FASTAPath = Me.txtFASTAPath.Text
+        m_DMSConnectString = Me.txtDMSConnectionString.Text
+        m_OutputPath = Me.txtOutputPath.Text
+        m_FASTAPath = Me.txtFASTAPath.Text
         If m_DMS Is Nothing Then
-            Me.m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile
+            m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile()
         End If
+
         'Me.LoadParamNames()
         Me.LoadParamFileTypes()
-
 
     End Sub
 
@@ -223,121 +227,134 @@ Public Class frmMain
 
     Dim m_OutputPath As String
     Dim m_DMSConnectString As String
-    Dim m_ParamFileType As ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType
+    Dim m_ParamFileType As IGenerateFile.ParamFileType
     Dim m_ParamTypeID As Integer
     Dim m_ParamFileName As String
     Dim m_FASTAPath As String
     Dim m_AvailableParamFiles As DataTable
 
-    Dim m_DMS As ParamFileGenerator.MakeParams.IGenerateFile
+    Dim m_CurrentConnectionString As String
+    Dim m_CurrentDBTools As IDBTools
 
-    Private Sub cmdDoIt_Click(sender As System.Object, e As System.EventArgs) Handles cmdDoIt.Click
+    ReadOnly m_DMS As IGenerateFile
+
+    Private Sub cmdDoIt_Click(sender As Object, e As EventArgs) Handles cmdDoIt.Click
         'If m_DMS Is Nothing Then
-        '    Me.m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile
+        '    m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile
         'End If
 
         If txtParamFileName.TextLength > 0 Then
-            Me.m_ParamFileName = txtParamFileName.Text
+            m_ParamFileName = txtParamFileName.Text
         Else
             PopulateParamFileNameTextbox()
         End If
 
-        Dim datasetID As Integer = 0
+        Dim datasetID As Integer
         If Not Me.txtDatasetID.Text = "" Then
             datasetID = CInt(Me.txtDatasetID.Text)
         Else
             datasetID = -1
         End If
-        Dim success As Boolean = Me.m_DMS.MakeFile(m_ParamFileName, m_ParamFileType, m_FASTAPath, m_OutputPath, m_DMSConnectString, datasetID)
+        Dim success As Boolean = m_DMS.MakeFile(m_ParamFileName, m_ParamFileType, m_FASTAPath, m_OutputPath, m_DMSConnectString, datasetID)
         If success = True Then
-            Me.txtResults.Text = "File successfully written to: " & System.IO.Path.Combine(m_OutputPath, m_ParamFileName)
+            Me.txtResults.Text = "File successfully written to: " & Path.Combine(m_OutputPath, m_ParamFileName)
         Else
             Me.txtResults.Text = "Error!"
-            If Not Me.m_DMS.LastError Is Nothing AndAlso Me.m_DMS.LastError.Length > 0 Then
-                Me.txtResults.Text &= " " & Me.m_DMS.LastError
+            If Not m_DMS.LastError Is Nothing AndAlso m_DMS.LastError.Length > 0 Then
+                Me.txtResults.Text &= " " & m_DMS.LastError
             End If
         End If
     End Sub
 
-    Private Sub txtOutputPath_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtOutputPath.TextChanged
-        Me.m_OutputPath = Me.txtOutputPath.Text
+    Private Sub txtOutputPath_TextChanged(sender As Object, e As EventArgs) Handles txtOutputPath.TextChanged
+        m_OutputPath = Me.txtOutputPath.Text
     End Sub
 
-    Private Sub cboAvailableParams_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cboAvailableParams.SelectedIndexChanged
+    Private Sub cboAvailableParams_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboAvailableParams.SelectedIndexChanged
         PopulateParamFileNameTextbox()
     End Sub
 
-    Private Sub txtDMSConnectionString_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtDMSConnectionString.TextChanged
-        Me.m_DMSConnectString = Me.txtDMSConnectionString.Text
+    Private Sub txtDMSConnectionString_TextChanged(sender As Object, e As EventArgs) Handles txtDMSConnectionString.TextChanged
+        m_DMSConnectString = Me.txtDMSConnectionString.Text
     End Sub
 
-    Private Sub cboFileTypes_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cboFileTypes.SelectedIndexChanged
-        Me.m_ParamTypeID = CInt(Me.cboFileTypes.SelectedValue)
+    Private Sub cboFileTypes_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboFileTypes.SelectedIndexChanged
+        m_ParamTypeID = CInt(Me.cboFileTypes.SelectedValue)
 
-        Select Case Me.m_ParamTypeID
+        Select Case m_ParamTypeID
             Case 1000
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.BioWorks_32
+                m_ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
             Case 1008
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.X_Tandem
+                m_ParamFileType = IGenerateFile.ParamFileType.X_Tandem
             Case 1018
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSGFPlus
+                m_ParamFileType = IGenerateFile.ParamFileType.MSGFPlus
             Case 1019
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlign
+                m_ParamFileType = IGenerateFile.ParamFileType.MSAlign
             Case 1022
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSAlignHistone
+                m_ParamFileType = IGenerateFile.ParamFileType.MSAlignHistone
             Case 1025
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.MSPathFinder
+                m_ParamFileType = IGenerateFile.ParamFileType.MSPathFinder
             Case 1032
-                Me.m_ParamFileType = ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType.TopPIC
-            Case Else
+                m_ParamFileType = IGenerateFile.ParamFileType.TopPIC
 
         End Select
-        'Me.m_ParamFileType = _
+        'm_ParamFileType = _
         '    CType([Enum].Parse(GetType(ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType), _
         '    Me.cboFileTypes.Text), _
         '    ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType)
-        Me.LoadParamNames(Me.m_ParamTypeID)
+        Me.LoadParamNames(m_ParamTypeID)
 
     End Sub
 
+    Private Sub ValidateDBTools()
+        If m_CurrentDBTools Is Nothing OrElse
+           String.IsNullOrWhiteSpace(m_CurrentConnectionString) OrElse
+           Not m_CurrentConnectionString.Equals(m_DMSConnectString) Then
+
+            m_CurrentConnectionString = String.Copy(m_DMSConnectString)
+            m_CurrentDBTools = DbToolsFactory.GetDBTools(m_CurrentConnectionString)
+        End If
+    End Sub
+
     Private Sub LoadParamNames(Optional ByVal TypeID As Integer = 0)
-        If Me.m_AvailableParamFiles Is Nothing Then
-            Me.m_AvailableParamFiles = Me.m_DMS.GetAvailableParamSetTable(Me.m_DMSConnectString)
+        If m_AvailableParamFiles Is Nothing Then
+            ValidateDBTools()
+            m_AvailableParamFiles = m_DMS.GetAvailableParamSetTable(m_CurrentDBTools)
         End If
 
-        Dim dr As DataRow
-        Dim foundrows() As DataRow
+        Dim foundRows() As DataRow
 
         If TypeID > 1 Then
-            foundrows = Me.m_AvailableParamFiles.Select("Type_ID = " & TypeID.ToString)
+            foundRows = m_AvailableParamFiles.Select("Type_ID = " & TypeID.ToString)
         Else
-            foundrows = Me.m_AvailableParamFiles.Select()
+            foundRows = m_AvailableParamFiles.Select()
         End If
 
-        Me.cboAvailableParams.BeginUpdate()
-        Me.cboAvailableParams.Items.Clear()
+        cboAvailableParams.BeginUpdate()
+        cboAvailableParams.Items.Clear()
         txtParamFileName.Text = String.Empty
 
-        For Each dr In foundrows
-            Me.cboAvailableParams.Items.Add(New ParamFileEntry(
+        For Each dr As DataRow In foundRows
+            cboAvailableParams.Items.Add(New ParamFileEntry(
                 CInt(dr.Item("ID")), dr.Item("Filename").ToString))
         Next
 
-        Me.cboAvailableParams.DisplayMember = "Description"
-        Me.cboAvailableParams.ValueMember = "Value"
+        cboAvailableParams.DisplayMember = "Description"
+        cboAvailableParams.ValueMember = "Value"
 
-        If Me.cboAvailableParams.Items.Count > 0 Then
-            Me.cboAvailableParams.SelectedIndex = 0
+        If cboAvailableParams.Items.Count > 0 Then
+            cboAvailableParams.SelectedIndex = 0
         End If
 
-        Me.cboAvailableParams.EndUpdate()
+        cboAvailableParams.EndUpdate()
 
     End Sub
 
     Private Sub LoadParamFileTypes()
+        ValidateDBTools()
 
         Dim paramFileTypes As DataTable
-        paramFileTypes = Me.m_DMS.GetAvailableParamFileTypes(Me.m_DMSConnectString)
+        paramFileTypes = m_DMS.GetAvailableParamFileTypes(m_CurrentDBTools)
 
         With Me.cboFileTypes
             .DisplayMember = "Type"
@@ -352,16 +369,16 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub PopulateParamFileNameTextbox()
+    Private Sub PopulateParamFileNameTextBox()
         Dim entry As ParamFileEntry
         entry = DirectCast(Me.cboAvailableParams.SelectedItem, ParamFileEntry)
 
         txtParamFileName.Text = entry.Description
-        Me.m_ParamFileName = txtParamFileName.Text
+        m_ParamFileName = txtParamFileName.Text
     End Sub
 
-    Private Sub txtFASTAPath_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtFASTAPath.TextChanged
-        Me.m_FASTAPath = Me.txtFASTAPath.Text
+    Private Sub txtFASTAPath_TextChanged(sender As Object, e As EventArgs) Handles txtFASTAPath.TextChanged
+        m_FASTAPath = Me.txtFASTAPath.Text
     End Sub
 
 

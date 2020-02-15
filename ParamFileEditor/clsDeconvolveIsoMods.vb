@@ -1,7 +1,8 @@
+Imports PRISMDatabaseUtils
+
 Public Interface IDeconvolveIsoMods
 
     Function DeriveIsoMods(ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams
-
 
 End Interface
 
@@ -11,11 +12,14 @@ Public Class clsDeconvolveIsoMods
 
     Private Const allowedDifference As Single = 0.05
 
-    Private ReadOnly m_ConnectionString As String
+    Private ReadOnly m_DBTools As IDBTools
 
-    Public Sub New(connectionString As String)
-        MyBase.New(connectionString)
-        Me.m_ConnectionString = connectionString
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+    Public Sub New(dbTools As IDBTools)
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
+
+        MyBase.New(dbTools)
+        m_DBTools = dbTools
 
     End Sub
 
@@ -71,7 +75,7 @@ Public Class clsDeconvolveIsoMods
             Me.StripStaticIsoMod(ParamsClass, maxIsoMod, maxIsoAtom)
             '...and replace it with the new isoMod entity
             Dim at As IMassTweaker
-            at = New clsMassTweaker(Me.m_ConnectionString)
+            at = New clsMassTweaker(m_DBTools)
             maxIsoMod = CSng(at.GetTweakedMass(maxIsoMod, maxIsoAtom.ToString()))
             maxMassCorrectionID = at.TweakedModID
 

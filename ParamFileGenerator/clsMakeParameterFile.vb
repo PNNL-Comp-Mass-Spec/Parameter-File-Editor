@@ -2,6 +2,7 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
 Imports ParamFileGenerator.DownloadParams
+Imports PRISMDatabaseUtils
 
 ' ReSharper disable once CheckNamespace
 Namespace MakeParams
@@ -26,35 +27,38 @@ Namespace MakeParams
             TopPIC = 13
         End Enum
 
-        Function MakeFile(paramFileName As String,
+        Function MakeFile(
+             paramFileName As String,
              paramFileType As ParamFileType,
              fastaFilePath As String,
              outputFilePath As String,
              dmsConnectionString As String) As Boolean
 
-        Function MakeFile(paramFileName As String,
+        Function MakeFile(
+             paramFileName As String,
              paramFileType As ParamFileType,
              fastaFilePath As String,
              outputFilePath As String,
              dmsConnectionString As String,
              DatasetID As Integer) As Boolean
 
-        Function MakeFile(paramFileName As String,
+        Function MakeFile(
+             paramFileName As String,
              paramFileType As ParamFileType,
              fastaFilePath As String,
              outputFilePath As String,
              dmsConnectionString As String,
              datasetName As String) As Boolean
 
-        Function GetAvailableParamSetNames(dmsConnectionString As String) As List(Of String)
-        Function GetAvailableParamSetTable(dmsConnectionString As String) As DataTable
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
 
-        Function GetAvailableParamFileTypes(dmsConnectionString As String) As DataTable
+        Function GetAvailableParamSetNames(dbTools As IDBTools) As List(Of String)
+        Function GetAvailableParamSetTable(dbTools As IDBTools) As DataTable
+        Function GetAvailableParamFileTypes(dbTools As IDBTools) As DataTable
+
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
         ReadOnly Property LastError As String
-
-        Property TemplateFilePath As String
-
     End Interface
 
 
@@ -62,19 +66,10 @@ Namespace MakeParams
         Inherits PRISM.EventNotifier
         Implements IGenerateFile
 
-        Private m_TemplateFilePathString As String
-
-        Private m_DbTools As PRISM.DBTools
+        Private m_DbTools As PRISMDatabaseUtils.IDBTools
         Private m_FileWriter As clsWriteOutput
 
-        Public Property TemplateFilePath As String Implements IGenerateFile.TemplateFilePath
-            Get
-                Return m_TemplateFilePathString
-            End Get
-            Set
-                m_TemplateFilePathString = Value
-            End Set
-        End Property
+        Public Property TemplateFilePath As String
 
         Private Property LastErrorMsg As String = String.Empty
 
@@ -189,14 +184,14 @@ Namespace MakeParams
             Return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString)
         End Function
 
-        Private Function GetMonoParentStatusWorker(LookupSQL As String, dmsConnectionString As String) As Boolean
+        Private Function GetMonoParentStatusWorker(sqlQuery As String, dmsConnectionString As String) As Boolean
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.DBTools(dmsConnectionString)
+                m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
             End If
 
             Dim typeCheckTable As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(LookupSQL, typeCheckTable, "GetMonoParentStatusWorker")
+            m_DbTools.GetQueryResults(sqlQuery, typeCheckTable)
 
             If typeCheckTable.Count > 0 Then
 
@@ -235,63 +230,63 @@ Namespace MakeParams
             forceMonoParentMass As Boolean) As Boolean
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.DBTools(dmsConnectionString)
+                m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
             End If
 
             Const DEF_TEMPLATE_FILEPATH = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
 
-            If m_TemplateFilePathString = "" Then
-                m_TemplateFilePathString = DEF_TEMPLATE_FILEPATH
+            If String.IsNullOrWhiteSpace(TemplateFilePath) Then
+                TemplateFilePath = DEF_TEMPLATE_FILEPATH
             End If
 
-            Dim fi As New FileInfo(m_TemplateFilePathString)
+            Dim fi As New FileInfo(TemplateFilePath)
             If Not fi.Exists Then
-                ReportError("Default template file '" & m_TemplateFilePathString & "' does not exist")
+                ReportError("Default template file '" & TemplateFilePath & "' does not exist")
                 Return False
             End If
 
             ' Instantiate clsMainProcess so we can access its properties later
 
             ' ReSharper disable once UnusedVariable.Compiler
-            Dim l_MainCode As New clsMainProcess(m_TemplateFilePathString)
+            Dim processor As New clsMainProcess(TemplateFilePath)
 
-            Dim l_LoadedParams As clsParams
-            Dim l_DMS As New clsParamsFromDMS(dmsConnectionString)
-            Dim l_ReconIsoMods As IReconstituteIsoMods
-            l_ReconIsoMods = New clsReconstituteIsoMods(dmsConnectionString)
+            Dim loadedParams As clsParams
+            Dim dmsParams As New clsParamsFromDMS(m_DbTools)
+            Dim modProcessor As IReconstituteIsoMods
+            modProcessor = New clsReconstituteIsoMods(m_DbTools)
 
-            If l_DMS.ParamFileTable Is Nothing Then
+            If dmsParams.ParamFileTable Is Nothing Then
                 ReportError("Could Not Establish Database Connection")
                 Return False
             End If
 
-            If Not l_DMS.ParamSetNameExists(paramFileName) Then
+            If Not dmsParams.ParamSetNameExists(paramFileName) Then
                 ReportError("Parameter File '" & paramFileName & "' does not exist in the database")
                 Return False
             End If
 
-            l_LoadedParams = l_DMS.ReadParamsFromDMS(paramFileName)
-            l_LoadedParams = l_ReconIsoMods.ReconstituteIsoMods(l_LoadedParams)
+            loadedParams = dmsParams.ReadParamsFromDMS(paramFileName)
+            loadedParams = modProcessor.ReconstituteIsoMods(loadedParams)
 
-            If forceMonoParentMass And Not l_LoadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
-                l_LoadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic
+            If forceMonoParentMass And Not loadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
+                loadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic
             End If
 
-            If Not l_LoadedParams.LoadedParamNames.ContainsKey("PeptideMassUnits") Then
-                l_LoadedParams.PeptideMassUnits = IAdvancedParams.MassUnitList.amu
+            If Not loadedParams.LoadedParamNames.ContainsKey("PeptideMassUnits") Then
+                loadedParams.PeptideMassUnits = IAdvancedParams.MassUnitList.amu
             End If
 
-            If Not l_LoadedParams.LoadedParamNames.ContainsKey("FragmentMassUnits") Then
-                l_LoadedParams.FragmentMassUnits = IAdvancedParams.MassUnitList.amu
+            If Not loadedParams.LoadedParamNames.ContainsKey("FragmentMassUnits") Then
+                loadedParams.FragmentMassUnits = IAdvancedParams.MassUnitList.amu
             End If
 
-            l_LoadedParams.DefaultFASTAPath = fastaFilePath
+            loadedParams.DefaultFASTAPath = fastaFilePath
 
             If m_FileWriter Is Nothing Then
                 m_FileWriter = New clsWriteOutput
             End If
 
-            Dim writeSuccess = m_FileWriter.WriteOutputFile(l_LoadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType)
+            Dim writeSuccess = m_FileWriter.WriteOutputFile(loadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType)
 
             Dim successExtra = MakeSeqInfoRelatedFiles(paramFileName, outputFilePath, dmsConnectionString)
 
@@ -308,7 +303,7 @@ Namespace MakeParams
             Dim mdSQL As String
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.DBTools(dmsConnectionString)
+                m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
             End If
 
             Dim baseParamFileName As String = Path.GetFileNameWithoutExtension(paramFileName)
@@ -328,11 +323,11 @@ Namespace MakeParams
                 "WHERE Param_File_Name = '" & paramFileName & "'"
 
             Dim mctTable As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(mctSQL, mctTable, "MakeSeqInfoRelatedFiles_A")
+            m_DbTools.GetQueryResults(mctSQL, mctTable)
 
 
             Dim mdTable As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(mdSQL, mdTable, "MakeSeqInfoRelatedFiles_B")
+            m_DbTools.GetQueryResults(mdSQL, mdTable)
 
             'Dump the Mass_Correction_Tags file to the working directory
             m_FileWriter.WriteDataTableToOutputFile(mctTable, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"))
@@ -351,16 +346,17 @@ Namespace MakeParams
             Dim paramFilePath As String
 
             If m_DbTools Is Nothing Then
-                m_DbTools = New PRISM.DBTools(dmsConnectionString)
+                m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
             End If
 
+            ' ReSharper disable once StringLiteralTypo
             Dim paramFilePathSQL =
-             "SELECT TOP 1 AJT_parmFileStoragePath " &
-             "FROM T_Analysis_Tool " &
-             "WHERE AJT_ToolName = '" & analysisToolName & "'"
+                "SELECT TOP 1 AJT_parmFileStoragePath " &
+                "FROM T_Analysis_Tool " &
+                "WHERE AJT_ToolName = '" & analysisToolName & "'"
 
             Dim paramFilePathTable As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(paramFilePathSQL, paramFilePathTable, "RetrieveStaticPSMParameterFile")
+            m_DbTools.GetQueryResults(paramFilePathSQL, paramFilePathTable)
 
             If paramFilePathTable.Count = 0 Then
                 ReportError("Tool not found in T_Analysis_Tool: " & analysisToolName)
@@ -392,29 +388,30 @@ Namespace MakeParams
 
         End Function
 
-        Private Function GetAvailableParamSetNames(dmsConnectionString As String) As List(Of String) Implements IGenerateFile.GetAvailableParamSetNames
+        Private Function GetAvailableParamSetNames(dbTools As IDBTools) As List(Of String) Implements IGenerateFile.GetAvailableParamSetNames
 
-            Dim l_ParamSetsAvailable As New List(Of String)
-            Dim l_DMS As New clsParamsFromDMS(dmsConnectionString)
-            Dim d_ParamSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams()
+            Dim availableParamSets As New List(Of String)
+            Dim dmsParams As New clsParamsFromDMS(dbTools)
+
+            Dim retrievedParamSets As DataTable = dmsParams.RetrieveAvailableParams()
             Dim dr As DataRow
-            For Each dr In d_ParamSetsAvailable.Rows
-                l_ParamSetsAvailable.Add(dr.Item("FileName").ToString)
+            For Each dr In retrievedParamSets.Rows
+                availableParamSets.Add(dr.Item("FileName").ToString)
             Next
-            Return l_ParamSetsAvailable
+            Return availableParamSets
         End Function
 
-        Private Function GetAvailableParamSetTable(dmsConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamSetTable
-            Dim l_DMS As New clsParamsFromDMS(dmsConnectionString)
-            Dim paramSetsAvailable As DataTable = l_DMS.RetrieveAvailableParams
+        Private Function GetAvailableParamSetTable(dbTools As IDBTools) As DataTable Implements IGenerateFile.GetAvailableParamSetTable
+            Dim paramGenerator As New clsParamsFromDMS(dbTools)
+            Dim paramSetsAvailable As DataTable = paramGenerator.RetrieveAvailableParams
 
             Return paramSetsAvailable
 
         End Function
 
-        Private Function GetAvailableParamSetTypes(dmsConnectionString As String) As DataTable Implements IGenerateFile.GetAvailableParamFileTypes
-            Dim l_DMS As New clsParamsFromDMS(dmsConnectionString)
-            Dim paramTypesAvailable As DataTable = l_DMS.RetrieveParamFileTypes
+        Private Function GetAvailableParamSetTypes(dbTools As IDBTools) As DataTable Implements IGenerateFile.GetAvailableParamFileTypes
+            Dim paramGenerator As New clsParamsFromDMS(dbTools)
+            Dim paramTypesAvailable As DataTable = paramGenerator.RetrieveParamFileTypes
             Return paramTypesAvailable
         End Function
 

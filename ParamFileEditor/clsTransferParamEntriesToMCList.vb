@@ -1,17 +1,17 @@
+Imports PRISMDatabaseUtils
+
 Friend Class clsTransferParamEntriesToMassModList
     Inherits clsDMSParamUpload
 
-    Private m_mgrParams As ParamFileEditor.ProgramSettings.IProgramSettings
-    Private m_ParamUpload As clsDMSParamUpload
+    Private ReadOnly m_ParamUpload As clsDMSParamUpload
     Private m_AutoTweak As IMassTweaker
-    Private m_IsoFix As IDeconvolveIsoMods
+    Private ReadOnly m_IsoFix As IDeconvolveIsoMods
 
-    Public Sub New(mgrParams As ParamFileEditor.ProgramSettings.IProgramSettings)
-        MyBase.New(mgrParams)
-        Me.m_mgrParams = mgrParams
-        Me.m_AutoTweak = New clsMassTweaker(Me.m_mgrParams)
-        Me.m_ParamUpload = New clsDMSParamUpload(Me.m_mgrParams)
-        Me.m_IsoFix = New clsDeconvolveIsoMods(Me.m_mgrParams.DMS_ConnectionString)
+    Public Sub New(dbTools As IDBTools)
+        MyBase.New(dbTools)
+        Me.m_AutoTweak = New clsMassTweaker(dbTools)
+        Me.m_ParamUpload = New clsDMSParamUpload(dbTools)
+        Me.m_IsoFix = New clsDeconvolveIsoMods(mDBTools)
     End Sub
 
     Public Sub SyncAll()
@@ -26,27 +26,23 @@ Friend Class clsTransferParamEntriesToMassModList
         Me.SyncDesc(BaseLineParams)
     End Sub
 
-
     Private Sub SyncMassModList2PETable()
 
-        Dim ParamEntryTable As DataTable
-        Dim PESQL = "SELECT * FROM T_Param_Entries WHERE ([Entry_Type] like '%Modification')"
-        ParamEntryTable = Me.GetTable(PESQL)
+        'Dim PESQL = "SELECT * FROM T_Param_Entries WHERE ([Entry_Type] like '%Modification')"
+        'Dim paramEntryTable = Me.GetTable(PESQL)
 
-        Dim AffectedParamFiles As DataTable
-        Dim fileSQL As String = "SELECT DISTINCT [Param_File_ID] FROM T_Param_Entries WHERE ([Entry_Type] like '%Modification') AND ([Param_File_ID] NOT IN " & _
-            "(SELECT DISTINCT [Param_File_ID] FROM T_Param_File_Mass_Mods))"
-        AffectedParamFiles = GetTable(fileSQL)
+        Dim fileSQL As String = " SELECT DISTINCT [Param_File_ID] FROM T_Param_Entries" & " WHERE ([Entry_Type] like '%Modification') AND " & "       ([Param_File_ID] NOT IN (SELECT DISTINCT [Param_File_ID] FROM T_Param_File_Mass_Mods))"
 
-        Dim fileRow As DataRow
-        Dim fileRows() As DataRow
+        Dim affectedParamFiles = GetTable(fileSQL)
 
-        Dim currParamFileID As Integer
+        Dim currentParamFileID As Integer
 
-        fileRows = AffectedParamFiles.Select("", "[Param_File_ID]")
-        For Each fileRow In fileRows        'Loop through the affected param files and get the appropriate mods
-            currParamFileID = CInt(fileRow.Item(0))
-            SyncSingleJob(currParamFileID)
+        Dim fileRows = affectedParamFiles.Select("", "[Param_File_ID]")
+
+        'Loop through the affected param files and get the appropriate mods
+        For Each fileRow As DataRow In fileRows
+            currentParamFileID = CInt(fileRow.Item(0))
+            SyncSingleJob(currentParamFileID)
         Next
     End Sub
 
@@ -64,42 +60,33 @@ Friend Class clsTransferParamEntriesToMassModList
         Me.tmpSaveMods(tmpParams, Me.m_AutoTweak)
 
         Debug.WriteLine("Finished: " & paramFileID)
-
     End Sub
 
     Private Sub SyncDesc(ByRef BaseLineParams As ParamFileGenerator.clsParams)
-        Dim ParamFileTable As DataTable
-        Dim eParamFileType = ParamFileGenerator.DownloadParams.clsParamsFromDMS.eParamFileTypeConstants.Sequest
+
+        Dim eParamFileType = eParamFileTypeConstants.Sequest
 
         Dim PFSQL As String = "SELECT * FROM T_Param_Files WHERE [Param_File_Type_ID] = " & eParamFileType
 
         Dim tmpDA As SqlClient.SqlDataAdapter = Nothing
-        Dim tmpCB As SqlClient.SqlCommandBuilder = Nothing
 
-        ParamFileTable = Me.GetTable(PFSQL, tmpDA, tmpCB)
+        Dim paramFiles = Me.GetTable(PFSQL)
 
-        Dim filerow As DataRow
-        Dim fileRows() As DataRow
+        Dim fileRows = paramFiles.Select("", "[Param_File_ID]")
 
-        Dim currParamFileID As Integer
-        Dim testparams As ParamFileGenerator.clsParams
-
-        fileRows = ParamFileTable.Select("", "[Param_File_ID]")
-
-        For Each filerow In fileRows
-            currParamFileID = CInt(filerow.Item("Param_File_ID"))
+        For Each fileRow As DataRow In fileRows
+            Dim currParamFileID = CInt(fileRow.Item("Param_File_ID"))
             If currParamFileID = 1092 Then
                 Debug.WriteLine("")
             End If
-            Debug.Write("Param File = " & currParamFileID & " | CS = " & filerow.RowState.ToString & ", ")
-            testparams = Me.GetParamSetWithID(currParamFileID, eParamFileType)
+            Debug.Write("Param File = " & currParamFileID & " | CS = " & fileRow.RowState.ToString & ", ")
+            Dim testparams = Me.GetParamSetWithID(currParamFileID, eParamFileType)
 
-            filerow.Item("Param_File_Description") = testparams.Description
+            fileRow.Item("Param_File_Description") = testparams.Description
 
-            Debug.Write("NS = " & filerow.RowState.ToString & Chr(13) & Chr(10))
+            Debug.Write("NS = " & fileRow.RowState.ToString & Chr(13) & Chr(10))
         Next
 
-        tmpDA.Update(ParamFileTable)
+        tmpDA.Update(paramFiles)
     End Sub
-
 End Class

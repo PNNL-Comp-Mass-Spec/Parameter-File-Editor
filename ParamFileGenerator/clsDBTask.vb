@@ -1,201 +1,176 @@
 Imports System.Data.SqlClient
+Imports PRISMDatabaseUtils
 
-Public Interface IGetSQLData
-    Function GetTable(selectSQL As String) As DataTable
-    Function GetTable(
-                      selectSQL As String,
-        ByRef sqlDataAdapter As SqlClient.SqlDataAdapter,
-        ByRef sqlCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable
+'Public Interface IGetSQLData
+'    Function GetTable(selectSQL As String) As DataTable
+'    Function GetTable(
+'                      selectSQL As String,
+'        ByRef sqlDataAdapter As SqlClient.SqlDataAdapter,
+'        ByRef sqlCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable
 
-    Sub OpenConnection()
-    Sub OpenConnection(dbConnectionString As String)
-    Sub CloseConnection()
+'    Sub OpenConnection()
+'    Sub OpenConnection(dbConnectionString As String)
+'    Sub CloseConnection()
 
-    Property ConnectionString As String
-    ReadOnly Property Connected As Boolean
-    ReadOnly Property Connection As SqlClient.SqlConnection
+'    Property ConnectionString As String
+'    ReadOnly Property Connected As Boolean
+'    ReadOnly Property Connection As SqlClient.SqlConnection
 
-End Interface
+'End Interface
 
 Public Class clsDBTask
-    Implements IGetSQLData
 
 #Region "Member Variables"
 
     ' DB access
-    Protected m_connection_str As String
-    Protected m_DBCn As SqlConnection
-    Protected m_PersistConnection As Boolean
+
+#Disable Warning BC40025 ' Type of member is not CLS-compliant
+    Protected ReadOnly mDBTools As IDBTools
+#Enable Warning BC40025 ' Type of member is not CLS-compliant
 
 #End Region
 
-    ' constructor
-    Public Sub New(dbConnectionString As String, Optional PersistConnection As Boolean = False)
-        Me.m_connection_str = dbConnectionString
-        Me.SetupNew(PersistConnection)
-
+    ''' <summary>
+    ''' Constructor
+    ''' </summary>
+    ''' <param name="connectionString"></param>
+    Public Sub New(connectionString As String)
+        mDBTools = DbToolsFactory.GetDBTools(connectionString)
     End Sub
 
-    Public Sub New(Optional PersistConnection As Boolean = False)
-        Me.SetupNew(PersistConnection)
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+    Public Sub New(existingDbTools As IDBTools)
+        mDBTools = existingDbTools
+    End Sub
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
+
+    <Obsolete("Use the constructor that only has a connection string")>
+    Public Sub New(connectionString As String, persistConnection As Boolean)
+        mDBTools = DbToolsFactory.GetDBTools(connectionString)
     End Sub
 
-    Private Sub SetupNew(PersistConnection As Boolean)
-        Me.m_PersistConnection = PersistConnection
-        If Me.m_PersistConnection Then
-            Me.OpenConnection(Me.m_connection_str)
-        Else
-
-            'if
-
-        End If
+    <Obsolete("Use the constructor that accepts a connection string", True)>
+    Public Sub New(Optional persistConnection As Boolean = False)
+        Throw New NotImplementedException()
     End Sub
 
+    ''------[for DB access]-----------------------------------------------------------
+    'Protected Sub OpenConnection() Implements IGetSQLData.OpenConnection
+    '    If Me.m_connection_str = "" Then
+    '        Exit Sub
+    '    End If
+    '    OpenConnection(Me.m_connection_str)
+    'End Sub
 
-    '------[for DB access]-----------------------------------------------------------
-    Protected Sub OpenConnection() Implements IGetSQLData.OpenConnection
-        If Me.m_connection_str = "" Then
-            Exit Sub
-        End If
-        OpenConnection(Me.m_connection_str)
-    End Sub
+    'Protected Sub OpenConnection(dbConnectionString As String) Implements IGetSQLData.OpenConnection
+    '    Dim retryCount = 3
+    '    If m_DBCn Is Nothing Then
+    '        m_DBCn = New SqlConnection(dbConnectionString & "Connect Timeout=30")
+    '    End If
+    '    If m_DBCn.State <> ConnectionState.Open Then
+    '        While retryCount > 0
+    '            Try
+    '                m_DBCn.Open()
+    '                retryCount = 0
+    '            Catch e As SqlException
+    '                retryCount -= 1
+    '                If retryCount = 0 Then
+    '                    Throw New Exception("could not open database connection after three tries")
+    '                End If
+    '                System.Threading.Thread.Sleep(3000)
+    '                m_DBCn.Close()
+    '            End Try
+    '        End While
+    '    End If
+    'End Sub
 
-    Protected Sub OpenConnection(dbConnectionString As String) Implements IGetSQLData.OpenConnection
+    'Protected Sub CloseConnection() Implements IGetSQLData.CloseConnection
+    '    If Not m_DBCn Is Nothing Then
+    '        m_DBCn.Close()
+    '        m_DBCn = Nothing
+    '    End If
+    'End Sub
+
+    'Protected ReadOnly Property Connected As Boolean Implements IGetSQLData.Connected
+    '    Get
+    '        If m_DBCn Is Nothing Then
+    '            Return False
+    '        Else
+    '            If Me.m_DBCn.State = ConnectionState.Open Then
+    '                Return True
+    '            Else
+    '                Return False
+    '            End If
+    '        End If
+    '    End Get
+    'End Property
+
+    'Protected Property ConnectionString As String Implements IGetSQLData.ConnectionString
+    '    Get
+    '        Return Me.m_connection_str
+    '    End Get
+    '    Set
+    '        Me.m_connection_str = Value
+    '    End Set
+    'End Property
+
+    'Protected ReadOnly Property Connection As SqlClient.SqlConnection Implements IGetSQLData.Connection
+    '    Get
+    '        If Me.Connected Then
+    '            Return Me.m_DBCn
+    '        Else
+    '            Me.OpenConnection()
+    '            Return Me.m_DBCn
+    '        End If
+    '    End Get
+    'End Property
+
+    Protected Function GetTable(selectSQL As String) As DataTable
+
         Dim retryCount = 3
-        If m_DBCn Is Nothing Then
-            m_DBCn = New SqlConnection(dbConnectionString & "Connect Timeout=30")
-        End If
-        If m_DBCn.State <> ConnectionState.Open Then
-            While retryCount > 0
-                Try
-                    m_DBCn.Open()
-                    retryCount = 0
-                Catch e As SqlException
-                    retryCount -= 1
-                    If retryCount = 0 Then
-                        Throw New Exception("could not open database connection after three tries")
-                    End If
-                    System.Threading.Thread.Sleep(3000)
-                    m_DBCn.Close()
-                End Try
-            End While
-        End If
-    End Sub
+        Dim retryDelaySeconds = 5
+        Dim timeoutSeconds = 120
 
-    Protected Sub CloseConnection() Implements IGetSQLData.CloseConnection
-        If Not m_DBCn Is Nothing Then
-            m_DBCn.Close()
-            m_DBCn = Nothing
-        End If
-    End Sub
+        Dim queryResults As DataTable = Nothing
+        Dim success = mDBTools.GetQueryResultsDataTable(selectSQL, queryResults, retryCount, retryDelaySeconds, timeoutSeconds)
 
-    Protected ReadOnly Property Connected As Boolean Implements IGetSQLData.Connected
-        Get
-            If m_DBCn Is Nothing Then
-                Return False
-            Else
-                If Me.m_DBCn.State = ConnectionState.Open Then
-                    Return True
-                Else
-                    Return False
-                End If
-            End If
-        End Get
-    End Property
-
-    Protected Property ConnectionString As String Implements IGetSQLData.ConnectionString
-        Get
-            Return Me.m_connection_str
-        End Get
-        Set
-            Me.m_connection_str = Value
-        End Set
-    End Property
-
-    Protected ReadOnly Property Connection As SqlClient.SqlConnection Implements IGetSQLData.Connection
-        Get
-            If Me.Connected Then
-                Return Me.m_DBCn
-            Else
-                Me.OpenConnection()
-                Return Me.m_DBCn
-            End If
-        End Get
-    End Property
-
-    Protected Function GetTable(
-        selectSQL As String,
-        ByRef sqlDataAdapter As SqlClient.SqlDataAdapter,
-        ByRef SQLCommandBuilder As SqlClient.SqlCommandBuilder) As DataTable Implements IGetSQLData.GetTable
-
-        Dim tmpIDTable As New DataTable
-        Dim GetID_CMD = New SqlClient.SqlCommand(selectSQL)
-
-        Dim numTries = 3
-        'Dim tryCount As Integer
-        'Try
-        If Not Me.m_PersistConnection Then Me.OpenConnection()
-
-        GetID_CMD.CommandTimeout = 120
-        GetID_CMD.Connection = Me.m_DBCn
-
-        If Me.Connected = True Then
-
-            sqlDataAdapter = New SqlClient.SqlDataAdapter
-            SQLCommandBuilder = New SqlClient.SqlCommandBuilder(sqlDataAdapter)
-            sqlDataAdapter.SelectCommand = GetID_CMD
-
-            While numTries > 0
-                Try
-                    sqlDataAdapter.Fill(tmpIDTable)
-                    Exit While
-                Catch ex As Exception
-                    numTries -= 1
-                    If numTries = 0 Then
-                        Throw New Exception("could not get records after three tries; query: " & selectSQL)
-                    End If
-                    System.Threading.Thread.Sleep(10000)
-                End Try
-
-            End While
-            If Not Me.m_PersistConnection Then Me.CloseConnection()
-        Else
-            tmpIDTable = Nothing
+        If Not success Then
+            Throw New Exception("Could not get records after three tries; query: " & selectSQL)
         End If
 
-        Return tmpIDTable
+        Return queryResults
 
     End Function
 
-    Protected Function GetTable(SelectSQL As String) As DataTable Implements IGetSQLData.GetTable
-        Dim tmpDA As SqlClient.SqlDataAdapter = Nothing
-        Dim tmpCB As SqlClient.SqlCommandBuilder = Nothing
+    'Protected Function GetTable(SelectSQL As String) As DataTable Implements IGetSQLData.GetTable
+    '    Dim tmpDA As SqlClient.SqlDataAdapter = Nothing
+    '    Dim tmpCB As SqlClient.SqlCommandBuilder = Nothing
 
-        Return GetTable(SelectSQL, tmpDA, tmpCB)
+    '    Return GetTable(SelectSQL, tmpDA, tmpCB)
 
-    End Function
+    'End Function
 
-    Protected Sub CreateRelationship(
-        ds As DataSet,
-        dt1 As DataTable,
-        dt1_keyFieldName As String,
-        dt2 As DataTable,
-        dt2_keyFieldName As String)
+    'Protected Sub CreateRelationship(
+    '    ds As DataSet,
+    '    dt1 As DataTable,
+    '    dt1_keyFieldName As String,
+    '    dt2 As DataTable,
+    '    dt2_keyFieldName As String)
 
-        Dim dc_dt1_keyField As DataColumn = dt1.Columns(dt1_keyFieldName)
-        Dim dc_dt2_keyField As DataColumn = dt2.Columns(dt2_keyFieldName)
-        ds.Relations.Add(dc_dt1_keyField, dc_dt2_keyField)
+    '    Dim dc_dt1_keyField As DataColumn = dt1.Columns(dt1_keyFieldName)
+    '    Dim dc_dt2_keyField As DataColumn = dt2.Columns(dt2_keyFieldName)
+    '    ds.Relations.Add(dc_dt1_keyField, dc_dt2_keyField)
 
-    End Sub
+    'End Sub
 
-    Protected Sub SetPrimaryKey(
-        keyColumnIndex As Integer,
-        dt As DataTable)
+    'Protected Sub SetPrimaryKey(
+    '    keyColumnIndex As Integer,
+    '    dt As DataTable)
 
-        Dim pKey(0) As DataColumn
-        pKey(0) = dt.Columns(keyColumnIndex)
-        dt.PrimaryKey = pKey
+    '    Dim pKey(0) As DataColumn
+    '    pKey(0) = dt.Columns(keyColumnIndex)
+    '    dt.PrimaryKey = pKey
 
-    End Sub
+    'End Sub
 
 End Class

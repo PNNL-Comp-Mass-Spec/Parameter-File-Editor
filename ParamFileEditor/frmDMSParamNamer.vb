@@ -1,28 +1,33 @@
+Imports System.ComponentModel
 Imports ParamFileGenerator
+Imports PRISMDatabaseUtils
 
 Public Class frmDMSParamNamer
-    Inherits System.Windows.Forms.Form
+    Inherits Form
 
-    Private m_MainForm As frmMainGUI
-    Private m_Params As clsParams
+    Private ReadOnly m_DBTools As IDBTools
+    Private ReadOnly m_Params As clsParams
     Private m_SaveName As String
-    Friend WithEvents cmdCancel As System.Windows.Forms.Button
+    Friend WithEvents cmdCancel As Button
     Private m_clsDMSParams As clsDMSParamUpload
     'Private m_clsDMSUpload As clsDMSParamUpload
 
 
 #Region "Windows Form Designer generated code"
 
-    Public Sub New(CallingFrm As frmMainGUI, ParamSetToSave As clsParams)
+#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+    Public Sub New(dbTools As IDBTools, ParamSetToSave As clsParams)
         MyBase.New()
+#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
         'This call is required by the Windows Form Designer.
         InitializeComponent()
 
         'Add any initialization after the InitializeComponent() call
-        m_MainForm = CallingFrm
+        m_DBTools = dbTools
+
         m_Params = ParamSetToSave
-        m_clsDMSParams = New clsDMSParamUpload(frmMainGUI.mySettings)
+        m_clsDMSParams = New clsDMSParamUpload(dbTools)
     End Sub
 
     'Form overrides dispose to clean up the component list.
@@ -47,7 +52,9 @@ Public Class frmDMSParamNamer
     Friend WithEvents txtDiffs As System.Windows.Forms.TextBox
     Friend WithEvents cmdUpload As System.Windows.Forms.Button
     Friend WithEvents NamingErrorProvider As System.Windows.Forms.ErrorProvider
-    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+
+    <System.Diagnostics.DebuggerStepThrough()>
+    Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.txtSaveFileName = New System.Windows.Forms.TextBox()
         Me.lblSaveFileName = New System.Windows.Forms.Label()
@@ -61,8 +68,7 @@ Public Class frmDMSParamNamer
         '
         'txtSaveFileName
         '
-        Me.txtSaveFileName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                  Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtSaveFileName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtSaveFileName.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtSaveFileName.Location = New System.Drawing.Point(14, 28)
         Me.txtSaveFileName.MaxLength = 255
@@ -88,8 +94,7 @@ Public Class frmDMSParamNamer
         '
         'txtDiffs
         '
-        Me.txtDiffs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                  Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtDiffs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDiffs.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtDiffs.Location = New System.Drawing.Point(14, 83)
         Me.txtDiffs.Multiline = True
@@ -137,24 +142,21 @@ Public Class frmDMSParamNamer
         CType(Me.NamingErrorProvider, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
-
     End Sub
 
 #End Region
 
-    Private Sub frmDMSParamNamer_Load(sender As Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub frmDMSParamNamer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.txtSaveFileName.Text = m_Params.FileName
-        m_clsDMSParams = New clsDMSParamUpload(frmMainGUI.mySettings)
+        m_clsDMSParams = New clsDMSParamUpload(m_DBTools)
         LoadParamDiffs(m_Params)
-
     End Sub
 
-    Private Sub cmdUpload_Click(sender As System.Object, e As System.EventArgs) Handles cmdUpload.Click
+    Private Sub cmdUpload_Click(sender As Object, e As EventArgs) Handles cmdUpload.Click
 
         Dim nameExists As Boolean
         Dim ParamSetID As Integer
         Dim IDExists As Boolean
-        Dim eDialogResult As New DialogResult
         Dim blnSuccess As Boolean
 
         Try
@@ -167,21 +169,18 @@ Public Class frmDMSParamNamer
             m_Params.Description = txtDiffs.Text
 
             If IDExists And nameExists Then
-                eDialogResult = MessageBox.Show("This Parameter Set already exists. Would you like to replace it with the current Parameter set?",
-                    "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
+                Dim eDialogResult = MessageBox.Show("This Parameter Set already exists. Would you like to replace it with the current Parameter set?", "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
                 If eDialogResult = DialogResult.No Then
                     Exit Sub
                 End If
             ElseIf nameExists And Not IDExists Then
-                eDialogResult = MessageBox.Show("A Parameter Set with this name already exists. Would you like to replace it with the current Parameter set?",
-                    "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
+                Dim eDialogResult = MessageBox.Show("A Parameter Set with this name already exists. Would you like to replace it with the current Parameter set?", "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
                 If eDialogResult = DialogResult.No Then
                     Exit Sub
                 End If
 
             Else
-                eDialogResult = MessageBox.Show("Are you sure you want to add a new Parameter set?",
-                    "Make New Parameter Set", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
+                Dim eDialogResult = MessageBox.Show("Are you sure you want to add a new Parameter set?", "Make New Parameter Set", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1)
                 If eDialogResult = DialogResult.No Then
                     Exit Sub
                 End If
@@ -190,18 +189,17 @@ Public Class frmDMSParamNamer
             blnSuccess = m_clsDMSParams.WriteParamsToDMS(m_Params, False)
 
             If blnSuccess Then
-                Windows.Forms.MessageBox.Show("File successfully uploaded: " & m_SaveName, "Succcess", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show("File successfully uploaded: " & m_SaveName, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
-                Windows.Forms.MessageBox.Show("A problem occurred while uploading the file " & m_SaveName & ": " & m_clsDMSParams.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show("A problem occurred while uploading the file " & m_SaveName & ": " & m_clsDMSParams.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End If
 
         Catch ex As Exception
-            Windows.Forms.MessageBox.Show("Error in cmdUpload_Click: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            MessageBox.Show("Error in cmdUpload_Click: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
 
 
         Me.Close()
-
     End Sub
 
 
@@ -210,7 +208,7 @@ Public Class frmDMSParamNamer
         Me.txtDiffs.Text = dms.GetDiffsFromTemplate(ParamSet)
     End Sub
 
-    Private Sub txtSaveFileName_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtSaveFileName.TextChanged
+    Private Sub txtSaveFileName_TextChanged(sender As Object, e As EventArgs) Handles txtSaveFileName.TextChanged
         If Me.txtSaveFileName.Text.Length < 255 Then
             Me.m_SaveName = Me.txtSaveFileName.Text
             Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "")
@@ -219,7 +217,7 @@ Public Class frmDMSParamNamer
         End If
     End Sub
 
-    Private Sub txtSaveFileName_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles txtSaveFileName.Validating
+    Private Sub txtSaveFileName_Validating(sender As Object, e As CancelEventArgs) Handles txtSaveFileName.Validating
         Dim tb As TextBox = DirectCast(sender, TextBox)
         If tb.Text.Length >= 255 Then
             Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "Parameter File names must be < 255 characters in length")
@@ -227,12 +225,10 @@ Public Class frmDMSParamNamer
         Else
             Me.NamingErrorProvider.SetError(Me.lblSaveFileName, "")
         End If
-
     End Sub
 
-    Private Sub cmdCancel_Click(sender As System.Object, e As System.EventArgs) Handles cmdCancel.Click
+    Private Sub cmdCancel_Click(sender As Object, e As EventArgs) Handles cmdCancel.Click
 
         Me.Close()
-
     End Sub
 End Class
