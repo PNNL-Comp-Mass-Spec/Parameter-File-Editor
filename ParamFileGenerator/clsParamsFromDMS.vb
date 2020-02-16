@@ -612,17 +612,17 @@ Namespace DownloadParams
         Protected Function GetAvailableParamSets() As DataTable
             Dim paramTableSQL As String =
               "SELECT " &
-              "Param_File_ID as ID, " &
-              "Param_File_Name AS Filename, " &
-              "Param_File_Description as Diffs, " &
-              "Param_File_Type_ID as Type_ID " &
+              "  Param_File_ID as ID, " &
+              "  Param_File_Name AS Filename, " &
+              "  Param_File_Description as Diffs, " &
+              "  Param_File_Type_ID as Type_ID " &
               "FROM T_Param_Files " &
               "WHERE Param_File_Type_ID = " & eParamFileTypeConstants.Sequest &
-              " or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem &
-              " or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB &
-              " or Param_File_Type_ID = " & eParamFileTypeConstants.MSPathFinder &
-              " or Param_File_Type_ID = " & eParamFileTypeConstants.MODPlus &
-              " or Param_File_Type_ID = " & eParamFileTypeConstants.TopPIC
+              "   or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem &
+              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB &
+              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MSPathFinder &
+              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MODPlus &
+              "   or Param_File_Type_ID = " & eParamFileTypeConstants.TopPIC
 
             Dim tmpIDTable = GetTable(paramTableSQL)
 
@@ -631,11 +631,10 @@ Namespace DownloadParams
             Dim tmpDiffs As String
             Dim tmpType As Integer
 
-            Dim dr As DataRow
-
-            For Each dr In tmpIDTable.Rows
+            For Each dr As DataRow In tmpIDTable.Rows
 
                 tmpType = DirectCast(dr.Item("Type_ID"), Integer)
+
                 If tmpType = eParamFileTypeConstants.Sequest Then
 
                     tmpID = DirectCast(dr.Item("ID"), Integer)
