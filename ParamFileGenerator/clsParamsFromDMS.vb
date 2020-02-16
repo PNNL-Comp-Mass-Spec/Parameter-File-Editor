@@ -1,5 +1,4 @@
 Imports System.Collections.Generic
-Imports System.Data.SqlClient
 Imports System.Reflection
 Imports PRISMDatabaseUtils
 
@@ -152,10 +151,6 @@ Namespace DownloadParams
         Protected m_BasicParams As List(Of String)
         Protected m_AdvancedParams As List(Of String)
         Protected m_IonSeriesParams As List(Of String)
-        Protected m_GetID_DA As SqlDataAdapter
-        Protected m_GetID_DB As SqlCommandBuilder
-        Protected m_GetEntries_DA As SqlDataAdapter
-        Protected m_GetEntries_CB As SqlCommandBuilder
         Protected m_MassMods As DataTable
 
 #End Region

@@ -1,4 +1,3 @@
-Imports System.Data.SqlClient
 Imports PRISMDatabaseUtils
 
 Public Class clsDBTask
