@@ -78,9 +78,11 @@ Public Class clsParams
     Implements IBasicParams
     Implements IAdvancedParams
 
+    ' Ignore Spelling: Xcalibur
+
     Public Enum ParamFileTypes
-        BioWorks_20 = 0 'Normal BioWorks 2.0 Sequest
-        BioWorks_30 = 1 'BioWorks 3.0+ TurboSequest
+        BioWorks_20 = 0 'Normal BioWorks 2.0 SEQUEST
+        BioWorks_30 = 1 'BioWorks 3.0+ TurboSEQUEST
         BioWorks_31 = 2 'BioWorks 3.1 ClusterQuest
         BioWorks_32 = 3 'BioWorks 3.2 ClusterF***
     End Enum

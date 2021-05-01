@@ -6,6 +6,9 @@ Namespace DownloadParams
 
     Public Class clsParamsFromDMS
         Inherits clsDBTask
+
+        ' Ignore Spelling: diffs, mc
+
 #Region "Constants"
         Protected Const Param_File_Table As String = "T_Param_Files"
         Protected Const Param_Entry_Table As String = "T_Param_Entries"
@@ -53,6 +56,7 @@ Namespace DownloadParams
             PeptideMassUnits
             FragmentMassUnits
         End Enum
+
         Public Enum BasicParams
             SelectedEnzymeIndex
             SelectedEnzymeCleavagePosition
@@ -61,6 +65,7 @@ Namespace DownloadParams
             FragmentMassType
             PartialSequenceToMatch
         End Enum
+
         Public Enum AdvancedParams
             CreateOutputFiles
             NumberOfResultsToProcess
@@ -385,7 +390,6 @@ Namespace DownloadParams
 
         End Function
 
-        'Todo Adding mass mod grabber
         Protected Function GetMassModsFromDMS(ParamSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef params As clsDMSParamStorage) As clsDMSParamStorage
             Const MaxDynMods = 15
 
@@ -448,7 +452,7 @@ Namespace DownloadParams
 
             Next
 
-            'Find N-Term Dyn Mods
+            'Find N-Term Dynamic Mods
             foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'")
             If foundRows.Length > 0 Then
                 tmpSpec = GetDynModSpecifier(foundRows)
@@ -457,7 +461,7 @@ Namespace DownloadParams
                 params.Add(tmpSpec, tmpValue, tmpType)
             End If
 
-            'Find C-Term Dyn Mods
+            'Find C-Term Dynamic Mods
             foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'")
             If foundRows.Length > 0 Then
                 tmpSpec = GetDynModSpecifier(foundRows)
@@ -605,7 +609,7 @@ Namespace DownloadParams
         End Function
 
         ''' <summary>
-        ''' Finds parameter file info for Sequest, X!Tandem, MSGF+, MSPathFinder, or MODPlus
+        ''' Finds parameter file info for SEQUEST, X!Tandem, MSGF+, MSPathFinder, MODPlus, TopPIC, MSFragger, or MaxQuant
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>

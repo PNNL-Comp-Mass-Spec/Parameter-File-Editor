@@ -9,9 +9,11 @@ Namespace MakeParams
 
     Public Interface IGenerateFile
 
+        ' Ignore Spelling: Sequest
+
         Enum ParamFileType
             Invalid = -1            ' Other stuff not currently handled
-            BioWorks_20 = 0         ' Normal BioWorks 2.0 Sequest
+            BioWorks_20 = 0         ' Normal BioWorks 2.0 SEQUEST
             BioWorks_30 = 1         ' BioWorks 3.0+ TurboSequest
             BioWorks_31 = 2         ' BioWorks 3.1 ClusterQuest
             BioWorks_32 = 3         ' BioWorks 3.2 Cluster
@@ -211,7 +213,7 @@ Namespace MakeParams
         End Function
 
         ''' <summary>
-        ''' Create Sequest parameter file
+        ''' Create SEQUEST parameter file
         ''' </summary>
         ''' <param name="paramFileName"></param>
         ''' <param name="paramFileType"></param>
@@ -233,7 +235,7 @@ Namespace MakeParams
                 m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
             End If
 
-            Const DEF_TEMPLATE_FILEPATH = "\\Gigasax\dms_parameter_files\Sequest\sequest_N14_NE_Template.params"
+            Const DEF_TEMPLATE_FILEPATH = "\\Gigasax\DMS_Parameter_Files\Sequest\sequest_N14_NE_Template.params"
 
             If String.IsNullOrWhiteSpace(TemplateFilePath) Then
                 TemplateFilePath = DEF_TEMPLATE_FILEPATH
@@ -332,7 +334,7 @@ Namespace MakeParams
             'Dump the Mass_Correction_Tags file to the working directory
             m_FileWriter.WriteDataTableToOutputFile(mctTable, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"))
 
-            'Dump the param file specific Mod Defs file to the working directory
+            'Dump the param file specific modification definitions file to the working directory
             m_FileWriter.WriteDataTableToOutputFile(mdTable, Path.Combine(targetDirectory, baseParamFileName & "_ModDefs.txt"))
 
         End Function

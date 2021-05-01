@@ -9,7 +9,7 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("Parameter File Generator")>
-<Assembly: AssemblyDescription("Class library to access the parameter files tables on DMS and generate flat Sequest parameter files")>
+<Assembly: AssemblyDescription("Class library to access the parameter files tables on DMS and generate flat SEQUEST parameter files")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("")>
 <Assembly: AssemblyCopyright("")>

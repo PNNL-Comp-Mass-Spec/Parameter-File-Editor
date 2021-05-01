@@ -217,7 +217,7 @@ Public Class frmMain
         Me.Controls.Add(Me.lblOutputPath)
         Me.Controls.Add(Me.cboFileTypes)
         Me.Name = "frmMain"
-        Me.Text = "Sequest Param Generator"
+        Me.Text = "SEQUEST Param Generator"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -360,7 +360,7 @@ Public Class frmMain
             .DisplayMember = "Type"
             .ValueMember = "ID"
             .DataSource = paramFileTypes
-            .Text = "Sequest"
+            .Text = "SEQUEST"
         End With
 
 
