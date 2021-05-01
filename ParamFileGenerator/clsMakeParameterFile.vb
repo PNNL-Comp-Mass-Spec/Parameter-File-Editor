@@ -27,6 +27,8 @@ Namespace MakeParams
             MSPathFinder = 11
             MODPlus = 12
             TopPIC = 13
+            MSFragger = 14
+            MaxQuant = 15
         End Enum
 
         Function MakeFile(
@@ -152,6 +154,12 @@ Namespace MakeParams
 
                     Case IGenerateFile.ParamFileType.TopPIC
                         Return RetrieveStaticPSMParameterFile("TopPIC", paramFileName, outputFilePath, dmsConnectionString)
+
+                    Case IGenerateFile.ParamFileType.MSFragger
+                        Return RetrieveStaticPSMParameterFile("MSFragger", paramFileName, outputFilePath, dmsConnectionString)
+
+                    Case IGenerateFile.ParamFileType.MaxQuant
+                        Return RetrieveStaticPSMParameterFile("MaxQuant", paramFileName, outputFilePath, dmsConnectionString)
 
                     Case IGenerateFile.ParamFileType.Invalid
                         Exit Function

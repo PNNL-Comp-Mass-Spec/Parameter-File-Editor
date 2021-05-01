@@ -296,6 +296,10 @@ Public Class frmMain
                 m_ParamFileType = IGenerateFile.ParamFileType.MSPathFinder
             Case 1032
                 m_ParamFileType = IGenerateFile.ParamFileType.TopPIC
+            Case 1033
+                m_ParamFileType = IGenerateFile.ParamFileType.MSFragger
+            Case 1034
+                m_ParamFileType = IGenerateFile.ParamFileType.MaxQuant
 
         End Select
         'm_ParamFileType = _

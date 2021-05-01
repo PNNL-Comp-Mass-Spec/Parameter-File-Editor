@@ -138,6 +138,8 @@ Namespace DownloadParams
             MODPlus = 1028
             TopFD = 1031
             TopPIC = 1032
+            MSFragger = 1033
+            MaxQuant = 1034
         End Enum
 
 #End Region
@@ -626,7 +628,9 @@ Namespace DownloadParams
               "   or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB &
               "   or Param_File_Type_ID = " & eParamFileTypeConstants.MSPathFinder &
               "   or Param_File_Type_ID = " & eParamFileTypeConstants.MODPlus &
-              "   or Param_File_Type_ID = " & eParamFileTypeConstants.TopPIC
+              "   or Param_File_Type_ID = " & eParamFileTypeConstants.TopPIC &
+              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MSFragger &
+              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MaxQuant
 
             Dim tmpIDTable = GetTable(paramTableSQL)
 
