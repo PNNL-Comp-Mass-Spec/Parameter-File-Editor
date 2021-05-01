@@ -302,10 +302,7 @@ Public Class frmMain
                 m_ParamFileType = IGenerateFile.ParamFileType.MaxQuant
 
         End Select
-        'm_ParamFileType = _
-        '    CType([Enum].Parse(GetType(ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType), _
-        '    Me.cboFileTypes.Text), _
-        '    ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType)
+
         Me.LoadParamNames(m_ParamTypeID)
 
     End Sub
