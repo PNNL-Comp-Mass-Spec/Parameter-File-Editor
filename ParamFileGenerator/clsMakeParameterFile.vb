@@ -197,7 +197,8 @@ Namespace MakeParams
         Private Function GetMonoParentStatusWorker(sqlQuery As String, dmsConnectionString As String) As Boolean
 
             If m_DbTools Is Nothing Then
-                m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
+                Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator")
+                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse)
             End If
 
             Dim typeCheckTable As List(Of List(Of String)) = Nothing
@@ -240,7 +241,8 @@ Namespace MakeParams
             forceMonoParentMass As Boolean) As Boolean
 
             If m_DbTools Is Nothing Then
-                m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
+                Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator")
+                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse)
             End If
 
             Const DEF_TEMPLATE_FILEPATH = "\\Gigasax\DMS_Parameter_Files\Sequest\sequest_N14_NE_Template.params"
@@ -313,7 +315,8 @@ Namespace MakeParams
             Dim mdSQL As String
 
             If m_DbTools Is Nothing Then
-                m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
+                Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator")
+                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse)
             End If
 
             Dim baseParamFileName As String = Path.GetFileNameWithoutExtension(paramFileName)
@@ -356,7 +359,8 @@ Namespace MakeParams
             Dim paramFilePath As String
 
             If m_DbTools Is Nothing Then
-                m_DbTools = DbToolsFactory.GetDBTools(dmsConnectionString)
+                Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator")
+                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse)
             End If
 
             ' ReSharper disable once StringLiteralTypo

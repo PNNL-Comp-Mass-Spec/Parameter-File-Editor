@@ -313,7 +313,10 @@ Public Class frmMain
            Not m_CurrentConnectionString.Equals(m_DMSConnectString) Then
 
             m_CurrentConnectionString = String.Copy(m_DMSConnectString)
-            m_CurrentDBTools = DbToolsFactory.GetDBTools(m_CurrentConnectionString)
+
+            Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(m_CurrentConnectionString, "ParameterFileEditor_ParamGenTest")
+
+            m_CurrentDBTools = DbToolsFactory.GetDBTools(connectionStringToUse)
         End If
     End Sub
 

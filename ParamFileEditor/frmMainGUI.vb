@@ -3385,7 +3385,9 @@ Public Class frmMainGUI
            Not m_CurrentConnectionString.Equals(newConnectionString) Then
 
             m_CurrentConnectionString = String.Copy(newConnectionString)
-            m_CurrentDBTools = DbToolsFactory.GetDBTools(m_CurrentConnectionString)
+
+            Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(m_CurrentConnectionString, "ParamFileGenerator")
+            m_CurrentDBTools = DbToolsFactory.GetDBTools(connectionStringToUse)
         End If
     End Sub
 

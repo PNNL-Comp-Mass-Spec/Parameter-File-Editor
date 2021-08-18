@@ -17,7 +17,8 @@ Public Class clsDBTask
     ''' </summary>
     ''' <param name="connectionString"></param>
     Public Sub New(connectionString As String)
-        mDBTools = DbToolsFactory.GetDBTools(connectionString)
+        Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator")
+        mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse)
     End Sub
 
 #Disable Warning BC40028 ' Type of parameter is not CLS-compliant
@@ -28,7 +29,8 @@ Public Class clsDBTask
 
     <Obsolete("Use the constructor that only has a connection string")>
     Public Sub New(connectionString As String, persistConnection As Boolean)
-        mDBTools = DbToolsFactory.GetDBTools(connectionString)
+        Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator")
+        mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse)
     End Sub
 
     <Obsolete("Use the constructor that accepts a connection string", True)>
