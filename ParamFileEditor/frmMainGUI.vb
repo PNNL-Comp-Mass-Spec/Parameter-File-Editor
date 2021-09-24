@@ -42,8 +42,6 @@ Public Class frmMainGUI
         CheckForSettingsFileExistence()
         CheckForParamFileExistence()
         m_sharedMain = New clsMainProcess()
-
-        ValidateDBTools(mySettings.DMS_ConnectionString)
     End Sub
 
     'Form overrides dispose to clean up the component list.
