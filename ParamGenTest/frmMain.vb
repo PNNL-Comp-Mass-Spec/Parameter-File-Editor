@@ -14,11 +14,12 @@ Public Class frmMain
         InitializeComponent()
 
         'Add any initialization after the InitializeComponent() call
-        m_DMSConnectString = Me.txtDMSConnectionString.Text
-        m_OutputPath = Me.txtOutputPath.Text
-        m_FASTAPath = Me.txtFASTAPath.Text
-        If m_DMS Is Nothing Then
-            m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile()
+
+        mDMSConnectString = Me.txtDMSConnectionString.Text
+        mOutputPath = Me.txtOutputPath.Text
+        mFASTAPath = Me.txtFASTAPath.Text
+        If mDMS Is Nothing Then
+            mDMS = New clsMakeParameterFile()
         End If
 
         'Me.LoadParamNames()
@@ -225,26 +226,27 @@ Public Class frmMain
 
 #End Region
 
-    Dim m_OutputPath As String
-    Dim m_DMSConnectString As String
-    Dim m_ParamFileType As IGenerateFile.ParamFileType
-    Dim m_ParamTypeID As Integer
-    Dim m_ParamFileName As String
-    Dim m_FASTAPath As String
-    Dim m_AvailableParamFiles As DataTable
+    Dim mOutputPath As String
+    Dim mDMSConnectString As String
+    Dim mParamFileType As IGenerateFile.ParamFileType
+    Dim mParamTypeID As Integer
+    Dim mParamFileName As String
+    Dim mFASTAPath As String
+    Dim mAvailableParamFiles As DataTable
 
-    Dim m_CurrentConnectionString As String
-    Dim m_CurrentDBTools As IDBTools
+    Dim mCurrentConnectionString As String
+    Dim mCurrentDBTools As IDBTools
 
-    ReadOnly m_DMS As IGenerateFile
+
+    ReadOnly mDMS As IGenerateFile
 
     Private Sub cmdDoIt_Click(sender As Object, e As EventArgs) Handles cmdDoIt.Click
-        'If m_DMS Is Nothing Then
-        '    m_DMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile
+        'If mDMS Is Nothing Then
+        '    mDMS = New ParamFileGenerator.MakeParams.clsMakeParameterFile
         'End If
 
         If txtParamFileName.TextLength > 0 Then
-            m_ParamFileName = txtParamFileName.Text
+            mParamFileName = txtParamFileName.Text
         Else
             PopulateParamFileNameTextbox()
         End If
@@ -255,19 +257,19 @@ Public Class frmMain
         Else
             datasetID = -1
         End If
-        Dim success As Boolean = m_DMS.MakeFile(m_ParamFileName, m_ParamFileType, m_FASTAPath, m_OutputPath, m_DMSConnectString, datasetID)
+        Dim success As Boolean = mDMS.MakeFile(mParamFileName, mParamFileType, mFASTAPath, mOutputPath, mDMSConnectString, datasetID)
         If success = True Then
-            Me.txtResults.Text = "File successfully written to: " & Path.Combine(m_OutputPath, m_ParamFileName)
+            Me.txtResults.Text = "File successfully written to: " & Path.Combine(mOutputPath, mParamFileName)
         Else
             Me.txtResults.Text = "Error!"
-            If m_DMS.LastError IsNot Nothing AndAlso m_DMS.LastError.Length > 0 Then
-                Me.txtResults.Text &= " " & m_DMS.LastError
+            If mDMS.LastError IsNot Nothing AndAlso mDMS.LastError.Length > 0 Then
+                Me.txtResults.Text &= " " & mDMS.LastError
             End If
         End If
     End Sub
 
     Private Sub txtOutputPath_TextChanged(sender As Object, e As EventArgs) Handles txtOutputPath.TextChanged
-        m_OutputPath = Me.txtOutputPath.Text
+        mOutputPath = Me.txtOutputPath.Text
     End Sub
 
     Private Sub cboAvailableParams_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboAvailableParams.SelectedIndexChanged
@@ -275,63 +277,64 @@ Public Class frmMain
     End Sub
 
     Private Sub txtDMSConnectionString_TextChanged(sender As Object, e As EventArgs) Handles txtDMSConnectionString.TextChanged
-        m_DMSConnectString = Me.txtDMSConnectionString.Text
+        mDMSConnectString = Me.txtDMSConnectionString.Text
     End Sub
 
     Private Sub cboFileTypes_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboFileTypes.SelectedIndexChanged
-        m_ParamTypeID = CInt(Me.cboFileTypes.SelectedValue)
+        mParamTypeID = CInt(Me.cboFileTypes.SelectedValue)
 
-        Select Case m_ParamTypeID
+        Select Case mParamTypeID
             Case 1000
-                m_ParamFileType = IGenerateFile.ParamFileType.BioWorks_32
+                mParamFileType = IGenerateFile.ParamFileType.BioWorks_32
             Case 1008
-                m_ParamFileType = IGenerateFile.ParamFileType.X_Tandem
+                mParamFileType = IGenerateFile.ParamFileType.X_Tandem
             Case 1018
-                m_ParamFileType = IGenerateFile.ParamFileType.MSGFPlus
+                mParamFileType = IGenerateFile.ParamFileType.MSGFPlus
             Case 1019
-                m_ParamFileType = IGenerateFile.ParamFileType.MSAlign
+                mParamFileType = IGenerateFile.ParamFileType.MSAlign
             Case 1022
-                m_ParamFileType = IGenerateFile.ParamFileType.MSAlignHistone
+                mParamFileType = IGenerateFile.ParamFileType.MSAlignHistone
             Case 1025
-                m_ParamFileType = IGenerateFile.ParamFileType.MSPathFinder
+                mParamFileType = IGenerateFile.ParamFileType.MSPathFinder
             Case 1032
-                m_ParamFileType = IGenerateFile.ParamFileType.TopPIC
+                mParamFileType = IGenerateFile.ParamFileType.TopPIC
             Case 1033
-                m_ParamFileType = IGenerateFile.ParamFileType.MSFragger
+                mParamFileType = IGenerateFile.ParamFileType.MSFragger
             Case 1034
-                m_ParamFileType = IGenerateFile.ParamFileType.MaxQuant
+                mParamFileType = IGenerateFile.ParamFileType.MaxQuant
 
         End Select
 
-        Me.LoadParamNames(m_ParamTypeID)
+        Me.LoadParamNames(mParamTypeID)
 
     End Sub
 
     Private Sub ValidateDBTools()
-        If m_CurrentDBTools Is Nothing OrElse
-           String.IsNullOrWhiteSpace(m_CurrentConnectionString) OrElse
-           Not m_CurrentConnectionString.Equals(m_DMSConnectString) Then
+        If mCurrentDBTools Is Nothing OrElse
+           String.IsNullOrWhiteSpace(mCurrentConnectionString) OrElse
+           Not mCurrentConnectionString.Equals(mDMSConnectString) Then
 
-            m_CurrentConnectionString = String.Copy(m_DMSConnectString)
+            mCurrentConnectionString = String.Copy(mDMSConnectString)
 
-            Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(m_CurrentConnectionString, "ParameterFileEditor_ParamGenTest")
+            Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(mCurrentConnectionString, "ParameterFileEditor_ParamGenTest")
 
-            m_CurrentDBTools = DbToolsFactory.GetDBTools(connectionStringToUse)
+            mCurrentDBTools = DbToolsFactory.GetDBTools(connectionStringToUse)
         End If
     End Sub
 
     Private Sub LoadParamNames(Optional ByVal TypeID As Integer = 0)
-        If m_AvailableParamFiles Is Nothing Then
+    Private Sub LoadParamNames(Optional TypeID As Integer = 0)
+        If mAvailableParamFiles Is Nothing Then
             ValidateDBTools()
-            m_AvailableParamFiles = m_DMS.GetAvailableParamSetTable(m_CurrentDBTools)
+            mAvailableParamFiles = mDMS.GetAvailableParamSetTable(mCurrentDBTools)
         End If
 
         Dim foundRows() As DataRow
 
         If TypeID > 1 Then
-            foundRows = m_AvailableParamFiles.Select("Type_ID = " & TypeID.ToString)
+            foundRows = mAvailableParamFiles.Select("Type_ID = " & TypeID.ToString)
         Else
-            foundRows = m_AvailableParamFiles.Select()
+            foundRows = mAvailableParamFiles.Select()
         End If
 
         cboAvailableParams.BeginUpdate()
@@ -376,11 +379,11 @@ Public Class frmMain
         entry = DirectCast(Me.cboAvailableParams.SelectedItem, ParamFileEntry)
 
         txtParamFileName.Text = entry.Description
-        m_ParamFileName = txtParamFileName.Text
+        mParamFileName = txtParamFileName.Text
     End Sub
 
     Private Sub txtFASTAPath_TextChanged(sender As Object, e As EventArgs) Handles txtFASTAPath.TextChanged
-        m_FASTAPath = Me.txtFASTAPath.Text
+        mFASTAPath = Me.txtFASTAPath.Text
     End Sub
 
 
