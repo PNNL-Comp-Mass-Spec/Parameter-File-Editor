@@ -16,11 +16,14 @@ Public Class clsWriteOutput
 
     Public Sub WriteDataTableToOutputFile(
         tableToWrite As List(Of List(Of String)),
-        outputFilePath As String)
+        outputFilePath As String,
+        headerNames As List(Of String))
 
         Using writer As New StreamWriter(New FileStream(outputFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+            writer.WriteLine(String.Join(ControlChars.Tab, headerNames))
+
             For Each tableRow In tableToWrite
-                writer.WriteLine(String.Join(Chr(9), tableRow))
+                writer.WriteLine(String.Join(ControlChars.Tab, tableRow))
             Next
         End Using
 

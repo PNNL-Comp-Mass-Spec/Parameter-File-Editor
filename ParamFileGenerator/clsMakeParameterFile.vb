@@ -300,16 +300,16 @@ Namespace MakeParams
 
             Dim writeSuccess = m_FileWriter.WriteOutputFile(loadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType)
 
-            Dim successExtra = MakeSeqInfoRelatedFiles(paramFileName, outputFilePath, dmsConnectionString)
+            MakeSeqInfoRelatedFiles(paramFileName, outputFilePath, dmsConnectionString)
 
             Return writeSuccess
 
         End Function
 
-        Private Function MakeSeqInfoRelatedFiles(
+        Private Sub MakeSeqInfoRelatedFiles(
             paramFileName As String,
             targetDirectory As String,
-            dmsConnectionString As String) As Boolean
+            dmsConnectionString As String)
 
             Dim mctSQL As String
             Dim mdSQL As String
@@ -325,30 +325,48 @@ Namespace MakeParams
                 m_FileWriter = New clsWriteOutput
             End If
 
+            Dim massCorrectionTagsHeaderNames = New List(Of String) From {
+                "Mass_Correction_Tag",
+                "Monoisotopic_Mass",
+                "Affected_Atom"
+            }
+
+            Dim modDefHeaderNames = New List(Of String) From {
+                "Modification_Symbol",
+                "Monoisotopic_Mass",
+                "Target_Residues",
+                "Modification_Type",
+                "Mass_Correction_Tag"
+            }
+
             mctSQL =
                 "SELECT Mass_Correction_Tag, Monoisotopic_Mass, Affected_Atom " &
                 "FROM T_Mass_Correction_Factors " &
                 "ORDER BY Mass_Correction_Tag"
 
             mdSQL =
-                "SELECT Local_Symbol, Monoisotopic_Mass, Residue_Symbol, Mod_Type_Symbol, Mass_Correction_Tag " &
+                "SELECT " &
+                    "Local_Symbol As Modification_Symbol, " &
+                    "Monoisotopic_Mass, " &
+                    "Residue_Symbol As Target_Residues, " &
+                    "Mod_Type_Symbol As Modification_Type, " &
+                    "Mass_Correction_Tag, " &
                 "FROM V_Param_File_Mass_Mod_Info " &
                 "WHERE Param_File_Name = '" & paramFileName & "'"
 
             Dim mctTable As List(Of List(Of String)) = Nothing
             m_DbTools.GetQueryResults(mctSQL, mctTable)
 
-
             Dim mdTable As List(Of List(Of String)) = Nothing
             m_DbTools.GetQueryResults(mdSQL, mdTable)
 
-            'Dump the Mass_Correction_Tags file to the working directory
-            m_FileWriter.WriteDataTableToOutputFile(mctTable, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"))
+            ' Create the Mass_Correction_Tags file in the working directory
+            m_FileWriter.WriteDataTableToOutputFile(mctTable, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"), massCorrectionTagsHeaderNames)
 
-            'Dump the param file specific modification definitions file to the working directory
-            m_FileWriter.WriteDataTableToOutputFile(mdTable, Path.Combine(targetDirectory, baseParamFileName & "_ModDefs.txt"))
+            ' Create the param file specific modification definitions file in the working directory
+            m_FileWriter.WriteDataTableToOutputFile(mdTable, Path.Combine(targetDirectory, baseParamFileName & "_ModDefs.txt"), modDefHeaderNames)
 
-        End Function
+        End Sub
 
         Private Function RetrieveStaticPSMParameterFile(
            analysisToolName As String,
