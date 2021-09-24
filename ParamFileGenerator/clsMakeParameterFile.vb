@@ -331,6 +331,7 @@ Namespace MakeParams
                 "Affected_Atom"
             }
 
+            ' Note that "MaxQuant_Mod_Name" will be added below if MaxQuant mods are defined
             Dim modDefHeaderNames = New List(Of String) From {
                 "Modification_Symbol",
                 "Monoisotopic_Mass",
@@ -351,20 +352,43 @@ Namespace MakeParams
                     "Residue_Symbol As Target_Residues, " &
                     "Mod_Type_Symbol As Modification_Type, " &
                     "Mass_Correction_Tag, " &
+                    "MaxQuant_Mod_Name " &
                 "FROM V_Param_File_Mass_Mod_Info " &
                 "WHERE Param_File_Name = '" & paramFileName & "'"
 
-            Dim mctTable As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(mctSQL, mctTable)
+            Dim massCorrectionTags As List(Of List(Of String)) = Nothing
+            m_DbTools.GetQueryResults(mctSQL, massCorrectionTags)
 
-            Dim mdTable As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(mdSQL, mdTable)
+            Dim paramFileModInfo As List(Of List(Of String)) = Nothing
+            m_DbTools.GetQueryResults(mdSQL, paramFileModInfo)
 
             ' Create the Mass_Correction_Tags file in the working directory
-            m_FileWriter.WriteDataTableToOutputFile(mctTable, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"), massCorrectionTagsHeaderNames)
+            m_FileWriter.WriteDataTableToOutputFile(massCorrectionTags, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"), massCorrectionTagsHeaderNames)
+
+            ' Check whether any MaxQuant mods are actually defined
+            Dim paramFileModInfoNoMaxQuant = New List(Of List(Of String))
+
+            Dim includeMaxQuant = False
+            For Each item In paramFileModInfo
+                If item(5).Length > 0 Then
+                    includeMaxQuant = True
+                    Exit For
+                End If
+
+                paramFileModInfoNoMaxQuant.Add(item.Take(item.Count - 1).ToList())
+            Next
+
+            Dim paramFileModInfoToWrite As List(Of List(Of String))
+
+            If includeMaxQuant Then
+                paramFileModInfoToWrite = paramFileModInfo
+                modDefHeaderNames.Add("MaxQuant_Mod_Name")
+            Else
+                paramFileModInfoToWrite = paramFileModInfoNoMaxQuant
+            End If
 
             ' Create the param file specific modification definitions file in the working directory
-            m_FileWriter.WriteDataTableToOutputFile(mdTable, Path.Combine(targetDirectory, baseParamFileName & "_ModDefs.txt"), modDefHeaderNames)
+            m_FileWriter.WriteDataTableToOutputFile(paramFileModInfoToWrite, Path.Combine(targetDirectory, baseParamFileName & "_ModDefs.txt"), modDefHeaderNames)
 
         End Sub
 
