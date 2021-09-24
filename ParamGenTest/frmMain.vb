@@ -28,7 +28,7 @@ Public Class frmMain
     End Sub
 
     'Form overrides dispose to clean up the component list.
-    Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+    Protected Overloads Overrides Sub Dispose(disposing As Boolean)
         If disposing Then
             If Not (components Is Nothing) Then
                 components.Dispose()
@@ -322,7 +322,6 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub LoadParamNames(Optional ByVal TypeID As Integer = 0)
     Private Sub LoadParamNames(Optional TypeID As Integer = 0)
         If mAvailableParamFiles Is Nothing Then
             ValidateDBTools()
