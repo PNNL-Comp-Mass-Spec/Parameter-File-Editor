@@ -390,8 +390,8 @@ Public Class frmMain
         With Me.cboFileTypes
             .DisplayMember = "Type"
             .ValueMember = "ID"
-            .DataSource = paramFileTypes
-            .Text = "SEQUEST"
+            .DataSource = supportedParamFileTypes
+            .Text = "MSGFDB"
         End With
 
         'Me.cboFileTypes.DataSource = System.Enum.GetValues(GetType(ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType))
