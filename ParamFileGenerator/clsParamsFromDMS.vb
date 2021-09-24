@@ -515,7 +515,7 @@ Namespace DownloadParams
 
             If rowSet.Length > 0 Then               'We have dynamic mods
                 For Each foundRow As DataRow In rowSet
-                    tmpSpec = tmpSpec & foundRow.Item("Residue_Symbol").ToString
+                    tmpSpec &= foundRow.Item("Residue_Symbol").ToString
                 Next
                 Return tmpSpec
             Else

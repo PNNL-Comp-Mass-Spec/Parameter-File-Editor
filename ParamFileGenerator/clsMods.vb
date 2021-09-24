@@ -342,7 +342,7 @@ Public Class clsModEntry
         Dim returnString = ""
         For Each s In resCollection
             s = Left(s, 1)
-            returnString = returnString & s
+            returnString &= s
         Next
         Return returnString
     End Function
@@ -710,9 +710,9 @@ Public Class clsDynamicMods
 
         For padCount = 0 To counter - 1
             If padCount <= 2 Then
-                s = s & "0.0000 C "
+                s &= "0.0000 C "
             Else
-                s = s & "0.0000 X "
+                s &= "0.0000 X "
             End If
         Next
 

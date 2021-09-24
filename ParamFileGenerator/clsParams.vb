@@ -629,10 +629,10 @@ Public Class clsEnzymeDetails
             If (currChar = " " And prevChar <> " ") Or (counter = Len(enzStr) + 1) Then
                 ReDim Preserve s(placeCounter)
                 s(placeCounter) = tmpString
-                placeCounter = placeCounter + 1
+                placeCounter += 1
                 tmpString = ""
             ElseIf currChar <> " " Then
-                tmpString = tmpString + currChar
+                tmpString += currChar
             End If
 
             prevChar = currChar
