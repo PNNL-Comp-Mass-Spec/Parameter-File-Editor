@@ -168,8 +168,9 @@ Public Class frmDMSPicker
     End Sub
 
     Private Sub frmDMSPicker_Load(sender As System.Object, e As EventArgs) Handles MyBase.Load
-        m_Loader = New clsDMSPickerHandler
-        m_Loader.ProgramSettings = Me.MySettings
+        m_Loader = New clsDMSPickerHandler With {
+            .ProgramSettings = Me.MySettings
+        }
         m_Loader.FillListView(m_DBTools, Me.lvwDMSPicklist)
     End Sub
 

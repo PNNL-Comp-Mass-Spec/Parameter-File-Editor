@@ -442,8 +442,10 @@ Public Class clsTermDynamicMods
             ' Mod was not found
             ' Add it (assuming sngMass is non-zero)
             If Math.Abs(sngMass) > Single.Epsilon Then
-                Dim resCollection = New List(Of String)
-                resCollection.Add(strSymbol)
+                Dim resCollection = New List(Of String) From {
+                    strSymbol
+                }
+
                 Add(New clsModEntry(resCollection, sngMass, clsModEntry.ModificationTypes.Dynamic))
             End If
         Else
