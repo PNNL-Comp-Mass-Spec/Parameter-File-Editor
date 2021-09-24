@@ -4387,10 +4387,10 @@ Public Class frmMainGUI
             Dim t = DirectCast(sender, NumericTextBox)
             If e.KeyCode = Keys.Escape Then
                 t.Text = "0.0"
-                numericTextbox_Validating(sender, Nothing)
+                NumericTextBox_Validating(sender, Nothing)
             ElseIf e.KeyCode = Keys.Return OrElse e.KeyCode = Keys.Enter Then
                 t.ForceNewValue = True
-                numericTextbox_Validating(t, Nothing)
+                NumericTextBox_Validating(t, Nothing)
             End If
         Catch ex As Exception
             ' Exception: Perhaps the caller was not a numeric text box
@@ -4577,7 +4577,7 @@ Public Class frmMainGUI
                     For Each t In g_d.Controls
                         If IsNumeric(t.Text) And t.GetType.ToString = "System.Windows.Forms.TextBox" Then
                             If Math.Abs(CSng(t.Text)) > Single.Epsilon Then
-                                numericTextbox_Validating(t, Nothing)
+                                NumericTextBox_Validating(t, Nothing)
                             Else
                                 t.BackColor = SystemColors.Window
                             End If

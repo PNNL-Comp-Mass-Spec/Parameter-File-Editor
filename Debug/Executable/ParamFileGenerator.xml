@@ -21,7 +21,7 @@ ParamFileGenerator
 </member>
 <member name="M:ParamFileGenerator.MakeParams.clsMakeParameterFile.MakeFileSQ(System.String,ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType,System.String,System.String,System.String,System.Boolean)">
  <summary>
- Create Sequest parameter file
+ Create SEQUEST parameter file
  </summary>
  <param name="paramFileName"></param>
  <param name="paramFileType"></param>
@@ -46,7 +46,7 @@ ParamFileGenerator
 </member>
 <member name="M:ParamFileGenerator.DownloadParams.clsParamsFromDMS.GetAvailableParamSets">
  <summary>
- Finds parameter file info for Sequest, X!Tandem, MSGF+, MSPathFinder, or MODPlus
+ Finds parameter file info for SEQUEST, X!Tandem, MSGF+, MSPathFinder, MODPlus, TopPIC, MSFragger, or MaxQuant
  </summary>
  <returns></returns>
  <remarks></remarks>
