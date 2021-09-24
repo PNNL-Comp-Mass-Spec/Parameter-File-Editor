@@ -6,6 +6,8 @@ Imports PRISMDatabaseUtils
 Public Class frmMain
     Inherits Form
 
+    ' Ignore Spelling: SEQUEST
+
 #Region "Windows Form Designer generated code"
 
     Public Sub New()
@@ -35,7 +37,6 @@ Public Class frmMain
             mDMS = New clsMakeParameterFile()
         End If
 
-        'Me.LoadParamNames()
         Me.LoadParamFileTypes()
 
     End Sub
@@ -262,7 +263,7 @@ Public Class frmMain
         If txtParamFileName.TextLength > 0 Then
             mParamFileName = txtParamFileName.Text
         Else
-            PopulateParamFileNameTextbox()
+            PopulateParamFileNameTextBox()
         End If
 
         Dim datasetID As Integer
@@ -287,7 +288,7 @@ Public Class frmMain
     End Sub
 
     Private Sub cboAvailableParams_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboAvailableParams.SelectedIndexChanged
-        PopulateParamFileNameTextbox()
+        PopulateParamFileNameTextBox()
     End Sub
 
     Private Sub txtDMSConnectionString_TextChanged(sender As Object, e As EventArgs) Handles txtDMSConnectionString.TextChanged
