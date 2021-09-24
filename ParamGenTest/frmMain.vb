@@ -260,7 +260,7 @@ Public Class frmMain
             Me.txtResults.Text = "File successfully written to: " & Path.Combine(m_OutputPath, m_ParamFileName)
         Else
             Me.txtResults.Text = "Error!"
-            If Not m_DMS.LastError Is Nothing AndAlso m_DMS.LastError.Length > 0 Then
+            If m_DMS.LastError IsNot Nothing AndAlso m_DMS.LastError.Length > 0 Then
                 Me.txtResults.Text &= " " & m_DMS.LastError
             End If
         End If
@@ -366,8 +366,6 @@ Public Class frmMain
             .DataSource = paramFileTypes
             .Text = "SEQUEST"
         End With
-
-
 
         'Me.cboFileTypes.DataSource = System.Enum.GetValues(GetType(ParamFileGenerator.MakeParams.IGenerateFile.ParamFileType))
 

@@ -23,9 +23,9 @@ Public Class clsSimpleComparer
             Return 0
         Else
             Dim xGreater As Boolean
-            If Not xValue Is Nothing AndAlso yValue Is Nothing Then
+            If xValue IsNot Nothing AndAlso yValue Is Nothing Then
                 xGreater = True
-            ElseIf xValue Is Nothing AndAlso Not yValue Is Nothing Then
+            ElseIf xValue Is Nothing AndAlso yValue IsNot Nothing Then
                 xGreater = False
             Else
                 xGreater = xValue.ToString() > yValue.ToString()

@@ -3472,7 +3472,7 @@ Public Class frmMainGUI
     Private Sub cboCleavagePosition_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCleavagePosition.SelectedIndexChanged
         Try
             Dim cbc = DirectCast(cboCleavagePosition.SelectedItem, ComboBoxContents)
-            If Not cbc Is Nothing Then
+            If cbc IsNot Nothing Then
                 newParams.SelectedEnzymeCleavagePosition = CInt(cbc.Value)
             Else
                 newParams.SelectedEnzymeCleavagePosition = 1
@@ -4660,7 +4660,7 @@ Public Class frmMainGUI
         Do While trTextReader.Peek >= 0
             Dim strLine = trTextReader.ReadLine
 
-            If Not strLine Is Nothing AndAlso strLine.Length > 0 Then
+            If strLine IsNot Nothing AndAlso strLine.Length > 0 Then
                 strCurrentFunction = String.Empty
 
                 objMatch = reFunctionName.Match(strLine)
@@ -4684,7 +4684,7 @@ Public Class frmMainGUI
 
                 End If
 
-                If Not strCurrentFunction Is Nothing AndAlso strCurrentFunction.Length > 0 Then
+                If strCurrentFunction IsNot Nothing AndAlso strCurrentFunction.Length > 0 Then
                     If intFunctionCount >= strFunctions.Length Then
                         ' Reserve more space in strFunctions()
                         ReDim Preserve strFunctions(strFunctions.Length * 2 - 1)
@@ -4707,7 +4707,7 @@ Public Class frmMainGUI
 
         Dim strStackTrace = String.Empty
         For intIndex = intFunctionCount - 1 To 0 Step -1
-            If Not strFunctions(intIndex) Is Nothing Then
+            If strFunctions(intIndex) IsNot Nothing Then
                 If strStackTrace.Length = 0 Then
                     strStackTrace = "Stack trace: " & strFunctions(intIndex)
                 Else
@@ -4716,7 +4716,7 @@ Public Class frmMainGUI
             End If
         Next intIndex
 
-        If Not strStackTrace Is Nothing AndAlso strFinalFile.Length > 0 Then
+        If strStackTrace IsNot Nothing AndAlso strFinalFile.Length > 0 Then
             strStackTrace &= " in " & strFinalFile
         End If
 
