@@ -5,6 +5,7 @@
 
 Imports System.Diagnostics.CodeAnalysis
 
+<Assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification:="Auto-generated code", Scope:="member", Target:="~F:ParamGenTest.frmMain.components")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.cboAvailableParams_SelectedIndexChanged(System.Object,System.EventArgs)")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.cboFileTypes_SelectedIndexChanged(System.Object,System.EventArgs)")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.cmdDoIt_Click(System.Object,System.EventArgs)")>
