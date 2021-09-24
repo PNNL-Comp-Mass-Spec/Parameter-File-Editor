@@ -231,7 +231,7 @@ Public Class frmMain
         Me.Controls.Add(Me.lblOutputPath)
         Me.Controls.Add(Me.cboFileTypes)
         Me.Name = "frmMain"
-        Me.Text = "SEQUEST Param Generator"
+        Me.Text = "DMS Param File Generator"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
