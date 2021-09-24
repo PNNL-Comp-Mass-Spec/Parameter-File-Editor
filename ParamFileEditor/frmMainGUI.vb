@@ -28,17 +28,6 @@ Public Class frmMainGUI
 
     Private m_CurrentDBTools As IDBTools
 
-#Disable Warning BC40027 ' Return type of function is not CLS-compliant
-    'Public Property CurrentDBTools As IDBTools
-    '    Get
-    '        Return m_CurrentDBTools
-    '    End Get
-    '    Private Set(value As IDBTools)
-    '        m_CurrentDBTools = value
-    '    End Set
-    'End Property
-#Enable Warning BC40027 ' Return type of function is not CLS-compliant
-
     Private m_CurrentConnectionString As String = String.Empty
 
 #Region "Windows Form Designer generated code"
