@@ -24,7 +24,7 @@ Public Class frmMainGUI
     ''' <summary>
     ''' This class needs to be instantiated so that we can read properties BaseLineParamSet and templateFileName
     ''' </summary>
-    Private m_sharedMain As clsMainProcess
+    Private ReadOnly m_sharedMain As clsMainProcess
 
     Private m_CurrentDBTools As IDBTools
 

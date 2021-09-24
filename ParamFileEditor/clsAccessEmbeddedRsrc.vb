@@ -1,10 +1,10 @@
 Imports System.IO
 
 Friend Class clsAccessEmbeddedRsrc
-    Private m_EmbeddedRsrcList As Array
-    Private executingAssembly As System.Reflection.Assembly
-    Private myNameSpace As String
-    Private myExecutingDirectory As String
+    Private ReadOnly m_EmbeddedRsrcList As Array
+    Private ReadOnly executingAssembly As System.Reflection.Assembly
+    Private ReadOnly myNameSpace As String
+    Private ReadOnly myExecutingDirectory As String
 
 
     Friend Sub New()

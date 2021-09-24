@@ -4,7 +4,7 @@ Class ListViewItemComparer
 	' Implements the manual sorting of items by columns.
 	Dim m_SortOrderAsc As Boolean = True
 
-	Private col As Integer
+	Private ReadOnly col As Integer
 
 	Public Sub New()
 		col = 0
