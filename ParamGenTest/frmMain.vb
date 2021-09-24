@@ -1,3 +1,4 @@
+Imports System.Collections.Generic
 Imports System.IO
 Imports ParamFileGenerator.MakeParams
 Imports PRISMDatabaseUtils
@@ -14,6 +15,18 @@ Public Class frmMain
         InitializeComponent()
 
         'Add any initialization after the InitializeComponent() call
+
+        mSupportedParamFileTypeIDs = New SortedSet(Of Integer) From {
+            1000,   ' SEQUEST
+            1008,   ' X_Tandem
+            1018,   ' MSGFPlus
+            1019,   ' MSAlign
+            1022,   ' MSAlignHistone
+            1025,   ' MSPathFinder
+            1032,   ' TopPIC
+            1033,   ' MSFragger
+            1034    ' MaxQuant
+        }
 
         mDMSConnectString = Me.txtDMSConnectionString.Text
         mOutputPath = Me.txtOutputPath.Text
@@ -237,6 +250,7 @@ Public Class frmMain
     Dim mCurrentConnectionString As String
     Dim mCurrentDBTools As IDBTools
 
+    ReadOnly mSupportedParamFileTypeIDs As SortedSet(Of Integer)
 
     ReadOnly mDMS As IGenerateFile
 
@@ -359,8 +373,19 @@ Public Class frmMain
     Private Sub LoadParamFileTypes()
         ValidateDBTools()
 
-        Dim paramFileTypes As DataTable
-        paramFileTypes = m_DMS.GetAvailableParamFileTypes(m_CurrentDBTools)
+        Dim paramFileTypes As DataTable = mDMS.GetAvailableParamFileTypes(mCurrentDBTools)
+
+        Dim supportedParamFileTypes = paramFileTypes.Clone()
+
+        For Each currentRow As DataRow In paramFileTypes.Rows
+            Dim paramFileTypeID = Integer.Parse(currentRow.Item(0).ToString())
+
+            If Not mSupportedParamFileTypeIDs.Contains(paramFileTypeID) Then
+                Continue For
+            End If
+
+            supportedParamFileTypes.Rows.Add(currentRow.ItemArray())
+        Next
 
         With Me.cboFileTypes
             .DisplayMember = "Type"
