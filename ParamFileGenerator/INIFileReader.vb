@@ -62,7 +62,7 @@ Public Class IniFileReader
                 If fi.Exists Then
                     tr = fi.OpenText
                     s = tr.ReadLine()
-                    Do While Not s Is Nothing
+                    Do While s IsNot Nothing
                         If InStr(s, ";") Then
                             s = Left(s, InStr(s, ";") - 1).Trim
                         End If
@@ -79,7 +79,7 @@ Public Class IniFileReader
             Catch e As Exception
                 'MessageBox.Show(e.Message)
             Finally
-                If (Not tr Is Nothing) Then
+                If (tr IsNot Nothing) Then
                     tr.Close()
                 End If
             End Try
@@ -135,10 +135,10 @@ Public Class IniFileReader
 
     Private Function GetItem(sectionName As String, keyName As String) As XmlElement
         Dim section As XmlElement
-        If (Not keyName Is Nothing) AndAlso (keyName <> "") Then
+        If (keyName IsNot Nothing) AndAlso (keyName <> "") Then
             keyName = SetNameCase(keyName)
             section = GetSection(sectionName)
-            If (Not section Is Nothing) Then
+            If (section IsNot Nothing) Then
                 Return CType(section.SelectSingleNode("item[@key='" + keyName + "']"), XmlElement)
             End If
         End If
@@ -150,7 +150,7 @@ Public Class IniFileReader
         If Not Initialized Then
             Throw New IniFileReaderNotInitializedException
         End If
-        If (Not newSection Is Nothing) AndAlso (newSection <> "") Then
+        If (newSection IsNot Nothing) AndAlso (newSection <> "") Then
             section = GetSection(oldSection)
             If (Not (section Is Nothing)) Then
                 section.SetAttribute("name", SetNameCase(newSection))
@@ -184,7 +184,7 @@ Public Class IniFileReader
         End If
 
         item = GetItem(sectionName, keyName)
-        If Not item Is Nothing Then
+        If item IsNot Nothing Then
             If newValue Is Nothing Then
                 ' delete this item
                 Return DeleteItem(sectionName, keyName)
@@ -195,7 +195,7 @@ Public Class IniFileReader
             End If
         Else
             ' try to create the item
-            If (keyName <> "") AndAlso (Not newValue Is Nothing) Then
+            If (keyName <> "") AndAlso (newValue IsNot Nothing) Then
                 ' construct a new item (blank values are OK)
                 item = m_XmlDoc.CreateElement("item")
                 item.SetAttribute("key", SetNameCase(keyName))
@@ -209,7 +209,7 @@ Public Class IniFileReader
 
     Private Function DeleteSection(sectionName As String) As Boolean
         Dim section As XmlElement = GetSection(sectionName)
-        If Not section Is Nothing Then
+        If section IsNot Nothing Then
             section.ParentNode.RemoveChild(section)
             UpdateSections()
             Return True
@@ -219,7 +219,7 @@ Public Class IniFileReader
 
     Private Function DeleteItem(sectionName As String, keyName As String) As Boolean
         Dim item As XmlElement = GetItem(sectionName, keyName)
-        If Not item Is Nothing Then
+        If item IsNot Nothing Then
             item.ParentNode.RemoveChild(item)
             Return True
         End If
@@ -229,7 +229,7 @@ Public Class IniFileReader
     Public Function SetIniKey(sectionName As String, keyName As String, newValue As String) As Boolean
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Dim item As XmlElement = GetItem(sectionName, keyName)
-        If Not item Is Nothing Then
+        If item IsNot Nothing Then
             item.SetAttribute("key", SetNameCase(newValue))
             Return True
         End If
@@ -239,7 +239,7 @@ Public Class IniFileReader
     Public Function GetIniValue(sectionName As String, keyName As String) As String
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Dim N As XmlNode = GetItem(sectionName, keyName)
-        If Not N Is Nothing Then
+        If N IsNot Nothing Then
             Return (N.Attributes.GetNamedItem("value").Value)
         End If
         Return Nothing
@@ -307,9 +307,9 @@ Public Class IniFileReader
     Public Function GetCustomIniAttribute(sectionName As String, keyName As String, attributeName As String) As String
         Dim N As XmlElement
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
-        If (Not attributeName Is Nothing) AndAlso (attributeName <> "") Then
+        If (attributeName IsNot Nothing) AndAlso (attributeName <> "") Then
             N = GetItem(sectionName, keyName)
-            If Not N Is Nothing Then
+            If N IsNot Nothing Then
                 attributeName = SetNameCase(attributeName)
                 Return N.GetAttribute(attributeName)
             End If
@@ -325,7 +325,7 @@ Public Class IniFileReader
 
 
         Dim item = GetItem(sectionName, keyName)
-        If Not item Is Nothing Then
+        If item IsNot Nothing Then
             Try
                 If attributeValue Is Nothing Then
                     ' delete the attribute
@@ -349,7 +349,7 @@ Public Class IniFileReader
     Private Function CreateSection(sectionName As String) As Boolean
         Dim item As XmlElement
         Dim itemAttribute As XmlAttribute
-        If (Not sectionName Is Nothing) AndAlso (sectionName <> "") Then
+        If (sectionName IsNot Nothing) AndAlso (sectionName <> "") Then
             sectionName = SetNameCase(sectionName)
             Try
                 item = m_XmlDoc.CreateElement("section")
@@ -372,7 +372,7 @@ Public Class IniFileReader
         Dim section As XmlElement
         Try
             section = GetSection(sectionName)
-            If Not section Is Nothing Then
+            If section IsNot Nothing Then
                 item = m_XmlDoc.CreateElement("item")
                 item.SetAttribute("key", keyName)
                 item.SetAttribute("newValue", newValue)
@@ -454,7 +454,7 @@ Public Class IniFileReader
 
     Public Sub Save()
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
-        If Not OutputFilename Is Nothing AndAlso Not m_XmlDoc Is Nothing Then
+        If OutputFilename IsNot Nothing AndAlso m_XmlDoc IsNot Nothing Then
             Dim fi = New FileInfo(OutputFilename)
             If Not fi.Directory.Exists Then
                 'MessageBox.Show("Invalid path.")

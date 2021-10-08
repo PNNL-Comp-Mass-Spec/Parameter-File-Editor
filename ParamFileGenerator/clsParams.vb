@@ -326,7 +326,7 @@ Public Class clsParams
                 NumberOfResultsToProcess = CInt(.GetParam("num_results"))
             End If
             PeptideMassTolerance = CSng(.GetParam("peptide_mass_tolerance"))
-            If Not .GetParam("create_output_files") Is Nothing Then
+            If .GetParam("create_output_files") IsNot Nothing Then
                 CreateOutputFiles = CBool(.GetParam("create_output_files"))
             Else
                 CreateOutputFiles = True
@@ -379,7 +379,7 @@ Public Class clsParams
         tr = fi.OpenText
         s = tr.ReadLine
         'Find the correct section block)
-        Do While Not s Is Nothing
+        Do While s IsNot Nothing
             If InStr(s, ";DMS_Description = ") > 0 Then
                 desc = Mid(s, InStr(s, " = ") + 3)
                 Return desc
@@ -402,7 +402,7 @@ Public Class clsParams
         tr = fi.OpenText
         s = tr.ReadLine
 
-        Do While Not s Is Nothing
+        Do While s IsNot Nothing
             If InStr(s.ToLower, "num_results = ") > 0 Then
                 type = ParamFileTypes.BioWorks_31
                 Return type
