@@ -44,6 +44,19 @@ ParamFileGenerator
  Constructor
  </summary>
 </member>
+<member name="F:ParamFileGenerator.DownloadParams.clsParamsFromDMS.m_ParamFileTable">
+ <summary>
+ Parameter file table
+ </summary>
+</member>
+<member name="M:ParamFileGenerator.DownloadParams.clsParamsFromDMS.GetParamFileRowByID(System.Int32,System.Data.DataRow@)">
+ <summary>
+ Finds the row in m_ParamFileTable with the given parameter file ID
+ </summary>
+ <param name="paramFileID"></param>
+ <param name="matchingRow">The row if found, otherwise null</param>
+ <returns>True if the parameter file was found, otherwise false</returns>
+</member>
 <member name="M:ParamFileGenerator.DownloadParams.clsParamsFromDMS.GetAvailableParamSets">
  <summary>
  Finds parameter file info for SEQUEST, X!Tandem, MSGF+, MSPathFinder, MODPlus, TopPIC, MSFragger, or MaxQuant
