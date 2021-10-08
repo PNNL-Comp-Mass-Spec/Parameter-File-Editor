@@ -344,6 +344,7 @@ Namespace DownloadParams
 
         'TODO Fix this function for new mod handling
         Protected Function GetParamSetWithID(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As clsParams   'Download
+            Dim matchingRow As DataRow = Nothing
 
             If Not GetParamFileRowByID(paramSetID, matchingRow) Then
                 ' Match not found
@@ -562,19 +563,18 @@ Namespace DownloadParams
             Return tmpID
         End Function
 
-            Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
-            Dim tmpString As String
-            If foundRows.Length <> 0 Then
-                Dim foundRow = foundRows(0)
-                tmpString = CStr(foundRow.Item("Param_File_Description"))
-                If tmpString = "" Then
-                    Return ""
         Private Function GetDescriptionWithID(paramFileID As Integer) As String
+            Dim matchingRow As DataRow = Nothing
+
+            If GetParamFileRowByID(paramFileID, matchingRow) Then
+                Dim tmpString = CStr(matchingRow.Item("Param_File_Description"))
+                If String.IsNullOrWhiteSpace(tmpString) Then
+                    Return String.Empty
                 Else
                     Return tmpString
                 End If
             Else
-                Return Nothing
+                Return String.Empty
             End If
         End Function
 
@@ -967,10 +967,9 @@ Namespace DownloadParams
 
         End Function
 
-
-            Dim IDExists As Boolean = Me.ParamFileTable.Rows.Contains(paramSetID)
-            Return IDExists
         Private Function DoesParamSetIDExist(paramSetID As Integer) As Boolean
+            Dim matchingRow As DataRow = Nothing
+            Return GetParamFileRowByID(paramSetID, matchingRow)
         End Function
 
         Protected Function CompareParamSets(ByRef templateSet As clsParams, ByRef checkSet As clsParams) As String         'Neither
