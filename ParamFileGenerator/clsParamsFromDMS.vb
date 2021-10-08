@@ -578,8 +578,6 @@ Namespace DownloadParams
             End If
         End Function
 
-            Dim foundRow As DataRow = ParamFileTable.Rows.Find(ID)
-            Return foundRow
         ''' <summary>
         ''' Finds the row in m_ParamFileTable with the given parameter file ID
         ''' </summary>
@@ -588,6 +586,15 @@ Namespace DownloadParams
         ''' <returns>True if the parameter file was found, otherwise false</returns>
         Private Function GetParamFileRowByID(paramFileID As Integer, <Out> ByRef matchingRow As DataRow) As Boolean
 
+            Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_ID] = " & paramFileID)
+
+            If foundRows.Length > 0 Then
+                matchingRow = foundRows(0)
+                Return True
+            End If
+
+            matchingRow = Nothing
+            Return False
         End Function
 
         ''' <summary>
