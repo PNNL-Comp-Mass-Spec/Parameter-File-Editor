@@ -166,9 +166,9 @@ Namespace DownloadParams
 #End Region
 
 #Region "Public Properties"
-        Public ReadOnly Property ParamFileTable As DataTable
+        Public ReadOnly Property ParamFileTableLoaded As Boolean
             Get
-                Return m_ParamFileTable
+                Return m_ParamFileTable IsNot Nothing AndAlso m_ParamFileTable.Rows.Count > 0
             End Get
         End Property
 

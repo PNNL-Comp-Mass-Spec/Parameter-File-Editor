@@ -178,7 +178,6 @@ Namespace MakeParams
             Catch ex As Exception
                 ReportError("Error in MakeFile: " + ex.Message, ex)
                 Return False
-
             End Try
 
 
@@ -267,7 +266,7 @@ Namespace MakeParams
             Dim modProcessor As IReconstituteIsoMods
             modProcessor = New clsReconstituteIsoMods(m_DbTools)
 
-            If dmsParams.ParamFileTable Is Nothing Then
+            If Not dmsParams.ParamFileTableLoaded Then
                 ReportError("Could Not Establish Database Connection")
                 Return False
             End If
