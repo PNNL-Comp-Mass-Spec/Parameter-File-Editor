@@ -517,7 +517,7 @@ Namespace DownloadParams
 
         Private Function GetIDWithName(Name As String, eParamFileType As eParamFileTypeConstants) As Integer            'Common
 
-            Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = " & eParamFileType)
+            Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = " & eParamFileType)
             Dim foundRow As DataRow
             Dim tmpID As Integer
             If foundRows.Length > 0 Then
@@ -529,9 +529,8 @@ Namespace DownloadParams
             Return tmpID
         End Function
 
-
-            Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID.ToString())
         Private Function GetTypeWithID(paramFileID As Integer) As eParamFileTypeConstants
+            Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_ID] = " & paramFileID.ToString())
             Dim foundRow As DataRow
             Dim tmpID As eParamFileTypeConstants
             If foundRows.Length > 0 Then
@@ -545,7 +544,7 @@ Namespace DownloadParams
 
         Private Function GetTypeWithName(paramFileName As String) As eParamFileTypeConstants
 
-            Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & ParamFileName & "'")
+            Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_Name] = '" & paramFileName & "'")
             Dim foundRow As DataRow
             Dim tmpID As eParamFileTypeConstants
             If foundRows.Length > 0 Then
@@ -646,18 +645,18 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function DistillFeaturesFromParamSet(ParamSet As clsParams) As String       'Neither
-            Dim templateColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(Me.m_BaseLineParamSet)
-            Dim checkColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(ParamSet)
+        Protected Function DistillFeaturesFromParamSet(paramSet As clsParams) As String
+            Dim templateColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(m_BaseLineParamSet)
+            Dim checkColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(paramSet)
 
 
             Dim diffColl As clsDMSParamStorage = CompareDataCollections(templateColl, checkColl)
-            Return Me.SummarizeDiffColl(diffColl)
+            Return SummarizeDiffColl(diffColl)
 
         End Function
 
-        Protected Function DistillFeaturesFromParamSet(ParamSetID As Integer, eParamFileTypeID As eParamFileTypeConstants) As String          'Common
-            Dim p As clsParams = Me.GetParamSetWithID(ParamSetID, eParamFileTypeID)
+        Protected Function DistillFeaturesFromParamSet(paramSetID As Integer, eParamFileTypeID As eParamFileTypeConstants) As String
+            Dim p As clsParams = GetParamSetWithID(paramSetID, eParamFileTypeID)
 
             Return p.Description
 
@@ -677,7 +676,7 @@ Namespace DownloadParams
             For Each pProp In pProps
                 tmpName = pProp.Name
                 tmpType = pProp.PropertyType
-                If Me.m_AcceptableParams.Contains(tmpName) Then
+                If m_AcceptableParams.Contains(tmpName) Then
                     If (tmpType.Name = "clsIonSeries") Then
                         c = ExpandIonSeries(paramSet.IonSeries, c)
 
@@ -693,10 +692,10 @@ Namespace DownloadParams
                     ElseIf (tmpType.Name = "clsStaticMods") Then
                         c = ExpandStaticMods(paramSet.StaticModificationsList, c)
 
-                    ElseIf Me.m_BasicParams.Contains(tmpName) Then
+                    ElseIf m_BasicParams.Contains(tmpName) Then
                         tmpValue = (pProp.GetValue(paramSet, Nothing)).ToString
                         c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.BasicParam)
-                    ElseIf Me.m_AdvancedParams.Contains(tmpName) Then
+                    ElseIf m_AdvancedParams.Contains(tmpName) Then
                         tmpValue = (pProp.GetValue(paramSet, Nothing)).ToString
                         c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.AdvancedParam)
                     End If
@@ -733,7 +732,7 @@ Namespace DownloadParams
                 tmpType = paramEntry.Type
 
                 If tmpType = clsDMSParamStorage.ParamTypes.BasicParam And
-                    Me.m_BasicParams.Contains(tmpSpec) Then
+                    m_BasicParams.Contains(tmpSpec) Then
 
                     For Each pField In pFields
                         If pField.Name = tmpSpec Then
@@ -764,7 +763,7 @@ Namespace DownloadParams
                     Next
 
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.AdvancedParam And
-                    Me.m_AdvancedParams.Contains(tmpSpec) Then
+                    m_AdvancedParams.Contains(tmpSpec) Then
 
                     For Each pField In pFields
                         If pField.Name = tmpSpec Then
@@ -790,7 +789,7 @@ Namespace DownloadParams
                     Next
 
                 ElseIf tmpType = clsDMSParamStorage.ParamTypes.AdvancedParam And
-                    Me.m_IonSeriesParams.Contains(tmpSpec) Then
+                    m_IonSeriesParams.Contains(tmpSpec) Then
 
                     For Each ionField In ionFields
                         If ionField.Name = tmpSpec Then
@@ -960,8 +959,8 @@ Namespace DownloadParams
         End Function
 
         Protected Function GetDiffColl(ByRef templateSet As clsParams, ByRef checkSet As clsParams) As clsDMSParamStorage
-            Dim templateColl As clsDMSParamStorage = Me.WriteDataCollectionFromParamSet(templateSet)
-            Dim checkColl As clsDMSParamStorage = Me.WriteDataCollectionFromParamSet(checkSet)
+            Dim templateColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(templateSet)
+            Dim checkColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(checkSet)
 
             Dim diffCollection As clsDMSParamStorage = CompareDataCollections(templateColl, checkColl)
             Return diffCollection

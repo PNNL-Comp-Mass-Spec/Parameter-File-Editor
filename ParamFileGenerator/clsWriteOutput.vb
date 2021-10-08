@@ -1,12 +1,13 @@
 Imports System.Collections.Generic
 Imports System.IO
+Imports ParamFileGenerator.MakeParams
 
 Public Class clsWriteOutput
 
     Public Function WriteOutputFile(
         params As clsParams,
         outputPathName As String,
-        fileType As MakeParams.IGenerateFile.ParamFileType) As Boolean
+        fileType As IGenerateFile.ParamFileType) As Boolean
 
         Dim sequestParamList As IEnumerable(Of String) = ConvertSequestParamsToList(params, fileType)
         Call OutputTextParamFile(sequestParamList, outputPathName)
@@ -31,16 +32,16 @@ Public Class clsWriteOutput
 
     Private Function ConvertSequestParamsToList(
         params As clsParams,
-        type As MakeParams.IGenerateFile.ParamFileType) As IEnumerable(Of String)
+        type As IGenerateFile.ParamFileType) As IEnumerable(Of String)
 
         Dim paramList As New List(Of String)
 
         Dim maxDynMods As Integer
 
-        If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_20 Then
+        If type = IGenerateFile.ParamFileType.BioWorks_20 Then
             paramList.Add("[Sequest]")
             maxDynMods = 3
-        ElseIf type = MakeParams.IGenerateFile.ParamFileType.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        ElseIf type = IGenerateFile.ParamFileType.BioWorks_30 Or type = IGenerateFile.ParamFileType.BioWorks_31 Or type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("[Sequest]")
             maxDynMods = 6
         End If
@@ -48,18 +49,18 @@ Public Class clsWriteOutput
         If type = clsParams.ParamFileTypes.BioWorks_20 Then
             paramList.Add("database_name = " & params.DefaultFASTAPath)
         ElseIf type = clsParams.ParamFileTypes.BioWorks_30 Or
-                    type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or
-                    type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+                    type = IGenerateFile.ParamFileType.BioWorks_31 Or
+                    type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("first_database_name = " & params.DefaultFASTAPath)
             paramList.Add("second_database_name = " & params.DefaultFASTAPath2)
         End If
         paramList.Add("peptide_mass_tolerance = " & Format(params.PeptideMassTolerance, "0.0000").ToString)
-        If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("peptide_mass_units = " + params.PeptideMassUnits.ToString)
         End If
         paramList.Add("ion_series = " & params.IonSeries.ReturnIonString)
         paramList.Add("fragment_ion_tolerance = " & Format(params.FragmentIonTolerance, "0.0000").ToString)
-        If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If type = IGenerateFile.ParamFileType.BioWorks_32 Then
 
             ' MEM Note from February 2010
             '  Our version of Sequest [ TurboSEQUEST - PVM Slave v.27 (rev. 12), (c) 1998-2005 ]
@@ -71,7 +72,7 @@ Public Class clsWriteOutput
         End If
 
         paramList.Add("num_output_lines = " & params.NumberOfOutputLines.ToString)
-        If type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If type = clsParams.ParamFileTypes.BioWorks_30 Or type = IGenerateFile.ParamFileType.BioWorks_31 Or type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("num_results = " & params.NumberOfResultsToProcess)
         End If
         paramList.Add("num_description_lines = " & params.NumberOfDescriptionLines.ToString)
@@ -82,7 +83,7 @@ Public Class clsWriteOutput
         'End If
         paramList.Add("print_duplicate_references = " & ConvertBoolToInteger(params.PrintDuplicateReferences).ToString)
 
-        If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If Not type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("enzyme_number = " & params.SelectedEnzymeIndex.ToString)
         Else
             If params.SelectedEnzymeIndex >= params.EnzymeList.Count Then
@@ -91,7 +92,7 @@ Public Class clsWriteOutput
             Dim enz = params.EnzymeList(params.SelectedEnzymeIndex)
             paramList.Add("enzyme_info = " + enz.ReturnBW32EnzymeInfoString(params.SelectedEnzymeCleavagePosition))
         End If
-        If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("max_num_differential_per_peptide = " + params.MaximumNumDifferentialPerPeptide.ToString)
         End If
         paramList.Add("max_num_differential_AA_per_mod = " & params.MaximumNumAAPerDynMod.ToString)
@@ -101,14 +102,14 @@ Public Class clsWriteOutput
 
         paramList.Add("term_diff_search_options = " + params.TermDynamicMods.ReturnDynModString(0))
 
-        If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("use_phospho_fragmentation = " + params.UsePhosphoFragmentation.ToString)
         End If
 
         paramList.Add("nucleotide_reading_frame = " & CType(params.SelectedNucReadingFrame, Integer).ToString)
         paramList.Add("mass_type_parent = " & CType(params.ParentMassType, Integer).ToString)
         paramList.Add("mass_type_fragment = " & CType(params.FragmentMassType, Integer).ToString)
-        If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("normalize_xcorr = " + "0")
         End If
         paramList.Add("remove_precursor_peak = " & ConvertBoolToInteger(params.RemovePrecursorPeak).ToString)
@@ -152,13 +153,13 @@ Public Class clsWriteOutput
         paramList.Add("add_R_Arginine = " & Format(params.StaticModificationsList.R_Arginine, "0.0000").ToString)
         paramList.Add("add_Y_Tyrosine = " & Format(params.StaticModificationsList.Y_Tyrosine, "0.0000").ToString)
         paramList.Add("add_W_Tryptophan = " & Format(params.StaticModificationsList.W_Tryptophan, "0.0000").ToString)
-        If type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("add_J_user_amino_acid = 0.0000")
             paramList.Add("add_U_user_amino_acid = 0.0000")          ' Note: you'd use 150.9536 for selenocysteine.  However, manual testing by Sam Purvine in 2010 showed that our version of Sequest ignores this parameter
         End If
         paramList.Add("")
 
-        If Not type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        If Not type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("[SEQUEST_ENZYME_INFO]")
             For Each item As clsEnzymeDetails In params.EnzymeList
                 paramList.Add(item.ReturnEnzymeString)

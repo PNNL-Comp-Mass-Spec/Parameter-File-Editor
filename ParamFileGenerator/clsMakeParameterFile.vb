@@ -2,6 +2,7 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
 Imports ParamFileGenerator.DownloadParams
+Imports PRISM
 Imports PRISMDatabaseUtils
 
 ' ReSharper disable once CheckNamespace
@@ -67,10 +68,10 @@ Namespace MakeParams
 
 
     Public Class clsMakeParameterFile
-        Inherits PRISM.EventNotifier
+        Inherits EventNotifier
         Implements IGenerateFile
 
-        Private m_DbTools As PRISMDatabaseUtils.IDBTools
+        Private m_DbTools As IDBTools
         Private m_FileWriter As clsWriteOutput
 
         Public Property TemplateFilePath As String

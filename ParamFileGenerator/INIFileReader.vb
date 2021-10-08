@@ -12,7 +12,7 @@ Enum IniItemTypeEnum
 End Enum
 
 Public Class IniFileReaderNotInitializedException
-    Inherits System.ApplicationException
+    Inherits ApplicationException
     Public Overrides ReadOnly Property Message As String
         Get
             Return "The IniFileReader instance has not been properly initialized."
