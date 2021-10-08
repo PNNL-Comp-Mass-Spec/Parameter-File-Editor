@@ -4607,7 +4607,7 @@ Public Class frmMainGUI
 
     Private Sub mnuDebugSyncDesc_Click(sender As Object, e As EventArgs) Handles mnuDebugSyncDesc.Click
         Dim sync As New clsTransferParamEntriesToMassModList(m_CurrentDBTools)
-        sync.SyncDescriptions(clsMainProcess.BaseLineParamSet)
+        sync.SyncDescriptions()
 
     End Sub
 

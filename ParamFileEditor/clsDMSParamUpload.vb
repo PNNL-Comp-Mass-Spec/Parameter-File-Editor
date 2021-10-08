@@ -32,7 +32,7 @@ Friend Class clsDMSParamUpload
         Return success
     End Function
 
-    Friend Function WriteParamsToLocalStructure(paramSet As clsParams, paramSetIDToUpdate As Integer) As Boolean
+    Friend Function WriteParamsToLocalStructure(paramSet As clsParams) As Boolean
         Return SaveParams(paramSet, True)
     End Function
 

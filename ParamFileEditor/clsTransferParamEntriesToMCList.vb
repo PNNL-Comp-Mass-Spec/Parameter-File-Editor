@@ -22,8 +22,8 @@ Friend Class clsTransferParamEntriesToMassModList
         Me.SyncSingleJob(paramFileID)
     End Sub
 
-    Public Sub SyncDescriptions(ByRef BaseLineParams As ParamFileGenerator.clsParams)
-        Me.SyncDesc(BaseLineParams)
+    Public Sub SyncDescriptions()
+        Me.SyncDesc()
     End Sub
 
     Private Sub SyncMassModList2PETable()
@@ -62,7 +62,7 @@ Friend Class clsTransferParamEntriesToMassModList
         Debug.WriteLine("Finished: " & paramFileID)
     End Sub
 
-    Private Sub SyncDesc(ByRef BaseLineParams As ParamFileGenerator.clsParams)
+    Private Sub SyncDesc()
 
         Dim eParamFileType = eParamFileTypeConstants.Sequest
 

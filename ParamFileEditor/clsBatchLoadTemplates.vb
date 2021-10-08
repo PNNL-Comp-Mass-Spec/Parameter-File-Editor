@@ -88,7 +88,7 @@ Friend Class clsBatchLoadTemplates
                 End If
             Else
                 'ParamSetID = Me.GetNextParamSetID
-                'Me.WriteParamsToLocalStructure(c, ParamSetID)
+                'Me.WriteParamsToLocalStructure(c)
                 added += 1
             End If
 

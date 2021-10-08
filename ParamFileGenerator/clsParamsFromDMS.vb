@@ -13,9 +13,6 @@ Namespace DownloadParams
 #Region "Constants"
         Private Const Param_File_Table As String = "T_Param_Files"
         Private Const Param_Entry_Table As String = "T_Param_Entries"
-        Private Const Param_FileTypes_Table As String = "T_Param_File_Types"
-        Private Const Param_Class_Table As String = "T_Param_Entry_Types"
-        Private Const Param_MassType_Table As String = "T_Sequest_Params_MassType_Name"
         Private Const Param_Mass_Mods_Table As String = "T_Param_File_Mass_Mods"
         Private Const Mass_Corr_Factors As String = "T_Mass_Correction_Factors"
         Private Const Residues_Table As String = "T_Residues"
@@ -330,11 +327,6 @@ Namespace DownloadParams
 
             Return True
 
-        End Function
-
-        Private Function GetParamSetTableCount(psTable As DataTable) As Integer
-            Dim count As Integer = psTable.Rows.Count
-            Return count
         End Function
 
         Private Function RetrieveParams(paramSetID As Integer, eParamFileType As eParamFileTypeConstants) As clsParams
@@ -845,15 +837,6 @@ Namespace DownloadParams
             Next
 
             Return p
-
-        End Function
-
-        Private Function UpdateParamSetMember(
-            ByRef paramSet As clsParams,
-            Specifier As String,
-            Value As String) As Integer
-
-
 
         End Function
 

@@ -93,16 +93,4 @@ Friend Class clsAccessEmbeddedRsrc
         End Get
     End Property
 
-    Private Sub printDebugList()
-        Dim maxCount As Integer = UBound(Me.m_EmbeddedRsrcList)
-        Dim counter As Integer
-
-        For counter = 0 To maxCount
-            Console.Write(ControlChars.Tab + "{0}", counter)
-        Next
-
-    End Sub
-
-
-
 End Class

@@ -611,8 +611,7 @@ Public Class clsDynamicMods
 
     Public Overloads Sub Add(
         AffectedResidueString As String,
-        MassDifference As Double,
-        Optional GlobalModID As Integer = 0)
+        MassDifference As Double)
 
         Dim residueList = ConvertAffectedResStringToList(AffectedResidueString)
         Dim newDynMod As New clsModEntry(residueList, MassDifference, clsModEntry.ModificationTypes.Dynamic)
@@ -689,7 +688,7 @@ Public Class clsDynamicMods
                 dm.GlobalModID = Value
                 Replace(index, dm)
             Else
-                Add("C", 0.0, Value)
+                Add("C", 0.0)
             End If
         End Set
     End Property
