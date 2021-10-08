@@ -70,7 +70,5 @@ Public Class clsGetResiduesList
             ResidueAtomCounts.Add(residueSymbol.Chars(0), atomCountsForResidue)
         Next
 
-        ' Me.m_ResiduesTable = Me.GetTable(SQL)
-
     End Sub
 End Class

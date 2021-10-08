@@ -529,29 +529,6 @@ Namespace DownloadParams
             Return tmpID
         End Function
 
-        'Private Function GetIDWithName(Name As String) As Integer             'Common
-        '    Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = 1000")
-        '    Dim foundRow As DataRow
-        '    Dim tmpID As Integer
-        '    If foundRows.Length > 0 Then
-        '        foundRow = foundRows(0)
-        '        tmpID = CInt(foundRow.Item(0))
-        '    Else
-        '        tmpID = -1
-        '    End If
-        '    Return tmpID
-        'End Function
-
-            Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
-            If foundRows.Length <> 0 Then
-                Dim foundRow = foundRows(0)
-                Return CStr(foundRow.Item("Param_File_Name"))
-        Private Function GetNameWithID(paramFileID As Integer) As String
-            Else
-                Return Nothing
-            End If
-
-        End Function
 
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID.ToString())
         Private Function GetTypeWithID(paramFileID As Integer) As eParamFileTypeConstants
