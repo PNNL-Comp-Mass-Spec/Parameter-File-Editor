@@ -531,7 +531,7 @@ Namespace DownloadParams
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = " & eParamFileType)
             Dim foundRow As DataRow
             Dim tmpID As Integer
-            If foundRows.Length <> 0 Then
+            If foundRows.Length > 0 Then
                 foundRow = foundRows(0)
                 tmpID = CInt(foundRow.Item("Param_File_ID"))
             Else
@@ -568,7 +568,7 @@ Namespace DownloadParams
         Private Function GetTypeWithID(paramFileID As Integer) As eParamFileTypeConstants
             Dim foundRow As DataRow
             Dim tmpID As eParamFileTypeConstants
-            If foundRows.Length <> 0 Then
+            If foundRows.Length > 0 Then
                 foundRow = foundRows(0)
                 tmpID = CType(foundRow.Item("Param_File_Type_ID"), eParamFileTypeConstants)
             Else
@@ -582,7 +582,7 @@ Namespace DownloadParams
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & ParamFileName & "'")
             Dim foundRow As DataRow
             Dim tmpID As eParamFileTypeConstants
-            If foundRows.Length <> 0 Then
+            If foundRows.Length > 0 Then
                 foundRow = foundRows(0)
                 tmpID = CType(foundRow.Item("Param_File_Type_ID"), eParamFileTypeConstants)
             Else
