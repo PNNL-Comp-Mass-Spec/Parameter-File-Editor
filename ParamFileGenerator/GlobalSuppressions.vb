@@ -5,6 +5,8 @@
 
 Imports System.Diagnostics.CodeAnalysis
 
+<Assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification:="Leave for reference", Scope:="member", Target:="~M:ParamFileGenerator.DownloadParams.clsParamsFromDMS.GetDescriptionWithID(System.Int32)~System.String")>
+<Assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification:="Leave for reference", Scope:="member", Target:="~M:ParamFileGenerator.IniFileReader.CreateItem(System.String,System.String,System.String)~System.Boolean")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamFileGenerator.clsIonSeries.c_Ion_Weighting")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamFileGenerator.clsIonSeries.d_Ion_Weighting")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamFileGenerator.clsIonSeries.v_Ion_Weighting")>

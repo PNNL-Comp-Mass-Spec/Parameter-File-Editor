@@ -5,8 +5,8 @@
 
 Imports System.Diagnostics.CodeAnalysis
 
+<Assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification:="Leave for reference", Scope:="member", Target:="~M:ParamFileEditor.frmGlobalModNamer.ConvertModTypeToString(ParamFileEditor.IMassTweaker.ModTypes)~System.String")>
 <Assembly: SuppressMessage("Style", "IDE0140:Object creation can be simplified", Justification:="Auto-generated code", Scope:="member", Target:="~M:ParamFileEditor.frmMainGUI.InitializeComponent")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamFileEditor.clsAccessEmbeddedRsrc.printDebugList")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamFileEditor.clsDeconvolveIsoMods.getIsoModValue(System.Char,ParamFileGenerator.clsReconstituteIsoMods.AvailableAtoms,System.Single)~System.Single")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamFileEditor.clsDMSParamUpload.tmpSaveMods(ParamFileGenerator.clsParams@,ParamFileEditor.IMassTweaker@)")>
 <Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamFileEditor.frmAboutBox.frmAboutBox_Load(System.Object,System.EventArgs)")>
