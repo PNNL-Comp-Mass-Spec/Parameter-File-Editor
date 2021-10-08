@@ -332,18 +332,18 @@ Namespace DownloadParams
 
         End Function
 
-        Private Function GetParamSetTableCount(psTable As DataTable) As Integer             'Common
+        Private Function GetParamSetTableCount(psTable As DataTable) As Integer
             Dim count As Integer = psTable.Rows.Count
             Return count
         End Function
 
-        Private Function RetrieveParams(paramSetID As Integer, eParamFileType As eParamFileTypeConstants) As clsParams                  'Download
+        Private Function RetrieveParams(paramSetID As Integer, eParamFileType As eParamFileTypeConstants) As clsParams
             Dim p As clsParams = GetParamSetWithID(paramSetID, eParamFileType)
             Return p
         End Function
 
         'TODO Fix this function for new mod handling
-        Protected Function GetParamSetWithID(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As clsParams   'Download
+        Protected Function GetParamSetWithID(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As clsParams
             Dim matchingRow As DataRow = Nothing
 
             If Not GetParamFileRowByID(paramSetID, matchingRow) Then
@@ -522,7 +522,7 @@ Namespace DownloadParams
             End If
         End Function
 
-        Private Function GetIDWithName(Name As String, eParamFileType As eParamFileTypeConstants) As Integer            'Common
+        Private Function GetIDWithName(Name As String, eParamFileType As eParamFileTypeConstants) As Integer
 
             Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = " & eParamFileType)
             Dim foundRow As DataRow
@@ -936,7 +936,7 @@ Namespace DownloadParams
             Return ParamCollection
         End Function
 
-        Private Function DoesParamSetNameExist(paramSetName As String) As Boolean       'Common
+        Private Function DoesParamSetNameExist(paramSetName As String) As Boolean
 
             Dim eParamFileType As eParamFileTypeConstants
             eParamFileType = GetTypeWithName(paramSetName)
@@ -953,7 +953,7 @@ Namespace DownloadParams
                     paramFileTypeName = "Unknown"
                 End If
 
-                Console.WriteLine("Parameter file " & paramSetName & " is of type " & paramFileTypeName & ", which isn't support for export from DMS")
+                Console.WriteLine("Parameter file " & paramSetName & " is of type " & paramFileTypeName & ", which isn't supported for export from DMS")
                 Return False
             End If
 
@@ -972,7 +972,7 @@ Namespace DownloadParams
             Return GetParamFileRowByID(paramSetID, matchingRow)
         End Function
 
-        Protected Function CompareParamSets(ByRef templateSet As clsParams, ByRef checkSet As clsParams) As String         'Neither
+        Protected Function CompareParamSets(ByRef templateSet As clsParams, ByRef checkSet As clsParams) As String
             Dim diffCollection As clsDMSParamStorage = GetDiffColl(templateSet, checkSet)
             Return SummarizeDiffColl(diffCollection)
         End Function
