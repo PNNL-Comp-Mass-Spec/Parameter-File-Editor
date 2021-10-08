@@ -1,5 +1,6 @@
 Imports System.Collections.Generic
 Imports System.Reflection
+Imports System.Runtime.InteropServices
 Imports PRISMDatabaseUtils
 
 Namespace DownloadParams
@@ -344,8 +345,7 @@ Namespace DownloadParams
         'TODO Fix this function for new mod handling
         Protected Function GetParamSetWithID(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As clsParams   'Download
 
-            Dim dr As DataRow = GetFileRowWithID(ParamSetID)
-            If dr Is Nothing Then
+            If Not GetParamFileRowByID(paramSetID, matchingRow) Then
                 ' Match not found
                 Return New clsParams()
             End If
@@ -578,9 +578,16 @@ Namespace DownloadParams
             End If
         End Function
 
-        Protected Function GetFileRowWithID(ID As Integer) As DataRow             'Download
             Dim foundRow As DataRow = ParamFileTable.Rows.Find(ID)
             Return foundRow
+        ''' <summary>
+        ''' Finds the row in m_ParamFileTable with the given parameter file ID
+        ''' </summary>
+        ''' <param name="paramFileID"></param>
+        ''' <param name="matchingRow">The row if found, otherwise null</param>
+        ''' <returns>True if the parameter file was found, otherwise false</returns>
+        Private Function GetParamFileRowByID(paramFileID As Integer, <Out> ByRef matchingRow As DataRow) As Boolean
+
         End Function
 
         ''' <summary>
