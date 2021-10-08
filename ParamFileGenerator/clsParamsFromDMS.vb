@@ -172,17 +172,6 @@ Namespace DownloadParams
             End Get
         End Property
 
-        Public ReadOnly Property ParamEntryTable As DataTable
-            Get
-                Return m_ParamEntryTable
-            End Get
-        End Property
-
-        Public ReadOnly Property ParamFileType As eParamFileTypeConstants
-            Get
-                Return m_ParamFileType
-            End Get
-        End Property
 #End Region
 
 
