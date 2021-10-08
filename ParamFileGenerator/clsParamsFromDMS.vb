@@ -10,14 +10,14 @@ Namespace DownloadParams
         ' Ignore Spelling: diffs, mc
 
 #Region "Constants"
-        Protected Const Param_File_Table As String = "T_Param_Files"
-        Protected Const Param_Entry_Table As String = "T_Param_Entries"
-        Protected Const Param_FileTypes_Table As String = "T_Param_File_Types"
-        Protected Const Param_Class_Table As String = "T_Param_Entry_Types"
-        Protected Const Param_MassType_Table As String = "T_Sequest_Params_MassType_Name"
-        Protected Const Param_Mass_Mods_Table As String = "T_Param_File_Mass_Mods"
-        Protected Const Mass_Corr_Factors As String = "T_Mass_Correction_Factors"
-        Protected Const Residues_Table As String = "T_Residues"
+        Private Const Param_File_Table As String = "T_Param_Files"
+        Private Const Param_Entry_Table As String = "T_Param_Entries"
+        Private Const Param_FileTypes_Table As String = "T_Param_File_Types"
+        Private Const Param_Class_Table As String = "T_Param_Entry_Types"
+        Private Const Param_MassType_Table As String = "T_Sequest_Params_MassType_Name"
+        Private Const Param_Mass_Mods_Table As String = "T_Param_File_Mass_Mods"
+        Private Const Mass_Corr_Factors As String = "T_Mass_Correction_Factors"
+        Private Const Residues_Table As String = "T_Residues"
 #End Region
 
 #Region "Enums"
@@ -145,20 +145,23 @@ Namespace DownloadParams
 #End Region
 
 #Region "Member Properties"
-        Protected m_ID As Integer
-        Protected m_Name As String
-        Protected m_ParamFileType As eParamFileTypeConstants
-        Protected m_Params As clsParams
+        Private m_ID As Integer
+        Private m_Name As String
+        Private m_ParamFileType As eParamFileTypeConstants
+        Private m_Params As clsParams
 
-        Protected m_ParamFileTable As DataTable
-        Protected m_ParamEntryTable As DataTable
+        ''' <summary>
+        ''' Parameter file table
+        ''' </summary>
+        Private m_ParamFileTable As DataTable
+        Private m_ParamEntryTable As DataTable
 
-        Protected m_BaseLineParamSet As clsParams
-        Protected m_AcceptableParams As List(Of String)
-        Protected m_BasicParams As List(Of String)
-        Protected m_AdvancedParams As List(Of String)
-        Protected m_IonSeriesParams As List(Of String)
-        Protected m_MassMods As DataTable
+        Private ReadOnly m_BaseLineParamSet As clsParams
+        Private ReadOnly m_AcceptableParams As List(Of String)
+        Private ReadOnly m_BasicParams As List(Of String)
+        Private ReadOnly m_AdvancedParams As List(Of String)
+        Private ReadOnly m_IonSeriesParams As List(Of String)
+        Private m_MassMods As DataTable
 
 #End Region
 
@@ -281,7 +284,7 @@ Namespace DownloadParams
 #End Region
 
 #Region "Member Functions"
-        Protected Function LoadAcceptableParamList() As List(Of String)
+        Private Function LoadAcceptableParamList() As List(Of String)
             Dim paramEnum() As String = [Enum].GetNames(GetType(AcceptableParams))
             Dim paramList As New List(Of String)
             For Each param In paramEnum
@@ -290,7 +293,7 @@ Namespace DownloadParams
             Return paramList
         End Function
 
-        Protected Function LoadBasicParams() As List(Of String)
+        Private Function LoadBasicParams() As List(Of String)
             Dim paramEnum() As String = [Enum].GetNames(GetType(BasicParams))
             Dim paramList As New List(Of String)
             For Each param In paramEnum
@@ -299,7 +302,7 @@ Namespace DownloadParams
             Return paramList
         End Function
 
-        Protected Function LoadAdvancedParams() As List(Of String)
+        Private Function LoadAdvancedParams() As List(Of String)
             Dim paramEnum() As String = [Enum].GetNames(GetType(AdvancedParams))
             Dim paramList As New List(Of String)
             For Each param In paramEnum
@@ -308,7 +311,7 @@ Namespace DownloadParams
             Return paramList
         End Function
 
-        Protected Function LoadIonSeriesParams() As List(Of String)
+        Private Function LoadIonSeriesParams() As List(Of String)
             Dim paramEnum() As String = [Enum].GetNames(GetType(IonSeriesParams))
             Dim paramList As New List(Of String)
             For Each param In paramEnum
@@ -317,7 +320,7 @@ Namespace DownloadParams
             Return paramList
         End Function
 
-        Protected Function GetParamsFromDMS() As Boolean
+        Private Function GetParamsFromDMS() As Boolean
 
             'SQL to grab param file table
             Dim query1 = "SELECT * FROM " & Param_File_Table ' & " WHERE [Param_File_Type_ID] = 1000"
@@ -333,18 +336,18 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function GetParamSetTableCount(psTable As DataTable) As Integer             'Common
+        Private Function GetParamSetTableCount(psTable As DataTable) As Integer             'Common
             Dim count As Integer = psTable.Rows.Count
             Return count
         End Function
 
-        Protected Function RetrieveParams(ParamSetID As Integer, eParamFileType As eParamFileTypeConstants) As clsParams                  'Download
-            Dim p As clsParams = GetParamSetWithID(ParamSetID, eParamFileType)
+        Private Function RetrieveParams(paramSetID As Integer, eParamFileType As eParamFileTypeConstants) As clsParams                  'Download
+            Dim p As clsParams = GetParamSetWithID(paramSetID, eParamFileType)
             Return p
         End Function
 
         'TODO Fix this function for new mod handling
-        Protected Function GetParamSetWithID(ParamSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As clsParams   'Download
+        Protected Function GetParamSetWithID(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As clsParams   'Download
 
             Dim dr As DataRow = GetFileRowWithID(ParamSetID)
             If dr Is Nothing Then
@@ -371,7 +374,7 @@ Namespace DownloadParams
             Return p
         End Function
 
-        Protected Function MakeStorageClassFromTableRowSet(foundRows As DataRow()) As clsDMSParamStorage
+        Private Function MakeStorageClassFromTableRowSet(foundRows As IEnumerable(Of DataRow)) As clsDMSParamStorage
             Dim foundRow As DataRow
             Dim storageClass As New clsDMSParamStorage
             Dim tmpSpec As String
@@ -392,7 +395,7 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function GetMassModsFromDMS(ParamSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef params As clsDMSParamStorage) As clsDMSParamStorage
+        Private Function GetMassModsFromDMS(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef params As clsDMSParamStorage) As clsDMSParamStorage
             Const MaxDynMods = 15
 
             Dim foundRow As DataRow
@@ -509,7 +512,7 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function GetDynModSpecifier(rowSet As DataRow()) As String
+        Private Function GetDynModSpecifier(rowSet As DataRow()) As String
 
             Dim tmpSpec = ""
 
@@ -523,7 +526,7 @@ Namespace DownloadParams
             End If
         End Function
 
-        Protected Function GetIDWithName(Name As String, eParamFileType As eParamFileTypeConstants) As Integer            'Common
+        Private Function GetIDWithName(Name As String, eParamFileType As eParamFileTypeConstants) As Integer            'Common
 
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = " & eParamFileType)
             Dim foundRow As DataRow
@@ -537,12 +540,11 @@ Namespace DownloadParams
             Return tmpID
         End Function
 
-
-        'Protected Function GetIDWithName(Name As String) As Integer             'Common
-        '    Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = 1000")
+        'Private Function GetIDWithName(Name As String) As Integer             'Common
+        '    Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = 1000")
         '    Dim foundRow As DataRow
         '    Dim tmpID As Integer
-        '    If foundRows.Length <> 0 Then
+        '    If foundRows.Length > 0 Then
         '        foundRow = foundRows(0)
         '        tmpID = CInt(foundRow.Item(0))
         '    Else
@@ -551,19 +553,19 @@ Namespace DownloadParams
         '    Return tmpID
         'End Function
 
-        Protected Function GetNameWithID(ID As Integer) As String
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
             If foundRows.Length <> 0 Then
                 Dim foundRow = foundRows(0)
                 Return CStr(foundRow.Item("Param_File_Name"))
+        Private Function GetNameWithID(paramFileID As Integer) As String
             Else
                 Return Nothing
             End If
 
         End Function
 
-        Protected Function GetTypeWithID(ID As Integer) As eParamFileTypeConstants
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID.ToString())
+        Private Function GetTypeWithID(paramFileID As Integer) As eParamFileTypeConstants
             Dim foundRow As DataRow
             Dim tmpID As eParamFileTypeConstants
             If foundRows.Length <> 0 Then
@@ -575,7 +577,7 @@ Namespace DownloadParams
             Return tmpID
         End Function
 
-        Protected Function GetTypeWithName(ParamFileName As String) As eParamFileTypeConstants
+        Private Function GetTypeWithName(paramFileName As String) As eParamFileTypeConstants
 
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_Name] = '" & ParamFileName & "'")
             Dim foundRow As DataRow
@@ -589,7 +591,6 @@ Namespace DownloadParams
             Return tmpID
         End Function
 
-        Protected Function GetDescriptionWithID(ID As Integer) As String
             Dim foundRows As DataRow() = Me.ParamFileTable.Select("[Param_File_ID] = " & ID)
             Dim tmpString As String
             If foundRows.Length <> 0 Then
@@ -597,6 +598,7 @@ Namespace DownloadParams
                 tmpString = CStr(foundRow.Item("Param_File_Description"))
                 If tmpString = "" Then
                     Return ""
+        Private Function GetDescriptionWithID(paramFileID As Integer) As String
                 Else
                     Return tmpString
                 End If
@@ -615,7 +617,7 @@ Namespace DownloadParams
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Protected Function GetAvailableParamSets() As DataTable
+        Private Function GetAvailableParamSets() As DataTable
             Dim paramTableSQL As String =
               "SELECT " &
               "  Param_File_ID as ID, " &
@@ -665,7 +667,7 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function GetParamFileTypes() As DataTable
+        Private Function GetParamFileTypes() As DataTable
             Dim tmpTypeTable As DataTable
             Dim tableTypesSQL As String
             tableTypesSQL =
@@ -695,10 +697,9 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function WriteDataCollectionFromParamSet(ParamSet As clsParams) As clsDMSParamStorage      'Upload
+        Private Function WriteDataCollectionFromParamSet(paramSet As clsParams) As clsDMSParamStorage
             Dim c = New clsDMSParamStorage()
 
-            Dim pType As Type = ParamSet.GetType
             Dim tmpType As Type
             Dim pProps As PropertyInfo() = pType.GetProperties((BindingFlags.Public Or BindingFlags.Instance))
             Dim pProp As PropertyInfo
@@ -740,7 +741,7 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function UpdateParamSetFromDataCollection(dc As clsDMSParamStorage) As clsParams
+        Private Function UpdateParamSetFromDataCollection(dc As clsDMSParamStorage) As clsParams
             Dim p As New clsParams
             Dim tmpSpec As String
             Dim tmpValue As Object
@@ -861,8 +862,8 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function UpdateParamSetMember(
             ByRef ParamSet As clsParams,
+        Private Function UpdateParamSetMember(
             Specifier As String,
             Value As String) As Integer
 
@@ -949,7 +950,7 @@ Namespace DownloadParams
             Return ParamCollection
         End Function
 
-        Protected Function DoesParamSetNameExist(paramSetName As String) As Boolean       'Common
+        Private Function DoesParamSetNameExist(paramSetName As String) As Boolean       'Common
 
             Dim eParamFileType As eParamFileTypeConstants
             eParamFileType = GetTypeWithName(paramSetName)
@@ -980,10 +981,10 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function DoesParamSetIDExist(paramSetID As Integer) As Boolean                  'Common
 
             Dim IDExists As Boolean = Me.ParamFileTable.Rows.Contains(paramSetID)
             Return IDExists
+        Private Function DoesParamSetIDExist(paramSetID As Integer) As Boolean
         End Function
 
         Protected Function CompareParamSets(ByRef templateSet As clsParams, ByRef checkSet As clsParams) As String         'Neither
@@ -999,7 +1000,7 @@ Namespace DownloadParams
             Return diffCollection
         End Function
 
-        Protected Function SummarizeDiffColl(ByRef diffColl As clsDMSParamStorage) As String
+        Private Function SummarizeDiffColl(ByRef diffColl As clsDMSParamStorage) As String
 
             Dim maxIndex As Integer = diffColl.Count - 1
             Dim index As Integer
@@ -1158,7 +1159,7 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function CompareDataCollections(templateColl As clsDMSParamStorage, checkColl As clsDMSParamStorage) As clsDMSParamStorage        'Neither
+        Private Function CompareDataCollections(templateColl As clsDMSParamStorage, checkColl As clsDMSParamStorage) As clsDMSParamStorage
             Dim diffColl As New clsDMSParamStorage()
             Dim maxIndex As Integer = checkColl.Count - 1
 
