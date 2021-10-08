@@ -311,13 +311,19 @@ Namespace DownloadParams
 
         Private Function GetParamsFromDMS() As Boolean
 
-            'SQL to grab param file table
-            Dim query1 = "SELECT * FROM " & Param_File_Table ' & " WHERE [Param_File_Type_ID] = 1000"
+            ' SQL to grab param file table
+            ' The ID column is named Param_File_ID
+            Dim query1 = "SELECT Param_File_ID, Param_File_Name, Param_File_Description, Param_File_Type_ID " &
+                         "FROM " & Param_File_Table
+            ' Optional: " WHERE [Param_File_Type_ID] = 1000"
 
             m_ParamFileTable = GetTable(query1)
 
-            'SQL to grab param entry table
-            Dim query2 = "SELECT * FROM " & Param_Entry_Table & " WHERE [Entry_Type] not like '%Modification'"
+            ' SQL to grab param entry table
+            ' The ID column is named Param_Entry_ID
+            Dim query2 = "SELECT Param_Entry_ID, Entry_Sequence_Order, Entry_Type, Entry_Specifier, Entry_Value, Param_File_ID " &
+                         "FROM " & Param_Entry_Table & " " &
+                         "WHERE [Entry_Type] not like '%Modification'"
 
             m_ParamEntryTable = GetTable(query2)
 
