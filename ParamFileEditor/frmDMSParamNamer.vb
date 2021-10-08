@@ -155,25 +155,25 @@ Public Class frmDMSParamNamer
     Private Sub cmdUpload_Click(sender As Object, e As EventArgs) Handles cmdUpload.Click
 
         Dim nameExists As Boolean
-        Dim ParamSetID As Integer
-        Dim IDExists As Boolean
-        Dim blnSuccess As Boolean
+        Dim paramSetID As Integer
+        Dim idExists As Boolean
+        Dim success As Boolean
 
         Try
 
             nameExists = m_clsDMSParams.ParamSetNameExists(m_SaveName)
-            ParamSetID = m_Params.DMS_ID
-            IDExists = m_clsDMSParams.ParamSetIDExists(ParamSetID)
+            paramSetID = m_Params.DMS_ID
+            idExists = m_clsDMSParams.ParamSetIDExists(paramSetID)
 
             m_Params.FileName = m_SaveName
             m_Params.Description = txtDiffs.Text
 
-            If IDExists And nameExists Then
+            If idExists And nameExists Then
                 Dim eDialogResult = MessageBox.Show("This Parameter Set already exists. Would you like to replace it with the current Parameter set?", "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
                 If eDialogResult = DialogResult.No Then
                     Exit Sub
                 End If
-            ElseIf nameExists And Not IDExists Then
+            ElseIf nameExists And Not idExists Then
                 Dim eDialogResult = MessageBox.Show("A Parameter Set with this name already exists. Would you like to replace it with the current Parameter set?", "Parameter set exists", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
                 If eDialogResult = DialogResult.No Then
                     Exit Sub
@@ -186,9 +186,9 @@ Public Class frmDMSParamNamer
                 End If
             End If
 
-            blnSuccess = m_clsDMSParams.WriteParamsToDMS(m_Params, False)
+            success = m_clsDMSParams.WriteParamsToDMS(m_Params, False)
 
-            If blnSuccess Then
+            If success Then
                 MessageBox.Show("File successfully uploaded: " & m_SaveName, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
                 MessageBox.Show("A problem occurred while uploading the file " & m_SaveName & ": " & m_clsDMSParams.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -203,9 +203,9 @@ Public Class frmDMSParamNamer
     End Sub
 
 
-    Private Sub LoadParamDiffs(ParamSet As clsParams)
+    Private Sub LoadParamDiffs(paramSet As clsParams)
         Dim dms As clsDMSParamUpload = m_clsDMSParams
-        Me.txtDiffs.Text = dms.GetDiffsFromTemplate(ParamSet)
+        Me.txtDiffs.Text = dms.GetDiffsFromTemplate(paramSet)
     End Sub
 
     Private Sub txtSaveFileName_TextChanged(sender As Object, e As EventArgs) Handles txtSaveFileName.TextChanged

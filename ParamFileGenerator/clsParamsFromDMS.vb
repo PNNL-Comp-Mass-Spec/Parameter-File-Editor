@@ -209,14 +209,14 @@ Namespace DownloadParams
             GetParamsFromDMS()
         End Sub
 
-        Public Function ReadParamsFromDMS(ParamSetName As String) As clsParams
+        Public Function ReadParamsFromDMS(paramSetName As String) As clsParams
             'Retrieve ID number first, then use the same procedure as below
-            m_Name = ParamSetName
+            m_Name = paramSetName
 
-            m_ParamFileType = GetTypeWithName(ParamSetName)
+            m_ParamFileType = GetTypeWithName(paramSetName)
 
             If m_ParamFileType = eParamFileTypeConstants.Unknown Then
-                Throw New Exception("Parameter file " & ParamSetName & " was not found in table " & Param_File_Table)
+                Throw New Exception("Parameter file " & paramSetName & " was not found in table " & Param_File_Table)
             End If
 
             If m_ParamFileType <> eParamFileTypeConstants.Sequest Then
@@ -226,7 +226,7 @@ Namespace DownloadParams
                     paramFileTypeName = "Unknown"
                 End If
 
-                Throw New NotSupportedException("Parameter file " & ParamSetName & " is of type " & paramFileTypeName & ", which isn't support for export from DMS")
+                Throw New NotSupportedException("Parameter file " & paramSetName & " is of type " & paramFileTypeName & ", which isn't support for export from DMS")
             End If
 
             m_ID = GetIDWithName(m_Name, m_ParamFileType)
@@ -236,17 +236,17 @@ Namespace DownloadParams
 
         End Function
 
-        Public Function ReadParamsFromDMS(ParamSetID As Integer) As clsParams
-            m_ID = ParamSetID
+        Public Function ReadParamsFromDMS(paramSetID As Integer) As clsParams
+            m_ID = paramSetID
             m_ParamFileType = GetTypeWithID(m_ID)
 
             If m_ParamFileType = eParamFileTypeConstants.Unknown Then
-                Throw New Exception("Parameter file ID " & ParamSetID & " was not found in table " & Param_File_Table)
+                Throw New Exception("Parameter file ID " & paramSetID & " was not found in table " & Param_File_Table)
             End If
 
             If m_ParamFileType <> eParamFileTypeConstants.Sequest Then
                 ' This param file type is not supported for export from DMS
-                Throw New NotSupportedException("Parameter file ID " & ParamSetID & " is of type " & [Enum].GetName(GetType(eParamFileTypeConstants), m_ParamFileType) & ", which isn't support for export from DMS")
+                Throw New NotSupportedException("Parameter file ID " & paramSetID & " is of type " & [Enum].GetName(GetType(eParamFileTypeConstants), m_ParamFileType) & ", which isn't support for export from DMS")
             End If
 
             m_Params = RetrieveParams(m_ID, m_ParamFileType)
@@ -261,12 +261,12 @@ Namespace DownloadParams
             Return GetParamFileTypes()
         End Function
 
-        Public Function ParamSetNameExists(ParamSetName As String) As Boolean
-            Return DoesParamSetNameExist(ParamSetName)
+        Public Function ParamSetNameExists(paramSetName As String) As Boolean
+            Return DoesParamSetNameExist(paramSetName)
         End Function
 
-        Public Function ParamSetIDExists(ParamSetID As Integer) As Boolean
-            Return DoesParamSetIDExist(ParamSetID)
+        Public Function ParamSetIDExists(paramSetID As Integer) As Boolean
+            Return DoesParamSetIDExist(paramSetID)
         End Function
 
         Public Function GetParamSetIDFromName(Name As String) As Integer
@@ -355,16 +355,16 @@ Namespace DownloadParams
                 Return New clsParams()
             End If
 
-            Dim foundRows As DataRow() = m_ParamEntryTable.Select("[Param_File_ID] = " & ParamSetID, "[Entry_Sequence_Order]")
+            Dim foundRows As DataRow() = m_ParamEntryTable.Select("[Param_File_ID] = " & paramSetID, "[Entry_Sequence_Order]")
 
             Dim storageSet As clsDMSParamStorage = MakeStorageClassFromTableRowSet(foundRows)
 
             If Not DisableMassLookup Then
-                storageSet = GetMassModsFromDMS(ParamSetID, eParamFileType, storageSet)
+                storageSet = GetMassModsFromDMS(paramSetID, eParamFileType, storageSet)
             End If
 
             Dim p As clsParams = UpdateParamSetFromDataCollection(storageSet)
-            p.FileName = DirectCast(dr.Item("Param_File_Name"), String)
+            p.FileName = DirectCast(matchingRow.Item("Param_File_Name"), String)
             p.Description = SummarizeDiffColl(storageSet)
 
             For Each paramRow As DataRow In foundRows
@@ -414,7 +414,7 @@ Namespace DownloadParams
               "FROM " & Param_Mass_Mods_Table & " mm INNER JOIN " &
               Mass_Corr_Factors & " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " &
               Residues_Table & " r ON mm.Residue_ID = r.Residue_ID " &
-              "WHERE mm.Param_File_ID = " & ParamSetID
+              "WHERE mm.Param_File_ID = " & paramSetID
 
             m_MassMods = GetTable(SQL)
 
@@ -700,6 +700,7 @@ Namespace DownloadParams
         Private Function WriteDataCollectionFromParamSet(paramSet As clsParams) As clsDMSParamStorage
             Dim c = New clsDMSParamStorage()
 
+            Dim pType As Type = paramSet.GetType
             Dim tmpType As Type
             Dim pProps As PropertyInfo() = pType.GetProperties((BindingFlags.Public Or BindingFlags.Instance))
             Dim pProp As PropertyInfo
@@ -712,25 +713,25 @@ Namespace DownloadParams
                 tmpType = pProp.PropertyType
                 If Me.m_AcceptableParams.Contains(tmpName) Then
                     If (tmpType.Name = "clsIonSeries") Then
-                        c = ExpandIonSeries(ParamSet.IonSeries, c)
+                        c = ExpandIonSeries(paramSet.IonSeries, c)
 
                     ElseIf (tmpType.Name = "clsIsoMods") Then
-                        c = ExpandIsoTopicMods(ParamSet.IsotopicMods, c)
+                        c = ExpandIsoTopicMods(paramSet.IsotopicMods, c)
 
                     ElseIf tmpType.Name = "clsDynamicMods" Then
-                        c = ExpandDynamicMods(ParamSet.DynamicMods, c, clsDMSParamStorage.ParamTypes.DynamicModification)
+                        c = ExpandDynamicMods(paramSet.DynamicMods, c, clsDMSParamStorage.ParamTypes.DynamicModification)
 
                     ElseIf tmpType.Name = "clsTermDynamicMods" Then
-                        c = ExpandDynamicMods(ParamSet.TermDynamicMods, c, clsDMSParamStorage.ParamTypes.TermDynamicModification)
+                        c = ExpandDynamicMods(paramSet.TermDynamicMods, c, clsDMSParamStorage.ParamTypes.TermDynamicModification)
 
                     ElseIf (tmpType.Name = "clsStaticMods") Then
-                        c = ExpandStaticMods(ParamSet.StaticModificationsList, c)
+                        c = ExpandStaticMods(paramSet.StaticModificationsList, c)
 
                     ElseIf Me.m_BasicParams.Contains(tmpName) Then
-                        tmpValue = (pProp.GetValue(ParamSet, Nothing)).ToString
+                        tmpValue = (pProp.GetValue(paramSet, Nothing)).ToString
                         c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.BasicParam)
                     ElseIf Me.m_AdvancedParams.Contains(tmpName) Then
-                        tmpValue = (pProp.GetValue(ParamSet, Nothing)).ToString
+                        tmpValue = (pProp.GetValue(paramSet, Nothing)).ToString
                         c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.AdvancedParam)
                     End If
                 End If
@@ -862,8 +863,8 @@ Namespace DownloadParams
 
         End Function
 
-            ByRef ParamSet As clsParams,
         Private Function UpdateParamSetMember(
+            ByRef paramSet As clsParams,
             Specifier As String,
             Value As String) As Integer
 
