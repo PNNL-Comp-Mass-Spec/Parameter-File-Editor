@@ -311,6 +311,9 @@ Namespace MakeParams
             targetDirectory As String,
             dmsConnectionString As String)
 
+            Const MAXQUANT_MOD_NAME_COLUMN = "MaxQuant_Mod_Name"
+            Const UNIMOD_MOD_NAME_COLUMN = "UniMod_Mod_Name"
+
             Dim mctSQL As String
             Dim mdSQL As String
 
@@ -352,7 +355,8 @@ Namespace MakeParams
                     "Residue_Symbol As Target_Residues, " &
                     "Mod_Type_Symbol As Modification_Type, " &
                     "Mass_Correction_Tag, " &
-                    "MaxQuant_Mod_Name " &
+                    MAXQUANT_MOD_NAME_COLUMN & ", " &
+                    UNIMOD_MOD_NAME_COLUMN & " " &
                 "FROM V_Param_File_Mass_Mod_Info " &
                 "WHERE Param_File_Name = '" & paramFileName & "'"
 
@@ -366,26 +370,34 @@ Namespace MakeParams
             m_FileWriter.WriteDataTableToOutputFile(massCorrectionTags, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"), massCorrectionTagsHeaderNames)
 
             ' Check whether any MaxQuant mods are actually defined
-            Dim paramFileModInfoNoMaxQuant = New List(Of List(Of String))
-
             Dim includeMaxQuant = False
             For Each item In paramFileModInfo
                 If item(5).Length > 0 Then
                     includeMaxQuant = True
+                    modDefHeaderNames.Add(MAXQUANT_MOD_NAME_COLUMN)
                     Exit For
                 End If
-
-                paramFileModInfoNoMaxQuant.Add(item.Take(item.Count - 1).ToList())
             Next
 
-            Dim paramFileModInfoToWrite As List(Of List(Of String))
+            ' Populate a new list, only including the MaxQuant column if includeMaxQuant is true
+            Dim paramFileModInfoToWrite As New List(Of List(Of String))
 
-            If includeMaxQuant Then
-                paramFileModInfoToWrite = paramFileModInfo
-                modDefHeaderNames.Add("MaxQuant_Mod_Name")
-            Else
-                paramFileModInfoToWrite = paramFileModInfoNoMaxQuant
-            End If
+            For Each item In paramFileModInfo
+                Dim currentRow = New List(Of String)
+
+                currentRow.AddRange(item.Take(5))
+
+                If includeMaxQuant Then
+                    currentRow.Add(item(5))
+                End If
+
+                currentRow.Add(item(6))
+
+                paramFileModInfoToWrite.Add(currentRow)
+            Next
+
+            ' Always include the UniMod column
+            modDefHeaderNames.Add(UNIMOD_MOD_NAME_COLUMN)
 
             ' Create the param file specific modification definitions file in the working directory
             m_FileWriter.WriteDataTableToOutputFile(paramFileModInfoToWrite, Path.Combine(targetDirectory, baseParamFileName & "_ModDefs.txt"), modDefHeaderNames)
