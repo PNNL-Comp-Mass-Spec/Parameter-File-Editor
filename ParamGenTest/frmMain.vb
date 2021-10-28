@@ -71,23 +71,25 @@ Public Class frmMain
     Friend WithEvents lblDatasetID As System.Windows.Forms.Label
     Friend WithEvents txtParamFileName As System.Windows.Forms.TextBox
     Friend WithEvents lblParamFileName As System.Windows.Forms.Label
+    Friend WithEvents lblFASTAFilePath As Label
     Friend WithEvents lblParamFileType As System.Windows.Forms.Label
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.txtOutputPath = New System.Windows.Forms.TextBox
-        Me.txtDMSConnectionString = New System.Windows.Forms.TextBox
-        Me.cboFileTypes = New System.Windows.Forms.ComboBox
-        Me.lblOutputPath = New System.Windows.Forms.Label
-        Me.lblPickList = New System.Windows.Forms.Label
-        Me.lblConnectionString = New System.Windows.Forms.Label
-        Me.lblParamFileType = New System.Windows.Forms.Label
-        Me.cboAvailableParams = New System.Windows.Forms.ComboBox
-        Me.txtResults = New System.Windows.Forms.TextBox
-        Me.cmdDoIt = New System.Windows.Forms.Button
-        Me.txtFASTAPath = New System.Windows.Forms.TextBox
-        Me.txtDatasetID = New System.Windows.Forms.TextBox
-        Me.lblDatasetID = New System.Windows.Forms.Label
-        Me.txtParamFileName = New System.Windows.Forms.TextBox
-        Me.lblParamFileName = New System.Windows.Forms.Label
+        Me.txtOutputPath = New System.Windows.Forms.TextBox()
+        Me.txtDMSConnectionString = New System.Windows.Forms.TextBox()
+        Me.cboFileTypes = New System.Windows.Forms.ComboBox()
+        Me.lblOutputPath = New System.Windows.Forms.Label()
+        Me.lblPickList = New System.Windows.Forms.Label()
+        Me.lblConnectionString = New System.Windows.Forms.Label()
+        Me.lblParamFileType = New System.Windows.Forms.Label()
+        Me.cboAvailableParams = New System.Windows.Forms.ComboBox()
+        Me.txtResults = New System.Windows.Forms.TextBox()
+        Me.cmdDoIt = New System.Windows.Forms.Button()
+        Me.txtFASTAPath = New System.Windows.Forms.TextBox()
+        Me.txtDatasetID = New System.Windows.Forms.TextBox()
+        Me.lblDatasetID = New System.Windows.Forms.Label()
+        Me.txtParamFileName = New System.Windows.Forms.TextBox()
+        Me.lblParamFileName = New System.Windows.Forms.Label()
+        Me.lblFASTAFilePath = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'txtOutputPath
@@ -193,7 +195,7 @@ Public Class frmMain
         Me.lblDatasetID.AutoSize = True
         Me.lblDatasetID.Location = New System.Drawing.Point(436, 260)
         Me.lblDatasetID.Name = "lblDatasetID"
-        Me.lblDatasetID.Size = New System.Drawing.Size(106, 13)
+        Me.lblDatasetID.Size = New System.Drawing.Size(121, 15)
         Me.lblDatasetID.TabIndex = 13
         Me.lblDatasetID.Text = "(Optional) Dataset ID"
         '
@@ -212,10 +214,19 @@ Public Class frmMain
         Me.lblParamFileName.TabIndex = 15
         Me.lblParamFileName.Text = "Param File Name"
         '
+        'lblFASTAFilePath
+        '
+        Me.lblFASTAFilePath.Location = New System.Drawing.Point(16, 203)
+        Me.lblFASTAFilePath.Name = "lblFASTAFilePath"
+        Me.lblFASTAFilePath.Size = New System.Drawing.Size(120, 41)
+        Me.lblFASTAFilePath.TabIndex = 16
+        Me.lblFASTAFilePath.Text = "FASTA File Path (only for SEQUEST)"
+        '
         'frmMain
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(576, 346)
+        Me.Controls.Add(Me.lblFASTAFilePath)
         Me.Controls.Add(Me.lblParamFileName)
         Me.Controls.Add(Me.txtParamFileName)
         Me.Controls.Add(Me.lblDatasetID)
