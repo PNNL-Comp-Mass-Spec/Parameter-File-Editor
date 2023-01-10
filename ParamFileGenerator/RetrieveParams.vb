@@ -10,7 +10,7 @@ Public Interface IRetrieveParams
     Sub SetSection(name As String)
 End Interface
 
-Public Class clsRetrieveParams
+Public Class RetrieveParams
     Implements IRetrieveParams
 
     Private m_iniFileReader As IniFileReader

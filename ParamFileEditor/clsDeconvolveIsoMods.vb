@@ -2,12 +2,12 @@ Imports PRISMDatabaseUtils
 
 Public Interface IDeconvolveIsoMods
 
-    Function DeriveIsoMods(ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams
+    Function DeriveIsoMods(ParamsClass As ParamFileGenerator.Params) As ParamFileGenerator.Params
 
 End Interface
 
 Public Class clsDeconvolveIsoMods
-    Inherits ParamFileGenerator.clsReconstituteIsoMods
+    Inherits ParamFileGenerator.ReconstituteIsoMods
     Implements IDeconvolveIsoMods
 
     Private Const allowedDifference As Single = 0.05
@@ -23,12 +23,12 @@ Public Class clsDeconvolveIsoMods
 
     End Sub
 
-    Friend Function DeriveIsoMods(ParamsClass As ParamFileGenerator.clsParams) As ParamFileGenerator.clsParams Implements IDeconvolveIsoMods.DeriveIsoMods
+    Friend Function DeriveIsoMods(ParamsClass As ParamFileGenerator.Params) As ParamFileGenerator.Params Implements IDeconvolveIsoMods.DeriveIsoMods
         'Get all members of the static mods list
         If ParamsClass.StaticModificationsList.Count = 0 Then Return ParamsClass
 
-        Dim modEntry As ParamFileGenerator.clsModEntry
-        Dim sm As ParamFileGenerator.clsStaticMods = ParamsClass.StaticModificationsList
+        Dim modEntry As ParamFileGenerator.ModEntry
+        Dim sm As ParamFileGenerator.StaticMods = ParamsClass.StaticModificationsList
 
         Dim atomEnums() As String = System.Enum.GetNames(GetType(AvailableAtoms))
         Dim atom As String
@@ -70,7 +70,7 @@ Public Class clsDeconvolveIsoMods
             imCollection.Clear()
         Next atom
 
-        If maxMatchcount >= 5 Then
+        If maxMatchCount >= 5 Then
             'Rip out the existing version...
             Me.StripStaticIsoMod(ParamsClass, maxIsoMod, maxIsoAtom)
             '...and replace it with the new isoMod entity
@@ -79,7 +79,7 @@ Public Class clsDeconvolveIsoMods
             maxIsoMod = CSng(at.GetTweakedMass(maxIsoMod, maxIsoAtom.ToString()))
             maxMassCorrectionID = at.TweakedModID
 
-            Dim eIsotope As ParamFileGenerator.clsIsoMods.IsotopeList
+            Dim eIsotope As ParamFileGenerator.IsoMods.IsotopeList
             [Enum].TryParse(maxIsoAtom.ToString(), eIsotope)
 
             ParamsClass.IsotopicMods.Add(eIsotope, maxIsoMod, maxMassCorrectionID)
@@ -126,11 +126,11 @@ Public Class clsDeconvolveIsoMods
     End Function
 
     Private Sub StripStaticIsoMod(
-        ByRef paramsClass As ParamFileGenerator.clsParams,
+        ByRef paramsClass As ParamFileGenerator.Params,
         modMassToRemove As Single,
         atom As AvailableAtoms)
 
-        Dim entry As ParamFileGenerator.clsModEntry
+        Dim entry As ParamFileGenerator.ModEntry
 
         For Each entry In paramsClass.StaticModificationsList
             Dim AA = entry.ReturnResidueAffected(0).Chars(0)

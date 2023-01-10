@@ -1,6 +1,6 @@
 Imports PRISMDatabaseUtils
 
-Public Class clsDBTask
+Public Class DBTask
 
 #Region "Member Variables"
 

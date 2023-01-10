@@ -23,7 +23,7 @@ Public Interface IMassTweaker
 End Interface
 
 Public Class clsMassTweaker
-    Inherits ParamFileGenerator.clsDBTask
+    Inherits ParamFileGenerator.DBTask
     Implements IMassTweaker
 
 #Region "Constants"

@@ -6,7 +6,7 @@ Public Class frmDMSParamNamer
     Inherits Form
 
     Private ReadOnly m_DBTools As IDBTools
-    Private ReadOnly m_Params As clsParams
+    Private ReadOnly m_Params As Params
     Private m_SaveName As String
     Friend WithEvents cmdCancel As Button
     Private m_clsDMSParams As clsDMSParamUpload
@@ -16,7 +16,7 @@ Public Class frmDMSParamNamer
 #Region "Windows Form Designer generated code"
 
 #Disable Warning BC40028 ' Type of parameter is not CLS-compliant
-    Public Sub New(dbTools As IDBTools, ParamSetToSave As clsParams)
+    Public Sub New(dbTools As IDBTools, ParamSetToSave As Params)
         MyBase.New()
 #Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
@@ -203,7 +203,7 @@ Public Class frmDMSParamNamer
     End Sub
 
 
-    Private Sub LoadParamDiffs(paramSet As clsParams)
+    Private Sub LoadParamDiffs(paramSet As Params)
         Dim dms As clsDMSParamUpload = m_clsDMSParams
         Me.txtDiffs.Text = dms.GetDiffsFromTemplate(paramSet)
     End Sub

@@ -34,7 +34,7 @@ Public Class frmMain
         mOutputPath = Me.txtOutputPath.Text
         mFASTAPath = Me.txtFASTAPath.Text
         If mDMS Is Nothing Then
-            mDMS = New clsMakeParameterFile()
+            mDMS = New MakeParameterFile()
         End If
 
         Me.LoadParamFileTypes()

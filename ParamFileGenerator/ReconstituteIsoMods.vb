@@ -3,11 +3,11 @@ Imports PRISMDatabaseUtils
 
 Public Interface IReconstituteIsoMods
 
-    Function ReconstituteIsoMods(ParamsClass As clsParams) As clsParams
+    Function ReconstituteIsoMods(ParamsClass As Params) As Params
 
 End Interface
 
-Public Class clsReconstituteIsoMods
+Public Class ReconstituteIsoMods
     Implements IReconstituteIsoMods
     Public Enum AvailableAtoms
         N
@@ -29,12 +29,12 @@ Public Class clsReconstituteIsoMods
     ''' </summary>
     ''' <param name="dbTools"></param>
     Public Sub New(dbTools As IDBTools)
-        Dim getResTable As New clsGetResiduesList(dbTools)
+        Dim getResTable As New GetResiduesList(dbTools)
         m_ResidueAtomCounts = getResTable.ResidueAtomCounts
     End Sub
 #Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
-    Friend Function ReconIsoMods(ParamsClass As clsParams) As clsParams Implements IReconstituteIsoMods.ReconstituteIsoMods
+    Friend Function ReconIsoMods(ParamsClass As Params) As Params Implements IReconstituteIsoMods.ReconstituteIsoMods
         Return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods)
     End Function
 
@@ -55,15 +55,15 @@ Public Class clsReconstituteIsoMods
     End Function
 
     Protected Function StreamlineIsoModsToStatics(
-        ParamsClass As clsParams,
-        IsoMods As clsIsoMods) As clsParams
+        ParamsClass As Params,
+        IsoMods As IsoMods) As Params
 
-        Dim im As clsModEntry
+        Dim im As ModEntry
 
         Dim tmpAtom As String
         Dim tmpIsoMass As Double
 
-        Dim AAEnums() As String = [Enum].GetNames(GetType(clsMods.ResidueCode))
+        Dim AAEnums() As String = [Enum].GetNames(GetType(Mods.ResidueCode))
         Dim tmpAA As String
 
 
@@ -76,7 +76,7 @@ Public Class clsReconstituteIsoMods
                     Dim tmpAASLC = Left(tmpAA, 1).Chars(0)
                     Dim tmpAtomCount = GetMultiplier(tmpAASLC, DirectCast([Enum].Parse(GetType(AvailableAtoms), tmpAtom), AvailableAtoms))
                     ParamsClass.StaticModificationsList.ChangeAAModification(
-                        DirectCast([Enum].Parse(GetType(clsMods.ResidueCode), tmpAA), clsMods.ResidueCode),
+                        DirectCast([Enum].Parse(GetType(Mods.ResidueCode), tmpAA), Mods.ResidueCode),
                         tmpIsoMass * tmpAtomCount, True)
                 End If
             Next

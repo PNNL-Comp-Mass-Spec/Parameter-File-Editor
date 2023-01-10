@@ -1,7 +1,7 @@
 Imports System.Collections.Generic
 Imports PRISMDatabaseUtils
 
-Public Class clsGetResiduesList
+Public Class GetResiduesList
 
     ''' <summary>
     ''' Dictionary where keys are amino acid residue (one letter abbreviation)

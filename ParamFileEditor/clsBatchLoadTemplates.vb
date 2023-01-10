@@ -62,12 +62,12 @@ Friend Class clsBatchLoadTemplates
         Dim changed = 0
 
         For Each paramFilePath In paramFileList
-            Dim params = New clsParams()
+            Dim params = New Params()
             'Try
             Dim paramFileName = Mid(paramFilePath, InStrRev(paramFilePath, "\") + 1).ToString
             Console.WriteLine("Working on: " & paramFileName)
             params.LoadTemplate(paramFilePath)
-            params.Description = Me.GetDiffsBetweenSets(clsMainProcess.BaseLineParamSet, params)
+            params.Description = Me.GetDiffsBetweenSets(MainProcess.BaseLineParamSet, params)
             params.FileName = paramFileName
             If Me.ParamSetNameExists(params.FileName) Then
                 Dim ParamSetID = Me.GetParamSetIDFromName(params.FileName)

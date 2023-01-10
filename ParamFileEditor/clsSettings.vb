@@ -64,7 +64,7 @@ Namespace ProgramSettings
 #Region "Member Functions"
 
         Private Function LoadProgramSettings(IniFilePath As String) As Boolean
-            Dim programSettings As New clsRetrieveParams(IniFilePath, True)
+            Dim programSettings As New RetrieveParams(IniFilePath, True)
 
             'Get connection string settings
 
@@ -151,7 +151,7 @@ Namespace ProgramSettings
             Return Path.Combine(fi.DirectoryName, fileName)
         End Function
 
-        Private Function LoadAAMappingsTable(pr As clsRetrieveParams) As DataTable
+        Private Function LoadAAMappingsTable(pr As RetrieveParams) As DataTable
             Dim sn = "aminoacidmappings"
             Dim counter = 1000
 

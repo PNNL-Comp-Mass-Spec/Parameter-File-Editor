@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -100,37 +100,37 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsDBTask.vb">
+    <Compile Include="DBTask.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsDMSParamStorage.vb">
+    <Compile Include="DMSParamStorage.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsGetResiduesList.vb">
+    <Compile Include="GetResiduesList.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsMainProcess.vb">
+    <Compile Include="MainProcess.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsMakeParameterFile.vb">
+    <Compile Include="MakeParameterFile.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsMods.vb">
+    <Compile Include="Mods.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsParams.vb">
+    <Compile Include="Params.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsParamsFromDMS.vb">
+    <Compile Include="ParamsFromDMS.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsReconstituteIsoMods.vb">
+    <Compile Include="ReconstituteIsoMods.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsRetrieveParams.vb">
+    <Compile Include="RetrieveParams.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsWriteOutput.vb">
+    <Compile Include="WriteOutput.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GlobalSuppressions.vb" />

@@ -5,8 +5,8 @@ Imports PRISMDatabaseUtils
 
 Namespace DownloadParams
 
-    Public Class clsParamsFromDMS
-        Inherits clsDBTask
+    Public Class ParamsFromDMS
+        Inherits DBTask
 
         ' Ignore Spelling: diffs, mc
 
@@ -146,7 +146,7 @@ Namespace DownloadParams
         Private m_ID As Integer
         Private m_Name As String
         Private m_ParamFileType As eParamFileTypeConstants
-        Private m_Params As clsParams
+        Private m_Params As Params
 
         ''' <summary>
         ''' Parameter file table
@@ -154,7 +154,7 @@ Namespace DownloadParams
         Private m_ParamFileTable As DataTable
         Private m_ParamEntryTable As DataTable
 
-        Private ReadOnly m_BaseLineParamSet As clsParams
+        Private ReadOnly m_BaseLineParamSet As Params
         Private ReadOnly m_AcceptableParams As List(Of String)
         Private ReadOnly m_BasicParams As List(Of String)
         Private ReadOnly m_AdvancedParams As List(Of String)
@@ -184,7 +184,7 @@ Namespace DownloadParams
             m_BasicParams = LoadBasicParams()
             m_AdvancedParams = LoadAdvancedParams()
             m_IonSeriesParams = LoadIonSeriesParams()
-            m_BaseLineParamSet = clsMainProcess.BaseLineParamSet
+            m_BaseLineParamSet = MainProcess.BaseLineParamSet
 
             Dim success = GetParamsFromDMS()
             If Not success Then
@@ -196,7 +196,7 @@ Namespace DownloadParams
             GetParamsFromDMS()
         End Sub
 
-        Public Function ReadParamsFromDMS(paramSetName As String) As clsParams
+        Public Function ReadParamsFromDMS(paramSetName As String) As Params
             'Retrieve ID number first, then use the same procedure as below
             m_Name = paramSetName
 
@@ -223,7 +223,7 @@ Namespace DownloadParams
 
         End Function
 
-        Public Function ReadParamsFromDMS(paramSetID As Integer) As clsParams
+        Public Function ReadParamsFromDMS(paramSetID As Integer) As Params
             m_ID = paramSetID
             m_ParamFileType = GetTypeWithID(m_ID)
 
@@ -329,29 +329,29 @@ Namespace DownloadParams
 
         End Function
 
-        Private Function RetrieveParams(paramSetID As Integer, eParamFileType As eParamFileTypeConstants) As clsParams
-            Dim p As clsParams = GetParamSetWithID(paramSetID, eParamFileType)
+        Private Function RetrieveParams(paramSetID As Integer, eParamFileType As eParamFileTypeConstants) As Params
+            Dim p As Params = GetParamSetWithID(paramSetID, eParamFileType)
             Return p
         End Function
 
         'TODO Fix this function for new mod handling
-        Protected Function GetParamSetWithID(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As clsParams
+        Protected Function GetParamSetWithID(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As Params
             Dim matchingRow As DataRow = Nothing
 
             If Not GetParamFileRowByID(paramSetID, matchingRow) Then
                 ' Match not found
-                Return New clsParams()
+                Return New Params()
             End If
 
             Dim foundRows As DataRow() = m_ParamEntryTable.Select("[Param_File_ID] = " & paramSetID, "[Entry_Sequence_Order]")
 
-            Dim storageSet As clsDMSParamStorage = MakeStorageClassFromTableRowSet(foundRows)
+            Dim storageSet As DMSParamStorage = MakeStorageClassFromTableRowSet(foundRows)
 
             If Not DisableMassLookup Then
                 storageSet = GetMassModsFromDMS(paramSetID, eParamFileType, storageSet)
             End If
 
-            Dim p As clsParams = UpdateParamSetFromDataCollection(storageSet)
+            Dim p As Params = UpdateParamSetFromDataCollection(storageSet)
             p.FileName = DirectCast(matchingRow.Item("Param_File_Name"), String)
             p.Description = SummarizeDiffColl(storageSet)
 
@@ -362,18 +362,18 @@ Namespace DownloadParams
             Return p
         End Function
 
-        Private Function MakeStorageClassFromTableRowSet(foundRows As IEnumerable(Of DataRow)) As clsDMSParamStorage
+        Private Function MakeStorageClassFromTableRowSet(foundRows As IEnumerable(Of DataRow)) As DMSParamStorage
             Dim foundRow As DataRow
-            Dim storageClass As New clsDMSParamStorage
+            Dim storageClass As New DMSParamStorage
             Dim tmpSpec As String
             Dim tmpValue As String
 
-            Dim tmpType As clsDMSParamStorage.ParamTypes
+            Dim tmpType As DMSParamStorage.ParamTypes
 
             For Each foundRow In foundRows
                 tmpSpec = DirectCast(foundRow.Item("Entry_Specifier"), String)
                 tmpValue = DirectCast(foundRow.Item("Entry_Value"), String)
-                tmpType = DirectCast([Enum].Parse(GetType(clsDMSParamStorage.ParamTypes), foundRow.Item("Entry_Type").ToString), clsDMSParamStorage.ParamTypes)
+                tmpType = DirectCast([Enum].Parse(GetType(DMSParamStorage.ParamTypes), foundRow.Item("Entry_Type").ToString), DMSParamStorage.ParamTypes)
 
                 storageClass.Add(tmpSpec, tmpValue, tmpType)
             Next
@@ -383,7 +383,7 @@ Namespace DownloadParams
 
         End Function
 
-        Private Function GetMassModsFromDMS(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef params As clsDMSParamStorage) As clsDMSParamStorage
+        Private Function GetMassModsFromDMS(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef params As DMSParamStorage) As DMSParamStorage
             Const MaxDynMods = 15
 
             Dim foundRow As DataRow
@@ -391,7 +391,7 @@ Namespace DownloadParams
             Dim tmpSpec As String
             Dim tmpValue As String
 
-            Dim tmpType As clsDMSParamStorage.ParamTypes
+            Dim tmpType As DMSParamStorage.ParamTypes
 
             'If m_MassMods Is Nothing Or m_MassMods.Rows.Count = 0 Then
             Dim SQL As String
@@ -439,7 +439,7 @@ Namespace DownloadParams
                 If foundRows.Length > 0 Then
                     tmpSpec = GetDynModSpecifier(foundRows)
                     tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
-                    tmpType = clsDMSParamStorage.ParamTypes.DynamicModification
+                    tmpType = DMSParamStorage.ParamTypes.DynamicModification
                     params.Add(tmpSpec, tmpValue, tmpType)
                 End If
 
@@ -450,7 +450,7 @@ Namespace DownloadParams
             If foundRows.Length > 0 Then
                 tmpSpec = GetDynModSpecifier(foundRows)
                 tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
-                tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
+                tmpType = DMSParamStorage.ParamTypes.TermDynamicModification
                 params.Add(tmpSpec, tmpValue, tmpType)
             End If
 
@@ -459,7 +459,7 @@ Namespace DownloadParams
             If foundRows.Length > 0 Then
                 tmpSpec = GetDynModSpecifier(foundRows)
                 tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
-                tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification
+                tmpType = DMSParamStorage.ParamTypes.TermDynamicModification
                 params.Add(tmpSpec, tmpValue, tmpType)
             End If
 
@@ -480,7 +480,7 @@ Namespace DownloadParams
                         tmpSpec = "C_Term_Protein"
                 End Select
                 tmpValue = foundRow.Item("Monoisotopic_Mass").ToString
-                tmpType = clsDMSParamStorage.ParamTypes.StaticModification
+                tmpType = DMSParamStorage.ParamTypes.StaticModification
                 params.Add(tmpSpec, tmpValue, tmpType)
             Next
 
@@ -491,7 +491,7 @@ Namespace DownloadParams
             For Each foundRow In foundRows
                 tmpSpec = foundRow.Item("Affected_Atom").ToString
                 tmpValue = foundRow.Item("Monoisotopic_Mass").ToString
-                tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification
+                tmpType = DMSParamStorage.ParamTypes.IsotopicModification
                 params.Add(tmpSpec, tmpValue, tmpType)
             Next
 
@@ -657,25 +657,25 @@ Namespace DownloadParams
 
         End Function
 
-        Protected Function DistillFeaturesFromParamSet(paramSet As clsParams) As String
-            Dim templateColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(m_BaseLineParamSet)
-            Dim checkColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(paramSet)
+        Protected Function DistillFeaturesFromParamSet(paramSet As Params) As String
+            Dim templateColl As DMSParamStorage = WriteDataCollectionFromParamSet(m_BaseLineParamSet)
+            Dim checkColl As DMSParamStorage = WriteDataCollectionFromParamSet(paramSet)
 
 
-            Dim diffColl As clsDMSParamStorage = CompareDataCollections(templateColl, checkColl)
+            Dim diffColl As DMSParamStorage = CompareDataCollections(templateColl, checkColl)
             Return SummarizeDiffColl(diffColl)
 
         End Function
 
         Protected Function DistillFeaturesFromParamSet(paramSetID As Integer, eParamFileTypeID As eParamFileTypeConstants) As String
-            Dim p As clsParams = GetParamSetWithID(paramSetID, eParamFileTypeID)
+            Dim p As Params = GetParamSetWithID(paramSetID, eParamFileTypeID)
 
             Return p.Description
 
         End Function
 
-        Private Function WriteDataCollectionFromParamSet(paramSet As clsParams) As clsDMSParamStorage
-            Dim c = New clsDMSParamStorage()
+        Private Function WriteDataCollectionFromParamSet(paramSet As Params) As DMSParamStorage
+            Dim c = New DMSParamStorage()
 
             Dim pType As Type = paramSet.GetType
             Dim tmpType As Type
@@ -689,27 +689,27 @@ Namespace DownloadParams
                 tmpName = pProp.Name
                 tmpType = pProp.PropertyType
                 If m_AcceptableParams.Contains(tmpName) Then
-                    If (tmpType.Name = "clsIonSeries") Then
+                    If (tmpType.Name = "IonSeries") Then
                         c = ExpandIonSeries(paramSet.IonSeries, c)
 
-                    ElseIf (tmpType.Name = "clsIsoMods") Then
+                    ElseIf (tmpType.Name = "IsoMods") Then
                         c = ExpandIsoTopicMods(paramSet.IsotopicMods, c)
 
-                    ElseIf tmpType.Name = "clsDynamicMods" Then
-                        c = ExpandDynamicMods(paramSet.DynamicMods, c, clsDMSParamStorage.ParamTypes.DynamicModification)
+                    ElseIf tmpType.Name = "DynamicMods" Then
+                        c = ExpandDynamicMods(paramSet.DynamicMods, c, DMSParamStorage.ParamTypes.DynamicModification)
 
-                    ElseIf tmpType.Name = "clsTermDynamicMods" Then
-                        c = ExpandDynamicMods(paramSet.TermDynamicMods, c, clsDMSParamStorage.ParamTypes.TermDynamicModification)
+                    ElseIf tmpType.Name = "TermDynamicMods" Then
+                        c = ExpandDynamicMods(paramSet.TermDynamicMods, c, DMSParamStorage.ParamTypes.TermDynamicModification)
 
-                    ElseIf (tmpType.Name = "clsStaticMods") Then
+                    ElseIf (tmpType.Name = "StaticMods") Then
                         c = ExpandStaticMods(paramSet.StaticModificationsList, c)
 
                     ElseIf m_BasicParams.Contains(tmpName) Then
                         tmpValue = (pProp.GetValue(paramSet, Nothing)).ToString
-                        c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.BasicParam)
+                        c.Add(tmpName, tmpValue.ToString, DMSParamStorage.ParamTypes.BasicParam)
                     ElseIf m_AdvancedParams.Contains(tmpName) Then
                         tmpValue = (pProp.GetValue(paramSet, Nothing)).ToString
-                        c.Add(tmpName, tmpValue.ToString, clsDMSParamStorage.ParamTypes.AdvancedParam)
+                        c.Add(tmpName, tmpValue.ToString, DMSParamStorage.ParamTypes.AdvancedParam)
                     End If
                 End If
 
@@ -719,31 +719,31 @@ Namespace DownloadParams
 
         End Function
 
-        Private Function UpdateParamSetFromDataCollection(dc As clsDMSParamStorage) As clsParams
-            Dim p As New clsParams
+        Private Function UpdateParamSetFromDataCollection(dc As DMSParamStorage) As Params
+            Dim p As New Params
             Dim tmpSpec As String
             Dim tmpValue As Object
-            Dim tmpType As clsDMSParamStorage.ParamTypes
+            Dim tmpType As DMSParamStorage.ParamTypes
             Dim tmpTypeName As String
 
-            'p = clsMainProcess.BaseLineParamSet
-            p.LoadTemplate(clsMainProcess.TemplateFileName)
-            Dim pType As Type = GetType(clsParams)
+            'p = MainProcess.BaseLineParamSet
+            p.LoadTemplate(MainProcess.TemplateFileName)
+            Dim pType As Type = GetType(Params)
             Dim pFields As PropertyInfo() = pType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
             Dim pField As PropertyInfo = Nothing
 
-            Dim ionType As Type = GetType(clsIonSeries)
+            Dim ionType As Type = GetType(IonSeries)
             Dim ionFields As PropertyInfo() = ionType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
             Dim ionField As PropertyInfo
 
-            Dim paramEntry As clsDMSParamStorage.ParamsEntry
+            Dim paramEntry As DMSParamStorage.ParamsEntry
 
             For Each paramEntry In dc
                 tmpSpec = paramEntry.Specifier
                 tmpValue = paramEntry.Value
                 tmpType = paramEntry.Type
 
-                If tmpType = clsDMSParamStorage.ParamTypes.BasicParam And
+                If tmpType = DMSParamStorage.ParamTypes.BasicParam And
                     m_BasicParams.Contains(tmpSpec) Then
 
                     For Each pField In pFields
@@ -774,7 +774,7 @@ Namespace DownloadParams
                         End If
                     Next
 
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.AdvancedParam And
+                ElseIf tmpType = DMSParamStorage.ParamTypes.AdvancedParam And
                     m_AdvancedParams.Contains(tmpSpec) Then
 
                     For Each pField In pFields
@@ -800,7 +800,7 @@ Namespace DownloadParams
                         End If
                     Next
 
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.AdvancedParam And
+                ElseIf tmpType = DMSParamStorage.ParamTypes.AdvancedParam And
                     m_IonSeriesParams.Contains(tmpSpec) Then
 
                     For Each ionField In ionFields
@@ -824,14 +824,14 @@ Namespace DownloadParams
                         End If
                     Next
 
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.DynamicModification Then
+                ElseIf tmpType = DMSParamStorage.ParamTypes.DynamicModification Then
 
                     p.DynamicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue.ToString)))
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
+                ElseIf tmpType = DMSParamStorage.ParamTypes.StaticModification Then
                     p.StaticModificationsList.Add(tmpSpec.ToString, CDbl(Val(tmpValue.ToString)))
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
+                ElseIf tmpType = DMSParamStorage.ParamTypes.IsotopicModification Then
                     p.IsotopicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue)))
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification Then
+                ElseIf tmpType = DMSParamStorage.ParamTypes.TermDynamicModification Then
                     p.TermDynamicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue)))
                 End If
             Next
@@ -840,7 +840,7 @@ Namespace DownloadParams
 
         End Function
 
-        Private Function ExpandDynamicMods(DynModSet As clsDynamicMods, ByRef ParamCollection As clsDMSParamStorage, eDynModType As clsDMSParamStorage.ParamTypes) As clsDMSParamStorage
+        Private Function ExpandDynamicMods(DynModSet As DynamicMods, ByRef ParamCollection As DMSParamStorage, eDynModType As DMSParamStorage.ParamTypes) As DMSParamStorage
             Dim maxCount As Integer = DynModSet.Count
             Dim counter As Integer
             Dim tmpName As String
@@ -850,10 +850,10 @@ Namespace DownloadParams
                 Return ParamCollection
             End If
 
-            If eDynModType <> clsDMSParamStorage.ParamTypes.DynamicModification And
-               eDynModType <> clsDMSParamStorage.ParamTypes.TermDynamicModification Then
+            If eDynModType <> DMSParamStorage.ParamTypes.DynamicModification And
+               eDynModType <> DMSParamStorage.ParamTypes.TermDynamicModification Then
                 ' This is unexpected; force eDynModType to be .DynamicModification
-                eDynModType = clsDMSParamStorage.ParamTypes.DynamicModification
+                eDynModType = DMSParamStorage.ParamTypes.DynamicModification
             End If
 
             For counter = 1 To maxCount
@@ -866,7 +866,7 @@ Namespace DownloadParams
 
         End Function
 
-        Private Function ExpandStaticMods(StatModSet As clsStaticMods, ByRef ParamCollection As clsDMSParamStorage) As clsDMSParamStorage
+        Private Function ExpandStaticMods(StatModSet As StaticMods, ByRef ParamCollection As DMSParamStorage) As DMSParamStorage
             Dim maxCount As Integer = StatModSet.Count
             Dim counter As Integer
             Dim tmpName As String
@@ -879,14 +879,14 @@ Namespace DownloadParams
             For counter = 0 To maxCount - 1
                 tmpName = StatModSet.GetResidue(counter)
                 tmpValue = StatModSet.GetMassDiff(counter)
-                ParamCollection.Add(tmpName, tmpValue, clsDMSParamStorage.ParamTypes.StaticModification)
+                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.StaticModification)
             Next
 
             Return ParamCollection
 
         End Function
 
-        Private Function ExpandIsoTopicMods(IsoModSet As clsIsoMods, ByRef ParamCollection As clsDMSParamStorage) As clsDMSParamStorage
+        Private Function ExpandIsoTopicMods(IsoModSet As IsoMods, ByRef ParamCollection As DMSParamStorage) As DMSParamStorage
             Dim maxCount As Integer = IsoModSet.Count
             Dim counter As Integer
             Dim tmpName As String
@@ -899,21 +899,21 @@ Namespace DownloadParams
             For counter = 0 To maxCount - 1
                 tmpName = IsoModSet.GetAtom(counter)
                 tmpValue = IsoModSet.GetMassDiff(counter)
-                ParamCollection.Add(tmpName, tmpValue, clsDMSParamStorage.ParamTypes.IsotopicModification)
+                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.IsotopicModification)
             Next
 
             Return ParamCollection
         End Function
 
-        Private Function ExpandIonSeries(IonSeriesSet As clsIonSeries, ByRef ParamCollection As clsDMSParamStorage) As clsDMSParamStorage
-            Dim pType As Type = GetType(clsIonSeries)
+        Private Function ExpandIonSeries(IonSeriesSet As IonSeries, ByRef ParamCollection As DMSParamStorage) As DMSParamStorage
+            Dim pType As Type = GetType(IonSeries)
             Dim pFields As PropertyInfo() = pType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
             Dim pField As PropertyInfo
 
             For Each pField In pFields
                 Dim tmpName As String = pField.Name
                 Dim tmpValue As String = pField.GetValue(IonSeriesSet, Nothing).ToString
-                ParamCollection.Add(tmpName, tmpValue, clsDMSParamStorage.ParamTypes.AdvancedParam)
+                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.AdvancedParam)
             Next
 
             Return ParamCollection
@@ -955,20 +955,20 @@ Namespace DownloadParams
             Return GetParamFileRowByID(paramSetID, matchingRow)
         End Function
 
-        Protected Function CompareParamSets(ByRef templateSet As clsParams, ByRef checkSet As clsParams) As String
-            Dim diffCollection As clsDMSParamStorage = GetDiffColl(templateSet, checkSet)
+        Protected Function CompareParamSets(ByRef templateSet As Params, ByRef checkSet As Params) As String
+            Dim diffCollection As DMSParamStorage = GetDiffColl(templateSet, checkSet)
             Return SummarizeDiffColl(diffCollection)
         End Function
 
-        Protected Function GetDiffColl(ByRef templateSet As clsParams, ByRef checkSet As clsParams) As clsDMSParamStorage
-            Dim templateColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(templateSet)
-            Dim checkColl As clsDMSParamStorage = WriteDataCollectionFromParamSet(checkSet)
+        Protected Function GetDiffColl(ByRef templateSet As Params, ByRef checkSet As Params) As DMSParamStorage
+            Dim templateColl As DMSParamStorage = WriteDataCollectionFromParamSet(templateSet)
+            Dim checkColl As DMSParamStorage = WriteDataCollectionFromParamSet(checkSet)
 
-            Dim diffCollection As clsDMSParamStorage = CompareDataCollections(templateColl, checkColl)
+            Dim diffCollection As DMSParamStorage = CompareDataCollections(templateColl, checkColl)
             Return diffCollection
         End Function
 
-        Private Function SummarizeDiffColl(ByRef diffColl As clsDMSParamStorage) As String
+        Private Function SummarizeDiffColl(ByRef diffColl As DMSParamStorage) As String
 
             Dim maxIndex As Integer = diffColl.Count - 1
             Dim index As Integer
@@ -1007,7 +1007,7 @@ Namespace DownloadParams
                     tmpSign = ""
                 End If
 
-                If tmpType = clsDMSParamStorage.ParamTypes.StaticModification Then
+                If tmpType = DMSParamStorage.ParamTypes.StaticModification Then
 
                     If tmpStatModsList Is Nothing Then
                         tmpStatModsList = New Queue()
@@ -1016,7 +1016,7 @@ Namespace DownloadParams
                     tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
 
 
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.DynamicModification Then
+                ElseIf tmpType = DMSParamStorage.ParamTypes.DynamicModification Then
 
                     If tmpDynModsList Is Nothing Then
                         tmpDynModsList = New Queue()
@@ -1027,7 +1027,7 @@ Namespace DownloadParams
                     intDynModCount += 1
 
 
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.TermDynamicModification Then
+                ElseIf tmpType = DMSParamStorage.ParamTypes.TermDynamicModification Then
 
                     If tmpSpec = "<" Then
                         tmpSpec = "N-Term Peptide"
@@ -1044,7 +1044,7 @@ Namespace DownloadParams
                     intTermDynModCount += 1
 
 
-                ElseIf tmpType = clsDMSParamStorage.ParamTypes.IsotopicModification Then
+                ElseIf tmpType = DMSParamStorage.ParamTypes.IsotopicModification Then
 
                     If tmpIsoMods = "" Then
                         tmpIsoMods = "Isotopic Mods: "
@@ -1127,8 +1127,8 @@ Namespace DownloadParams
 
         End Function
 
-        Private Function CompareDataCollections(templateColl As clsDMSParamStorage, checkColl As clsDMSParamStorage) As clsDMSParamStorage
-            Dim diffColl As New clsDMSParamStorage()
+        Private Function CompareDataCollections(templateColl As DMSParamStorage, checkColl As DMSParamStorage) As DMSParamStorage
+            Dim diffColl As New DMSParamStorage()
             Dim maxIndex As Integer = checkColl.Count - 1
 
             For checkIndex = 0 To maxIndex

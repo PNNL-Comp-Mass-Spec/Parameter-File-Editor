@@ -47,7 +47,7 @@ Friend Class clsTransferParamEntriesToMassModList
     End Sub
 
     Private Sub SyncSingleJob(paramFileID As Integer)
-        Dim tmpParams As ParamFileGenerator.clsParams
+        Dim tmpParams As ParamFileGenerator.Params
 
 
         Debug.WriteLine("Working on: " & paramFileID)

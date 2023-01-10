@@ -67,12 +67,12 @@ Namespace MakeParams
     End Interface
 
 
-    Public Class clsMakeParameterFile
+    Public Class MakeParameterFile
         Inherits EventNotifier
         Implements IGenerateFile
 
         Private m_DbTools As IDBTools
-        Private m_FileWriter As clsWriteOutput
+        Private m_FileWriter As WriteOutput
 
         Public Property TemplateFilePath As String
 
@@ -257,15 +257,15 @@ Namespace MakeParams
                 Return False
             End If
 
-            ' Instantiate clsMainProcess so we can access its properties later
+            ' Instantiate MainProcess so we can access its properties later
 
             ' ReSharper disable once UnusedVariable.Compiler
-            Dim processor As New clsMainProcess(TemplateFilePath)
+            Dim processor As New MainProcess(TemplateFilePath)
 
-            Dim loadedParams As clsParams
-            Dim dmsParams As New clsParamsFromDMS(m_DbTools)
+            Dim loadedParams As Params
+            Dim dmsParams As New ParamsFromDMS(m_DbTools)
             Dim modProcessor As IReconstituteIsoMods
-            modProcessor = New clsReconstituteIsoMods(m_DbTools)
+            modProcessor = New ReconstituteIsoMods(m_DbTools)
 
             If Not dmsParams.ParamFileTableLoaded Then
                 ReportError("Could Not Establish Database Connection")
@@ -295,7 +295,7 @@ Namespace MakeParams
             loadedParams.DefaultFASTAPath = fastaFilePath
 
             If m_FileWriter Is Nothing Then
-                m_FileWriter = New clsWriteOutput
+                m_FileWriter = New WriteOutput
             End If
 
             Dim writeSuccess = m_FileWriter.WriteOutputFile(loadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType)
@@ -325,7 +325,7 @@ Namespace MakeParams
             Dim baseParamFileName As String = Path.GetFileNameWithoutExtension(paramFileName)
 
             If m_FileWriter Is Nothing Then
-                m_FileWriter = New clsWriteOutput
+                m_FileWriter = New WriteOutput
             End If
 
             Dim massCorrectionTagsHeaderNames = New List(Of String) From {
@@ -459,7 +459,7 @@ Namespace MakeParams
         Private Function GetAvailableParamSetNames(dbTools As IDBTools) As List(Of String) Implements IGenerateFile.GetAvailableParamSetNames
 
             Dim availableParamSets As New List(Of String)
-            Dim dmsParams As New clsParamsFromDMS(dbTools)
+            Dim dmsParams As New ParamsFromDMS(dbTools)
 
             Dim retrievedParamSets As DataTable = dmsParams.RetrieveAvailableParams()
             Dim dr As DataRow
@@ -470,7 +470,7 @@ Namespace MakeParams
         End Function
 
         Private Function GetAvailableParamSetTable(dbTools As IDBTools) As DataTable Implements IGenerateFile.GetAvailableParamSetTable
-            Dim paramGenerator As New clsParamsFromDMS(dbTools)
+            Dim paramGenerator As New ParamsFromDMS(dbTools)
             Dim paramSetsAvailable As DataTable = paramGenerator.RetrieveAvailableParams
 
             Return paramSetsAvailable
@@ -478,7 +478,7 @@ Namespace MakeParams
         End Function
 
         Private Function GetAvailableParamSetTypes(dbTools As IDBTools) As DataTable Implements IGenerateFile.GetAvailableParamFileTypes
-            Dim paramGenerator As New clsParamsFromDMS(dbTools)
+            Dim paramGenerator As New ParamsFromDMS(dbTools)
             Dim paramTypesAvailable As DataTable = paramGenerator.RetrieveParamFileTypes
             Return paramTypesAvailable
         End Function

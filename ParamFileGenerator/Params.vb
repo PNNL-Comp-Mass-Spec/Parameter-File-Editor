@@ -9,23 +9,23 @@ Public Interface IBasicParams
         Monoisotopic = 1
     End Enum
 
-    ReadOnly Property FileType As clsParams.ParamFileTypes
+    ReadOnly Property FileType As Params.ParamFileTypes
     Property DMS_ID As Integer
     Property FileName As String
     Property Description As String
-    Property SelectedEnzymeDetails As clsEnzymeDetails
+    Property SelectedEnzymeDetails As EnzymeDetails
     Property SelectedEnzymeIndex As Integer
     Property SelectedEnzymeCleavagePosition As Integer
     Property MaximumNumberMissedCleavages As Integer
     Property ParentMassType As MassTypeList
     Property FragmentMassType As MassTypeList
-    Property DynamicMods As clsDynamicMods
-    Property TermDynamicMods As clsTermDynamicMods
-    Property StaticModificationsList As clsStaticMods
-    Property IsotopicModificationsList As clsIsoMods
+    Property DynamicMods As DynamicMods
+    Property TermDynamicMods As TermDynamicMods
+    Property StaticModificationsList As StaticMods
+    Property IsotopicModificationsList As IsoMods
     Property PartialSequenceToMatch As String
-    Property EnzymeList As clsEnzymeCollection
-    Function RetrieveEnzymeDetails(index As Integer) As clsEnzymeDetails
+    Property EnzymeList As EnzymeCollection
+    Function RetrieveEnzymeDetails(index As Integer) As EnzymeDetails
 End Interface
 Public Interface IAdvancedParams
     Enum FrameList As Integer
@@ -48,7 +48,7 @@ Public Interface IAdvancedParams
     Property DefaultFASTAPath As String
     Property DefaultFASTAPath2 As String
     Property CreateOutputFiles As Boolean
-    Property IonSeries As clsIonSeries
+    Property IonSeries As IonSeries
     Property NumberOfResultsToProcess As Integer
     Property MaximumNumAAPerDynMod As Integer
     Property MaximumDifferentialPerPeptide As Integer
@@ -74,7 +74,7 @@ Public Interface IAdvancedParams
     Property FragmentMassUnits As Integer
 End Interface
 
-Public Class clsParams
+Public Class Params
     Implements IBasicParams
     Implements IAdvancedParams
 
@@ -99,15 +99,15 @@ Public Class clsParams
     Private m_ionSeriesString As String
     Private m_protMassFilterString As String
 
-    Private m_fullTemplate As clsRetrieveParams
+    Private m_fullTemplate As RetrieveParams
     Private m_templateFilePath As String
 
 #End Region
 
 #Region "clsParams Properties"
-    Public Shared ReadOnly Property BaseLineParamSet As clsParams
+    Public Shared ReadOnly Property BaseLineParamSet As Params
         Get
-            Return clsMainProcess.BaseLineParamSet
+            Return MainProcess.BaseLineParamSet
         End Get
     End Property
 
@@ -135,13 +135,13 @@ Public Class clsParams
 
     Public Property CreateOutputFiles As Boolean Implements IAdvancedParams.CreateOutputFiles
 
-    Public Property IonSeries As clsIonSeries Implements IAdvancedParams.IonSeries
+    Public Property IonSeries As IonSeries Implements IAdvancedParams.IonSeries
 
-    Public Property DynamicMods As clsDynamicMods Implements IBasicParams.DynamicMods
+    Public Property DynamicMods As DynamicMods Implements IBasicParams.DynamicMods
 
-    Public Property TermDynamicMods As clsTermDynamicMods Implements IBasicParams.TermDynamicMods
+    Public Property TermDynamicMods As TermDynamicMods Implements IBasicParams.TermDynamicMods
 
-    Public Property IsotopicMods As clsIsoMods Implements IBasicParams.IsotopicModificationsList
+    Public Property IsotopicMods As IsoMods Implements IBasicParams.IsotopicModificationsList
 
     Public Property MaximumNumAAPerDynMod As Integer Implements IAdvancedParams.MaximumNumAAPerDynMod
 
@@ -159,7 +159,7 @@ Public Class clsParams
 
     Public Property PrintDuplicateReferences As Boolean Implements IAdvancedParams.PrintDuplicateReferences
 
-    Public Property SelectedEnzymeDetails As clsEnzymeDetails Implements IBasicParams.SelectedEnzymeDetails
+    Public Property SelectedEnzymeDetails As EnzymeDetails Implements IBasicParams.SelectedEnzymeDetails
 
     Public Property SelectedEnzymeIndex As Integer Implements IBasicParams.SelectedEnzymeIndex
 
@@ -206,9 +206,9 @@ Public Class clsParams
 
     Public Property FragmentMassUnits As Integer Implements IAdvancedParams.FragmentMassUnits
 
-    Public Property StaticModificationsList As clsStaticMods Implements IBasicParams.StaticModificationsList
+    Public Property StaticModificationsList As StaticMods Implements IBasicParams.StaticModificationsList
 
-    Public Property EnzymeList As clsEnzymeCollection Implements IBasicParams.EnzymeList
+    Public Property EnzymeList As EnzymeCollection Implements IBasicParams.EnzymeList
 
     Public Property LoadedParamNames As Hashtable = New Hashtable
 
@@ -221,7 +221,7 @@ Public Class clsParams
         End If
     End Sub
 
-    Public Function RetrieveEnzymeDetails(EnzymeListIndex As Integer) As clsEnzymeDetails Implements IBasicParams.RetrieveEnzymeDetails
+    Public Function RetrieveEnzymeDetails(EnzymeListIndex As Integer) As EnzymeDetails Implements IBasicParams.RetrieveEnzymeDetails
         Return EnzymeList.Item(EnzymeListIndex)
     End Function
 #End Region
@@ -230,13 +230,13 @@ Public Class clsParams
     ''' Constructor
     ''' </summary>
     Public Sub New()
-        IonSeries = New clsIonSeries()
-        EnzymeList = New clsEnzymeCollection()
-        SelectedEnzymeDetails = New clsEnzymeDetails()
-        DynamicMods = New clsDynamicMods()
-        StaticModificationsList = New clsStaticMods()
-        IsotopicMods = New clsIsoMods()
-        TermDynamicMods = New clsTermDynamicMods("0.0 0.0")
+        IonSeries = New IonSeries()
+        EnzymeList = New EnzymeCollection()
+        SelectedEnzymeDetails = New EnzymeDetails()
+        DynamicMods = New DynamicMods()
+        StaticModificationsList = New StaticMods()
+        IsotopicMods = New IsoMods()
+        TermDynamicMods = New TermDynamicMods("0.0 0.0")
 
         MaximumNumDifferentialPerPeptide = 3
         UsePhosphoFragmentation = 0
@@ -254,14 +254,14 @@ Public Class clsParams
     Private Sub LoadTemplateParams(templateFileName As String)
 
         m_templateFilePath = GetFilePath(templateFileName)
-        Dim m_getEnzymeList As New clsGetEnzymeBlock(m_templateFilePath, DEF_ENZ_SECTION_NAME)
+        Dim m_getEnzymeList As New GetEnzymeBlock(m_templateFilePath, DEF_ENZ_SECTION_NAME)
         EnzymeList = m_getEnzymeList.EnzymeList
 
         m_type = GetTemplateType()
 
         Dim SectionName = "SEQUEST"
 
-        m_fullTemplate = New clsRetrieveParams(m_templateFilePath)
+        m_fullTemplate = New RetrieveParams(m_templateFilePath)
         'Retrieve Basic Parameters
         With m_fullTemplate
             .SetSection(SectionName)
@@ -273,9 +273,9 @@ Public Class clsParams
             ParentMassType = CType(CInt(.GetParam("mass_type_parent")), IBasicParams.MassTypeList)
             FragmentMassType = CType(CInt(.GetParam("mass_type_fragment")), IBasicParams.MassTypeList)
             PartialSequenceToMatch = .GetParam("partial_sequence")
-            DynamicMods = New clsDynamicMods(.GetParam("diff_search_options"))
-            TermDynamicMods = New clsTermDynamicMods(.GetParam("term_diff_search_options"))
-            StaticModificationsList = New clsStaticMods
+            DynamicMods = New DynamicMods(.GetParam("diff_search_options"))
+            TermDynamicMods = New TermDynamicMods(.GetParam("term_diff_search_options"))
+            StaticModificationsList = New StaticMods
 
 
             'Get Static Mods
@@ -332,7 +332,7 @@ Public Class clsParams
                 CreateOutputFiles = True
             End If
             m_ionSeriesString = .GetParam("ion_series")
-            IonSeries = New clsIonSeries(m_ionSeriesString)
+            IonSeries = New IonSeries(m_ionSeriesString)
             MaximumNumAAPerDynMod = CInt(.GetParam("max_num_differential_AA_per_mod"))
             If m_type = ParamFileTypes.BioWorks_32 Then
                 MaximumNumDifferentialPerPeptide = CInt(.GetParam("max_num_differential_per_peptide"))
@@ -429,7 +429,7 @@ Public Class clsParams
 
 End Class
 
-Public Class clsIonSeries
+Public Class IonSeries
     Public m_origIonSeriesString As String
 
     Private m_use_a_Ions As Integer
@@ -599,7 +599,7 @@ Public Class clsIonSeries
 End Class
 
 
-Public Class clsEnzymeDetails
+Public Class EnzymeDetails
 
     Private ReadOnly m_EnzymeString As String
 
@@ -725,20 +725,20 @@ Public Class clsEnzymeDetails
 
 End Class
 
-Public Class clsEnzymeCollection
+Public Class EnzymeCollection
     Inherits CollectionBase
 
     Public Sub New()
         MyBase.New()
     End Sub
 
-    Public Sub add(Enzyme As clsEnzymeDetails)
+    Public Sub add(Enzyme As EnzymeDetails)
         List.Add(Enzyme)
     End Sub
 
-    Default Public Property Item(index As Integer) As clsEnzymeDetails
+    Default Public Property Item(index As Integer) As EnzymeDetails
         Get
-            Return DirectCast(List(index), clsEnzymeDetails)
+            Return DirectCast(List(index), EnzymeDetails)
         End Get
         Set
             List(index) = Value
@@ -746,13 +746,13 @@ Public Class clsEnzymeCollection
     End Property
 End Class
 
-Public Class clsGetEnzymeBlock
+Public Class GetEnzymeBlock
 
     Private ReadOnly m_templateFilePath As String
     Private ReadOnly m_sectionName As String
     Private ReadOnly m_EnzymeBlockCollection As List(Of String)
 
-    Public Property EnzymeList As clsEnzymeCollection
+    Public Property EnzymeList As EnzymeCollection
 
     Public Sub New(
         TemplateFilePath As String,
@@ -830,14 +830,14 @@ Public Class clsGetEnzymeBlock
 
     End Function
 
-    Private Function InterpretEnzymeBlockCollection(enzymeBlock As IEnumerable(Of String)) As clsEnzymeCollection
+    Private Function InterpretEnzymeBlockCollection(enzymeBlock As IEnumerable(Of String)) As EnzymeCollection
 
-        Dim enzymeInfo = New clsEnzymeCollection()
+        Dim enzymeInfo = New EnzymeCollection()
 
         For Each s In enzymeBlock
             Dim sTmp = s.Substring(0, InStr(s, " "))
             If InStr(sTmp, ". ") > 0 Then
-                Dim tempEnzyme = New clsEnzymeDetails(s)
+                Dim tempEnzyme = New EnzymeDetails(s)
                 enzymeInfo.add(tempEnzyme)
             End If
         Next

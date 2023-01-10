@@ -3,7 +3,7 @@ Imports System.Linq
 Imports System.Text
 Imports System.Text.RegularExpressions
 
-Public Class clsMods
+Public Class Mods
     Inherits CollectionBase
 
 #Region "Enums"
@@ -64,9 +64,9 @@ Public Class clsMods
         End Get
     End Property
 
-    Public ReadOnly Property GetModEntry(index As Integer) As clsModEntry
+    Public ReadOnly Property GetModEntry(index As Integer) As ModEntry
         Get
-            Return CType(List.Item(index), clsModEntry)
+            Return CType(List.Item(index), ModEntry)
         End Get
     End Property
 
@@ -88,7 +88,7 @@ Public Class clsMods
         MassDifference As Double,
         Optional GlobalModID As Integer = 0)
 
-        m_Add(ConvertResidueCodeToSLC(AffectedResidue), MassDifference, clsModEntry.ModificationTypes.Static, GlobalModID)
+        m_Add(ConvertResidueCodeToSLC(AffectedResidue), MassDifference, ModEntry.ModificationTypes.Static, GlobalModID)
     End Sub
 
     Public Sub Add(
@@ -96,11 +96,11 @@ Public Class clsMods
         MassDifference As Double)
 
         Dim residueList = ConvertAffectedResStringToList(AffectedResidueString)
-        Dim newMod As New clsModEntry(residueList, MassDifference, clsModEntry.ModificationTypes.Static)
+        Dim newMod As New ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Static)
         List.Add(newMod)
     End Sub
 
-    Public Sub Insert(index As Integer, newMod As clsModEntry)
+    Public Sub Insert(index As Integer, newMod As ModEntry)
         List.Insert(index, newMod)
     End Sub
 
@@ -108,13 +108,13 @@ Public Class clsMods
         List.RemoveAt(index)
     End Sub
 
-    Public Sub Replace(index As Integer, newMod As clsModEntry)
+    Public Sub Replace(index As Integer, newMod As ModEntry)
         List.RemoveAt(index)
         List.Insert(index, newMod)
     End Sub
 
     Public Function GetMassDiff(index As Integer) As String
-        Dim m = DirectCast(List.Item(index), clsModEntry)
+        Dim m = DirectCast(List.Item(index), ModEntry)
         Return Format(m.MassDifference, "0.00000")
     End Function
 
@@ -133,11 +133,11 @@ Public Class clsMods
     Protected Sub m_Add(
         AffectedEntity As String,
         MassDifference As Double,
-        ModType As clsModEntry.ModificationTypes,
+        ModType As ModEntry.ModificationTypes,
         Optional GlobalModID As Integer = 0)
 
         Dim residueList = ConvertAffectedResStringToList(AffectedEntity)
-        Dim newMod As New clsModEntry(residueList, MassDifference, ModType, GlobalModID)
+        Dim newMod As New ModEntry(residueList, MassDifference, ModType, GlobalModID)
         List.Add(newMod)
 
     End Sub
@@ -200,7 +200,7 @@ Public Class clsMods
     End Function
 
     Protected Function m_FindModIndex(modifiedEntity As String) As Integer
-        Dim statMod As clsModEntry
+        Dim statMod As ModEntry
 
         For Each statMod In List
             Dim testCase = statMod.ReturnResidueAffected(0)
@@ -212,13 +212,13 @@ Public Class clsMods
         Return -1
     End Function
 
-    Protected Function m_FindMod(ModifiedEntity As String) As clsModEntry
-        Dim ModEntry As clsModEntry
+    Protected Function m_FindMod(ModifiedEntity As String) As ModEntry
+        Dim ModEntry As ModEntry
         Dim ModIndex As Integer = m_FindModIndex(ModifiedEntity)
         If ModIndex = -1 Then
             ModEntry = Nothing
         Else
-            ModEntry = DirectCast(List.Item(ModIndex), clsModEntry)
+            ModEntry = DirectCast(List.Item(ModIndex), ModEntry)
         End If
 
         If ModEntry Is Nothing Then
@@ -226,7 +226,7 @@ Public Class clsMods
                 ModifiedEntity
             }
 
-            Dim emptyMod As New clsModEntry(sc, 0.0, clsModEntry.ModificationTypes.Dynamic)
+            Dim emptyMod As New ModEntry(sc, 0.0, ModEntry.ModificationTypes.Dynamic)
             Return emptyMod
         Else
             Return ModEntry
@@ -235,7 +235,7 @@ Public Class clsMods
     End Function
 
     Protected Sub m_ChangeMod(
-        foundMod As clsModEntry,
+        foundMod As ModEntry,
         ModifiedEntity As String,
         MassDifference As Double,
         Optional Additive As Boolean = False)
@@ -247,15 +247,15 @@ Public Class clsMods
             Exit Sub
         ElseIf Math.Abs(foundMod.MassDifference) > Single.Epsilon Then          'Not an emptyMod
             Dim counter As Integer
-            Dim tempMod As clsModEntry
+            Dim tempMod As ModEntry
 
             Dim residueList As List(Of String) = ConvertAffectedResStringToList(ModifiedEntity)
-            Dim changeMod As clsModEntry
+            Dim changeMod As ModEntry
 
             If Additive Then
-                changeMod = New clsModEntry(residueList, MassDifference + foundMod.MassDifference, foundMod.ModificationType)
+                changeMod = New ModEntry(residueList, MassDifference + foundMod.MassDifference, foundMod.ModificationType)
             Else
-                changeMod = New clsModEntry(residueList, MassDifference, foundMod.ModificationType)
+                changeMod = New ModEntry(residueList, MassDifference, foundMod.ModificationType)
             End If
 
             For Each tempMod In List
@@ -276,7 +276,7 @@ Public Class clsMods
 
 End Class
 
-Public Class clsModEntry
+Public Class ModEntry
 
     Enum ModificationTypes
         Dynamic
@@ -390,8 +390,8 @@ Public Class clsModEntry
 
 End Class
 
-Public Class clsTermDynamicMods
-    Inherits clsDynamicMods
+Public Class TermDynamicMods
+    Inherits DynamicMods
 
 #Region "Public Procedures"
     Public Const NTERM_SYMBOL As String = "<"
@@ -423,7 +423,7 @@ Public Class clsTermDynamicMods
     End Property
 
     Protected Function GetTermDynMod(strSymbol As String) As Double
-        Dim objModEntry As clsModEntry
+        Dim objModEntry As ModEntry
         objModEntry = m_FindMod(strSymbol)
 
         If objModEntry Is Nothing Then
@@ -446,7 +446,7 @@ Public Class clsTermDynamicMods
                     strSymbol
                 }
 
-                Add(New clsModEntry(resCollection, sngMass, clsModEntry.ModificationTypes.Dynamic))
+                Add(New ModEntry(resCollection, sngMass, ModEntry.ModificationTypes.Dynamic))
             End If
         Else
             ' Mod was found
@@ -454,7 +454,7 @@ Public Class clsTermDynamicMods
             If Math.Abs(sngMass) < Single.Epsilon Then
                 Remove(intIndex)
             Else
-                Dim objModEntry As clsModEntry
+                Dim objModEntry As ModEntry
                 objModEntry = GetModEntry(intIndex)
                 objModEntry.MassDifference = sngMass
             End If
@@ -498,7 +498,7 @@ Public Class clsTermDynamicMods
 
         Dim tmpModMass As Double
 
-        Dim dynMod As clsModEntry
+        Dim dynMod As ModEntry
 
         For Each dynMod In List
             tmpModMass = dynMod.MassDifference
@@ -526,8 +526,8 @@ End Class
 
 
 
-Public Class clsDynamicMods
-    Inherits clsMods
+Public Class DynamicMods
+    Inherits Mods
     '#Region "Public Legacy Functions and Properties"
     '    Public Property Dyn_Mod_1_MassDiff As Double
     '        Get
@@ -614,29 +614,29 @@ Public Class clsDynamicMods
         MassDifference As Double)
 
         Dim residueList = ConvertAffectedResStringToList(AffectedResidueString)
-        Dim newDynMod As New clsModEntry(residueList, MassDifference, clsModEntry.ModificationTypes.Dynamic)
+        Dim newDynMod As New ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Dynamic)
         List.Add(newDynMod)
     End Sub
-    Public Overloads Sub Add(ModToAdd As clsModEntry)
+    Public Overloads Sub Add(ModToAdd As ModEntry)
         List.Add(ModToAdd)
     End Sub
 
     Public Property Dyn_Mod_n_MassDiff(DynModNumber As Integer) As Double
         Get
-            Dim dm As clsModEntry
+            Dim dm As ModEntry
             Dim index As Integer = DynModNumber - 1
             Try
-                dm = DirectCast(List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), ModEntry)
             Catch ex As Exception
-                dm = New clsModEntry(ConvertAffectedResStringToList("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
+                dm = New ModEntry(ConvertAffectedResStringToList("C"), 0.0, ModEntry.ModificationTypes.Dynamic)
             End Try
             Return dm.MassDifference
         End Get
         Set
             Dim index As Integer = DynModNumber - 1
-            Dim dm As clsModEntry
+            Dim dm As ModEntry
             If index <= List.Count - 1 Then
-                dm = DirectCast(List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), ModEntry)
                 dm.MassDifference = Value
                 Replace(index, dm)
             Else
@@ -647,20 +647,20 @@ Public Class clsDynamicMods
 
     Public Property Dyn_Mod_n_AAList(DynModNumber As Integer) As String
         Get
-            Dim dm As clsModEntry
+            Dim dm As ModEntry
             Dim index As Integer = DynModNumber - 1
             Try
-                dm = DirectCast(List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), ModEntry)
             Catch ex As Exception
-                dm = New clsModEntry(ConvertAffectedResStringToList("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
+                dm = New ModEntry(ConvertAffectedResStringToList("C"), 0.0, ModEntry.ModificationTypes.Dynamic)
             End Try
             Return dm.ReturnAllAffectedResiduesString
         End Get
         Set
             Dim index As Integer = DynModNumber - 1
-            Dim dm As clsModEntry
+            Dim dm As ModEntry
             If index <= List.Count - 1 Then
-                dm = DirectCast(List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), ModEntry)
                 dm.ResidueCollection = ConvertAffectedResStringToList(Value)
                 Replace(index, dm)
             Else
@@ -671,20 +671,20 @@ Public Class clsDynamicMods
 
     Public Property Dyn_Mod_n_Global_ModID(DynModNumber As Integer) As Integer
         Get
-            Dim dm As clsModEntry
+            Dim dm As ModEntry
             Dim index As Integer = DynModNumber - 1
             Try
-                dm = DirectCast(List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), ModEntry)
             Catch ex As Exception
-                dm = New clsModEntry(ConvertAffectedResStringToList("C"), 0.0, clsModEntry.ModificationTypes.Dynamic)
+                dm = New ModEntry(ConvertAffectedResStringToList("C"), 0.0, ModEntry.ModificationTypes.Dynamic)
             End Try
             Return dm.GlobalModID
         End Get
         Set
             Dim index As Integer = DynModNumber - 1
-            Dim dm As clsModEntry
+            Dim dm As ModEntry
             If index <= List.Count - 1 Then
-                dm = DirectCast(List.Item(index), clsModEntry)
+                dm = DirectCast(List.Item(index), ModEntry)
                 dm.GlobalModID = Value
                 Replace(index, dm)
             Else
@@ -699,7 +699,7 @@ Public Class clsDynamicMods
         Dim s = ""
         Dim tmpModString As String
         Dim tmpModMass As Double
-        Dim dynMod As clsModEntry
+        Dim dynMod As ModEntry
         Dim padCount As Integer
 
         For Each dynMod In List
@@ -735,7 +735,7 @@ Public Class clsDynamicMods
                     Dim tmpRes = Mid(tmpResString, resCounter, 1)
                     residueList.Add(tmpRes)
                 Next
-                Dim modEntry As New clsModEntry(residueList, tmpMass, clsModEntry.ModificationTypes.Dynamic)
+                Dim modEntry As New ModEntry(residueList, tmpMass, ModEntry.ModificationTypes.Dynamic)
                 Add(modEntry)
             End If
         Next
@@ -745,14 +745,14 @@ Public Class clsDynamicMods
 
 #Region "Member Properties"
     Protected m_OrigDynModString As String
-    'private m_EmptyMod as New clsModEntry(
+    'private m_EmptyMod as New ModEntry(
 #End Region
 
 End Class
 
 
-Public Class clsStaticMods
-    Inherits clsMods
+Public Class StaticMods
+    Inherits Mods
 
 #Region "Legacy Access"
     Public Property CtermPeptide As Double
@@ -1013,7 +1013,7 @@ Public Class clsStaticMods
     End Sub
 
     Public Function GetResidue(index As Integer) As String
-        Dim m = DirectCast(List.Item(index), clsModEntry)
+        Dim m = DirectCast(List.Item(index), ModEntry)
         Return m.ReturnResidueAffected(0)
     End Function
     Public Sub ChangeAAModification(ModifiedAA As ResidueCode, MassDifference As Double, Optional Additive As Boolean = False)
@@ -1025,12 +1025,12 @@ Public Class clsStaticMods
 #End Region
 
 #Region "Member Procedures"
-    Private Function FindAAMod(ModifiedAA As ResidueCode) As clsModEntry
+    Private Function FindAAMod(ModifiedAA As ResidueCode) As ModEntry
         Return m_FindMod(ConvertResidueCodeToSLC(ModifiedAA))
     End Function
 
     Private Sub ChangeAAMod(ModifiedAA As ResidueCode, MassDifference As Double, Optional Additive As Boolean = False)
-        Dim foundMod As clsModEntry = FindAAMod(ModifiedAA)
+        Dim foundMod As ModEntry = FindAAMod(ModifiedAA)
         Dim ModAAString As String = ConvertResidueCodeToSLC(ModifiedAA)
         m_ChangeMod(foundMod, ModAAString, MassDifference, Additive)
 
@@ -1041,7 +1041,7 @@ Public Class clsStaticMods
         Dim AASLC As String
         Dim AAEnums = [Enum].GetNames(GetType(ResidueCode)).ToList()
         Dim currIndex As Integer
-        Dim modEntry As clsModEntry
+        Dim modEntry As ModEntry
 
         For Each AA In AAEnums
             If InStr(AA, "Term") = 0 Then
@@ -1061,16 +1061,16 @@ Public Class clsStaticMods
 
 End Class
 
-Public Class clsIsoMods
-    Inherits clsMods
+Public Class IsoMods
+    Inherits Mods
 
     Public Overloads Sub Add(AffectedAtom As IsotopeList, MassDifference As Double, Optional GlobalModID As Integer = 0)
-        m_Add(AffectedAtom.ToString, MassDifference, clsModEntry.ModificationTypes.Isotopic, GlobalModID)
+        m_Add(AffectedAtom.ToString, MassDifference, ModEntry.ModificationTypes.Isotopic, GlobalModID)
     End Sub
 
 #Region "Public Procedures"
     Public Function GetAtom(index As Integer) As String
-        Dim m = DirectCast(List.Item(index), clsModEntry)
+        Dim m = DirectCast(List.Item(index), ModEntry)
         Return m.ReturnResidueAffected(0)
     End Function
 #End Region
@@ -1124,12 +1124,12 @@ Public Class clsIsoMods
 #End Region
 
     Private Sub ChangeIsoMod(AffectedAtom As IsotopeList, MassDifference As Double)
-        Dim foundMod As clsModEntry = FindIsoMod(AffectedAtom)
+        Dim foundMod As ModEntry = FindIsoMod(AffectedAtom)
         Dim ModAAString As String = AffectedAtom.ToString
         m_ChangeMod(foundMod, ModAAString, MassDifference)
     End Sub
 
-    Private Function FindIsoMod(AffectedAtom As IsotopeList) As clsModEntry
+    Private Function FindIsoMod(AffectedAtom As IsotopeList) As ModEntry
         Return m_FindMod(AffectedAtom.ToString)
     End Function
 

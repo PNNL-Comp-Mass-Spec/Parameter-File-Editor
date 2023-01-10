@@ -1,7 +1,7 @@
 Imports System.IO
 Imports System.Reflection
 
-Public Class clsMainProcess
+Public Class MainProcess
 
 #Region "Member Properties"
     'Private basicTemplate As IBasicParams
@@ -10,9 +10,9 @@ Public Class clsMainProcess
     'Private m_SettingsFileName As String = "ParamFileEditorSettings.xml"
     Shared m_TemplateFileName As String
     Shared m_TemplateFilePath As String
-    'Private m_clsModsUpdate As clsUpdateModsTable
-    'Private m_mainProcess As clsMainProcess
-    Shared m_BaseLineParams As clsParams
+    'Private m_modsUpdate As UpdateModsTable
+    'Private m_mainProcess As MainProcess
+    Shared m_BaseLineParams As Params
     'Const DEF_TEMPLATE_LABEL_TEXT As String = "Currently Loaded Template: "
     Const DEF_TEMPLATE_FILENAME As String = "sequest_N14_NE.params"
     Shared ReadOnly DEF_TEMPLATE_FILEPATH As String = Path.GetDirectoryName(Assembly.GetEntryAssembly.Location)
@@ -21,9 +21,9 @@ Public Class clsMainProcess
 #End Region
 
 #Region "Public Properties"
-    'Public Shared mySettings As clsSettings
+    'Public Shared mySettings As Settings
 
-    Public Shared ReadOnly Property BaseLineParamSet As clsParams
+    Public Shared ReadOnly Property BaseLineParamSet As Params
         Get
             Return m_BaseLineParams
         End Get
@@ -40,7 +40,7 @@ Public Class clsMainProcess
     Public Sub New()
 
         m_TemplateFileName = Path.Combine(DEF_TEMPLATE_FILEPATH, DEF_TEMPLATE_FILENAME)
-        m_BaseLineParams = New clsParams
+        m_BaseLineParams = New Params
         m_TemplateFilePath = DEF_TEMPLATE_FILEPATH
 
 
@@ -53,7 +53,7 @@ Public Class clsMainProcess
 
     Public Sub New(templateFilePath As String)
         m_TemplateFileName = templateFilePath
-        m_BaseLineParams = New clsParams
+        m_BaseLineParams = New Params
         m_TemplateFilePath = Path.GetDirectoryName(templateFilePath)
 
         With m_BaseLineParams

@@ -14,7 +14,7 @@ Imports PRISMDatabaseUtils
 Public Class frmMainGUI
     Inherits Form
 
-    Private m_clsParamsFromDMS As clsParamsFromDMS
+    Private m_clsParamsFromDMS As ParamsFromDMS
     Private m_clsMassTweaker As IMassTweaker
 
     Private m_DMSUpload As clsDMSParamUpload
@@ -24,7 +24,7 @@ Public Class frmMainGUI
     ''' <summary>
     ''' This class needs to be instantiated so that we can read properties BaseLineParamSet and templateFileName
     ''' </summary>
-    Private ReadOnly m_sharedMain As clsMainProcess
+    Private ReadOnly m_sharedMain As MainProcess
 
     Private m_CurrentDBTools As IDBTools
 
@@ -41,7 +41,7 @@ Public Class frmMainGUI
         'Add any initialization after the InitializeComponent() call
         CheckForSettingsFileExistence()
         CheckForParamFileExistence()
-        m_sharedMain = New clsMainProcess()
+        m_sharedMain = New MainProcess()
     End Sub
 
     'Form overrides dispose to clean up the component list.
@@ -2492,7 +2492,7 @@ Public Class frmMainGUI
 
     ' Unused: Private basicTemplate As IBasicParams
     ' Unused: Private advTemplate As IAdvancedParams
-    Public newParams As clsParams
+    Public newParams As Params
     ' Unused: Private newBasic As IBasicParams
     ' Unused: Private newAdv As IAdvancedParams
     Private ReadOnly m_SettingsFileName As String = "ParamFileEditorSettings.xml"
@@ -2500,7 +2500,7 @@ Public Class frmMainGUI
     Private ReadOnly embeddedResource As New clsAccessEmbeddedRsrc
     Private m_UseAutoTweak As Boolean
 
-    Private Sub RefreshTabs(frm As frmMainGUI, ParamsClass As clsParams)
+    Private Sub RefreshTabs(frm As frmMainGUI, ParamsClass As Params)
         SetupBasicTab(frm, ParamsClass)
         SetupAdvancedTab(frm, ParamsClass)
         RetweakMasses()
@@ -2513,11 +2513,11 @@ Public Class frmMainGUI
 
         ValidateDBTools(mySettings.DMS_ConnectionString)
 
-        newParams = New clsParams()
+        newParams = New Params()
         m_DMSUpload = New clsDMSParamUpload(m_CurrentDBTools)
 
         With newParams
-            .FileName = Mid(clsMainProcess.TemplateFileName, InStrRev(clsMainProcess.TemplateFileName, "\") + 1)
+            .FileName = Mid(MainProcess.TemplateFileName, InStrRev(MainProcess.TemplateFileName, "\") + 1)
             .LoadTemplate(mySettings.TemplateFileName)
         End With
 
@@ -2579,27 +2579,27 @@ Public Class frmMainGUI
                 .BeginUpdate()
                 .Items.Clear()
 
-                For Each enz As clsEnzymeDetails In frm.newParams.EnzymeList
+                For Each enz As EnzymeDetails In frm.newParams.EnzymeList
                     .Items.Add(enz.EnzymeID & " - " & enz.EnzymeName & " [" & enz.EnzymeCleavePoints & "]")
                 Next
                 .EndUpdate()
 
                 If .Items.Count = 0 Then
                     Try
-                        MessageBox.Show("Current parameter file had an empty enzyme list; will load the defaults from " & Path.GetFileName(clsMainProcess.TemplateFileName), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show("Current parameter file had an empty enzyme list; will load the defaults from " & Path.GetFileName(MainProcess.TemplateFileName), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                         ' No enzymes were defined; update to show the defaults
 
-                        Dim objParams As New clsParams
+                        Dim objParams As New Params
 
                         With objParams
-                            .FileName = Path.GetFileName(clsMainProcess.TemplateFileName)
+                            .FileName = Path.GetFileName(MainProcess.TemplateFileName)
                             .LoadTemplate(mySettings.TemplateFileName)
                         End With
 
                         .BeginUpdate()
                         .Items.Clear()
-                        For Each enz As clsEnzymeDetails In objParams.EnzymeList
+                        For Each enz As EnzymeDetails In objParams.EnzymeList
                             .Items.Add(enz.EnzymeID & " - " & enz.EnzymeName & " [" & enz.EnzymeCleavePoints & "]")
                         Next
                         .EndUpdate()
@@ -3347,8 +3347,8 @@ Public Class frmMainGUI
 
     End Function
 
-    Private Function LoadDMSParamsClass() As clsParamsFromDMS
-        Dim dms As New clsParamsFromDMS(m_CurrentDBTools)
+    Private Function LoadDMSParamsClass() As ParamsFromDMS
+        Dim dms As New ParamsFromDMS(m_CurrentDBTools)
         Return dms
     End Function
 
@@ -4149,15 +4149,15 @@ Public Class frmMainGUI
 #Region "Menu Handlers"
 
     Private Sub mnuFileSaveBW2_Click(sender As Object, e As EventArgs) Handles mnuFileSaveBW2.Click
-        SaveSequestFile("Save Sequest/BioWorks v2.0 Parameter File", clsParams.ParamFileTypes.BioWorks_20)
+        SaveSequestFile("Save Sequest/BioWorks v2.0 Parameter File", Params.ParamFileTypes.BioWorks_20)
     End Sub
 
     Private Sub mnuFileSaveBW3_Click(sender As Object, e As EventArgs) Handles mnuFileSaveBW3.Click
-        SaveSequestFile("Save Sequest/BioWorks v3.0 Parameter File", clsParams.ParamFileTypes.BioWorks_30)
+        SaveSequestFile("Save Sequest/BioWorks v3.0 Parameter File", Params.ParamFileTypes.BioWorks_30)
     End Sub
 
     Private Sub mnuFileSaveBW32_Click(sender As Object, e As EventArgs) Handles mnuFileSaveBW32.Click
-        SaveSequestFile("Save Sequest/BioWorks v3.2 Parameter File", clsParams.ParamFileTypes.BioWorks_32)
+        SaveSequestFile("Save Sequest/BioWorks v3.2 Parameter File", Params.ParamFileTypes.BioWorks_32)
     End Sub
 
     Private Sub mnuHelpAbout_Click(sender As Object, e As EventArgs) Handles mnuHelpAbout.Click
@@ -4524,10 +4524,10 @@ Public Class frmMainGUI
         End Select
     End Function
 
-    Private Sub SaveSequestFile(strTitle As String, eFileType As clsParams.ParamFileTypes)
+    Private Sub SaveSequestFile(strTitle As String, eFileType As Params.ParamFileTypes)
 
         Try
-            Dim FileOutput As New clsWriteOutput
+            Dim FileOutput As New WriteOutput
 
             Dim SaveDialog As New SaveFileDialog
 

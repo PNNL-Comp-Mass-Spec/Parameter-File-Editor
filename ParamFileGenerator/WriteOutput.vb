@@ -2,10 +2,10 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports ParamFileGenerator.MakeParams
 
-Public Class clsWriteOutput
+Public Class WriteOutput
 
     Public Function WriteOutputFile(
-        params As clsParams,
+        params As Params,
         outputPathName As String,
         fileType As IGenerateFile.ParamFileType) As Boolean
 
@@ -31,7 +31,7 @@ Public Class clsWriteOutput
     End Sub
 
     Private Function ConvertSequestParamsToList(
-        params As clsParams,
+        params As Params,
         type As IGenerateFile.ParamFileType) As IEnumerable(Of String)
 
         Dim paramList As New List(Of String)
@@ -46,9 +46,9 @@ Public Class clsWriteOutput
             maxDynMods = 6
         End If
         paramList.Add(";DMS_Description = " & params.Description)
-        If type = clsParams.ParamFileTypes.BioWorks_20 Then
+        If type = params.ParamFileTypes.BioWorks_20 Then
             paramList.Add("database_name = " & params.DefaultFASTAPath)
-        ElseIf type = clsParams.ParamFileTypes.BioWorks_30 Or
+        ElseIf type = params.ParamFileTypes.BioWorks_30 Or
                     type = IGenerateFile.ParamFileType.BioWorks_31 Or
                     type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("first_database_name = " & params.DefaultFASTAPath)
@@ -72,11 +72,11 @@ Public Class clsWriteOutput
         End If
 
         paramList.Add("num_output_lines = " & params.NumberOfOutputLines.ToString)
-        If type = clsParams.ParamFileTypes.BioWorks_30 Or type = IGenerateFile.ParamFileType.BioWorks_31 Or type = IGenerateFile.ParamFileType.BioWorks_32 Then
+        If type = params.ParamFileTypes.BioWorks_30 Or type = IGenerateFile.ParamFileType.BioWorks_31 Or type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("num_results = " & params.NumberOfResultsToProcess)
         End If
         paramList.Add("num_description_lines = " & params.NumberOfDescriptionLines.ToString)
-        'If type = clsParams.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
+        'If type = Params.ParamFileTypes.BioWorks_30 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_31 Or type = MakeParams.IGenerateFile.ParamFileType.BioWorks_32 Then
         'paramList.add("show_fragment_ions = 0")
         'Else
         paramList.Add("show_fragment_ions = " & ConvertBoolToInteger(params.ShowFragmentIons).ToString)
@@ -161,7 +161,7 @@ Public Class clsWriteOutput
 
         If Not type = IGenerateFile.ParamFileType.BioWorks_32 Then
             paramList.Add("[SEQUEST_ENZYME_INFO]")
-            For Each item As clsEnzymeDetails In params.EnzymeList
+            For Each item As EnzymeDetails In params.EnzymeList
                 paramList.Add(item.ReturnEnzymeString)
             Next
         End If

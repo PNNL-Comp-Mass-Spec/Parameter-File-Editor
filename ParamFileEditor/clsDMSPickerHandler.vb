@@ -8,7 +8,7 @@ Public Class clsDMSPickerHandler
 
     Private Sub SetupPickerListView(dbTools As IDBTools, lvw As ListView, Optional filterCriteria As String = "")
         'Load up available Param sets from DMS
-        Dim c As New clsParamsFromDMS(dbTools)
+        Dim c As New ParamsFromDMS(dbTools)
         'Dim availableParams As DataTable = c.RetrieveAvailableParams
         Dim paramRow As DataRow
         Dim paramRows() As DataRow

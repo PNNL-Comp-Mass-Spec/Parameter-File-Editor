@@ -1,4 +1,4 @@
-Public Class clsDMSParamStorage
+Public Class DMSParamStorage
     Inherits CollectionBase
 
     Public Enum ParamTypes
