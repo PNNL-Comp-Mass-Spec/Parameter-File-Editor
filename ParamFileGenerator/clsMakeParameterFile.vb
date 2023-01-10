@@ -185,12 +185,12 @@ Namespace MakeParams
         End Function
 
         Private Function GetMonoMassStatus(DatasetID As Integer, dmsConnectionString As String) As Boolean
-            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_ID = " + DatasetID.ToString
+            Dim TypeCheckSQL As String = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + DatasetID.ToString
             Return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString)
         End Function
 
         Private Function GetMonoMassStatus(datasetName As String, dmsConnectionString As String) As Boolean
-            Dim TypeCheckSQL As String = "SELECT TOP 1 Use_Mono_Parent FROM V_Analysis_Job_Use_MonoMass WHERE Dataset_Name = '" + datasetName + "'"
+            Dim TypeCheckSQL As String = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_name = '" + datasetName + "'"
             Return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString)
         End Function
 
