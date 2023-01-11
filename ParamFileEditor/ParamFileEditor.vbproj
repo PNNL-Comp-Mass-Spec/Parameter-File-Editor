@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -111,7 +111,7 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\ParamFileGenerator\ParamFileGenerator.vbproj">
+    <ProjectReference Include="..\ParamFileGenerator\ParamFileGenerator.csproj">
       <Name>ParamFileGenerator</Name>
       <Project>{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}</Project>
       <Package>{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</Package>

@@ -1,8 +1,8 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileGenerator", "ParamFileGenerator\ParamFileGenerator.vbproj", "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParamFileGenerator", "ParamFileGenerator\ParamFileGenerator.csproj", "{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileEditor", "ParamFileEditor\ParamFileEditor.vbproj", "{DF84F4CE-B4B1-43B7-B169-84078341607F}"
 EndProject
