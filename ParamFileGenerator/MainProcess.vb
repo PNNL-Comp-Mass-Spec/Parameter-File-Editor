@@ -3,7 +3,6 @@ Imports System.Reflection
 
 Public Class MainProcess
 
-#Region "Member Properties"
     'Private basicTemplate As IBasicParams
     ' Private advTemplate As IAdvancedParams
 
@@ -17,10 +16,6 @@ Public Class MainProcess
     Const DEF_TEMPLATE_FILENAME As String = "sequest_N14_NE.params"
     Shared ReadOnly DEF_TEMPLATE_FILEPATH As String = Path.GetDirectoryName(Assembly.GetEntryAssembly.Location)
 
-
-#End Region
-
-#Region "Public Properties"
     'Public Shared mySettings As Settings
 
     Public Shared ReadOnly Property BaseLineParamSet As Params
@@ -34,8 +29,6 @@ Public Class MainProcess
             Return Path.Combine(m_TemplateFilePath, Path.GetFileName(m_TemplateFileName))
         End Get
     End Property
-
-#End Region
 
     Public Sub New()
 

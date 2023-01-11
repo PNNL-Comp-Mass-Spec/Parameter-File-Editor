@@ -10,15 +10,12 @@ Namespace DownloadParams
 
         ' Ignore Spelling: diffs, mc
 
-#Region "Constants"
         Private Const Param_File_Table As String = "T_Param_Files"
         Private Const Param_Entry_Table As String = "T_Param_Entries"
         Private Const Param_Mass_Mods_Table As String = "T_Param_File_Mass_Mods"
         Private Const Mass_Corr_Factors As String = "T_Mass_Correction_Factors"
         Private Const Residues_Table As String = "T_Residues"
-#End Region
 
-#Region "Enums"
         Public Enum AcceptableParams
             SelectedEnzymeIndex
             SelectedEnzymeCleavagePosition
@@ -140,9 +137,6 @@ Namespace DownloadParams
             MaxQuant = 1034
         End Enum
 
-#End Region
-
-#Region "Member Properties"
         Private m_ID As Integer
         Private m_Name As String
         Private m_ParamFileType As eParamFileTypeConstants
@@ -161,19 +155,11 @@ Namespace DownloadParams
         Private ReadOnly m_IonSeriesParams As List(Of String)
         Private m_MassMods As DataTable
 
-#End Region
-
-#Region "Public Properties"
         Public ReadOnly Property ParamFileTableLoaded As Boolean
             Get
                 Return m_ParamFileTable IsNot Nothing AndAlso m_ParamFileTable.Rows.Count > 0
             End Get
         End Property
-
-#End Region
-
-
-#Region "Public Functions"
 
 #Disable Warning BC40028 ' Type of parameter is not CLS-compliant
         Public Sub New(dbTools As IDBTools)
@@ -268,9 +254,6 @@ Namespace DownloadParams
             Return GetIDWithName(Name, eParamFileType)
         End Function
 
-#End Region
-
-#Region "Member Functions"
         Private Function LoadAcceptableParamList() As List(Of String)
             Dim paramEnum() As String = [Enum].GetNames(GetType(AcceptableParams))
             Dim paramList As New List(Of String)
@@ -1163,8 +1146,6 @@ Namespace DownloadParams
             Return diffColl
 
         End Function
-
-#End Region
 
     End Class
 

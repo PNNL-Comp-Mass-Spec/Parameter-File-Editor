@@ -89,7 +89,6 @@ Public Class Params
 
     Const DEF_DB_NAME As String = "C:\Xcalibur\database\nr.fasta"     'Not really used, just a placeholder
 
-#Region "Private Variables"
     Const DEF_ENZ_SECTION_NAME As String = "SEQUEST_ENZYME_INFO"
 
     'Basic Parameters
@@ -102,9 +101,6 @@ Public Class Params
     Private m_fullTemplate As RetrieveParams
     Private m_templateFilePath As String
 
-#End Region
-
-#Region "clsParams Properties"
     Public Shared ReadOnly Property BaseLineParamSet As Params
         Get
             Return MainProcess.BaseLineParamSet
@@ -224,7 +220,6 @@ Public Class Params
     Public Function RetrieveEnzymeDetails(EnzymeListIndex As Integer) As EnzymeDetails Implements IBasicParams.RetrieveEnzymeDetails
         Return EnzymeList.Item(EnzymeListIndex)
     End Function
-#End Region
 
     ''' <summary>
     ''' Constructor
@@ -478,8 +473,6 @@ Public Class IonSeries
         m_zWeight = CSng(tmpSplit(11))
     End Sub
 
-#Region "Properties"
-
     Public Property Initialized As Boolean
 
     Public Property Use_a_Ions As Integer
@@ -578,7 +571,6 @@ Public Class IonSeries
             m_zWeight = Value
         End Set
     End Property
-#End Region
 
     Public Function ReturnIonString() As String
         Dim s As String = AssembleIonString()

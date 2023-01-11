@@ -2,15 +2,11 @@ Imports PRISMDatabaseUtils
 
 Public Class DBTask
 
-#Region "Member Variables"
-
     ' DB access
 
 #Disable Warning BC40025 ' Type of member is not CLS-compliant
     Protected ReadOnly mDBTools As IDBTools
 #Enable Warning BC40025 ' Type of member is not CLS-compliant
-
-#End Region
 
     ''' <summary>
     ''' Constructor
