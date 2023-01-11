@@ -2,15 +2,11 @@
 using System.Collections;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace ParamFileGenerator
 {
-
     public class Params : IBasicParams, IAdvancedParams
     {
-
         // Ignore Spelling: Xcalibur
 
         public enum ParamFileTypes
@@ -35,21 +31,9 @@ namespace ParamFileGenerator
         private RetrieveParams m_fullTemplate;
         private string m_templateFilePath;
 
-        public static Params BaseLineParamSet
-        {
-            get
-            {
-                return MainProcess.BaseLineParamSet;
-            }
-        }
+        public static Params BaseLineParamSet => MainProcess.BaseLineParamSet;
 
-        public ParamFileTypes FileType
-        {
-            get
-            {
-                return m_type;
-            }
-        }
+        public ParamFileTypes FileType => m_type;
 
         public int DMS_ID { get; set; }
 
@@ -76,12 +60,12 @@ namespace ParamFileGenerator
         public TermDynamicMods TermDynamicMods { get; set; }
 
         public IsoMods IsotopicMods { get; set; }
-        IsoMods IBasicParams.IsotopicModificationsList { get => IsotopicMods; set => IsotopicMods = value; }
+        public IsoMods IsotopicModificationsList { get => IsotopicMods; set => IsotopicMods = value; }
 
         public int MaximumNumAAPerDynMod { get; set; }
 
         public int MaximumNumDifferentialPerPeptide { get; set; }
-        int IAdvancedParams.MaximumDifferentialPerPeptide { get => MaximumNumDifferentialPerPeptide; set => MaximumNumDifferentialPerPeptide = value; }
+        public int MaximumDifferentialPerPeptide { get => MaximumNumDifferentialPerPeptide; set => MaximumNumDifferentialPerPeptide = value; }
 
         public int UsePhosphoFragmentation { get; set; }
 
@@ -105,14 +89,8 @@ namespace ParamFileGenerator
 
         public int SelectedNucReadingFrameIndex
         {
-            get
-            {
-                return (int)SelectedNucReadingFrame;
-            }
-            set
-            {
-                SelectedNucReadingFrame = (IAdvancedParams.FrameList)value;
-            }
+            get => (int)SelectedNucReadingFrame;
+            set => SelectedNucReadingFrame = (IAdvancedParams.FrameList)value;
         }
 
         public IBasicParams.MassTypeList ParentMassType { get; set; }
@@ -169,8 +147,8 @@ namespace ParamFileGenerator
         }
 
         /// <summary>
-    /// Constructor
-    /// </summary>
+        /// Constructor
+        /// </summary>
         public Params()
         {
             IonSeries = new IonSeries();
@@ -198,7 +176,6 @@ namespace ParamFileGenerator
 
         private void LoadTemplateParams(string templateFileName)
         {
-
             m_templateFilePath = GetFilePath(templateFileName);
             var m_getEnzymeList = new GetEnzymeBlockType(m_templateFilePath, DEF_ENZ_SECTION_NAME);
             EnzymeList = m_getEnzymeList.EnzymeList;
@@ -209,124 +186,113 @@ namespace ParamFileGenerator
 
             m_fullTemplate = new RetrieveParams(m_templateFilePath);
             // Retrieve Basic Parameters
-            {
-                ref var withBlock = ref m_fullTemplate;
-                withBlock.SetSection(SectionName);
-                FileName = Path.GetFileName(m_templateFilePath);
-                SelectedEnzymeIndex = Conversions.ToInteger(withBlock.GetParam("enzyme_number"));
-                SelectedEnzymeDetails = EnzymeList[SelectedEnzymeIndex];
-                SelectedEnzymeCleavagePosition = 1;
-                MaximumNumberMissedCleavages = Conversions.ToInteger(withBlock.GetParam("max_num_internal_cleavage_sites"));
-                ParentMassType = (IBasicParams.MassTypeList)Conversions.ToInteger(withBlock.GetParam("mass_type_parent"));
-                FragmentMassType = (IBasicParams.MassTypeList)Conversions.ToInteger(withBlock.GetParam("mass_type_fragment"));
-                PartialSequenceToMatch = withBlock.GetParam("partial_sequence");
-                DynamicMods = new DynamicMods(withBlock.GetParam("diff_search_options"));
-                TermDynamicMods = new TermDynamicMods(withBlock.GetParam("term_diff_search_options"));
-                StaticModificationsList = new StaticMods();
+            m_fullTemplate.SetSection(SectionName);
+            FileName = Path.GetFileName(m_templateFilePath);
+            SelectedEnzymeIndex = SafeCastInt(m_fullTemplate.GetParam("enzyme_number"));
+            SelectedEnzymeDetails = EnzymeList[SelectedEnzymeIndex];
+            SelectedEnzymeCleavagePosition = 1;
+            MaximumNumberMissedCleavages = SafeCastInt(m_fullTemplate.GetParam("max_num_internal_cleavage_sites"));
+            ParentMassType = (IBasicParams.MassTypeList)SafeCastInt(m_fullTemplate.GetParam("mass_type_parent"));
+            FragmentMassType = (IBasicParams.MassTypeList)SafeCastInt(m_fullTemplate.GetParam("mass_type_fragment"));
+            PartialSequenceToMatch = m_fullTemplate.GetParam("partial_sequence");
+            DynamicMods = new DynamicMods(m_fullTemplate.GetParam("diff_search_options"));
+            TermDynamicMods = new TermDynamicMods(m_fullTemplate.GetParam("term_diff_search_options"));
+            StaticModificationsList = new StaticMods();
 
-
-                // Get Static Mods
-                StaticModificationsList.CtermPeptide = (double)Conversions.ToSingle(withBlock.GetParam("add_Cterm_peptide"));
-                StaticModificationsList.CtermProtein = (double)Conversions.ToSingle(withBlock.GetParam("add_Cterm_protein"));
-                StaticModificationsList.NtermPeptide = (double)Conversions.ToSingle(withBlock.GetParam("add_Nterm_peptide"));
-                StaticModificationsList.NtermProtein = (double)Conversions.ToSingle(withBlock.GetParam("add_Nterm_protein"));
-                StaticModificationsList.G_Glycine = (double)Conversions.ToSingle(withBlock.GetParam("add_G_Glycine"));
-                StaticModificationsList.A_Alanine = (double)Conversions.ToSingle(withBlock.GetParam("add_A_Alanine"));
-                StaticModificationsList.S_Serine = (double)Conversions.ToSingle(withBlock.GetParam("add_S_Serine"));
-                StaticModificationsList.P_Proline = (double)Conversions.ToSingle(withBlock.GetParam("add_P_Proline"));
-                StaticModificationsList.V_Valine = (double)Conversions.ToSingle(withBlock.GetParam("add_V_Valine"));
-                StaticModificationsList.T_Threonine = (double)Conversions.ToSingle(withBlock.GetParam("add_T_Threonine"));
-                StaticModificationsList.C_Cysteine = (double)Conversions.ToSingle(withBlock.GetParam("add_C_Cysteine"));
-                StaticModificationsList.L_Leucine = (double)Conversions.ToSingle(withBlock.GetParam("add_L_Leucine"));
-                StaticModificationsList.I_Isoleucine = (double)Conversions.ToSingle(withBlock.GetParam("add_I_Isoleucine"));
-                StaticModificationsList.X_LorI = (double)Conversions.ToSingle(withBlock.GetParam("add_X_LorI"));
-                StaticModificationsList.N_Asparagine = (double)Conversions.ToSingle(withBlock.GetParam("add_N_Asparagine"));
-                StaticModificationsList.O_Ornithine = (double)Conversions.ToSingle(withBlock.GetParam("add_O_Ornithine"));
-                StaticModificationsList.B_avg_NandD = (double)Conversions.ToSingle(withBlock.GetParam("add_B_avg_NandD"));
-                StaticModificationsList.D_Aspartic_Acid = (double)Conversions.ToSingle(withBlock.GetParam("add_D_Aspartic_Acid"));
-                StaticModificationsList.Q_Glutamine = (double)Conversions.ToSingle(withBlock.GetParam("add_Q_Glutamine"));
-                StaticModificationsList.K_Lysine = (double)Conversions.ToSingle(withBlock.GetParam("add_K_Lysine"));
-                StaticModificationsList.Z_avg_QandE = (double)Conversions.ToSingle(withBlock.GetParam("add_Z_avg_QandE"));
-                StaticModificationsList.E_Glutamic_Acid = (double)Conversions.ToSingle(withBlock.GetParam("add_E_Glutamic_Acid"));
-                StaticModificationsList.M_Methionine = (double)Conversions.ToSingle(withBlock.GetParam("add_M_Methionine"));
-                StaticModificationsList.H_Histidine = (double)Conversions.ToSingle(withBlock.GetParam("add_H_Histidine"));
-                StaticModificationsList.F_Phenylalanine = (double)Conversions.ToSingle(withBlock.GetParam("add_F_Phenylalanine"));
-                StaticModificationsList.R_Arginine = (double)Conversions.ToSingle(withBlock.GetParam("add_R_Arginine"));
-                StaticModificationsList.Y_Tyrosine = (double)Conversions.ToSingle(withBlock.GetParam("add_Y_Tyrosine"));
-                StaticModificationsList.W_Tryptophan = (double)Conversions.ToSingle(withBlock.GetParam("add_W_Tryptophan"));
-            }
+            // Get Static Mods
+            StaticModificationsList.CtermPeptide = SafeCastDouble(m_fullTemplate.GetParam("add_Cterm_peptide"));
+            StaticModificationsList.CtermProtein = SafeCastDouble(m_fullTemplate.GetParam("add_Cterm_protein"));
+            StaticModificationsList.NtermPeptide = SafeCastDouble(m_fullTemplate.GetParam("add_Nterm_peptide"));
+            StaticModificationsList.NtermProtein = SafeCastDouble(m_fullTemplate.GetParam("add_Nterm_protein"));
+            StaticModificationsList.G_Glycine = SafeCastDouble(m_fullTemplate.GetParam("add_G_Glycine"));
+            StaticModificationsList.A_Alanine = SafeCastDouble(m_fullTemplate.GetParam("add_A_Alanine"));
+            StaticModificationsList.S_Serine = SafeCastDouble(m_fullTemplate.GetParam("add_S_Serine"));
+            StaticModificationsList.P_Proline = SafeCastDouble(m_fullTemplate.GetParam("add_P_Proline"));
+            StaticModificationsList.V_Valine = SafeCastDouble(m_fullTemplate.GetParam("add_V_Valine"));
+            StaticModificationsList.T_Threonine = SafeCastDouble(m_fullTemplate.GetParam("add_T_Threonine"));
+            StaticModificationsList.C_Cysteine = SafeCastDouble(m_fullTemplate.GetParam("add_C_Cysteine"));
+            StaticModificationsList.L_Leucine = SafeCastDouble(m_fullTemplate.GetParam("add_L_Leucine"));
+            StaticModificationsList.I_Isoleucine = SafeCastDouble(m_fullTemplate.GetParam("add_I_Isoleucine"));
+            StaticModificationsList.X_LorI = SafeCastDouble(m_fullTemplate.GetParam("add_X_LorI"));
+            StaticModificationsList.N_Asparagine = SafeCastDouble(m_fullTemplate.GetParam("add_N_Asparagine"));
+            StaticModificationsList.O_Ornithine = SafeCastDouble(m_fullTemplate.GetParam("add_O_Ornithine"));
+            StaticModificationsList.B_avg_NandD = SafeCastDouble(m_fullTemplate.GetParam("add_B_avg_NandD"));
+            StaticModificationsList.D_Aspartic_Acid = SafeCastDouble(m_fullTemplate.GetParam("add_D_Aspartic_Acid"));
+            StaticModificationsList.Q_Glutamine = SafeCastDouble(m_fullTemplate.GetParam("add_Q_Glutamine"));
+            StaticModificationsList.K_Lysine = SafeCastDouble(m_fullTemplate.GetParam("add_K_Lysine"));
+            StaticModificationsList.Z_avg_QandE = SafeCastDouble(m_fullTemplate.GetParam("add_Z_avg_QandE"));
+            StaticModificationsList.E_Glutamic_Acid = SafeCastDouble(m_fullTemplate.GetParam("add_E_Glutamic_Acid"));
+            StaticModificationsList.M_Methionine = SafeCastDouble(m_fullTemplate.GetParam("add_M_Methionine"));
+            StaticModificationsList.H_Histidine = SafeCastDouble(m_fullTemplate.GetParam("add_H_Histidine"));
+            StaticModificationsList.F_Phenylalanine = SafeCastDouble(m_fullTemplate.GetParam("add_F_Phenylalanine"));
+            StaticModificationsList.R_Arginine = SafeCastDouble(m_fullTemplate.GetParam("add_R_Arginine"));
+            StaticModificationsList.Y_Tyrosine = SafeCastDouble(m_fullTemplate.GetParam("add_Y_Tyrosine"));
+            StaticModificationsList.W_Tryptophan = SafeCastDouble(m_fullTemplate.GetParam("add_W_Tryptophan"));
 
             // add code to check for existence of isotopic mods
 
-
-
             // Retrieve Advanced Parameters
+            m_fullTemplate.SetSection(SectionName);
+            if (m_type == ParamFileTypes.BioWorks_20)
             {
-                ref var withBlock1 = ref m_fullTemplate;
-                withBlock1.SetSection(SectionName);
-                if (m_type == ParamFileTypes.BioWorks_20)
-                {
-                    DefaultFASTAPath = withBlock1.GetParam("database_name");
-                    DefaultFASTAPath2 = "";
-                    NumberOfResultsToProcess = 500;
-                }
-                else if (m_type == ParamFileTypes.BioWorks_30)
-                {
-                    DefaultFASTAPath = withBlock1.GetParam("first_database_name");
-                    DefaultFASTAPath2 = withBlock1.GetParam("second_database_name");
-                    NumberOfResultsToProcess = Conversions.ToInteger(withBlock1.GetParam("num_results"));
-                }
-                PeptideMassTolerance = Conversions.ToSingle(withBlock1.GetParam("peptide_mass_tolerance"));
-                if (withBlock1.GetParam("create_output_files") is not null)
-                {
-                    CreateOutputFiles = Conversions.ToBoolean(withBlock1.GetParam("create_output_files"));
-                }
-                else
-                {
-                    CreateOutputFiles = true;
-                }
-                m_ionSeriesString = withBlock1.GetParam("ion_series");
-                IonSeries = new IonSeries(m_ionSeriesString);
-                MaximumNumAAPerDynMod = Conversions.ToInteger(withBlock1.GetParam("max_num_differential_AA_per_mod"));
-                if (m_type == ParamFileTypes.BioWorks_32)
-                {
-                    MaximumNumDifferentialPerPeptide = Conversions.ToInteger(withBlock1.GetParam("max_num_differential_per_peptide"));
-                }
-                FragmentIonTolerance = Conversions.ToSingle(withBlock1.GetParam("fragment_ion_tolerance"));
-                NumberOfOutputLines = Conversions.ToInteger(withBlock1.GetParam("num_output_lines"));
-                NumberOfDescriptionLines = Conversions.ToInteger(withBlock1.GetParam("num_description_lines"));
-                ShowFragmentIons = Conversions.ToBoolean(withBlock1.GetParam("show_fragment_ions"));
-                PrintDuplicateReferences = Conversions.ToBoolean(withBlock1.GetParam("print_duplicate_references"));
-                SelectedNucReadingFrame = (IAdvancedParams.FrameList)Conversions.ToInteger(withBlock1.GetParam("enzyme_number"));
-                RemovePrecursorPeak = Conversions.ToBoolean(withBlock1.GetParam("remove_precursor_peak"));
-                IonCutoffPercentage = Conversions.ToSingle(withBlock1.GetParam("ion_cutoff_percentage"));
-                m_protMassFilterString = withBlock1.GetParam("protein_mass_filter");
+                DefaultFASTAPath = m_fullTemplate.GetParam("database_name");
+                DefaultFASTAPath2 = "";
+                NumberOfResultsToProcess = 500;
+            }
+            else if (m_type == ParamFileTypes.BioWorks_30)
+            {
+                DefaultFASTAPath = m_fullTemplate.GetParam("first_database_name");
+                DefaultFASTAPath2 = m_fullTemplate.GetParam("second_database_name");
+                NumberOfResultsToProcess = SafeCastInt(m_fullTemplate.GetParam("num_results"));
+            }
+            PeptideMassTolerance = (float) SafeCastDouble(m_fullTemplate.GetParam("peptide_mass_tolerance"));
+            if (m_fullTemplate.GetParam("create_output_files") is not null)
+            {
+                CreateOutputFiles = SafeCastBool(m_fullTemplate.GetParam("create_output_files"));
+            }
+            else
+            {
+                CreateOutputFiles = true;
+            }
+            m_ionSeriesString = m_fullTemplate.GetParam("ion_series");
+            IonSeries = new IonSeries(m_ionSeriesString);
+            MaximumNumAAPerDynMod = SafeCastInt(m_fullTemplate.GetParam("max_num_differential_AA_per_mod"));
+            if (m_type == ParamFileTypes.BioWorks_32)
+            {
+                MaximumNumDifferentialPerPeptide = SafeCastInt(m_fullTemplate.GetParam("max_num_differential_per_peptide"));
+            }
+            FragmentIonTolerance = (float) SafeCastDouble(m_fullTemplate.GetParam("fragment_ion_tolerance"));
+            NumberOfOutputLines = SafeCastInt(m_fullTemplate.GetParam("num_output_lines"));
+            NumberOfDescriptionLines = SafeCastInt(m_fullTemplate.GetParam("num_description_lines"));
+            ShowFragmentIons = SafeCastBool(m_fullTemplate.GetParam("show_fragment_ions"));
+            PrintDuplicateReferences = SafeCastBool(m_fullTemplate.GetParam("print_duplicate_references"));
+            SelectedNucReadingFrame = (IAdvancedParams.FrameList)SafeCastInt(m_fullTemplate.GetParam("enzyme_number"));
+            RemovePrecursorPeak = SafeCastBool(m_fullTemplate.GetParam("remove_precursor_peak"));
+            IonCutoffPercentage = (float) SafeCastDouble(m_fullTemplate.GetParam("ion_cutoff_percentage"));
+            m_protMassFilterString = m_fullTemplate.GetParam("protein_mass_filter");
 
-                var protMassFilterList = m_protMassFilterString.Split(' ');
-                if (protMassFilterList.Count() > 0)
-                {
-                    MinimumProteinMassToSearch = Conversions.ToSingle(protMassFilterList[0]);
-                }
-
-                if (protMassFilterList.Count() > 1)
-                {
-                    MaximumProteinMassToSearch = Conversions.ToSingle(protMassFilterList[1]);
-                }
-
-                NumberOfDetectedPeaksToMatch = Conversions.ToInteger(withBlock1.GetParam("match_peak_count"));
-                NumberOfAllowedDetectedPeakErrors = Conversions.ToInteger(withBlock1.GetParam("match_peak_allowed_error"));
-                MatchedPeakMassTolerance = Conversions.ToSingle(withBlock1.GetParam("match_peak_tolerance"));
-                AminoAcidsAllUpperCase = true;
-                SequenceHeaderInfoToFilter = withBlock1.GetParam("sequence_header_filter");
-                DMS_ID = -1;
+            var protMassFilterList = m_protMassFilterString.Split(' ');
+            if (protMassFilterList.Count() > 0)
+            {
+                MinimumProteinMassToSearch = (float) SafeCastDouble(protMassFilterList[0]);
             }
 
+            if (protMassFilterList.Count() > 1)
+            {
+                MaximumProteinMassToSearch = (float) SafeCastDouble(protMassFilterList[1]);
+            }
+
+            NumberOfDetectedPeaksToMatch = SafeCastInt(m_fullTemplate.GetParam("match_peak_count"));
+            NumberOfAllowedDetectedPeakErrors = SafeCastInt(m_fullTemplate.GetParam("match_peak_allowed_error"));
+            MatchedPeakMassTolerance = (float) SafeCastDouble(m_fullTemplate.GetParam("match_peak_tolerance"));
+            AminoAcidsAllUpperCase = true;
+            SequenceHeaderInfoToFilter = m_fullTemplate.GetParam("sequence_header_filter");
+            DMS_ID = -1;
         }
 
         [Obsolete("Unused")]
         private string GetDescription()
         {
-
             string s;
             string desc;
 
@@ -339,16 +305,15 @@ namespace ParamFileGenerator
             // Find the correct section block)
             while (s is not null)
             {
-                if (Strings.InStr(s, ";DMS_Description = ") > 0)
+                if (s.Contains(";DMS_Description = "))
                 {
-                    desc = Strings.Mid(s, Strings.InStr(s, " = ") + 3);
+                    desc = s.Substring(s.IndexOf(" = ") + 3);
                     return desc;
                 }
                 s = tr.ReadLine();
             }
 
             return s;
-
         }
 
         private ParamFileTypes GetTemplateType()
@@ -365,7 +330,7 @@ namespace ParamFileGenerator
 
             while (s is not null)
             {
-                if (Strings.InStr(s.ToLower(), "num_results = ") > 0)
+                if (s.ToLower().Contains("num_results = "))
                 {
                     type = ParamFileTypes.BioWorks_31;
                     return type;
@@ -378,14 +343,13 @@ namespace ParamFileGenerator
             }
 
             return default;
-
         }
 
-        private string ReturnMassFilterString(float minMass, float maxMass)
+        private string ReturnMassFilterString(
+            float minMass,
+            float maxMass)
         {
-
-            return Strings.Format(minMass.ToString(), "0") + " " + Strings.Format(maxMass.ToString(), "0");
-
+            return minMass.ToString("0") + " " + maxMass.ToString("0");
         }
 
         private string GetFilePath(string templateFileName)
@@ -393,5 +357,52 @@ namespace ParamFileGenerator
             return templateFileName;
         }
 
+        public static int SafeCastInt(object value)
+        {
+            if (value is int valueInt) return valueInt;
+            if (value == null) return 0;
+
+            var valueString = value.ToString().Trim();
+            if (string.IsNullOrEmpty(valueString)) return 0;
+
+            if (int.TryParse(valueString, out valueInt)) return valueInt;
+
+            if (double.TryParse(valueString, out var valueDbl))
+            {
+                return (int) Math.Round(valueDbl);
+            }
+
+            return 0;
+        }
+
+        public static double SafeCastDouble(string value)
+        {
+            if (value == null) return 0;
+
+            var valueString = value.Trim();
+            if (string.IsNullOrEmpty(valueString)) return 0;
+
+            if (double.TryParse(valueString, out var valueDbl))
+            {
+                return valueDbl;
+            }
+
+            return 0;
+        }
+
+        public static bool SafeCastBool(string value)
+        {
+            if (value == null) return false;
+
+            var valueString = value.Trim();
+            if (string.IsNullOrEmpty(valueString)) return false;
+
+            if (bool.TryParse(valueString, out var valueBool))
+            {
+                return valueBool;
+            }
+
+            return false;
+        }
     }
 }

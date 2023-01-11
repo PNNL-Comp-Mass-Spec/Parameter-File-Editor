@@ -1,9 +1,7 @@
-﻿
-namespace ParamFileGenerator
+﻿namespace ParamFileGenerator
 {
     public class IsoMods : Mods
     {
-
         public void Add(IsotopeList AffectedAtom, double MassDifference, int GlobalModID = 0)
         {
             m_Add(AffectedAtom.ToString(), MassDifference, ModEntry.ModificationTypes.Isotopic, GlobalModID);
@@ -17,62 +15,32 @@ namespace ParamFileGenerator
 
         public double Iso_C
         {
-            get
-            {
-                return FindIsoMod(IsotopeList.C).MassDifference;
-            }
-            set
-            {
-                ChangeIsoMod(IsotopeList.C, value);
-            }
+            get => FindIsoMod(IsotopeList.C).MassDifference;
+            set => ChangeIsoMod(IsotopeList.C, value);
         }
 
         public double Iso_H
         {
-            get
-            {
-                return FindIsoMod(IsotopeList.H).MassDifference;
-            }
-            set
-            {
-                ChangeIsoMod(IsotopeList.H, value);
-            }
+            get => FindIsoMod(IsotopeList.H).MassDifference;
+            set => ChangeIsoMod(IsotopeList.H, value);
         }
 
         public double Iso_O
         {
-            get
-            {
-                return FindIsoMod(IsotopeList.O).MassDifference;
-            }
-            set
-            {
-                ChangeIsoMod(IsotopeList.O, value);
-            }
+            get => FindIsoMod(IsotopeList.O).MassDifference;
+            set => ChangeIsoMod(IsotopeList.O, value);
         }
 
         public double Iso_N
         {
-            get
-            {
-                return FindIsoMod(IsotopeList.N).MassDifference;
-            }
-            set
-            {
-                ChangeIsoMod(IsotopeList.N, value);
-            }
+            get => FindIsoMod(IsotopeList.N).MassDifference;
+            set => ChangeIsoMod(IsotopeList.N, value);
         }
 
         public double Iso_S
         {
-            get
-            {
-                return FindIsoMod(IsotopeList.S).MassDifference;
-            }
-            set
-            {
-                ChangeIsoMod(IsotopeList.S, value);
-            }
+            get => FindIsoMod(IsotopeList.S).MassDifference;
+            set => ChangeIsoMod(IsotopeList.S, value);
         }
 
         private void ChangeIsoMod(IsotopeList AffectedAtom, double MassDifference)
@@ -86,6 +54,5 @@ namespace ParamFileGenerator
         {
             return m_FindMod(AffectedAtom.ToString());
         }
-
     }
 }

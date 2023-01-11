@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace ParamFileGenerator
 {
-
     enum IniItemTypeEnum
     {
         GetKeys = 0,
@@ -16,16 +13,11 @@ namespace ParamFileGenerator
         GetKeysAndValues = 2
     }
 
+#pragma warning disable RCS1194
     public class IniFileReaderNotInitializedException : ApplicationException
+#pragma warning restore RCS1194
     {
-        public override string Message
-        {
-            get
-            {
-                return "The IniFileReader instance has not been properly initialized.";
-
-            }
-        }
+        public override string Message => "The IniFileReader instance has not been properly initialized.";
     }
 
     public class IniFileReader
@@ -55,10 +47,11 @@ namespace ParamFileGenerator
             m_CaseSensitive = isCaseSensitive;
             m_XmlDoc = new XmlDocument();
 
-            if (settingsFileName is null || string.IsNullOrEmpty(settingsFileName.Trim()))
+            if (string.IsNullOrWhiteSpace(settingsFileName))
             {
                 return;
             }
+
             // try to load the file as an XML file
             try
             {
@@ -67,7 +60,6 @@ namespace ParamFileGenerator
                 m_IniFilename = settingsFileName;
                 m_initialized = true;
             }
-
             catch
             {
                 // load the default XML
@@ -81,9 +73,9 @@ namespace ParamFileGenerator
                         s = tr.ReadLine();
                         while (s is not null)
                         {
-                            if (Conversions.ToBoolean(Strings.InStr(s, ";")))
+                            if (s.Contains(";"))
                             {
-                                s = Strings.Left(s, Strings.InStr(s, ";") - 1).Trim();
+                                s = s.Substring(s.IndexOf(";") - 1).Trim();
                             }
                             ParseLineXml(s, m_XmlDoc);
                             s = tr.ReadLine();
@@ -98,10 +90,10 @@ namespace ParamFileGenerator
                         m_initialized = true;
                     }
                 }
-                catch (Exception e)
+                catch //(Exception e)
                 {
+                    // MessageBox.Show(e.Message);
                 }
-                // MessageBox.Show(e.Message)
                 finally
                 {
                     if (tr is not null)
@@ -122,21 +114,9 @@ namespace ParamFileGenerator
             }
         }
 
-        public bool Initialized
-        {
-            get
-            {
-                return m_initialized;
-            }
-        }
+        public bool Initialized => m_initialized;
 
-        public bool CaseSensitive
-        {
-            get
-            {
-                return m_CaseSensitive;
-            }
-        }
+        public bool CaseSensitive => m_CaseSensitive;
 
         private string SetNameCase(string aName)
         {
@@ -357,25 +337,19 @@ namespace ParamFileGenerator
                     switch (itemType)
                     {
                         case IniItemTypeEnum.GetKeys:
-                            {
-                                items.Add(currentNode.Attributes.GetNamedItem("key").Value);
-                                break;
-                            }
+                            items.Add(currentNode.Attributes.GetNamedItem("key").Value);
+                            break;
                         case IniItemTypeEnum.GetValues:
-                            {
-                                items.Add(currentNode.Attributes.GetNamedItem("value").Value);
-                                break;
-                            }
+                            items.Add(currentNode.Attributes.GetNamedItem("value").Value);
+                            break;
                         case IniItemTypeEnum.GetKeysAndValues:
-                            {
-                                items.Add(currentNode.Attributes.GetNamedItem("key").Value + "=" + currentNode.Attributes.GetNamedItem("value").Value);
-                                break;
-                            }
+                            items.Add(currentNode.Attributes.GetNamedItem("key").Value + "=" +
+                                      currentNode.Attributes.GetNamedItem("value").Value);
+                            break;
                     }
                 }
             }
             return items;
-
         }
 
         public List<string> AllKeysInSection(string sectionName)
@@ -425,7 +399,6 @@ namespace ParamFileGenerator
                 return false;
             }
 
-
             var item = GetItem(sectionName, keyName);
             if (item is not null)
             {
@@ -445,14 +418,13 @@ namespace ParamFileGenerator
                     }
                 }
 
-                catch (Exception e)
+                catch //(Exception e)
                 {
                     // MessageBox.Show(e.Message)
                 }
             }
 
             return false;
-
         }
 
         private bool CreateSection(string sectionName)
@@ -472,7 +444,7 @@ namespace ParamFileGenerator
                     sections.Add(itemAttribute.Value);
                     return true;
                 }
-                catch (Exception e)
+                catch //(Exception e)
                 {
                     // MessageBox.Show(e.Message)
                     return false;
@@ -498,7 +470,7 @@ namespace ParamFileGenerator
                 }
                 return false;
             }
-            catch (Exception e)
+            catch //(Exception e)
             {
                 // MessageBox.Show(e.Message)
                 return false;
@@ -507,7 +479,6 @@ namespace ParamFileGenerator
 
         private void ParseLineXml(string dataLine, XmlDocument doc)
         {
-
             dataLine = dataLine.TrimStart();
 
             if (string.IsNullOrWhiteSpace(dataLine))
@@ -518,56 +489,50 @@ namespace ParamFileGenerator
             switch (dataLine.Substring(0, 1) ?? "")
             {
                 case "[":
-                    {
-                        // this is a section
-                        // trim the first and last characters
-                        dataLine = dataLine.TrimStart('[');
-                        dataLine = dataLine.TrimEnd(']');
-                        // create a new section element
-                        CreateSection(dataLine);
-                        break;
-                    }
+                    // this is a section
+                    // trim the first and last characters
+                    dataLine = dataLine.TrimStart('[');
+                    dataLine = dataLine.TrimEnd(']');
+                    // create a new section element
+                    CreateSection(dataLine);
+                    break;
+
                 case ";":
-                    {
-                        // new comment
-                        var newComment = doc.CreateElement("comment");
-                        newComment.InnerText = dataLine.Substring(1);
-                        GetLastSection().AppendChild(newComment);
-                        break;
-                    }
+                    // new comment
+                    var newComment = doc.CreateElement("comment");
+                    newComment.InnerText = dataLine.Substring(1);
+                    GetLastSection().AppendChild(newComment);
+                    break;
 
                 default:
+                    // split the string on the "=" sign, if present
+                    string key;
+                    string value;
+
+                    if (dataLine.IndexOf("=", StringComparison.Ordinal) > 0)
                     {
-                        // split the string on the "=" sign, if present
-                        string key;
-                        string value;
-
-                        if (dataLine.IndexOf("=", StringComparison.Ordinal) > 0)
-                        {
-                            var parts = dataLine.Split('=');
-                            key = parts[0].Trim();
-                            value = parts[1].Trim();
-                        }
-                        else
-                        {
-                            key = dataLine;
-                            value = "";
-                        }
-
-                        var newItem = doc.CreateElement("item");
-                        var keyAttribute = doc.CreateAttribute("key");
-                        keyAttribute.Value = SetNameCase(key);
-                        newItem.Attributes.SetNamedItem(keyAttribute);
-
-                        var valueAttribute = doc.CreateAttribute("value");
-                        valueAttribute.Value = value;
-                        newItem.Attributes.SetNamedItem(valueAttribute);
-
-                        GetLastSection().AppendChild(newItem);
-                        break;
+                        var parts = dataLine.Split('=');
+                        key = parts[0].Trim();
+                        value = parts[1].Trim();
                     }
-            }
+                    else
+                    {
+                        key = dataLine;
+                        value = "";
+                    }
 
+                    var newItem = doc.CreateElement("item");
+                    var keyAttribute = doc.CreateAttribute("key");
+                    keyAttribute.Value = SetNameCase(key);
+                    newItem.Attributes.SetNamedItem(keyAttribute);
+
+                    var valueAttribute = doc.CreateAttribute("value");
+                    valueAttribute.Value = value;
+                    newItem.Attributes.SetNamedItem(valueAttribute);
+
+                    GetLastSection().AppendChild(newItem);
+                    break;
+            }
         }
 
         public string OutputFilename
@@ -619,21 +584,26 @@ namespace ParamFileGenerator
             }
         }
 
-        // Public Function AsIniFile() As String
-        // If Not Initialized Then Throw New IniFileReaderNotInitializedException()
-        // Try
-        // Dim xsl As XslTransform = New XslTransform()
-        // xsl.Load("c:\\XMLToIni.xslt")
-        // Dim sb As StringBuilder = New StringBuilder()
-        // Dim sw As StringWriter = New StringWriter(sb)
-        // xsl.Transform(m_XmlDoc, Nothing, sw, Nothing)
-        // sw.Close()
-        // Return sb.ToString
-        // Catch e As Exception
-        // MessageBox.Show(e.Message)
-        // Return Nothing
-        // End Try
-        // End Function
+        //public string AsIniFile()
+        //{
+        //    if (!Initialized)
+        //        throw new IniFileReaderNotInitializedException();
+        //    try
+        //    {
+        //        var xsl = new XslTransform();
+        //        xsl.Load(@"c:\\XMLToIni.xslt");
+        //        var sb = new StringBuilder();
+        //        var sw = new StringWriter(sb);
+        //        xsl.Transform(m_XmlDoc, default, sw, default);
+        //        sw.Close();
+        //        return sb.ToString();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show(e.Message);
+        //        return null;
+        //    }
+        //}
 
         public XmlDocument XmlDoc
         {

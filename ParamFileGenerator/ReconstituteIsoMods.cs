@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualBasic;
 using PRISMDatabaseUtils;
 
 namespace ParamFileGenerator
 {
-
     public interface IReconstituteIsoMods
     {
-
         Params ReconstituteIsoMods(Params ParamsClass);
-
     }
 
     public class ReconstituteIsoMods : IReconstituteIsoMods
@@ -34,9 +30,9 @@ namespace ParamFileGenerator
         /// Constructor
         /// </summary>
         /// <param name="dbTools"></param>
-        #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+#pragma warning disable CS3001 // Type of parameter is not CLS-compliant
         public ReconstituteIsoMods(IDBTools dbTools)
-        #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
+#pragma warning restore CS3001 // Type of parameter is not CLS-compliant
         {
             var getResTable = new GetResiduesList(dbTools);
             m_ResidueAtomCounts = getResTable.ResidueAtomCounts;
@@ -50,7 +46,6 @@ namespace ParamFileGenerator
 
         protected int GetMultiplier(char AA, AvailableAtoms Atom)
         {
-
             Dictionary<char, int> atomCounts = null;
             if (m_ResidueAtomCounts.TryGetValue(AA, out atomCounts))
             {
@@ -64,17 +59,16 @@ namespace ParamFileGenerator
             }
 
             return 0;
-
         }
 
-        protected Params StreamlineIsoModsToStatics(Params ParamsClass, IsoMods IsoMods)
+        protected Params StreamlineIsoModsToStatics(
+            Params ParamsClass,
+            IsoMods IsoMods)
         {
-
             string tmpAtom;
             double tmpIsoMass;
 
             var AAEnums = Enum.GetNames(typeof(Mods.ResidueCode));
-
 
             foreach (ModEntry im in IsoMods)
             {
@@ -83,18 +77,18 @@ namespace ParamFileGenerator
 
                 foreach (var tmpAA in AAEnums)
                 {
-                    if (Strings.InStr(tmpAA, "Term") == 0)
+                    if (!tmpAA.StartsWith("Term"))
                     {
-                        char tmpAASLC = Strings.Left(tmpAA, 1)[0];
+                        char tmpAASLC = tmpAA[0];
                         int tmpAtomCount = GetMultiplier(tmpAASLC, (AvailableAtoms)Enum.Parse(typeof(AvailableAtoms), tmpAtom));
-                        ParamsClass.StaticModificationsList.ChangeAAModification((Mods.ResidueCode)Enum.Parse(typeof(Mods.ResidueCode), tmpAA), tmpIsoMass * tmpAtomCount, true);
+                        ParamsClass.StaticModificationsList.ChangeAAModification(
+                            (Mods.ResidueCode)Enum.Parse(typeof(Mods.ResidueCode), tmpAA),
+                            tmpIsoMass * tmpAtomCount, true);
                     }
                 }
-
             }
 
             return ParamsClass;
-
         }
     }
 }

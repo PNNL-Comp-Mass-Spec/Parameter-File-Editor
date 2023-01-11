@@ -4,7 +4,6 @@ namespace ParamFileGenerator
 {
     public class EnzymeCollection : CollectionBase
     {
-
         public EnzymeCollection() : base()
         {
         }
@@ -16,14 +15,8 @@ namespace ParamFileGenerator
 
         public EnzymeDetails this[int index]
         {
-            get
-            {
-                return (EnzymeDetails)List[index];
-            }
-            set
-            {
-                List[index] = value;
-            }
+            get => (EnzymeDetails)List[index];
+            set => List[index] = value;
         }
     }
 }

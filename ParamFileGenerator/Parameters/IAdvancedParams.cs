@@ -1,5 +1,4 @@
-﻿
-namespace ParamFileGenerator
+﻿namespace ParamFileGenerator
 {
     public interface IAdvancedParams
     {
@@ -16,12 +15,14 @@ namespace ParamFileGenerator
             All_3_Reverse = 8,
             All_Six = 9
         }
+
         public enum MassUnitList : int
         {
             amu = 0,
             mmu = 1,
             ppm = 2
         }
+
         string DefaultFASTAPath { get; set; }
         string DefaultFASTAPath2 { get; set; }
         bool CreateOutputFiles { get; set; }

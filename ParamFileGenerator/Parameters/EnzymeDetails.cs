@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Text;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace ParamFileGenerator
 {
-
     public class EnzymeDetails
     {
-
         private readonly string m_EnzymeString;
 
-        private int m_Number;         // Enzyme ID Number
+        private int m_Number;             // Enzyme ID Number
         private string m_Name;            // Descriptive Name
-        private int m_Offset;         // Cut position --> 0 = N-terminal, 1 = C-Terminal
+        private int m_Offset;             // Cut position --> 0 = N-terminal, 1 = C-Terminal
         private string m_CleavePoints;    // Amino Acids at which to cleave
         private string m_NoCleavePoints;  // Amino Acids to skip cleavage
 
@@ -25,7 +21,6 @@ namespace ParamFileGenerator
 
         public EnzymeDetails()
         {
-
         }
 
         private void ParseEnzymeString(string enzStr)
@@ -35,10 +30,10 @@ namespace ParamFileGenerator
             string prevChar = "";
             string tmpString = "";
 
-            for (int counter = 1, loopTo = Strings.Len(enzStr) + 1; counter <= loopTo; counter++)
+            for (int counter = 0; counter < enzStr.Length; counter++)
             {
-                string currChar = Strings.Mid(enzStr, counter, 1);
-                if (currChar == " " & prevChar != " " | counter == Strings.Len(enzStr) + 1)
+                string currChar = enzStr.Substring(counter, 1);
+                if (currChar == " " && prevChar != " " || counter == enzStr.Length + 1)
                 {
                     Array.Resize(ref s, placeCounter + 1);
                     s[placeCounter] = tmpString;
@@ -53,68 +48,41 @@ namespace ParamFileGenerator
                 prevChar = currChar;
             }
 
-            m_Number = Conversions.ToInteger(s[0]);
+            m_Number = Params.SafeCastInt(s[0]);
             m_Name = s[1];
-            m_Offset = Conversions.ToInteger(s[2]);
+            m_Offset = Params.SafeCastInt(s[2]);
             m_CleavePoints = s[3];
             m_NoCleavePoints = s[4];
-
         }
 
         public int EnzymeID
         {
-            get
-            {
-                return m_Number;
-            }
-            set
-            {
-                m_Number = value;
-            }
+            get => m_Number;
+            set => m_Number = value;
         }
+
         public string EnzymeName
         {
-            get
-            {
-                return m_Name;
-            }
-            set
-            {
-                m_Name = value;
-            }
+            get => m_Name;
+            set => m_Name = value;
         }
+
         public int EnzymeCleaveOffset
         {
-            get
-            {
-                return m_Offset;
-            }
-            set
-            {
-                m_Offset = value;
-            }
+            get => m_Offset;
+            set => m_Offset = value;
         }
+
         public string EnzymeCleavePoints
         {
-            get
-            {
-                return m_CleavePoints;
-            }
-            set
-            {
-                m_CleavePoints = value;
-            }
+            get => m_CleavePoints;
+            set => m_CleavePoints = value;
         }
+
         public string EnzymeNoCleavePoints
         {
-            get
-            {
-                return m_NoCleavePoints;
-            }
-            set
-            {
-                m_NoCleavePoints = value;
-            }
+            get => m_NoCleavePoints;
+            set => m_NoCleavePoints = value;
         }
 
         public string ReturnEnzymeString()
@@ -128,7 +96,6 @@ namespace ParamFileGenerator
             s = s.PadRight(48, Convert.ToChar(" ")) + EnzymeNoCleavePoints;
 
             return s;
-
         }
 
         public string ReturnBW32EnzymeInfoString(int cleavagePosition)
@@ -138,11 +105,12 @@ namespace ParamFileGenerator
             sb.Append(EnzymeName);
             sb.Append("(");
             sb.Append(EnzymeCleavePoints);
-            if (EnzymeNoCleavePoints.Length > 0 & EnzymeNoCleavePoints != "-")
+            if (EnzymeNoCleavePoints.Length > 0 && EnzymeNoCleavePoints != "-")
             {
                 sb.Append("/");
                 sb.Append(EnzymeNoCleavePoints);
             }
+
             sb.Append(")");
             sb.Append(" ");
             sb.Append(cleavagePosition.ToString());
@@ -155,6 +123,5 @@ namespace ParamFileGenerator
 
             return sb.ToString();
         }
-
     }
 }

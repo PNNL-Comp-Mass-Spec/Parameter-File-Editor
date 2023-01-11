@@ -1,5 +1,4 @@
-﻿
-namespace ParamFileGenerator
+﻿namespace ParamFileGenerator
 {
     public interface IBasicParams
     {

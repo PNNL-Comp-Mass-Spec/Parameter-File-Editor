@@ -4,7 +4,6 @@ namespace ParamFileGenerator
 {
     public class DMSParamStorage : CollectionBase
     {
-
         public enum ParamTypes
         {
             BasicParam,
@@ -15,9 +14,11 @@ namespace ParamFileGenerator
             IsotopicModification
         }
 
-        public void Add(string ParamSpecifier, string ParamValue, ParamTypes ParamType)
+        public void Add(
+            string ParamSpecifier,
+            string ParamValue,
+            ParamTypes ParamType)
         {
-
             var e = new ParamsEntry(ParamSpecifier, ParamValue, ParamType);
             List.Add(e);
         }
@@ -29,14 +30,8 @@ namespace ParamFileGenerator
 
         public ParamsEntry this[int index]
         {
-            get
-            {
-                return (ParamsEntry)List[index];
-            }
-            set
-            {
-                List[index] = value;
-            }
+            get => (ParamsEntry)List[index];
+            set => List[index] = value;
         }
 
         public ParamsEntry this[string ParamName, ParamTypes ParamType]
@@ -55,17 +50,15 @@ namespace ParamFileGenerator
             }
             set
             {
-
             }
         }
-
 
         public int IndexOf(string paramName, ParamTypes paramType)
         {
             var counter = default(int);
             foreach (ParamsEntry e in List)
             {
-                if (e.Type == paramType & (e.Specifier ?? "") == (paramName ?? ""))
+                if (e.Type == paramType && (e.Specifier ?? "") == (paramName ?? ""))
                 {
                     return counter;
                 }
@@ -76,7 +69,6 @@ namespace ParamFileGenerator
             }
             return -1;
         }
-
 
         public class ParamsEntry
         {
@@ -91,28 +83,11 @@ namespace ParamFileGenerator
                 m_Type = ParamType;
             }
 
-            public string Specifier
-            {
-                get
-                {
-                    return m_Spec;
-                }
-            }
-            public string Value
-            {
-                get
-                {
-                    return m_Value;
-                }
-            }
-            public ParamTypes Type
-            {
-                get
-                {
-                    return m_Type;
-                }
-            }
+            public string Specifier => m_Spec;
 
+            public string Value => m_Value;
+
+            public ParamTypes Type => m_Type;
         }
     }
 }

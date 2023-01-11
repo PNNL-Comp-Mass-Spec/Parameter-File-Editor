@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace ParamFileGenerator
 {
-
     public interface IRetrieveParams
     {
         string GetParam(string section, string item, string attributeName);
@@ -16,12 +15,11 @@ namespace ParamFileGenerator
 
     public class RetrieveParams : IRetrieveParams
     {
-
         private IniFileReader m_iniFileReader;
 
         /// <summary>
-    /// Default section name
-    /// </summary>
+        /// Default section name
+        /// </summary>
         private string m_defaultSection = "";
 
         public RetrieveParams(string iniFilePath = "", bool IsCaseSensitive = false)
@@ -46,6 +44,7 @@ namespace ParamFileGenerator
             m_iniFileReader.OutputFilename = IniFilePath;
             m_iniFileReader.Save();
         }
+
         public bool LoadSettings(string settingsFilePath)
         {
             IniFilePath = settingsFilePath;
@@ -70,6 +69,7 @@ namespace ParamFileGenerator
             string s = m_iniFileReader.GetCustomIniAttribute(section, item, attributeName);
             if (s is null)
                 throw new Exception("No custom ini value for parameter '" + item + "'");
+
             return s;
         }
 
@@ -94,8 +94,8 @@ namespace ParamFileGenerator
             keyNames = m_iniFileReader.AllKeysInSection(section);
             if (keyNames is null)
                 throw new Exception("No Keys in section '" + section + "'");
+
             return keyNames;
         }
-
     }
 }

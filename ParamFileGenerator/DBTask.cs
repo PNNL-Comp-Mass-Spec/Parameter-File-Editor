@@ -4,14 +4,13 @@ using PRISMDatabaseUtils;
 
 namespace ParamFileGenerator
 {
-
     public class DBTask
     {
         // DB access
 
-        #pragma warning disable CS3003 // Type of member is not CLS-compliant
+#pragma warning disable CS3003 // Type of member is not CLS-compliant
         protected readonly IDBTools mDBTools;
-        #pragma warning restore CS3003 // Type of member is not CLS-compliant
+#pragma warning restore CS3003 // Type of member is not CLS-compliant
 
         /// <summary>
         /// Constructor
@@ -23,9 +22,9 @@ namespace ParamFileGenerator
             mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse);
         }
 
-        #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+#pragma warning disable CS3001 // Type of parameter is not CLS-compliant
         public DBTask(IDBTools existingDbTools)
-        #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
+#pragma warning restore CS3001 // Type of parameter is not CLS-compliant
         {
             mDBTools = existingDbTools;
         }
@@ -45,7 +44,6 @@ namespace ParamFileGenerator
 
         protected DataTable GetTable(string selectSQL)
         {
-
             int retryCount = 3;
             int retryDelaySeconds = 5;
             int timeoutSeconds = 120;
@@ -59,8 +57,6 @@ namespace ParamFileGenerator
             }
 
             return queryResults;
-
         }
-
     }
 }

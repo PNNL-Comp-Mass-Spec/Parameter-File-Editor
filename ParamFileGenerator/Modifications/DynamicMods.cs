@@ -1,63 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace ParamFileGenerator
 {
-
     public class DynamicMods : Mods
     {
-        // Public Property Dyn_Mod_1_MassDiff As Double
-        // Get
-        // Return Dyn_Mod_n_MassDiff(1)
-        // End Get
-        // Set
-        // Dyn_Mod_n_MassDiff(1) = Value
-        // End Set
-        // End Property
-        // Public Property Dyn_Mod_2_MassDiff As Double
-        // Get
-        // Return Dyn_Mod_n_MassDiff(2)
-        // End Get
-        // Set
-        // Dyn_Mod_n_MassDiff(2) = Value
-        // End Set
-        // End Property
-        // Public Property Dyn_Mod_3_MassDiff As Double
-        // Get
-        // Return Dyn_Mod_n_MassDiff(3)
-        // End Get
-        // Set
-        // Dyn_Mod_n_MassDiff(3) = Value
-        // End Set
-        // End Property
-
-        // Public Property Dyn_Mod_1_AAList As String
-        // Get
-        // Return Dyn_Mod_n_AAList(1)
-        // End Get
-        // Set(Value As String)
-        // Dyn_Mod_n_AAList(1) = Value
-        // End Set
-        // End Property
-        // Public Property Dyn_Mod_2_AAList As String
-        // Get
-        // Return Dyn_Mod_n_AAList(2)
-        // End Get
-        // Set(Value As String)
-        // Dyn_Mod_n_AAList(2) = Value
-        // End Set
-        // End Property
-        // Public Property Dyn_Mod_3_AAList As String
-        // Get
-        // Return Dyn_Mod_n_AAList(3)
-        // End Get
-        // Set(Value As String)
-        // Dyn_Mod_n_AAList(3) = Value
-        // End Set
-        // End Property
+        //public double Dyn_Mod_1_MassDiff
+        //{
+        //    get => Dyn_Mod_n_MassDiff(1);
+        //    set => Dyn_Mod_n_MassDiff(1, value);
+        //}
+        //public double Dyn_Mod_2_MassDiff
+        //{
+        //    get => Dyn_Mod_n_MassDiff(2);
+        //    set => Dyn_Mod_n_MassDiff(2, value);
+        //}
+        //public double Dyn_Mod_3_MassDiff
+        //{
+        //    get => Dyn_Mod_n_MassDiff(3);
+        //    set => Dyn_Mod_n_MassDiff(3, value);
+        //}
+        //
+        //public string Dyn_Mod_1_AAList
+        //{
+        //    get => Dyn_Mod_n_AAList(1);
+        //    set => Dyn_Mod_n_AAList(1, value);
+        //}
+        //public string Dyn_Mod_2_AAList
+        //{
+        //    get => Dyn_Mod_n_AAList(2);
+        //    set => Dyn_Mod_n_AAList(2, value);
+        //}
+        //public string Dyn_Mod_3_AAList
+        //{
+        //    get => Dyn_Mod_n_AAList(3);
+        //    set => Dyn_Mod_n_AAList(3, value);
+        //}
 
         public DynamicMods(string DynamicModString) : base()
         {
@@ -73,27 +52,31 @@ namespace ParamFileGenerator
         public string ReturnDynModString(int maxDynMods)
         {
             string s;
-            // If Initialized Then
+            //if (Initialized)
+            //{
             s = AssembleModString(maxDynMods);
             return s;
-            // Else
-            // Return ""
-            // End If
+            //}
+            //else
+            //{
+            //    return "";
+            //}
         }
 
-        // 'TODO replace with real function for term dyn mods
-        // 'Just a placeholder for now
-        // 'Public Function ReturnDynTermModString As String
-        // '    Return "0.0000 0.0000"
-        // 'End Function
+        // TODO replace with real function for term dyn mods
+        // Just a placeholder for now
+        //public string ReturnDynTermModString()
+        //{
+        //    return "0.0000 0.0000";
+        //}
 
         public new void Add(string AffectedResidueString, double MassDifference)
         {
-
             var residueList = ConvertAffectedResStringToList(AffectedResidueString);
             var newDynMod = new ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Dynamic);
             List.Add(newDynMod);
         }
+
         public void Add(ModEntry ModToAdd)
         {
             List.Add(ModToAdd);
@@ -107,7 +90,7 @@ namespace ParamFileGenerator
             {
                 dm = (ModEntry)List[index];
             }
-            catch (Exception ex)
+            catch
             {
                 dm = new ModEntry(ConvertAffectedResStringToList("C"), 0.0d, ModEntry.ModificationTypes.Dynamic);
             }
@@ -138,7 +121,7 @@ namespace ParamFileGenerator
             {
                 dm = (ModEntry)List[index];
             }
-            catch (Exception ex)
+            catch
             {
                 dm = new ModEntry(ConvertAffectedResStringToList("C"), 0.0d, ModEntry.ModificationTypes.Dynamic);
             }
@@ -169,7 +152,7 @@ namespace ParamFileGenerator
             {
                 dm = (ModEntry)List[index];
             }
-            catch (Exception ex)
+            catch
             {
                 dm = new ModEntry(ConvertAffectedResStringToList("C"), 0.0d, ModEntry.ModificationTypes.Dynamic);
             }
@@ -195,20 +178,17 @@ namespace ParamFileGenerator
         protected virtual string AssembleModString(int counter)
         {
             string s = "";
-            string tmpModString;
-            double tmpModMass;
             int padCount;
 
             foreach (ModEntry dynMod in List)
             {
-                tmpModMass = dynMod.MassDifference;
-                tmpModString = dynMod.ReturnAllAffectedResiduesString;
-                s = s + Strings.Format(tmpModMass, "0.0000") + " " + tmpModString + " ";
+                var tmpModMass = dynMod.MassDifference;
+                var tmpModString = dynMod.ReturnAllAffectedResiduesString;
+                s = s + tmpModMass.ToString("0.0000") + " " + tmpModString + " ";
                 counter -= 1;
             }
 
-            var loopTo = counter - 1;
-            for (padCount = 0; padCount <= loopTo; padCount++)
+            for (padCount = 0; padCount < counter; padCount++)
             {
                 if (padCount <= 2)
                 {
@@ -225,32 +205,29 @@ namespace ParamFileGenerator
 
         protected virtual void ParseDynModString(string DMString)
         {
-
             var splitRE = new Regex(@"(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)");
             var matches = splitRE.Matches(DMString);
 
             foreach (Match m in matches)
             {
-                double tmpMass = Conversions.ToDouble(m.Groups["modmass"].Value);
+                double tmpMass = double.Parse(m.Groups["modmass"].Value);
                 string tmpResString = m.Groups["residues"].ToString();
 
                 if (Math.Abs(tmpMass) > float.Epsilon)
                 {
                     var residueList = new List<string>();
-                    for (int resCounter = 1, loopTo = Strings.Len(tmpResString); resCounter <= loopTo; resCounter++)
+                    for (int resCounter = 0; resCounter < tmpResString.Length; resCounter++)
                     {
-                        string tmpRes = Strings.Mid(tmpResString, resCounter, 1);
+                        string tmpRes = tmpResString.Substring(resCounter, 1);
                         residueList.Add(tmpRes);
                     }
                     var modEntry = new ModEntry(residueList, tmpMass, ModEntry.ModificationTypes.Dynamic);
                     Add(modEntry);
                 }
             }
-
         }
 
         protected string m_OrigDynModString;
-        // private m_EmptyMod as New ModEntry(
-
+        //private ModEntry m_EmptyMod = new ModEntry(
     }
 }

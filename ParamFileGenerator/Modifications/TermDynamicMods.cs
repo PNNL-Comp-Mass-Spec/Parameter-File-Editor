@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace ParamFileGenerator
 {
-
     public class TermDynamicMods : DynamicMods
     {
-
         public const string NTERM_SYMBOL = "<";
         public const string CTERM_SYMBOL = ">";
 
@@ -18,31 +14,18 @@ namespace ParamFileGenerator
         {
             m_OrigDynModString = TermDynModString;
             ParseDynModString(m_OrigDynModString);
-
         }
 
         public double Dyn_Mod_NTerm
         {
-            get
-            {
-                return GetTermDynMod(NTERM_SYMBOL);
-            }
-            set
-            {
-                UpdateTermDynMod(NTERM_SYMBOL, value);
-            }
+            get => GetTermDynMod(NTERM_SYMBOL);
+            set => UpdateTermDynMod(NTERM_SYMBOL, value);
         }
 
         public double Dyn_Mod_CTerm
         {
-            get
-            {
-                return GetTermDynMod(CTERM_SYMBOL);
-            }
-            set
-            {
-                UpdateTermDynMod(CTERM_SYMBOL, value);
-            }
+            get => GetTermDynMod(CTERM_SYMBOL);
+            set => UpdateTermDynMod(CTERM_SYMBOL, value);
         }
 
         protected double GetTermDynMod(string strSymbol)
@@ -62,7 +45,6 @@ namespace ParamFileGenerator
 
         protected void UpdateTermDynMod(string strSymbol, double sngMass)
         {
-
             int intIndex;
             intIndex = m_FindModIndex(strSymbol);
 
@@ -104,19 +86,16 @@ namespace ParamFileGenerator
                 return;
             }
 
-
             if (splitRE.IsMatch(DMString))
             {
                 m = splitRE.Match(DMString);
 
-                tmpCTMass = Conversions.ToDouble(m.Groups["ctmodmass"].Value);
-                tmpNTMass = Conversions.ToDouble(m.Groups["ntmodmass"].Value);
+                tmpCTMass = double.Parse(m.Groups["ctmodmass"].Value);
+                tmpNTMass = double.Parse(m.Groups["ntmodmass"].Value);
 
                 Dyn_Mod_NTerm = tmpNTMass;
                 Dyn_Mod_CTerm = tmpCTMass;
-
             }
-
         }
 
         protected override string AssembleModString(int counter)
@@ -124,8 +103,8 @@ namespace ParamFileGenerator
             var sb = new StringBuilder();
 
             string tmpModString;
-            // Dim ctRes As String = ">"
-            // Dim ntRes As String = "<"
+            // var ctRes = ">";
+            // var ntRes = "<";
 
             double ctModMass = 0.0d;
             double ntModMass = 0.0d;
@@ -139,21 +118,20 @@ namespace ParamFileGenerator
                 if (tmpModString == ">")
                 {
                     ctModMass = tmpModMass;
+                    // ctRes = tmpModString;
                 }
-                // ctRes = tmpModString
                 else if (tmpModString == "<")
                 {
                     ntModMass = tmpModMass;
-                    // ntRes = tmpModString
+                    // ntRes = tmpModString;
                 }
             }
 
-            sb.Append(Strings.Format(ctModMass, "0.000000"));
+            sb.Append(ctModMass.ToString("0.000000"));
             sb.Append(" ");
-            sb.Append(Strings.Format(ntModMass, "0.000000"));
+            sb.Append(ntModMass.ToString("0.000000"));
 
             return sb.ToString().Trim();
         }
-
     }
 }
