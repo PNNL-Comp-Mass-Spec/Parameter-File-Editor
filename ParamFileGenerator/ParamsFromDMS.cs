@@ -734,7 +734,7 @@ namespace ParamFileGenerator.DownloadParams
 
                     else if (tmpType.Name == "IsoMods")
                     {
-                        c = ExpandIsoTopicMods(paramSet.IsotopicMods, ref c);
+                        c = ExpandIsoTopicMods(paramSet.IsotopicModificationsList, ref c);
                     }
 
                     else if (tmpType.Name == "DynamicMods")
@@ -934,7 +934,7 @@ namespace ParamFileGenerator.DownloadParams
                 }
                 else if (tmpType == DMSParamStorage.ParamTypes.IsotopicModification)
                 {
-                    p.IsotopicMods.Add(tmpSpec, valueDouble);
+                    p.IsotopicModificationsList.Add(tmpSpec, valueDouble);
                 }
                 else if (tmpType == DMSParamStorage.ParamTypes.TermDynamicModification)
                 {

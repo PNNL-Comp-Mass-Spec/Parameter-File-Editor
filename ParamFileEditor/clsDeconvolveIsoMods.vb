@@ -82,7 +82,7 @@ Public Class clsDeconvolveIsoMods
             Dim eIsotope As ParamFileGenerator.IsoMods.IsotopeList
             [Enum].TryParse(maxIsoAtom.ToString(), eIsotope)
 
-            ParamsClass.IsotopicMods.Add(eIsotope, maxIsoMod, maxMassCorrectionID)
+            ParamsClass.IsotopicModificationsList.Add(eIsotope, maxIsoMod, maxMassCorrectionID)
         End If
 
         Return ParamsClass

@@ -39,7 +39,7 @@ namespace ParamFileGenerator
         }
         internal Params ReconIsoMods(Params ParamsClass)
         {
-            return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods);
+            return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicModificationsList);
         }
 
         Params IReconstituteIsoMods.ReconstituteIsoMods(Params ParamsClass) => ReconIsoMods(ParamsClass);

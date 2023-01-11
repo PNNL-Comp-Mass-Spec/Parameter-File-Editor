@@ -2842,7 +2842,7 @@ Public Class frmMainGUI
                 frm.txtMatchPeakCount.Text = PRISM.StringUtilities.DblToString(.NumberOfDetectedPeaksToMatch, 5)
                 frm.txtMatchPeakCountErrors.Text = PRISM.StringUtilities.DblToString(.NumberOfAllowedDetectedPeakErrors, 5)
                 frm.txtMaxAAPerDynMod.Text = PRISM.StringUtilities.DblToString(.MaximumNumAAPerDynMod, 5)
-                frm.txtMaxDiffPerPeptide.Text = .MaximumDifferentialPerPeptide.ToString()
+                frm.txtMaxDiffPerPeptide.Text = .MaximumNumDifferentialPerPeptide.ToString()
 
                 'Setup Ion Weighting
                 frm.txtAWeight.Text = PRISM.StringUtilities.DblToString(.IonSeries.a_Ion_Weighting, 5)
@@ -3841,7 +3841,7 @@ Public Class frmMainGUI
     Private Sub txtIsoC_Validated(sender As Object, e As EventArgs)
         Dim thisControl = DirectCast(sender, Control)
         Try
-            newParams.IsotopicMods.Iso_C = CDbl(thisControl.Text)
+            newParams.IsotopicModificationsList.Iso_C = CDbl(thisControl.Text)
         Catch
             thisControl.Text = "0.0"
         End Try
@@ -3851,7 +3851,7 @@ Public Class frmMainGUI
     Private Sub txtIsoH_Validated(sender As Object, e As EventArgs)
         Dim thisControl = DirectCast(sender, Control)
         Try
-            newParams.IsotopicMods.Iso_H = CDbl(thisControl.Text)
+            newParams.IsotopicModificationsList.Iso_H = CDbl(thisControl.Text)
         Catch
             thisControl.Text = "0.0"
         End Try
@@ -3861,7 +3861,7 @@ Public Class frmMainGUI
     Private Sub txtIsoO_Validated(sender As Object, e As EventArgs)
         Dim thisControl = DirectCast(sender, Control)
         Try
-            newParams.IsotopicMods.Iso_O = CDbl(thisControl.Text)
+            newParams.IsotopicModificationsList.Iso_O = CDbl(thisControl.Text)
         Catch
             thisControl.Text = "0.0"
         End Try
@@ -3871,7 +3871,7 @@ Public Class frmMainGUI
     Private Sub txtIsoN_Validated(sender As Object, e As EventArgs)
         Dim thisControl = DirectCast(sender, Control)
         Try
-            newParams.IsotopicMods.Iso_N = CDbl(thisControl.Text)
+            newParams.IsotopicModificationsList.Iso_N = CDbl(thisControl.Text)
         Catch
             thisControl.Text = "0.0"
         End Try
@@ -3881,7 +3881,7 @@ Public Class frmMainGUI
     Private Sub txtIsoS_Validated(sender As Object, e As EventArgs)
         Dim thisControl = DirectCast(sender, Control)
         Try
-            newParams.IsotopicMods.Iso_S = CDbl(thisControl.Text)
+            newParams.IsotopicModificationsList.Iso_S = CDbl(thisControl.Text)
         Catch
             thisControl.Text = "0.0"
         End Try

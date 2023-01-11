@@ -29,7 +29,7 @@
         IonSeries IonSeries { get; set; }
         int NumberOfResultsToProcess { get; set; }
         int MaximumNumAAPerDynMod { get; set; }
-        int MaximumDifferentialPerPeptide { get; set; }
+        int MaximumNumDifferentialPerPeptide { get; set; }
         float PeptideMassTolerance { get; set; }
         float FragmentIonTolerance { get; set; }
         int NumberOfOutputLines { get; set; }

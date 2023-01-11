@@ -59,13 +59,13 @@ namespace ParamFileGenerator
 
         public TermDynamicMods TermDynamicMods { get; set; }
 
-        public IsoMods IsotopicMods { get; set; }
-        public IsoMods IsotopicModificationsList { get => IsotopicMods; set => IsotopicMods = value; }
+        public IsoMods IsotopicModificationsList { get; set; }
+        [Obsolete("Use IsotopicModificationsList instead.")]
+        public IsoMods IsotopicMods => IsotopicModificationsList;
 
         public int MaximumNumAAPerDynMod { get; set; }
 
         public int MaximumNumDifferentialPerPeptide { get; set; }
-        public int MaximumDifferentialPerPeptide { get => MaximumNumDifferentialPerPeptide; set => MaximumNumDifferentialPerPeptide = value; }
 
         public int UsePhosphoFragmentation { get; set; }
 
@@ -156,7 +156,7 @@ namespace ParamFileGenerator
             SelectedEnzymeDetails = new EnzymeDetails();
             DynamicMods = new DynamicMods();
             StaticModificationsList = new StaticMods();
-            IsotopicMods = new IsoMods();
+            IsotopicModificationsList = new IsoMods();
             TermDynamicMods = new TermDynamicMods("0.0 0.0");
 
             MaximumNumDifferentialPerPeptide = 3;
