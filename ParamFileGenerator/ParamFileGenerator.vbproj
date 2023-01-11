@@ -97,7 +97,7 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.vb">
+    <Compile Include="Properties\AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DBTask.vb">
@@ -115,10 +115,21 @@
     <Compile Include="MakeParameterFile.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Mods.vb">
+    <Compile Include="Modifications\DynamicMods.vb" />
+    <Compile Include="Modifications\IsoMods.vb" />
+    <Compile Include="Modifications\ModEntry.vb" />
+    <Compile Include="Modifications\Mods.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Params.vb">
+    <Compile Include="Modifications\StaticMods.vb" />
+    <Compile Include="Modifications\TermDynamicMods.vb" />
+    <Compile Include="Parameters\EnzymeCollection.vb" />
+    <Compile Include="Parameters\EnzymeDetails.vb" />
+    <Compile Include="Parameters\GetEnzymeBlock.vb" />
+    <Compile Include="Parameters\IAdvancedParams.vb" />
+    <Compile Include="Parameters\IBasicParams.vb" />
+    <Compile Include="Parameters\IonSeries.vb" />
+    <Compile Include="Parameters\Params.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ParamsFromDMS.vb">
