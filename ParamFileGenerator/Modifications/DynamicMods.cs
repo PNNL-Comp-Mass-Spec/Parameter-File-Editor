@@ -1,217 +1,256 @@
-Imports System.Collections.Generic
-Imports System.Text.RegularExpressions
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 
-Public Class DynamicMods
-    Inherits Mods
-    '    Public Property Dyn_Mod_1_MassDiff As Double
-    '        Get
-    '            Return Dyn_Mod_n_MassDiff(1)
-    '        End Get
-    '        Set
-    '            Dyn_Mod_n_MassDiff(1) = Value
-    '        End Set
-    '    End Property
-    '    Public Property Dyn_Mod_2_MassDiff As Double
-    '        Get
-    '            Return Dyn_Mod_n_MassDiff(2)
-    '        End Get
-    '        Set
-    '            Dyn_Mod_n_MassDiff(2) = Value
-    '        End Set
-    '    End Property
-    '    Public Property Dyn_Mod_3_MassDiff As Double
-    '        Get
-    '            Return Dyn_Mod_n_MassDiff(3)
-    '        End Get
-    '        Set
-    '            Dyn_Mod_n_MassDiff(3) = Value
-    '        End Set
-    '    End Property
+namespace ParamFileGenerator
+{
 
-    '    Public Property Dyn_Mod_1_AAList As String
-    '        Get
-    '            Return Dyn_Mod_n_AAList(1)
-    '        End Get
-    '        Set(Value As String)
-    '            Dyn_Mod_n_AAList(1) = Value
-    '        End Set
-    '    End Property
-    '    Public Property Dyn_Mod_2_AAList As String
-    '        Get
-    '            Return Dyn_Mod_n_AAList(2)
-    '        End Get
-    '        Set(Value As String)
-    '            Dyn_Mod_n_AAList(2) = Value
-    '        End Set
-    '    End Property
-    '    Public Property Dyn_Mod_3_AAList As String
-    '        Get
-    '            Return Dyn_Mod_n_AAList(3)
-    '        End Get
-    '        Set(Value As String)
-    '            Dyn_Mod_n_AAList(3) = Value
-    '        End Set
-    '    End Property
+    public class DynamicMods : Mods
+    {
+        // Public Property Dyn_Mod_1_MassDiff As Double
+        // Get
+        // Return Dyn_Mod_n_MassDiff(1)
+        // End Get
+        // Set
+        // Dyn_Mod_n_MassDiff(1) = Value
+        // End Set
+        // End Property
+        // Public Property Dyn_Mod_2_MassDiff As Double
+        // Get
+        // Return Dyn_Mod_n_MassDiff(2)
+        // End Get
+        // Set
+        // Dyn_Mod_n_MassDiff(2) = Value
+        // End Set
+        // End Property
+        // Public Property Dyn_Mod_3_MassDiff As Double
+        // Get
+        // Return Dyn_Mod_n_MassDiff(3)
+        // End Get
+        // Set
+        // Dyn_Mod_n_MassDiff(3) = Value
+        // End Set
+        // End Property
 
-    Public Sub New(DynamicModString As String)
-        MyBase.New()
-        m_OrigDynModString = DynamicModString
-        ParseDynModString(m_OrigDynModString)
-    End Sub
+        // Public Property Dyn_Mod_1_AAList As String
+        // Get
+        // Return Dyn_Mod_n_AAList(1)
+        // End Get
+        // Set(Value As String)
+        // Dyn_Mod_n_AAList(1) = Value
+        // End Set
+        // End Property
+        // Public Property Dyn_Mod_2_AAList As String
+        // Get
+        // Return Dyn_Mod_n_AAList(2)
+        // End Get
+        // Set(Value As String)
+        // Dyn_Mod_n_AAList(2) = Value
+        // End Set
+        // End Property
+        // Public Property Dyn_Mod_3_AAList As String
+        // Get
+        // Return Dyn_Mod_n_AAList(3)
+        // End Get
+        // Set(Value As String)
+        // Dyn_Mod_n_AAList(3) = Value
+        // End Set
+        // End Property
 
-    Public Sub New()
-        MyBase.New()
-        m_OrigDynModString = Nothing
-    End Sub
+        public DynamicMods(string DynamicModString) : base()
+        {
+            m_OrigDynModString = DynamicModString;
+            ParseDynModString(m_OrigDynModString);
+        }
 
-    Public Function ReturnDynModString(maxDynMods As Integer) As String
-        Dim s As String
-        'If Initialized Then
-        s = AssembleModString(maxDynMods)
-        Return s
-        'Else
-        '    Return ""
-        'End If
-    End Function
+        public DynamicMods() : base()
+        {
+            m_OrigDynModString = null;
+        }
 
-    ' 'TODO replace with real function for term dyn mods
-    ' 'Just a placeholder for now
-    ''Public Function ReturnDynTermModString As String
-    ''    Return "0.0000 0.0000"
-    ''End Function
+        public string ReturnDynModString(int maxDynMods)
+        {
+            string s;
+            // If Initialized Then
+            s = AssembleModString(maxDynMods);
+            return s;
+            // Else
+            // Return ""
+            // End If
+        }
 
-    Public Overloads Sub Add(
-        AffectedResidueString As String,
-        MassDifference As Double)
+        // 'TODO replace with real function for term dyn mods
+        // 'Just a placeholder for now
+        // 'Public Function ReturnDynTermModString As String
+        // '    Return "0.0000 0.0000"
+        // 'End Function
 
-        Dim residueList = ConvertAffectedResStringToList(AffectedResidueString)
-        Dim newDynMod As New ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Dynamic)
-        List.Add(newDynMod)
-    End Sub
-    Public Overloads Sub Add(ModToAdd As ModEntry)
-        List.Add(ModToAdd)
-    End Sub
+        public new void Add(string AffectedResidueString, double MassDifference)
+        {
 
-    Public Property Dyn_Mod_n_MassDiff(DynModNumber As Integer) As Double
-        Get
-            Dim dm As ModEntry
-            Dim index As Integer = DynModNumber - 1
-            Try
-                dm = DirectCast(List.Item(index), ModEntry)
-            Catch ex As Exception
-                dm = New ModEntry(ConvertAffectedResStringToList("C"), 0.0, ModEntry.ModificationTypes.Dynamic)
-            End Try
-            Return dm.MassDifference
-        End Get
-        Set
-            Dim index As Integer = DynModNumber - 1
-            Dim dm As ModEntry
-            If index <= List.Count - 1 Then
-                dm = DirectCast(List.Item(index), ModEntry)
-                dm.MassDifference = Value
-                Replace(index, dm)
-            Else
-                Add("C", Value)
-            End If
-        End Set
-    End Property
+            var residueList = ConvertAffectedResStringToList(AffectedResidueString);
+            var newDynMod = new ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Dynamic);
+            List.Add(newDynMod);
+        }
+        public void Add(ModEntry ModToAdd)
+        {
+            List.Add(ModToAdd);
+        }
 
-    Public Property Dyn_Mod_n_AAList(DynModNumber As Integer) As String
-        Get
-            Dim dm As ModEntry
-            Dim index As Integer = DynModNumber - 1
-            Try
-                dm = DirectCast(List.Item(index), ModEntry)
-            Catch ex As Exception
-                dm = New ModEntry(ConvertAffectedResStringToList("C"), 0.0, ModEntry.ModificationTypes.Dynamic)
-            End Try
-            Return dm.ReturnAllAffectedResiduesString
-        End Get
-        Set
-            Dim index As Integer = DynModNumber - 1
-            Dim dm As ModEntry
-            If index <= List.Count - 1 Then
-                dm = DirectCast(List.Item(index), ModEntry)
-                dm.ResidueCollection = ConvertAffectedResStringToList(Value)
-                Replace(index, dm)
-            Else
-                Add(Value, CDbl(0.0))
-            End If
-        End Set
-    End Property
+        public double Dyn_Mod_n_MassDiff(int DynModNumber)
+        {
+            ModEntry dm;
+            int index = DynModNumber - 1;
+            try
+            {
+                dm = (ModEntry)List[index];
+            }
+            catch (Exception ex)
+            {
+                dm = new ModEntry(ConvertAffectedResStringToList("C"), 0.0d, ModEntry.ModificationTypes.Dynamic);
+            }
+            return dm.MassDifference;
+        }
 
-    Public Property Dyn_Mod_n_Global_ModID(DynModNumber As Integer) As Integer
-        Get
-            Dim dm As ModEntry
-            Dim index As Integer = DynModNumber - 1
-            Try
-                dm = DirectCast(List.Item(index), ModEntry)
-            Catch ex As Exception
-                dm = New ModEntry(ConvertAffectedResStringToList("C"), 0.0, ModEntry.ModificationTypes.Dynamic)
-            End Try
-            Return dm.GlobalModID
-        End Get
-        Set
-            Dim index As Integer = DynModNumber - 1
-            Dim dm As ModEntry
-            If index <= List.Count - 1 Then
-                dm = DirectCast(List.Item(index), ModEntry)
-                dm.GlobalModID = Value
-                Replace(index, dm)
-            Else
-                Add("C", 0.0)
-            End If
-        End Set
-    End Property
+        public void Dyn_Mod_n_MassDiff(int DynModNumber, double value)
+        {
+            int index = DynModNumber - 1;
+            ModEntry dm;
+            if (index <= List.Count - 1)
+            {
+                dm = (ModEntry)List[index];
+                dm.MassDifference = value;
+                Replace(index, dm);
+            }
+            else
+            {
+                Add("C", value);
+            }
+        }
 
-    Protected Overridable Function AssembleModString(counter As Integer) As String
-        Dim s = ""
-        Dim tmpModString As String
-        Dim tmpModMass As Double
-        Dim dynMod As ModEntry
-        Dim padCount As Integer
+        public string Dyn_Mod_n_AAList(int DynModNumber)
+        {
+            ModEntry dm;
+            int index = DynModNumber - 1;
+            try
+            {
+                dm = (ModEntry)List[index];
+            }
+            catch (Exception ex)
+            {
+                dm = new ModEntry(ConvertAffectedResStringToList("C"), 0.0d, ModEntry.ModificationTypes.Dynamic);
+            }
+            return dm.ReturnAllAffectedResiduesString;
+        }
 
-        For Each dynMod In List
-            tmpModMass = dynMod.MassDifference
-            tmpModString = dynMod.ReturnAllAffectedResiduesString
-            s = s & Format(tmpModMass, "0.0000") & " " & tmpModString & " "
-            counter -= 1
-        Next
+        public void Dyn_Mod_n_AAList(int DynModNumber, string value)
+        {
+            int index = DynModNumber - 1;
+            ModEntry dm;
+            if (index <= List.Count - 1)
+            {
+                dm = (ModEntry)List[index];
+                dm.ResidueCollection = ConvertAffectedResStringToList(value);
+                Replace(index, dm);
+            }
+            else
+            {
+                Add(value, 0.0d);
+            }
+        }
 
-        For padCount = 0 To counter - 1
-            If padCount <= 2 Then
-                s &= "0.0000 C "
-            Else
-                s &= "0.0000 X "
-            End If
-        Next
+        public int Dyn_Mod_n_Global_ModID(int DynModNumber)
+        {
+            ModEntry dm;
+            int index = DynModNumber - 1;
+            try
+            {
+                dm = (ModEntry)List[index];
+            }
+            catch (Exception ex)
+            {
+                dm = new ModEntry(ConvertAffectedResStringToList("C"), 0.0d, ModEntry.ModificationTypes.Dynamic);
+            }
+            return dm.GlobalModID;
+        }
 
-        Return s.Trim()
-    End Function
+        public void Dyn_Mod_n_Global_ModID(int DynModNumber, int value)
+        {
+            int index = DynModNumber - 1;
+            ModEntry dm;
+            if (index <= List.Count - 1)
+            {
+                dm = (ModEntry)List[index];
+                dm.GlobalModID = value;
+                Replace(index, dm);
+            }
+            else
+            {
+                Add("C", 0.0d);
+            }
+        }
 
-    Protected Overridable Sub ParseDynModString(DMString As String)
+        protected virtual string AssembleModString(int counter)
+        {
+            string s = "";
+            string tmpModString;
+            double tmpModMass;
+            int padCount;
 
-        Dim splitRE = New Regex("(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)")
-        Dim matches = splitRE.Matches(DMString)
+            foreach (ModEntry dynMod in List)
+            {
+                tmpModMass = dynMod.MassDifference;
+                tmpModString = dynMod.ReturnAllAffectedResiduesString;
+                s = s + Strings.Format(tmpModMass, "0.0000") + " " + tmpModString + " ";
+                counter -= 1;
+            }
 
-        For Each m As Match In matches
-            Dim tmpMass = CDbl(m.Groups("modmass").Value)
-            Dim tmpResString = m.Groups("residues").ToString()
+            var loopTo = counter - 1;
+            for (padCount = 0; padCount <= loopTo; padCount++)
+            {
+                if (padCount <= 2)
+                {
+                    s += "0.0000 C ";
+                }
+                else
+                {
+                    s += "0.0000 X ";
+                }
+            }
 
-            If Math.Abs(tmpMass) > Single.Epsilon Then
-                Dim residueList = New List(Of String)
-                For resCounter = 1 To Len(tmpResString)
-                    Dim tmpRes = Mid(tmpResString, resCounter, 1)
-                    residueList.Add(tmpRes)
-                Next
-                Dim modEntry As New ModEntry(residueList, tmpMass, ModEntry.ModificationTypes.Dynamic)
-                Add(modEntry)
-            End If
-        Next
+            return s.Trim();
+        }
 
-    End Sub
+        protected virtual void ParseDynModString(string DMString)
+        {
 
-    Protected m_OrigDynModString As String
-    'private m_EmptyMod as New ModEntry(
+            var splitRE = new Regex(@"(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)");
+            var matches = splitRE.Matches(DMString);
 
-End Class
+            foreach (Match m in matches)
+            {
+                double tmpMass = Conversions.ToDouble(m.Groups["modmass"].Value);
+                string tmpResString = m.Groups["residues"].ToString();
+
+                if (Math.Abs(tmpMass) > float.Epsilon)
+                {
+                    var residueList = new List<string>();
+                    for (int resCounter = 1, loopTo = Strings.Len(tmpResString); resCounter <= loopTo; resCounter++)
+                    {
+                        string tmpRes = Strings.Mid(tmpResString, resCounter, 1);
+                        residueList.Add(tmpRes);
+                    }
+                    var modEntry = new ModEntry(residueList, tmpMass, ModEntry.ModificationTypes.Dynamic);
+                    Add(modEntry);
+                }
+            }
+
+        }
+
+        protected string m_OrigDynModString;
+        // private m_EmptyMod as New ModEntry(
+
+    }
+}

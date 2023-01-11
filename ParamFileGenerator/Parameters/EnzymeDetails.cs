@@ -1,127 +1,160 @@
-Imports System.Text
+﻿using System;
+using System.Text;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 
-Public Class EnzymeDetails
+namespace ParamFileGenerator
+{
 
-    Private ReadOnly m_EnzymeString As String
+    public class EnzymeDetails
+    {
 
-    Private m_Number As Integer         'Enzyme ID Number
-    Private m_Name As String            'Descriptive Name
-    Private m_Offset As Integer         'Cut position --> 0 = N-terminal, 1 = C-Terminal
-    Private m_CleavePoints As String    'Amino Acids at which to cleave
-    Private m_NoCleavePoints As String  'Amino Acids to skip cleavage
+        private readonly string m_EnzymeString;
 
-    Public Sub New(EnzymeString As String)
-        m_EnzymeString = EnzymeString
-        Call ParseEnzymeString(m_EnzymeString)
-    End Sub
+        private int m_Number;         // Enzyme ID Number
+        private string m_Name;            // Descriptive Name
+        private int m_Offset;         // Cut position --> 0 = N-terminal, 1 = C-Terminal
+        private string m_CleavePoints;    // Amino Acids at which to cleave
+        private string m_NoCleavePoints;  // Amino Acids to skip cleavage
 
-    Public Sub New()
+        public EnzymeDetails(string EnzymeString)
+        {
+            m_EnzymeString = EnzymeString;
+            ParseEnzymeString(m_EnzymeString);
+        }
 
-    End Sub
+        public EnzymeDetails()
+        {
 
-    Private Sub ParseEnzymeString(enzStr As String)
-        Dim s() As String = Nothing
-        Dim placeCounter = 0
-        Dim prevChar = ""
-        Dim tmpString = ""
+        }
 
-        For counter = 1 To Len(enzStr) + 1
-            Dim currChar = Mid(enzStr, counter, 1)
-            If (currChar = " " And prevChar <> " ") Or (counter = Len(enzStr) + 1) Then
-                ReDim Preserve s(placeCounter)
-                s(placeCounter) = tmpString
-                placeCounter += 1
-                tmpString = ""
-            ElseIf currChar <> " " Then
-                tmpString += currChar
-            End If
+        private void ParseEnzymeString(string enzStr)
+        {
+            string[] s = null;
+            int placeCounter = 0;
+            string prevChar = "";
+            string tmpString = "";
 
-            prevChar = currChar
-        Next
+            for (int counter = 1, loopTo = Strings.Len(enzStr) + 1; counter <= loopTo; counter++)
+            {
+                string currChar = Strings.Mid(enzStr, counter, 1);
+                if (currChar == " " & prevChar != " " | counter == Strings.Len(enzStr) + 1)
+                {
+                    Array.Resize(ref s, placeCounter + 1);
+                    s[placeCounter] = tmpString;
+                    placeCounter += 1;
+                    tmpString = "";
+                }
+                else if (currChar != " ")
+                {
+                    tmpString += currChar;
+                }
 
-        m_Number = CInt(s(0))
-        m_Name = s(1)
-        m_Offset = CInt(s(2))
-        m_CleavePoints = s(3)
-        m_NoCleavePoints = s(4)
+                prevChar = currChar;
+            }
 
-    End Sub
+            m_Number = Conversions.ToInteger(s[0]);
+            m_Name = s[1];
+            m_Offset = Conversions.ToInteger(s[2]);
+            m_CleavePoints = s[3];
+            m_NoCleavePoints = s[4];
 
-    Public Property EnzymeID As Integer
-        Get
-            Return m_Number
-        End Get
-        Set
-            m_Number = Value
-        End Set
-    End Property
-    Public Property EnzymeName As String
-        Get
-            Return m_Name
-        End Get
-        Set
-            m_Name = Value
-        End Set
-    End Property
-    Public Property EnzymeCleaveOffset As Integer
-        Get
-            Return m_Offset
-        End Get
-        Set
-            m_Offset = Value
-        End Set
-    End Property
-    Public Property EnzymeCleavePoints As String
-        Get
-            Return m_CleavePoints
-        End Get
-        Set
-            m_CleavePoints = Value
-        End Set
-    End Property
-    Public Property EnzymeNoCleavePoints As String
-        Get
-            Return m_NoCleavePoints
-        End Get
-        Set
-            m_NoCleavePoints = Value
-        End Set
-    End Property
+        }
 
-    Public Function ReturnEnzymeString() As String
-        Dim s As String
+        public int EnzymeID
+        {
+            get
+            {
+                return m_Number;
+            }
+            set
+            {
+                m_Number = value;
+            }
+        }
+        public string EnzymeName
+        {
+            get
+            {
+                return m_Name;
+            }
+            set
+            {
+                m_Name = value;
+            }
+        }
+        public int EnzymeCleaveOffset
+        {
+            get
+            {
+                return m_Offset;
+            }
+            set
+            {
+                m_Offset = value;
+            }
+        }
+        public string EnzymeCleavePoints
+        {
+            get
+            {
+                return m_CleavePoints;
+            }
+            set
+            {
+                m_CleavePoints = value;
+            }
+        }
+        public string EnzymeNoCleavePoints
+        {
+            get
+            {
+                return m_NoCleavePoints;
+            }
+            set
+            {
+                m_NoCleavePoints = value;
+            }
+        }
 
-        s = EnzymeID.ToString & "."
-        s = s.PadRight(4, Convert.ToChar(" ")) & EnzymeName
-        s = s.PadRight(30, Convert.ToChar(" ")) & EnzymeCleaveOffset.ToString
-        s = s.PadRight(35, Convert.ToChar(" ")) & EnzymeCleavePoints
-        s = s.PadRight(48, Convert.ToChar(" ")) & EnzymeNoCleavePoints
+        public string ReturnEnzymeString()
+        {
+            string s;
 
-        Return s
+            s = EnzymeID.ToString() + ".";
+            s = s.PadRight(4, Convert.ToChar(" ")) + EnzymeName;
+            s = s.PadRight(30, Convert.ToChar(" ")) + EnzymeCleaveOffset.ToString();
+            s = s.PadRight(35, Convert.ToChar(" ")) + EnzymeCleavePoints;
+            s = s.PadRight(48, Convert.ToChar(" ")) + EnzymeNoCleavePoints;
 
-    End Function
+            return s;
 
-    Public Function ReturnBW32EnzymeInfoString(cleavagePosition As Integer) As String
-        Dim sb = New StringBuilder
+        }
 
-        sb.Append(EnzymeName)
-        sb.Append("(")
-        sb.Append(EnzymeCleavePoints)
-        If EnzymeNoCleavePoints.Length > 0 And EnzymeNoCleavePoints <> "-" Then
-            sb.Append("/")
-            sb.Append(EnzymeNoCleavePoints)
-        End If
-        sb.Append(")")
-        sb.Append(" ")
-        sb.Append(cleavagePosition.ToString)
-        sb.Append(" ")
-        sb.Append(EnzymeCleaveOffset.ToString)
-        sb.Append(" ")
-        sb.Append(EnzymeCleavePoints)
-        sb.Append(" ")
-        sb.Append(EnzymeNoCleavePoints)
+        public string ReturnBW32EnzymeInfoString(int cleavagePosition)
+        {
+            var sb = new StringBuilder();
 
-        Return sb.ToString
-    End Function
+            sb.Append(EnzymeName);
+            sb.Append("(");
+            sb.Append(EnzymeCleavePoints);
+            if (EnzymeNoCleavePoints.Length > 0 & EnzymeNoCleavePoints != "-")
+            {
+                sb.Append("/");
+                sb.Append(EnzymeNoCleavePoints);
+            }
+            sb.Append(")");
+            sb.Append(" ");
+            sb.Append(cleavagePosition.ToString());
+            sb.Append(" ");
+            sb.Append(EnzymeCleaveOffset.ToString());
+            sb.Append(" ");
+            sb.Append(EnzymeCleavePoints);
+            sb.Append(" ");
+            sb.Append(EnzymeNoCleavePoints);
 
-End Class
+            return sb.ToString();
+        }
+
+    }
+}

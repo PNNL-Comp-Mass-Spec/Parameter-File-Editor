@@ -1,82 +1,101 @@
+﻿using System;
+using System.Collections.Generic;
 
-Imports System.Collections.Generic
+namespace ParamFileGenerator
+{
 
-Public Interface IRetrieveParams
-    Function GetParam(section As String, item As String, attributeName As String) As String
-    Function GetParam(section As String, item As String) As String
-    Function GetParam(item As String) As String
-    Sub SetParam(section As String, name As String, Value As String)
-    Sub SetParam(name As String, Value As String)
-    Sub SetSection(name As String)
-End Interface
+    public interface IRetrieveParams
+    {
+        string GetParam(string section, string item, string attributeName);
+        string GetParam(string section, string item);
+        string GetParam(string item);
+        void SetParam(string section, string name, string Value);
+        void SetParam(string name, string Value);
+        void SetSection(string name);
+    }
 
-Public Class RetrieveParams
-    Implements IRetrieveParams
+    public class RetrieveParams : IRetrieveParams
+    {
 
-    Private m_iniFileReader As IniFileReader
+        private IniFileReader m_iniFileReader;
 
-    ''' <summary>
-    ''' Default section name
-    ''' </summary>
-    Private m_defaultSection As String = ""
+        /// <summary>
+    /// Default section name
+    /// </summary>
+        private string m_defaultSection = "";
 
-    Public Sub New(Optional iniFilePath As String = "", Optional IsCaseSensitive As Boolean = False)
-        If iniFilePath <> "" Then
-            Me.IniFilePath = iniFilePath
-            LoadSettings(IsCaseSensitive)
-        End If
-    End Sub
+        public RetrieveParams(string iniFilePath = "", bool IsCaseSensitive = false)
+        {
+            if (!string.IsNullOrEmpty(iniFilePath))
+            {
+                IniFilePath = iniFilePath;
+                LoadSettings(IsCaseSensitive);
+            }
+        }
 
-    Public Property IniFilePath As String = ""
+        public string IniFilePath { get; set; } = "";
 
-    Public Function LoadSettings(Optional IsCaseSensitive As Boolean = False) As Boolean
-        m_iniFileReader = New IniFileReader(IniFilePath, IsCaseSensitive)
-        Return Not (m_iniFileReader Is Nothing)
-    End Function
+        public bool LoadSettings(bool IsCaseSensitive = false)
+        {
+            m_iniFileReader = new IniFileReader(IniFilePath, IsCaseSensitive);
+            return m_iniFileReader is not null;
+        }
 
-    Public Sub SaveSettings()
-        m_iniFileReader.OutputFilename = IniFilePath
-        m_iniFileReader.Save()
-    End Sub
-    Public Function LoadSettings(settingsFilePath As String) As Boolean
-        IniFilePath = settingsFilePath
-        Return LoadSettings()
-    End Function
+        public void SaveSettings()
+        {
+            m_iniFileReader.OutputFilename = IniFilePath;
+            m_iniFileReader.Save();
+        }
+        public bool LoadSettings(string settingsFilePath)
+        {
+            IniFilePath = settingsFilePath;
+            return LoadSettings();
+        }
 
-    Public Function GetParam(item As String) As String Implements IRetrieveParams.GetParam
-        Return m_iniFileReader.GetIniValue(m_defaultSection, item)
-    End Function
+        public string GetParam(string item)
+        {
+            return m_iniFileReader.GetIniValue(m_defaultSection, item);
+        }
 
-    Public Function GetParam(section As String, item As String) As String Implements IRetrieveParams.GetParam
-        Dim s As String = m_iniFileReader.GetIniValue(section, item)
-        If s Is Nothing Then Throw New Exception("No ini value for parameter '" & item & "'")
-        Return s
-    End Function
+        public string GetParam(string section, string item)
+        {
+            string s = m_iniFileReader.GetIniValue(section, item);
+            if (s is null)
+                throw new Exception("No ini value for parameter '" + item + "'");
+            return s;
+        }
 
-    Public Function GetParam(section As String, item As String, attributeName As String) As String Implements IRetrieveParams.GetParam
-        Dim s As String = m_iniFileReader.GetCustomIniAttribute(section, item, attributeName)
-        If s Is Nothing Then Throw New Exception("No custom ini value for parameter '" & item & "'")
-        Return s
-    End Function
+        public string GetParam(string section, string item, string attributeName)
+        {
+            string s = m_iniFileReader.GetCustomIniAttribute(section, item, attributeName);
+            if (s is null)
+                throw new Exception("No custom ini value for parameter '" + item + "'");
+            return s;
+        }
 
-    Public Sub SetParam(name As String, Value As String) Implements IRetrieveParams.SetParam
-        m_iniFileReader.SetIniValue(m_defaultSection, name, Value)
-    End Sub
+        public void SetParam(string name, string Value)
+        {
+            m_iniFileReader.SetIniValue(m_defaultSection, name, Value);
+        }
 
-    Public Sub SetParam(section As String, name As String, Value As String) Implements IRetrieveParams.SetParam
-        m_iniFileReader.SetIniValue(section, name, Value)
-    End Sub
+        public void SetParam(string section, string name, string Value)
+        {
+            m_iniFileReader.SetIniValue(section, name, Value);
+        }
 
-    Public Sub SetSection(name As String) Implements IRetrieveParams.SetSection
-        m_defaultSection = name
-    End Sub
+        public void SetSection(string name)
+        {
+            m_defaultSection = name;
+        }
 
-    Public Function GetAllKeysInSection(section As String) As List(Of String)
-        Dim keyNames As List(Of String)
-        keyNames = m_iniFileReader.AllKeysInSection(section)
-        If keyNames Is Nothing Then Throw New Exception("No Keys in section '" & section & "'")
-        Return keyNames
-    End Function
+        public List<string> GetAllKeysInSection(string section)
+        {
+            List<string> keyNames;
+            keyNames = m_iniFileReader.AllKeysInSection(section);
+            if (keyNames is null)
+                throw new Exception("No Keys in section '" + section + "'");
+            return keyNames;
+        }
 
-End Class
-
+    }
+}

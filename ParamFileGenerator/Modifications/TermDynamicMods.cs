@@ -1,133 +1,159 @@
-Imports System.Collections.Generic
-Imports System.Text
-Imports System.Text.RegularExpressions
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 
-Public Class TermDynamicMods
-    Inherits DynamicMods
+namespace ParamFileGenerator
+{
 
-    Public Const NTERM_SYMBOL As String = "<"
-    Public Const CTERM_SYMBOL As String = ">"
+    public class TermDynamicMods : DynamicMods
+    {
 
-    Sub New(TermDynModString As String)
-        MyBase.New()
-        m_OrigDynModString = TermDynModString
-        ParseDynModString(m_OrigDynModString)
+        public const string NTERM_SYMBOL = "<";
+        public const string CTERM_SYMBOL = ">";
 
-    End Sub
+        public TermDynamicMods(string TermDynModString) : base()
+        {
+            m_OrigDynModString = TermDynModString;
+            ParseDynModString(m_OrigDynModString);
 
-    Public Property Dyn_Mod_NTerm As Double
-        Get
-            Return GetTermDynMod(NTERM_SYMBOL)
-        End Get
-        Set
-            UpdateTermDynMod(NTERM_SYMBOL, Value)
-        End Set
-    End Property
+        }
 
-    Public Property Dyn_Mod_CTerm As Double
-        Get
-            Return GetTermDynMod(CTERM_SYMBOL)
-        End Get
-        Set
-            UpdateTermDynMod(CTERM_SYMBOL, Value)
-        End Set
-    End Property
+        public double Dyn_Mod_NTerm
+        {
+            get
+            {
+                return GetTermDynMod(NTERM_SYMBOL);
+            }
+            set
+            {
+                UpdateTermDynMod(NTERM_SYMBOL, value);
+            }
+        }
 
-    Protected Function GetTermDynMod(strSymbol As String) As Double
-        Dim objModEntry As ModEntry
-        objModEntry = m_FindMod(strSymbol)
+        public double Dyn_Mod_CTerm
+        {
+            get
+            {
+                return GetTermDynMod(CTERM_SYMBOL);
+            }
+            set
+            {
+                UpdateTermDynMod(CTERM_SYMBOL, value);
+            }
+        }
 
-        If objModEntry Is Nothing Then
-            Return 0
-        Else
-            Return objModEntry.MassDifference
-        End If
-    End Function
+        protected double GetTermDynMod(string strSymbol)
+        {
+            ModEntry objModEntry;
+            objModEntry = m_FindMod(strSymbol);
 
-    Protected Sub UpdateTermDynMod(strSymbol As String, sngMass As Double)
+            if (objModEntry is null)
+            {
+                return 0d;
+            }
+            else
+            {
+                return objModEntry.MassDifference;
+            }
+        }
 
-        Dim intIndex As Integer
-        intIndex = m_FindModIndex(strSymbol)
+        protected void UpdateTermDynMod(string strSymbol, double sngMass)
+        {
 
-        If intIndex < 0 Then
-            ' Mod was not found
-            ' Add it (assuming sngMass is non-zero)
-            If Math.Abs(sngMass) > Single.Epsilon Then
-                Dim resCollection = New List(Of String) From {
-                    strSymbol
+            int intIndex;
+            intIndex = m_FindModIndex(strSymbol);
+
+            if (intIndex < 0)
+            {
+                // Mod was not found
+                // Add it (assuming sngMass is non-zero)
+                if (Math.Abs(sngMass) > float.Epsilon)
+                {
+                    var resCollection = new List<string>() { strSymbol };
+
+                    Add(new ModEntry(resCollection, sngMass, ModEntry.ModificationTypes.Dynamic));
                 }
+            }
+            // Mod was found
+            // Update the mass (or remove it if sngMass is zero)
+            else if (Math.Abs(sngMass) < float.Epsilon)
+            {
+                Remove(intIndex);
+            }
+            else
+            {
+                ModEntry objModEntry;
+                objModEntry = GetModEntry(intIndex);
+                objModEntry.MassDifference = sngMass;
+            }
+        }
 
-                Add(New ModEntry(resCollection, sngMass, ModEntry.ModificationTypes.Dynamic))
-            End If
-        Else
-            ' Mod was found
-            ' Update the mass (or remove it if sngMass is zero)
-            If Math.Abs(sngMass) < Single.Epsilon Then
-                Remove(intIndex)
-            Else
-                Dim objModEntry As ModEntry
-                objModEntry = GetModEntry(intIndex)
-                objModEntry.MassDifference = sngMass
-            End If
-        End If
-    End Sub
+        protected override void ParseDynModString(string DMString)
+        {
+            double tmpCTMass;
+            double tmpNTMass;
 
-    Protected Overrides Sub ParseDynModString(DMString As String)
-        Dim tmpCTMass As Double
-        Dim tmpNTMass As Double
+            var splitRE = new Regex(@"(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)");
+            Match m;
 
-        Dim splitRE = New Regex("(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)")
-        Dim m As Match
-
-        If DMString Is Nothing Then
-            Exit Sub
-        End If
+            if (DMString is null)
+            {
+                return;
+            }
 
 
-        If splitRE.IsMatch(DMString) Then
-            m = splitRE.Match(DMString)
+            if (splitRE.IsMatch(DMString))
+            {
+                m = splitRE.Match(DMString);
 
-            tmpCTMass = CDbl(m.Groups("ctmodmass").Value)
-            tmpNTMass = CDbl(m.Groups("ntmodmass").Value)
+                tmpCTMass = Conversions.ToDouble(m.Groups["ctmodmass"].Value);
+                tmpNTMass = Conversions.ToDouble(m.Groups["ntmodmass"].Value);
 
-            Dyn_Mod_NTerm = tmpNTMass
-            Dyn_Mod_CTerm = tmpCTMass
+                Dyn_Mod_NTerm = tmpNTMass;
+                Dyn_Mod_CTerm = tmpCTMass;
 
-        End If
+            }
 
-    End Sub
+        }
 
-    Protected Overrides Function AssembleModString(counter As Integer) As String
-        Dim sb = New StringBuilder()
+        protected override string AssembleModString(int counter)
+        {
+            var sb = new StringBuilder();
 
-        Dim tmpModString As String
-        ' Dim ctRes As String = ">"
-        ' Dim ntRes As String = "<"
+            string tmpModString;
+            // Dim ctRes As String = ">"
+            // Dim ntRes As String = "<"
 
-        Dim ctModMass = 0.0
-        Dim ntModMass = 0.0
+            double ctModMass = 0.0d;
+            double ntModMass = 0.0d;
 
-        Dim tmpModMass As Double
+            double tmpModMass;
 
-        Dim dynMod As ModEntry
+            foreach (ModEntry dynMod in List)
+            {
+                tmpModMass = dynMod.MassDifference;
+                tmpModString = dynMod.ReturnAllAffectedResiduesString;
+                if (tmpModString == ">")
+                {
+                    ctModMass = tmpModMass;
+                }
+                // ctRes = tmpModString
+                else if (tmpModString == "<")
+                {
+                    ntModMass = tmpModMass;
+                    // ntRes = tmpModString
+                }
+            }
 
-        For Each dynMod In List
-            tmpModMass = dynMod.MassDifference
-            tmpModString = dynMod.ReturnAllAffectedResiduesString
-            If tmpModString = ">" Then
-                ctModMass = tmpModMass
-                ' ctRes = tmpModString
-            ElseIf tmpModString = "<" Then
-                ntModMass = tmpModMass
-                ' ntRes = tmpModString
-            End If
-        Next
+            sb.Append(Strings.Format(ctModMass, "0.000000"));
+            sb.Append(" ");
+            sb.Append(Strings.Format(ntModMass, "0.000000"));
 
-        sb.Append(Format(ctModMass, "0.000000"))
-        sb.Append(" ")
-        sb.Append(Format(ntModMass, "0.000000"))
+            return sb.ToString().Trim();
+        }
 
-        Return sb.ToString.Trim()
-    End Function
-
-End Class
+    }
+}

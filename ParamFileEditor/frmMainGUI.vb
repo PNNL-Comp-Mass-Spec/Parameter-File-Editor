@@ -3538,7 +3538,7 @@ Public Class frmMainGUI
             txtModAATextBox.Text = txtModAATextBox.Text.ToUpper
             If Math.Abs(CSng(txtModMassTextBox.Text)) > Single.Epsilon Then
                 ' Only update this mod if the mass is non-zero
-                newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber) = txtModAATextBox.Text
+                newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber, txtModAATextBox.Text)
             Else
                 ' If this mod, and all other mods after this mod are 0, then remove this mod and all subsequent mods
                 If newParams.DynamicMods.Count = intModNumber Then
@@ -3562,20 +3562,20 @@ Public Class frmMainGUI
             dblModMass = CDbl(txtModMassTextBox.Text)
             If Math.Abs(dblModMass) > Single.Epsilon Then
                 ' Make sure this mod is defined
-                newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber) = txtModAATextBox.Text
+                newParams.DynamicMods.Dyn_Mod_n_AAList(intModNumber, txtModAATextBox.Text)
             End If
 
             If newParams.DynamicMods.Count < intModNumber And Math.Abs(dblModMass) < Single.Epsilon Then
                 ' Nothing to update
             Else
                 If Math.Abs(dblModMass) > Single.Epsilon Then
-                    newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber) = dblModMass
+                    newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber, dblModMass)
                 Else
                     ' If this mod, and all other mods after this mod are 0, then remove this mod and all subsequent mods
                     If newParams.DynamicMods.Count = intModNumber Then
                         newParams.DynamicMods.Remove(intModNumber - 1)
                     Else
-                        newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber) = dblModMass
+                        newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber, dblModMass)
                     End If
                 End If
             End If

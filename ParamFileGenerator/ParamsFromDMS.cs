@@ -1,1152 +1,1352 @@
-Imports System.Collections.Generic
-Imports System.Reflection
-Imports System.Runtime.InteropServices
-Imports PRISMDatabaseUtils
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using PRISMDatabaseUtils;
 
-Namespace DownloadParams
+namespace ParamFileGenerator.DownloadParams
+{
 
-    Public Class ParamsFromDMS
-        Inherits DBTask
+    public class ParamsFromDMS : DBTask
+    {
 
-        ' Ignore Spelling: diffs, mc
+        // Ignore Spelling: diffs, mc
 
-        Private Const Param_File_Table As String = "T_Param_Files"
-        Private Const Param_Entry_Table As String = "T_Param_Entries"
-        Private Const Param_Mass_Mods_Table As String = "T_Param_File_Mass_Mods"
-        Private Const Mass_Corr_Factors As String = "T_Mass_Correction_Factors"
-        Private Const Residues_Table As String = "T_Residues"
+        private const string Param_File_Table = "T_Param_Files";
+        private const string Param_Entry_Table = "T_Param_Entries";
+        private const string Param_Mass_Mods_Table = "T_Param_File_Mass_Mods";
+        private const string Mass_Corr_Factors = "T_Mass_Correction_Factors";
+        private const string Residues_Table = "T_Residues";
 
-        Public Enum AcceptableParams
-            SelectedEnzymeIndex
-            SelectedEnzymeCleavagePosition
-            MaximumNumberMissedCleavages
-            ParentMassType
-            FragmentMassType
-            DynamicMods
-            TermDynamicMods
-            StaticModificationsList
-            IsotopicMods
-            PartialSequenceToMatch
-            CreateOutputFiles
-            NumberOfResultsToProcess
-            MaximumNumAAPerDynMod
-            MaximumNumDifferentialPerPeptide
-            PeptideMassTolerance
-            FragmentIonTolerance
-            NumberOfOutputLines
-            NumberOfDescriptionLines
-            ShowFragmentIons
-            PrintDuplicateReferences
-            SelectedNucReadingFrameIndex
-            RemovePrecursorPeak
-            IonSeries
-            IonCutoffPercentage
-            MinimumProteinMassToSearch
-            MaximumProteinMassToSearch
-            NumberOfDetectedPeaksToMatch
-            NumberOfAllowedDetectedPeakErrors
-            MatchedPeakMassTolerance
-            AminoAcidsAllUpperCase
-            SequenceHeaderInfoToFilter
-            PeptideMassUnits
+        public enum AcceptableParams
+        {
+            SelectedEnzymeIndex,
+            SelectedEnzymeCleavagePosition,
+            MaximumNumberMissedCleavages,
+            ParentMassType,
+            FragmentMassType,
+            DynamicMods,
+            TermDynamicMods,
+            StaticModificationsList,
+            IsotopicMods,
+            PartialSequenceToMatch,
+            CreateOutputFiles,
+            NumberOfResultsToProcess,
+            MaximumNumAAPerDynMod,
+            MaximumNumDifferentialPerPeptide,
+            PeptideMassTolerance,
+            FragmentIonTolerance,
+            NumberOfOutputLines,
+            NumberOfDescriptionLines,
+            ShowFragmentIons,
+            PrintDuplicateReferences,
+            SelectedNucReadingFrameIndex,
+            RemovePrecursorPeak,
+            IonSeries,
+            IonCutoffPercentage,
+            MinimumProteinMassToSearch,
+            MaximumProteinMassToSearch,
+            NumberOfDetectedPeaksToMatch,
+            NumberOfAllowedDetectedPeakErrors,
+            MatchedPeakMassTolerance,
+            AminoAcidsAllUpperCase,
+            SequenceHeaderInfoToFilter,
+            PeptideMassUnits,
             FragmentMassUnits
-        End Enum
+        }
 
-        Public Enum BasicParams
-            SelectedEnzymeIndex
-            SelectedEnzymeCleavagePosition
-            MaximumNumberMissedCleavages
-            ParentMassType
-            FragmentMassType
+        public enum BasicParams
+        {
+            SelectedEnzymeIndex,
+            SelectedEnzymeCleavagePosition,
+            MaximumNumberMissedCleavages,
+            ParentMassType,
+            FragmentMassType,
             PartialSequenceToMatch
-        End Enum
+        }
 
-        Public Enum AdvancedParams
-            CreateOutputFiles
-            NumberOfResultsToProcess
-            MaximumNumAAPerDynMod
-            MaximumNumDifferentialPerPeptide
-            PeptideMassTolerance
-            FragmentIonTolerance
-            NumberOfOutputLines
-            NumberOfDescriptionLines
-            ShowFragmentIons
-            PrintDuplicateReferences
-            SelectedNucReadingFrameIndex
-            RemovePrecursorPeak
-            IonSeries
-            IonCutoffPercentage
-            MinimumProteinMassToSearch
-            MaximumProteinMassToSearch
-            NumberOfDetectedPeaksToMatch
-            NumberOfAllowedDetectedPeakErrors
-            MatchedPeakMassTolerance
-            AminoAcidsAllUpperCase
-            SequenceHeaderInfoToFilter
-            PeptideMassUnits
+        public enum AdvancedParams
+        {
+            CreateOutputFiles,
+            NumberOfResultsToProcess,
+            MaximumNumAAPerDynMod,
+            MaximumNumDifferentialPerPeptide,
+            PeptideMassTolerance,
+            FragmentIonTolerance,
+            NumberOfOutputLines,
+            NumberOfDescriptionLines,
+            ShowFragmentIons,
+            PrintDuplicateReferences,
+            SelectedNucReadingFrameIndex,
+            RemovePrecursorPeak,
+            IonSeries,
+            IonCutoffPercentage,
+            MinimumProteinMassToSearch,
+            MaximumProteinMassToSearch,
+            NumberOfDetectedPeaksToMatch,
+            NumberOfAllowedDetectedPeakErrors,
+            MatchedPeakMassTolerance,
+            AminoAcidsAllUpperCase,
+            SequenceHeaderInfoToFilter,
+            PeptideMassUnits,
             FragmentMassUnits
-        End Enum
+        }
 
-        Public Enum IonSeriesParams
-            Use_a_Ions
-            Use_b_Ions
-            Use_y_Ions
-            a_Ion_Weighting
-            b_Ion_Weighting
-            c_Ion_Weighting
-            d_Ion_Weighting
-            v_Ion_Weighting
-            w_Ion_Weighting
-            x_Ion_Weighting
-            y_Ion_Weighting
+        public enum IonSeriesParams
+        {
+            Use_a_Ions,
+            Use_b_Ions,
+            Use_y_Ions,
+            a_Ion_Weighting,
+            b_Ion_Weighting,
+            c_Ion_Weighting,
+            d_Ion_Weighting,
+            v_Ion_Weighting,
+            w_Ion_Weighting,
+            x_Ion_Weighting,
+            y_Ion_Weighting,
             z_Ion_Weighting
-        End Enum
+        }
 
-        Public Enum eParamFileTypeConstants
-            Unknown = 0
-            None = 1
-            Sequest = 1000
-            QTOFPek = 1001
-            DeNovoPeak = 1002
-            icr2ls = 1003
-            MLynxPek = 1004
-            AgilentTOFPek = 1005
-            LTQ_FTPek = 1006
-            MASIC = 1007
-            XTandem = 1008
-            Decon2LS = 1010
-            TIC_D2L = 1011
-            Inspect = 1012
-            MSXML_Gen = 1013
-            DTA_Gen = 1014
-            MSClusterDAT_Gen = 1015
-            OMSSA = 1016
-            MultiAlign = 1017
-            MSGFDB = 1018
-            MSAlign = 1019
-            SMAQC = 1020
-            LipidMapSearch = 1021
-            MSAlign_Histone = 1022
-            MODa = 1023
-            GlyQIQ = 1024
-            MSPathFinder = 1025
-            MODPlus = 1028
-            TopFD = 1031
-            TopPIC = 1032
-            MSFragger = 1033
+        public enum eParamFileTypeConstants
+        {
+            Unknown = 0,
+            None = 1,
+            Sequest = 1000,
+            QTOFPek = 1001,
+            DeNovoPeak = 1002,
+            icr2ls = 1003,
+            MLynxPek = 1004,
+            AgilentTOFPek = 1005,
+            LTQ_FTPek = 1006,
+            MASIC = 1007,
+            XTandem = 1008,
+            Decon2LS = 1010,
+            TIC_D2L = 1011,
+            Inspect = 1012,
+            MSXML_Gen = 1013,
+            DTA_Gen = 1014,
+            MSClusterDAT_Gen = 1015,
+            OMSSA = 1016,
+            MultiAlign = 1017,
+            MSGFDB = 1018,
+            MSAlign = 1019,
+            SMAQC = 1020,
+            LipidMapSearch = 1021,
+            MSAlign_Histone = 1022,
+            MODa = 1023,
+            GlyQIQ = 1024,
+            MSPathFinder = 1025,
+            MODPlus = 1028,
+            TopFD = 1031,
+            TopPIC = 1032,
+            MSFragger = 1033,
             MaxQuant = 1034
-        End Enum
-
-        Private m_ID As Integer
-        Private m_Name As String
-        Private m_ParamFileType As eParamFileTypeConstants
-        Private m_Params As Params
-
-        ''' <summary>
-        ''' Parameter file table
-        ''' </summary>
-        Private m_ParamFileTable As DataTable
-        Private m_ParamEntryTable As DataTable
-
-        Private ReadOnly m_BaseLineParamSet As Params
-        Private ReadOnly m_AcceptableParams As List(Of String)
-        Private ReadOnly m_BasicParams As List(Of String)
-        Private ReadOnly m_AdvancedParams As List(Of String)
-        Private ReadOnly m_IonSeriesParams As List(Of String)
-        Private m_MassMods As DataTable
-
-        Public ReadOnly Property ParamFileTableLoaded As Boolean
-            Get
-                Return m_ParamFileTable IsNot Nothing AndAlso m_ParamFileTable.Rows.Count > 0
-            End Get
-        End Property
-
-#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
-        Public Sub New(dbTools As IDBTools)
-#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
-            MyBase.New(dbTools)
-
-            m_AcceptableParams = LoadAcceptableParamList()
-            m_BasicParams = LoadBasicParams()
-            m_AdvancedParams = LoadAdvancedParams()
-            m_IonSeriesParams = LoadIonSeriesParams()
-            m_BaseLineParamSet = MainProcess.BaseLineParamSet
-
-            Dim success = GetParamsFromDMS()
-            If Not success Then
-                Throw New Exception("Unable to obtain data from " & Param_File_Table & " and/or " & Param_Entry_Table)
-            End If
-        End Sub
-
-        Public Sub RefreshParamsFromDMS()
-            GetParamsFromDMS()
-        End Sub
-
-        Public Function ReadParamsFromDMS(paramSetName As String) As Params
-            'Retrieve ID number first, then use the same procedure as below
-            m_Name = paramSetName
-
-            m_ParamFileType = GetTypeWithName(paramSetName)
-
-            If m_ParamFileType = eParamFileTypeConstants.Unknown Then
-                Throw New Exception("Parameter file " & paramSetName & " was not found in table " & Param_File_Table)
-            End If
-
-            If m_ParamFileType <> eParamFileTypeConstants.Sequest Then
-                ' This param file type is not supported for export from DMS
-                Dim paramFileTypeName As String = [Enum].GetName(GetType(eParamFileTypeConstants), m_ParamFileType)
-                If String.IsNullOrEmpty(paramFileTypeName) Then
-                    paramFileTypeName = "Unknown"
-                End If
-
-                Throw New NotSupportedException("Parameter file " & paramSetName & " is of type " & paramFileTypeName & ", which isn't support for export from DMS")
-            End If
-
-            m_ID = GetIDWithName(m_Name, m_ParamFileType)
-
-            m_Params = RetrieveParams(m_ID, m_ParamFileType)
-            Return m_Params
-
-        End Function
-
-        Public Function ReadParamsFromDMS(paramSetID As Integer) As Params
-            m_ID = paramSetID
-            m_ParamFileType = GetTypeWithID(m_ID)
-
-            If m_ParamFileType = eParamFileTypeConstants.Unknown Then
-                Throw New Exception("Parameter file ID " & paramSetID & " was not found in table " & Param_File_Table)
-            End If
-
-            If m_ParamFileType <> eParamFileTypeConstants.Sequest Then
-                ' This param file type is not supported for export from DMS
-                Throw New NotSupportedException("Parameter file ID " & paramSetID & " is of type " & [Enum].GetName(GetType(eParamFileTypeConstants), m_ParamFileType) & ", which isn't support for export from DMS")
-            End If
-
-            m_Params = RetrieveParams(m_ID, m_ParamFileType)
-            Return m_Params
-        End Function
-
-        Public Function RetrieveAvailableParams() As DataTable
-            Return GetAvailableParamSets()
-        End Function
-
-        Public Function RetrieveParamFileTypes() As DataTable
-            Return GetParamFileTypes()
-        End Function
-
-        Public Function ParamSetNameExists(paramSetName As String) As Boolean
-            Return DoesParamSetNameExist(paramSetName)
-        End Function
-
-        Public Function ParamSetIDExists(paramSetID As Integer) As Boolean
-            Return DoesParamSetIDExist(paramSetID)
-        End Function
-
-        Public Function GetParamSetIDFromName(Name As String) As Integer
-            Dim eParamFileType As eParamFileTypeConstants
-            eParamFileType = GetTypeWithName(Name)
-
-            If eParamFileType = eParamFileTypeConstants.Unknown Then
-                Console.WriteLine("Parameter file " & Name & "  was not found in table " & Param_File_Table)
-                Return -1
-            End If
-
-            Return GetIDWithName(Name, eParamFileType)
-        End Function
-
-        Private Function LoadAcceptableParamList() As List(Of String)
-            Dim paramEnum() As String = [Enum].GetNames(GetType(AcceptableParams))
-            Dim paramList As New List(Of String)
-            For Each param In paramEnum
-                paramList.Add(param)
-            Next
-            Return paramList
-        End Function
-
-        Private Function LoadBasicParams() As List(Of String)
-            Dim paramEnum() As String = [Enum].GetNames(GetType(BasicParams))
-            Dim paramList As New List(Of String)
-            For Each param In paramEnum
-                paramList.Add(param)
-            Next
-            Return paramList
-        End Function
-
-        Private Function LoadAdvancedParams() As List(Of String)
-            Dim paramEnum() As String = [Enum].GetNames(GetType(AdvancedParams))
-            Dim paramList As New List(Of String)
-            For Each param In paramEnum
-                paramList.Add(param)
-            Next
-            Return paramList
-        End Function
-
-        Private Function LoadIonSeriesParams() As List(Of String)
-            Dim paramEnum() As String = [Enum].GetNames(GetType(IonSeriesParams))
-            Dim paramList As New List(Of String)
-            For Each param In paramEnum
-                paramList.Add(param)
-            Next
-            Return paramList
-        End Function
-
-        Private Function GetParamsFromDMS() As Boolean
-
-            ' SQL to grab param file table
-            ' The ID column is named Param_File_ID
-            Dim query1 = "SELECT Param_File_ID, Param_File_Name, Param_File_Description, Param_File_Type_ID " &
-                         "FROM " & Param_File_Table
-            ' Optional: " WHERE [Param_File_Type_ID] = 1000"
-
-            m_ParamFileTable = GetTable(query1)
-
-            ' SQL to grab param entry table
-            ' The ID column is named Param_Entry_ID
-            Dim query2 = "SELECT Param_Entry_ID, Entry_Sequence_Order, Entry_Type, Entry_Specifier, Entry_Value, Param_File_ID " &
-                         "FROM " & Param_Entry_Table & " " &
-                         "WHERE [Entry_Type] not like '%Modification'"
-
-            m_ParamEntryTable = GetTable(query2)
-
-            Return True
-
-        End Function
-
-        Private Function RetrieveParams(paramSetID As Integer, eParamFileType As eParamFileTypeConstants) As Params
-            Dim p As Params = GetParamSetWithID(paramSetID, eParamFileType)
-            Return p
-        End Function
-
-        'TODO Fix this function for new mod handling
-        Protected Function GetParamSetWithID(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, Optional DisableMassLookup As Boolean = False) As Params
-            Dim matchingRow As DataRow = Nothing
-
-            If Not GetParamFileRowByID(paramSetID, matchingRow) Then
-                ' Match not found
-                Return New Params()
-            End If
-
-            Dim foundRows As DataRow() = m_ParamEntryTable.Select("[Param_File_ID] = " & paramSetID, "[Entry_Sequence_Order]")
-
-            Dim storageSet As DMSParamStorage = MakeStorageClassFromTableRowSet(foundRows)
-
-            If Not DisableMassLookup Then
-                storageSet = GetMassModsFromDMS(paramSetID, eParamFileType, storageSet)
-            End If
-
-            Dim p As Params = UpdateParamSetFromDataCollection(storageSet)
-            p.FileName = DirectCast(matchingRow.Item("Param_File_Name"), String)
-            p.Description = SummarizeDiffColl(storageSet)
-
-            For Each paramRow As DataRow In foundRows
-                p.AddLoadedParamName(paramRow.Item("Entry_Specifier").ToString, paramRow.Item("Entry_Value").ToString)
-            Next
-
-            Return p
-        End Function
-
-        Private Function MakeStorageClassFromTableRowSet(foundRows As IEnumerable(Of DataRow)) As DMSParamStorage
-            Dim foundRow As DataRow
-            Dim storageClass As New DMSParamStorage
-            Dim tmpSpec As String
-            Dim tmpValue As String
-
-            Dim tmpType As DMSParamStorage.ParamTypes
-
-            For Each foundRow In foundRows
-                tmpSpec = DirectCast(foundRow.Item("Entry_Specifier"), String)
-                tmpValue = DirectCast(foundRow.Item("Entry_Value"), String)
-                tmpType = DirectCast([Enum].Parse(GetType(DMSParamStorage.ParamTypes), foundRow.Item("Entry_Type").ToString), DMSParamStorage.ParamTypes)
-
-                storageClass.Add(tmpSpec, tmpValue, tmpType)
-            Next
-
-
-            Return storageClass
-
-        End Function
-
-        Private Function GetMassModsFromDMS(paramSetID As Integer, eParamFileType As eParamFileTypeConstants, ByRef params As DMSParamStorage) As DMSParamStorage
-            Const MaxDynMods = 15
-
-            Dim foundRow As DataRow
-            Dim foundRows() As DataRow
-            Dim tmpSpec As String
-            Dim tmpValue As String
-
-            Dim tmpType As DMSParamStorage.ParamTypes
-
-            'If m_MassMods Is Nothing Or m_MassMods.Rows.Count = 0 Then
-            Dim SQL As String
-
-            SQL = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " &
-              "mc.Monoisotopic_Mass as Monoisotopic_Mass, " &
-              "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " &
-              "FROM " & Param_Mass_Mods_Table & " mm INNER JOIN " &
-              Mass_Corr_Factors & " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " &
-              Residues_Table & " r ON mm.Residue_ID = r.Residue_ID " &
-              "WHERE mm.Param_File_ID = " & paramSetID
-
-            m_MassMods = GetTable(SQL)
-
-            'Look for Dynamic mods
-
-            Dim lstLocalSymbolIDs = New List(Of Integer)
-
-            Select Case eParamFileType
-                Case eParamFileTypeConstants.Sequest
-                    lstLocalSymbolIDs.Add(1)    ' *
-                    lstLocalSymbolIDs.Add(2)    ' #
-                    lstLocalSymbolIDs.Add(3)    ' @
-                    lstLocalSymbolIDs.Add(10)   ' ^
-                    lstLocalSymbolIDs.Add(11)   ' ~
-                    lstLocalSymbolIDs.Add(4)    ' $
-                Case eParamFileTypeConstants.XTandem
-                    lstLocalSymbolIDs.Add(1)    ' *
-                    lstLocalSymbolIDs.Add(2)    ' #
-                    lstLocalSymbolIDs.Add(3)    ' @
-                    lstLocalSymbolIDs.Add(4)    ' $
-                    lstLocalSymbolIDs.Add(5)    ' &
-                    lstLocalSymbolIDs.Add(6)    ' !
-                    lstLocalSymbolIDs.Add(7)    ' %
-            End Select
-
-            For intSymbolID = 1 To MaxDynMods
-                If Not lstLocalSymbolIDs.Contains(intSymbolID) Then
-                    lstLocalSymbolIDs.Add(intSymbolID)
-                End If
-            Next
-
-            For Each intSymbolID As Integer In lstLocalSymbolIDs
-                foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " & intSymbolID & " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]")
-                If foundRows.Length > 0 Then
-                    tmpSpec = GetDynModSpecifier(foundRows)
-                    tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
-                    tmpType = DMSParamStorage.ParamTypes.DynamicModification
-                    params.Add(tmpSpec, tmpValue, tmpType)
-                End If
-
-            Next
-
-            'Find N-Term Dynamic Mods
-            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'")
-            If foundRows.Length > 0 Then
-                tmpSpec = GetDynModSpecifier(foundRows)
-                tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
-                tmpType = DMSParamStorage.ParamTypes.TermDynamicModification
-                params.Add(tmpSpec, tmpValue, tmpType)
-            End If
-
-            'Find C-Term Dynamic Mods
-            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'")
-            If foundRows.Length > 0 Then
-                tmpSpec = GetDynModSpecifier(foundRows)
-                tmpValue = foundRows(0).Item("Monoisotopic_Mass").ToString
-                tmpType = DMSParamStorage.ParamTypes.TermDynamicModification
-                params.Add(tmpSpec, tmpValue, tmpType)
-            End If
-
-            'Look for Static and terminal mods
-
-            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'S' OR [Mod_Type_Symbol] = 'P' or [Mod_Type_Symbol] = 'T'")
-
-            For Each foundRow In foundRows
-                tmpSpec = foundRow.Item("Residue_Symbol").ToString
-                Select Case tmpSpec
-                    Case "<"
-                        tmpSpec = "N_Term_Peptide"
-                    Case ">"
-                        tmpSpec = "C_Term_Peptide"
-                    Case "["
-                        tmpSpec = "N_Term_Protein"
-                    Case "]"
-                        tmpSpec = "C_Term_Protein"
-                End Select
-                tmpValue = foundRow.Item("Monoisotopic_Mass").ToString
-                tmpType = DMSParamStorage.ParamTypes.StaticModification
-                params.Add(tmpSpec, tmpValue, tmpType)
-            Next
-
-            'TODO Still need code to handle import/export of isotopic mods
-
-            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'I'")
-
-            For Each foundRow In foundRows
-                tmpSpec = foundRow.Item("Affected_Atom").ToString
-                tmpValue = foundRow.Item("Monoisotopic_Mass").ToString
-                tmpType = DMSParamStorage.ParamTypes.IsotopicModification
-                params.Add(tmpSpec, tmpValue, tmpType)
-            Next
-
-
-            Return params
-
-        End Function
-
-        Private Function GetDynModSpecifier(rowSet As DataRow()) As String
-
-            Dim tmpSpec = ""
-
-            If rowSet.Length > 0 Then               'We have dynamic mods
-                For Each foundRow As DataRow In rowSet
-                    tmpSpec &= foundRow.Item("Residue_Symbol").ToString
-                Next
-                Return tmpSpec
-            Else
-                Return Nothing
-            End If
-        End Function
-
-        Private Function GetIDWithName(Name As String, eParamFileType As eParamFileTypeConstants) As Integer
-
-            Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_Name] = '" & Name & "' AND [Param_File_Type_ID] = " & eParamFileType)
-            Dim foundRow As DataRow
-            Dim tmpID As Integer
-            If foundRows.Length > 0 Then
-                foundRow = foundRows(0)
-                tmpID = CInt(foundRow.Item("Param_File_ID"))
-            Else
-                tmpID = -1
-            End If
-            Return tmpID
-        End Function
-
-        Private Function GetTypeWithID(paramFileID As Integer) As eParamFileTypeConstants
-            Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_ID] = " & paramFileID.ToString())
-            Dim foundRow As DataRow
-            Dim tmpID As eParamFileTypeConstants
-            If foundRows.Length > 0 Then
-                foundRow = foundRows(0)
-                tmpID = CType(foundRow.Item("Param_File_Type_ID"), eParamFileTypeConstants)
-            Else
-                tmpID = eParamFileTypeConstants.None
-            End If
-            Return tmpID
-        End Function
-
-        Private Function GetTypeWithName(paramFileName As String) As eParamFileTypeConstants
-
-            Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_Name] = '" & paramFileName & "'")
-            Dim foundRow As DataRow
-            Dim tmpID As eParamFileTypeConstants
-            If foundRows.Length > 0 Then
-                foundRow = foundRows(0)
-                tmpID = CType(foundRow.Item("Param_File_Type_ID"), eParamFileTypeConstants)
-            Else
-                tmpID = eParamFileTypeConstants.None
-            End If
-            Return tmpID
-        End Function
-
-        Private Function GetDescriptionWithID(paramFileID As Integer) As String
-            Dim matchingRow As DataRow = Nothing
-
-            If GetParamFileRowByID(paramFileID, matchingRow) Then
-                Dim tmpString = CStr(matchingRow.Item("Param_File_Description"))
-                If String.IsNullOrWhiteSpace(tmpString) Then
-                    Return String.Empty
-                Else
-                    Return tmpString
-                End If
-            Else
-                Return String.Empty
-            End If
-        End Function
-
-        ''' <summary>
-        ''' Finds the row in m_ParamFileTable with the given parameter file ID
-        ''' </summary>
-        ''' <param name="paramFileID"></param>
-        ''' <param name="matchingRow">The row if found, otherwise null</param>
-        ''' <returns>True if the parameter file was found, otherwise false</returns>
-        Private Function GetParamFileRowByID(paramFileID As Integer, <Out> ByRef matchingRow As DataRow) As Boolean
-
-            Dim foundRows As DataRow() = m_ParamFileTable.Select("[Param_File_ID] = " & paramFileID)
-
-            If foundRows.Length > 0 Then
-                matchingRow = foundRows(0)
-                Return True
-            End If
-
-            matchingRow = Nothing
-            Return False
-        End Function
-
-        ''' <summary>
-        ''' Finds parameter file info for SEQUEST, X!Tandem, MSGF+, MSPathFinder, MODPlus, TopPIC, MSFragger, or MaxQuant
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Private Function GetAvailableParamSets() As DataTable
-            Dim paramTableSQL As String =
-              "SELECT " &
-              "  Param_File_ID as ID, " &
-              "  Param_File_Name AS Filename, " &
-              "  Param_File_Description as Diffs, " &
-              "  Param_File_Type_ID as Type_ID " &
-              "FROM T_Param_Files " &
-              "WHERE Param_File_Type_ID = " & eParamFileTypeConstants.Sequest &
-              "   or Param_File_Type_ID = " & eParamFileTypeConstants.XTandem &
-              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MSGFDB &
-              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MSPathFinder &
-              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MODPlus &
-              "   or Param_File_Type_ID = " & eParamFileTypeConstants.TopPIC &
-              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MSFragger &
-              "   or Param_File_Type_ID = " & eParamFileTypeConstants.MaxQuant
-
-            Dim tmpIDTable = GetTable(paramTableSQL)
-
-            ''Load tmpIDTable
-            Dim tmpID As Integer
-            Dim tmpDiffs As String
-            Dim tmpType As Integer
-
-            For Each dr As DataRow In tmpIDTable.Rows
-
-                tmpType = DirectCast(dr.Item("Type_ID"), Integer)
-
-                If tmpType = eParamFileTypeConstants.Sequest Then
-
-                    tmpID = DirectCast(dr.Item("ID"), Integer)
-                    tmpDiffs = DirectCast(dr.Item("Diffs"), String)
-                    If tmpDiffs Is Nothing Then
-                        Dim eParamFileTypeID As eParamFileTypeConstants
-                        eParamFileTypeID = CType(tmpType, eParamFileTypeConstants)
-
-                        tmpDiffs = DistillFeaturesFromParamSet(tmpID, eParamFileTypeID)
-
-                        dr.Item("Diffs") = tmpDiffs
-                        dr.AcceptChanges()
-                    End If
-                End If
-            Next
-
-            Return tmpIDTable
-
-            'Need filtering code for tmpIDTable here...
-
-        End Function
-
-        Private Function GetParamFileTypes() As DataTable
-            Dim tmpTypeTable As DataTable
-            Dim tableTypesSQL As String
-            tableTypesSQL =
-                "SELECT Param_File_Type_ID as ID, Param_File_Type AS Type " &
-                "FROM T_Param_File_Types"
-
-            tmpTypeTable = GetTable(tableTypesSQL)
-
-            Return tmpTypeTable
-
-        End Function
-
-        Protected Function DistillFeaturesFromParamSet(paramSet As Params) As String
-            Dim templateColl As DMSParamStorage = WriteDataCollectionFromParamSet(m_BaseLineParamSet)
-            Dim checkColl As DMSParamStorage = WriteDataCollectionFromParamSet(paramSet)
-
-
-            Dim diffColl As DMSParamStorage = CompareDataCollections(templateColl, checkColl)
-            Return SummarizeDiffColl(diffColl)
-
-        End Function
-
-        Protected Function DistillFeaturesFromParamSet(paramSetID As Integer, eParamFileTypeID As eParamFileTypeConstants) As String
-            Dim p As Params = GetParamSetWithID(paramSetID, eParamFileTypeID)
-
-            Return p.Description
-
-        End Function
-
-        Private Function WriteDataCollectionFromParamSet(paramSet As Params) As DMSParamStorage
-            Dim c = New DMSParamStorage()
-
-            Dim pType As Type = paramSet.GetType
-            Dim tmpType As Type
-            Dim pProps As PropertyInfo() = pType.GetProperties((BindingFlags.Public Or BindingFlags.Instance))
-            Dim pProp As PropertyInfo
-
-            Dim tmpName As String
-            Dim tmpValue As String
-
-            For Each pProp In pProps
-                tmpName = pProp.Name
-                tmpType = pProp.PropertyType
-                If m_AcceptableParams.Contains(tmpName) Then
-                    If (tmpType.Name = "IonSeries") Then
-                        c = ExpandIonSeries(paramSet.IonSeries, c)
-
-                    ElseIf (tmpType.Name = "IsoMods") Then
-                        c = ExpandIsoTopicMods(paramSet.IsotopicMods, c)
-
-                    ElseIf tmpType.Name = "DynamicMods" Then
-                        c = ExpandDynamicMods(paramSet.DynamicMods, c, DMSParamStorage.ParamTypes.DynamicModification)
-
-                    ElseIf tmpType.Name = "TermDynamicMods" Then
-                        c = ExpandDynamicMods(paramSet.TermDynamicMods, c, DMSParamStorage.ParamTypes.TermDynamicModification)
-
-                    ElseIf (tmpType.Name = "StaticMods") Then
-                        c = ExpandStaticMods(paramSet.StaticModificationsList, c)
-
-                    ElseIf m_BasicParams.Contains(tmpName) Then
-                        tmpValue = (pProp.GetValue(paramSet, Nothing)).ToString
-                        c.Add(tmpName, tmpValue.ToString, DMSParamStorage.ParamTypes.BasicParam)
-                    ElseIf m_AdvancedParams.Contains(tmpName) Then
-                        tmpValue = (pProp.GetValue(paramSet, Nothing)).ToString
-                        c.Add(tmpName, tmpValue.ToString, DMSParamStorage.ParamTypes.AdvancedParam)
-                    End If
-                End If
-
-            Next
-
-            Return c
-
-        End Function
-
-        Private Function UpdateParamSetFromDataCollection(dc As DMSParamStorage) As Params
-            Dim p As New Params
-            Dim tmpSpec As String
-            Dim tmpValue As Object
-            Dim tmpType As DMSParamStorage.ParamTypes
-            Dim tmpTypeName As String
-
-            'p = MainProcess.BaseLineParamSet
-            p.LoadTemplate(MainProcess.TemplateFileName)
-            Dim pType As Type = GetType(Params)
-            Dim pFields As PropertyInfo() = pType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
-            Dim pField As PropertyInfo = Nothing
-
-            Dim ionType As Type = GetType(IonSeries)
-            Dim ionFields As PropertyInfo() = ionType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
-            Dim ionField As PropertyInfo
-
-            Dim paramEntry As DMSParamStorage.ParamsEntry
-
-            For Each paramEntry In dc
-                tmpSpec = paramEntry.Specifier
-                tmpValue = paramEntry.Value
-                tmpType = paramEntry.Type
-
-                If tmpType = DMSParamStorage.ParamTypes.BasicParam And
-                    m_BasicParams.Contains(tmpSpec) Then
-
-                    For Each pField In pFields
-                        If pField.Name = tmpSpec Then
-                            tmpTypeName = pField.PropertyType.Name
-                            If tmpTypeName = "Int32" Then
-                                pField.SetValue(p, CType(tmpValue, Int32), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "Single" Then
-                                pField.SetValue(p, CType(tmpValue, Single), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "String" Then
-                                pField.SetValue(p, CType(tmpValue, String), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "Boolean" Then
-                                pField.SetValue(p, CType(tmpValue, Boolean), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "MassTypeList" Then
-                                pField.SetValue(p, CType([Enum].Parse(GetType(IBasicParams.MassTypeList), CStr(tmpValue), True), IBasicParams.MassTypeList), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "MassUnitList" Then
-                                pField.SetValue(p, CType([Enum].Parse(GetType(IAdvancedParams.MassUnitList), CStr(tmpValue), True), IAdvancedParams.MassUnitList), Nothing)
-                            Else
-                                Console.WriteLine(pField.PropertyType.Name.ToString)
-                            End If
-
-                            Exit For
-                        End If
-                    Next
-
-                ElseIf tmpType = DMSParamStorage.ParamTypes.AdvancedParam And
-                    m_AdvancedParams.Contains(tmpSpec) Then
-
-                    For Each pField In pFields
-                        If pField.Name = tmpSpec Then
-                            tmpTypeName = pField.PropertyType.Name
-                            If tmpTypeName = "Int32" Then
-                                pField.SetValue(p, CType(tmpValue, Int32), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "Single" Then
-                                pField.SetValue(p, CType(tmpValue, Single), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "String" Then
-                                pField.SetValue(p, CType(tmpValue, String), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "Boolean" Then
-                                pField.SetValue(p, CType(tmpValue, Boolean), Nothing)
-                                Exit For
-                            Else
-                                Console.WriteLine(pField.PropertyType.Name.ToString)
-                            End If
-
-                            Exit For
-                        End If
-                    Next
-
-                ElseIf tmpType = DMSParamStorage.ParamTypes.AdvancedParam And
-                    m_IonSeriesParams.Contains(tmpSpec) Then
-
-                    For Each ionField In ionFields
-                        If ionField.Name = tmpSpec Then
-                            tmpTypeName = ionField.PropertyType.Name
-                            If tmpTypeName = "Int32" Then
-                                ionField.SetValue(p.IonSeries, CType(tmpValue, Int32), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "Single" Then
-                                ionField.SetValue(p.IonSeries, CType(tmpValue, Single), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "String" Then
-                                ionField.SetValue(p.IonSeries, CType(tmpValue, String), Nothing)
-                                Exit For
-                            ElseIf tmpTypeName = "Boolean" Then
-                                ionField.SetValue(p.IonSeries, CType(tmpValue, Boolean), Nothing)
-                                Exit For
-                            Else
-                                Console.WriteLine(pField.PropertyType.Name.ToString)
-                            End If
-                        End If
-                    Next
-
-                ElseIf tmpType = DMSParamStorage.ParamTypes.DynamicModification Then
-
-                    p.DynamicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue.ToString)))
-                ElseIf tmpType = DMSParamStorage.ParamTypes.StaticModification Then
-                    p.StaticModificationsList.Add(tmpSpec.ToString, CDbl(Val(tmpValue.ToString)))
-                ElseIf tmpType = DMSParamStorage.ParamTypes.IsotopicModification Then
-                    p.IsotopicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue)))
-                ElseIf tmpType = DMSParamStorage.ParamTypes.TermDynamicModification Then
-                    p.TermDynamicMods.Add(tmpSpec.ToString, CDbl(Val(tmpValue)))
-                End If
-            Next
-
-            Return p
-
-        End Function
-
-        Private Function ExpandDynamicMods(DynModSet As DynamicMods, ByRef ParamCollection As DMSParamStorage, eDynModType As DMSParamStorage.ParamTypes) As DMSParamStorage
-            Dim maxCount As Integer = DynModSet.Count
-            Dim counter As Integer
-            Dim tmpName As String
-            Dim tmpValue As String
-
-            If maxCount = 0 Then
-                Return ParamCollection
-            End If
-
-            If eDynModType <> DMSParamStorage.ParamTypes.DynamicModification And
-               eDynModType <> DMSParamStorage.ParamTypes.TermDynamicModification Then
-                ' This is unexpected; force eDynModType to be .DynamicModification
-                eDynModType = DMSParamStorage.ParamTypes.DynamicModification
-            End If
-
-            For counter = 1 To maxCount
-                tmpName = DynModSet.Dyn_Mod_n_AAList(counter)
-                tmpValue = Format(DynModSet.Dyn_Mod_n_MassDiff(counter), "0.00000")
-                ParamCollection.Add(tmpName, tmpValue, eDynModType)
-            Next
-
-            Return ParamCollection
-
-        End Function
-
-        Private Function ExpandStaticMods(StatModSet As StaticMods, ByRef ParamCollection As DMSParamStorage) As DMSParamStorage
-            Dim maxCount As Integer = StatModSet.Count
-            Dim counter As Integer
-            Dim tmpName As String
-            Dim tmpValue As String
-
-            If maxCount = 0 Then
-                Return ParamCollection
-            End If
-
-            For counter = 0 To maxCount - 1
-                tmpName = StatModSet.GetResidue(counter)
-                tmpValue = StatModSet.GetMassDiff(counter)
-                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.StaticModification)
-            Next
-
-            Return ParamCollection
-
-        End Function
-
-        Private Function ExpandIsoTopicMods(IsoModSet As IsoMods, ByRef ParamCollection As DMSParamStorage) As DMSParamStorage
-            Dim maxCount As Integer = IsoModSet.Count
-            Dim counter As Integer
-            Dim tmpName As String
-            Dim tmpValue As String
-
-            If maxCount = 0 Then
-                Return ParamCollection
-            End If
-
-            For counter = 0 To maxCount - 1
-                tmpName = IsoModSet.GetAtom(counter)
-                tmpValue = IsoModSet.GetMassDiff(counter)
-                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.IsotopicModification)
-            Next
-
-            Return ParamCollection
-        End Function
-
-        Private Function ExpandIonSeries(IonSeriesSet As IonSeries, ByRef ParamCollection As DMSParamStorage) As DMSParamStorage
-            Dim pType As Type = GetType(IonSeries)
-            Dim pFields As PropertyInfo() = pType.GetProperties(BindingFlags.Instance Or BindingFlags.Public)
-            Dim pField As PropertyInfo
-
-            For Each pField In pFields
-                Dim tmpName As String = pField.Name
-                Dim tmpValue As String = pField.GetValue(IonSeriesSet, Nothing).ToString
-                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.AdvancedParam)
-            Next
-
-            Return ParamCollection
-        End Function
-
-        Private Function DoesParamSetNameExist(paramSetName As String) As Boolean
-
-            Dim eParamFileType As eParamFileTypeConstants
-            eParamFileType = GetTypeWithName(paramSetName)
-
-            If eParamFileType = eParamFileTypeConstants.Unknown Then
-                Console.WriteLine("Parameter file " & paramSetName & "  was not found in table " & Param_File_Table)
-                Return False
-            End If
-
-            If eParamFileType <> eParamFileTypeConstants.Sequest Then
-                ' This param file type is not supported for export from DMS
-                Dim paramFileTypeName As String = [Enum].GetName(GetType(eParamFileTypeConstants), eParamFileType)
-                If String.IsNullOrEmpty(paramFileTypeName) Then
-                    paramFileTypeName = "Unknown"
-                End If
-
-                Console.WriteLine("Parameter file " & paramSetName & " is of type " & paramFileTypeName & ", which isn't supported for export from DMS")
-                Return False
-            End If
-
-            Dim tmpID As Integer = GetIDWithName(paramSetName, eParamFileType)
-            If tmpID < 0 Then
-                Console.WriteLine("Parameter file " & paramSetName & " with type ID " & eParamFileType.ToString() & " was not found in table " & Param_File_Table)
-                Return False
-            End If
-
-            Return True
-
-        End Function
-
-        Private Function DoesParamSetIDExist(paramSetID As Integer) As Boolean
-            Dim matchingRow As DataRow = Nothing
-            Return GetParamFileRowByID(paramSetID, matchingRow)
-        End Function
-
-        Protected Function CompareParamSets(ByRef templateSet As Params, ByRef checkSet As Params) As String
-            Dim diffCollection As DMSParamStorage = GetDiffColl(templateSet, checkSet)
-            Return SummarizeDiffColl(diffCollection)
-        End Function
-
-        Protected Function GetDiffColl(ByRef templateSet As Params, ByRef checkSet As Params) As DMSParamStorage
-            Dim templateColl As DMSParamStorage = WriteDataCollectionFromParamSet(templateSet)
-            Dim checkColl As DMSParamStorage = WriteDataCollectionFromParamSet(checkSet)
-
-            Dim diffCollection As DMSParamStorage = CompareDataCollections(templateColl, checkColl)
-            Return diffCollection
-        End Function
-
-        Private Function SummarizeDiffColl(ByRef diffColl As DMSParamStorage) As String
-
-            Dim maxIndex As Integer = diffColl.Count - 1
-            Dim index As Integer
-            Dim tmpString As String
-
-            Dim tmpIsoMods = ""
-            Dim tmpOtherParams = ""
-
-            Dim tmpDynModsList As Queue = Nothing
-            Dim tmpTermDynModsList As Queue = Nothing
-            Dim tmpStatModsList As Queue = Nothing
-            Dim tmpIsoModsList As Queue = Nothing
-            Dim tmpOtherParamsList As Queue = Nothing
-
-            Dim intDynModCount = 0
-            Dim intTermDynModCount = 0
-
-            For index = 0 To maxIndex
-                Dim tmpType = diffColl.Item(index).Type
-                Dim tmpSpec = diffColl.Item(index).Specifier
-                Dim tmpValue = diffColl.Item(index).Value
-
-                Dim dblValue As Double
-                Dim tmpValueFormatted As String
-                Dim tmpSign As String
-
-                If Double.TryParse(tmpValue, dblValue) Then
-                    tmpValueFormatted = dblValue.ToString("0.0000")
-                    If dblValue > 0 Then
-                        tmpSign = "+"
-                    Else
-                        tmpSign = ""
-                    End If
-                Else
-                    tmpValueFormatted = String.Copy(tmpValue)
-                    tmpSign = ""
-                End If
-
-                If tmpType = DMSParamStorage.ParamTypes.StaticModification Then
-
-                    If tmpStatModsList Is Nothing Then
-                        tmpStatModsList = New Queue()
-                        tmpStatModsList.Enqueue("Static Mods: ")
-                    End If
-                    tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
-
-
-                ElseIf tmpType = DMSParamStorage.ParamTypes.DynamicModification Then
-
-                    If tmpDynModsList Is Nothing Then
-                        tmpDynModsList = New Queue()
-                        tmpDynModsList.Enqueue("Dynamic Mods: ")
-                    End If
-                    tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
-
-                    intDynModCount += 1
-
-
-                ElseIf tmpType = DMSParamStorage.ParamTypes.TermDynamicModification Then
-
-                    If tmpSpec = "<" Then
-                        tmpSpec = "N-Term Peptide"
-                    ElseIf tmpSpec = ">" Then
-                        tmpSpec = "C-Term Peptide"
-                    End If
-
-                    If tmpTermDynModsList Is Nothing Then
-                        tmpTermDynModsList = New Queue()
-                        tmpTermDynModsList.Enqueue("PepTerm Dynamic Mods: ")
-                    End If
-                    tmpTermDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
-
-                    intTermDynModCount += 1
-
-
-                ElseIf tmpType = DMSParamStorage.ParamTypes.IsotopicModification Then
-
-                    If tmpIsoMods = "" Then
-                        tmpIsoMods = "Isotopic Mods: "
-                    End If
-
-                    If tmpIsoModsList Is Nothing Then
-                        tmpIsoModsList = New Queue()
-                        tmpIsoModsList.Enqueue(tmpIsoMods)
-                    End If
-                    tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")")
-
-
-                Else
-                    If tmpOtherParams = "" Then
-                        tmpOtherParams = "Other Parameters: "
-                    End If
-
-                    If tmpOtherParamsList Is Nothing Then
-                        tmpOtherParamsList = New Queue()
-                        tmpOtherParamsList.Enqueue(tmpOtherParams)
-                    End If
-                    tmpOtherParamsList.Enqueue(tmpSpec & " = " & tmpValue)
-
-                End If
-            Next
-
-            ' Build the string describing the mods
-            tmpString = ""
-
-            tmpString = MakeListOfMods(tmpString, tmpDynModsList, True)
-
-            tmpString = MakeListOfMods(tmpString, tmpTermDynModsList, False)
-            If intDynModCount = 0 And intTermDynModCount > 0 Then
-                tmpString = "Dynamic Mods: " & tmpString
-            End If
-
-            tmpString = MakeListOfMods(tmpString, tmpStatModsList, True)
-            tmpString = MakeListOfMods(tmpString, tmpIsoModsList, True)
-            tmpString = MakeListOfMods(tmpString, tmpOtherParamsList, True)
-
-
-            If tmpString = Nothing OrElse tmpString.Length = 0 Then
-                tmpString = " --No Change-- "
-            End If
-
-            Return tmpString
-
-
-        End Function
-
-        Private Function MakeListOfMods(strModDescriptionPrevious As String,
-                                        objModList As Queue,
-                                        blnAddTitlePrefix As Boolean) As String
-
-            If strModDescriptionPrevious Is Nothing Then strModDescriptionPrevious = ""
-            If objModList Is Nothing Then
-                Return strModDescriptionPrevious
-            End If
-
-            If objModList.Count > 0 Then
-                If strModDescriptionPrevious.Length > 0 Then strModDescriptionPrevious += ", "
-
-                Dim tmpElement = ""
-                Dim elementTitle = objModList.Dequeue.ToString
-                While objModList.Count > 0
-                    Dim subItem = objModList.Dequeue().ToString
-                    If tmpElement.Length > 0 Then tmpElement += ", "
-                    tmpElement += subItem
-                End While
-
-                If blnAddTitlePrefix Then
-                    strModDescriptionPrevious += elementTitle + tmpElement
-                Else
-                    strModDescriptionPrevious += tmpElement
-                End If
-
-            End If
-
-            Return strModDescriptionPrevious
-
-        End Function
-
-        Private Function CompareDataCollections(templateColl As DMSParamStorage, checkColl As DMSParamStorage) As DMSParamStorage
-            Dim diffColl As New DMSParamStorage()
-            Dim maxIndex As Integer = checkColl.Count - 1
-
-            For checkIndex = 0 To maxIndex
-                Dim tmpCType = checkColl.Item(checkIndex).Type
-                Dim tmpCSpec = checkColl.Item(checkIndex).Specifier
-                Dim tmpCVal = checkColl.Item(checkIndex).Value
-
-
-                Dim templateIndex = templateColl.IndexOf(tmpCSpec, tmpCType)
-
-                If templateIndex >= 0 Then
-                    Dim tmpTType = templateColl.Item(templateIndex).Type
-                    Dim tmpTSpec = templateColl.Item(templateIndex).Specifier
-                    Dim tmpTVal = templateColl.Item(templateIndex).Value
-                    ' Dim tmpTemp = tmpTType.ToString & " - " & tmpTSpec & " = " & tmpTVal
-                    ' Dim tmpCheck = tmpCType.ToString & " - " & tmpCSpec & " = " & tmpCVal
-
-                    If tmpTType.ToString & tmpTSpec = tmpCType.ToString & tmpCSpec Then
-                        If tmpTVal.Equals(tmpCVal) Then
-
-                        Else
-                            diffColl.Add(tmpCSpec, tmpCVal, tmpTType)
-                        End If
-                    End If
-                Else
-                    diffColl.Add(tmpCSpec, tmpCVal, tmpCType)
-                End If
-
-
-            Next
-
-            Return diffColl
-
-        End Function
-
-    End Class
-
-End Namespace
+        }
+
+        private int m_ID;
+        private string m_Name;
+        private eParamFileTypeConstants m_ParamFileType;
+        private Params m_Params;
+
+        /// <summary>
+        /// Parameter file table
+        /// </summary>
+        private DataTable m_ParamFileTable;
+        private DataTable m_ParamEntryTable;
+
+        private readonly Params m_BaseLineParamSet;
+        private readonly List<string> m_AcceptableParams;
+        private readonly List<string> m_BasicParams;
+        private readonly List<string> m_AdvancedParams;
+        private readonly List<string> m_IonSeriesParams;
+        private DataTable m_MassMods;
+
+        public bool ParamFileTableLoaded
+        {
+            get
+            {
+                return m_ParamFileTable is not null && m_ParamFileTable.Rows.Count > 0;
+            }
+        }
+
+        #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+        public ParamsFromDMS(IDBTools dbTools) : base(dbTools)
+        #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
+        {
+
+            m_AcceptableParams = LoadAcceptableParamList();
+            m_BasicParams = LoadBasicParams();
+            m_AdvancedParams = LoadAdvancedParams();
+            m_IonSeriesParams = LoadIonSeriesParams();
+            m_BaseLineParamSet = MainProcess.BaseLineParamSet;
+
+            bool success = GetParamsFromDMS();
+            if (!success)
+            {
+                throw new Exception("Unable to obtain data from " + Param_File_Table + " and/or " + Param_Entry_Table);
+            }
+        }
+
+        public void RefreshParamsFromDMS()
+        {
+            GetParamsFromDMS();
+        }
+
+        public Params ReadParamsFromDMS(string paramSetName)
+        {
+            // Retrieve ID number first, then use the same procedure as below
+            m_Name = paramSetName;
+
+            m_ParamFileType = GetTypeWithName(paramSetName);
+
+            if (m_ParamFileType == eParamFileTypeConstants.Unknown)
+            {
+                throw new Exception("Parameter file " + paramSetName + " was not found in table " + Param_File_Table);
+            }
+
+            if (m_ParamFileType != eParamFileTypeConstants.Sequest)
+            {
+                // This param file type is not supported for export from DMS
+                string paramFileTypeName = Enum.GetName(typeof(eParamFileTypeConstants), m_ParamFileType);
+                if (string.IsNullOrEmpty(paramFileTypeName))
+                {
+                    paramFileTypeName = "Unknown";
+                }
+
+                throw new NotSupportedException("Parameter file " + paramSetName + " is of type " + paramFileTypeName + ", which isn't support for export from DMS");
+            }
+
+            m_ID = GetIDWithName(m_Name, m_ParamFileType);
+
+            m_Params = RetrieveParams(m_ID, m_ParamFileType);
+            return m_Params;
+
+        }
+
+        public Params ReadParamsFromDMS(int paramSetID)
+        {
+            m_ID = paramSetID;
+            m_ParamFileType = GetTypeWithID(m_ID);
+
+            if (m_ParamFileType == eParamFileTypeConstants.Unknown)
+            {
+                throw new Exception("Parameter file ID " + paramSetID + " was not found in table " + Param_File_Table);
+            }
+
+            if (m_ParamFileType != eParamFileTypeConstants.Sequest)
+            {
+                // This param file type is not supported for export from DMS
+                throw new NotSupportedException("Parameter file ID " + paramSetID + " is of type " + Enum.GetName(typeof(eParamFileTypeConstants), m_ParamFileType) + ", which isn't support for export from DMS");
+            }
+
+            m_Params = RetrieveParams(m_ID, m_ParamFileType);
+            return m_Params;
+        }
+
+        public DataTable RetrieveAvailableParams()
+        {
+            return GetAvailableParamSets();
+        }
+
+        public DataTable RetrieveParamFileTypes()
+        {
+            return GetParamFileTypes();
+        }
+
+        public bool ParamSetNameExists(string paramSetName)
+        {
+            return DoesParamSetNameExist(paramSetName);
+        }
+
+        public bool ParamSetIDExists(int paramSetID)
+        {
+            return DoesParamSetIDExist(paramSetID);
+        }
+
+        public int GetParamSetIDFromName(string Name)
+        {
+            eParamFileTypeConstants eParamFileType;
+            eParamFileType = GetTypeWithName(Name);
+
+            if (eParamFileType == eParamFileTypeConstants.Unknown)
+            {
+                Console.WriteLine("Parameter file " + Name + "  was not found in table " + Param_File_Table);
+                return -1;
+            }
+
+            return GetIDWithName(Name, eParamFileType);
+        }
+
+        private List<string> LoadAcceptableParamList()
+        {
+            var paramEnum = Enum.GetNames(typeof(AcceptableParams));
+            var paramList = new List<string>();
+            foreach (var param in paramEnum)
+                paramList.Add(param);
+            return paramList;
+        }
+
+        private List<string> LoadBasicParams()
+        {
+            var paramEnum = Enum.GetNames(typeof(BasicParams));
+            var paramList = new List<string>();
+            foreach (var param in paramEnum)
+                paramList.Add(param);
+            return paramList;
+        }
+
+        private List<string> LoadAdvancedParams()
+        {
+            var paramEnum = Enum.GetNames(typeof(AdvancedParams));
+            var paramList = new List<string>();
+            foreach (var param in paramEnum)
+                paramList.Add(param);
+            return paramList;
+        }
+
+        private List<string> LoadIonSeriesParams()
+        {
+            var paramEnum = Enum.GetNames(typeof(IonSeriesParams));
+            var paramList = new List<string>();
+            foreach (var param in paramEnum)
+                paramList.Add(param);
+            return paramList;
+        }
+
+        private bool GetParamsFromDMS()
+        {
+
+            // SQL to grab param file table
+            // The ID column is named Param_File_ID
+            string query1 = "SELECT Param_File_ID, Param_File_Name, Param_File_Description, Param_File_Type_ID " + "FROM " + Param_File_Table;
+            // Optional: " WHERE [Param_File_Type_ID] = 1000"
+
+            m_ParamFileTable = GetTable(query1);
+
+            // SQL to grab param entry table
+            // The ID column is named Param_Entry_ID
+            string query2 = "SELECT Param_Entry_ID, Entry_Sequence_Order, Entry_Type, Entry_Specifier, Entry_Value, Param_File_ID " + "FROM " + Param_Entry_Table + " " + "WHERE [Entry_Type] not like '%Modification'";
+
+            m_ParamEntryTable = GetTable(query2);
+
+            return true;
+
+        }
+
+        private Params RetrieveParams(int paramSetID, eParamFileTypeConstants eParamFileType)
+        {
+            var p = GetParamSetWithID(paramSetID, eParamFileType);
+            return p;
+        }
+
+        // TODO Fix this function for new mod handling
+        protected Params GetParamSetWithID(int paramSetID, eParamFileTypeConstants eParamFileType, bool DisableMassLookup = false)
+        {
+            DataRow matchingRow = null;
+
+            if (!GetParamFileRowByID(paramSetID, out matchingRow))
+            {
+                // Match not found
+                return new Params();
+            }
+
+            var foundRows = m_ParamEntryTable.Select("[Param_File_ID] = " + paramSetID, "[Entry_Sequence_Order]");
+
+            var storageSet = MakeStorageClassFromTableRowSet(foundRows);
+
+            if (!DisableMassLookup)
+            {
+                storageSet = GetMassModsFromDMS(paramSetID, eParamFileType, ref storageSet);
+            }
+
+            var p = UpdateParamSetFromDataCollection(storageSet);
+            p.FileName = (string)matchingRow["Param_File_Name"];
+            p.Description = SummarizeDiffColl(ref storageSet);
+
+            foreach (DataRow paramRow in foundRows)
+                p.AddLoadedParamName(paramRow["Entry_Specifier"].ToString(), paramRow["Entry_Value"].ToString());
+
+            return p;
+        }
+
+        private DMSParamStorage MakeStorageClassFromTableRowSet(IEnumerable<DataRow> foundRows)
+        {
+            var storageClass = new DMSParamStorage();
+            string tmpSpec;
+            string tmpValue;
+
+            DMSParamStorage.ParamTypes tmpType;
+
+            foreach (var foundRow in foundRows)
+            {
+                tmpSpec = (string)foundRow["Entry_Specifier"];
+                tmpValue = (string)foundRow["Entry_Value"];
+                tmpType = (DMSParamStorage.ParamTypes)Enum.Parse(typeof(DMSParamStorage.ParamTypes), foundRow["Entry_Type"].ToString());
+
+                storageClass.Add(tmpSpec, tmpValue, tmpType);
+            }
+
+
+            return storageClass;
+
+        }
+
+        private DMSParamStorage GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType, ref DMSParamStorage @params)
+        {
+            const int MaxDynMods = 15;
+
+            DataRow foundRow;
+            DataRow[] foundRows;
+            string tmpSpec;
+            string tmpValue;
+
+            DMSParamStorage.ParamTypes tmpType;
+
+            // If m_MassMods Is Nothing Or m_MassMods.Rows.Count = 0 Then
+            string SQL;
+
+            SQL = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " + "mc.Monoisotopic_Mass as Monoisotopic_Mass, " + "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " + "FROM " + Param_Mass_Mods_Table + " mm INNER JOIN " + Mass_Corr_Factors + " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " + Residues_Table + " r ON mm.Residue_ID = r.Residue_ID " + "WHERE mm.Param_File_ID = " + paramSetID;
+
+            m_MassMods = GetTable(SQL);
+
+            // Look for Dynamic mods
+
+            var lstLocalSymbolIDs = new List<int>();
+
+            switch (eParamFileType)
+            {
+                case eParamFileTypeConstants.Sequest:
+                    {
+                        lstLocalSymbolIDs.Add(1);    // *
+                        lstLocalSymbolIDs.Add(2);    // #
+                        lstLocalSymbolIDs.Add(3);    // @
+                        lstLocalSymbolIDs.Add(10);   // ^
+                        lstLocalSymbolIDs.Add(11);   // ~
+                        lstLocalSymbolIDs.Add(4);    // $
+                        break;
+                    }
+                case eParamFileTypeConstants.XTandem:
+                    {
+                        lstLocalSymbolIDs.Add(1);    // *
+                        lstLocalSymbolIDs.Add(2);    // #
+                        lstLocalSymbolIDs.Add(3);    // @
+                        lstLocalSymbolIDs.Add(4);    // $
+                        lstLocalSymbolIDs.Add(5);    // &
+                        lstLocalSymbolIDs.Add(6);    // !
+                        lstLocalSymbolIDs.Add(7);    // %
+                        break;
+                    }
+            }
+
+            for (int intSymbolID = 1; intSymbolID <= MaxDynMods; intSymbolID++)
+            {
+                if (!lstLocalSymbolIDs.Contains(intSymbolID))
+                {
+                    lstLocalSymbolIDs.Add(intSymbolID);
+                }
+            }
+
+            foreach (int intSymbolID in lstLocalSymbolIDs)
+            {
+                foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " + intSymbolID + " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]");
+                if (foundRows.Length > 0)
+                {
+                    tmpSpec = GetDynModSpecifier(foundRows);
+                    tmpValue = foundRows[0]["Monoisotopic_Mass"].ToString();
+                    tmpType = DMSParamStorage.ParamTypes.DynamicModification;
+                    @params.Add(tmpSpec, tmpValue, tmpType);
+                }
+
+            }
+
+            // Find N-Term Dynamic Mods
+            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'");
+            if (foundRows.Length > 0)
+            {
+                tmpSpec = GetDynModSpecifier(foundRows);
+                tmpValue = foundRows[0]["Monoisotopic_Mass"].ToString();
+                tmpType = DMSParamStorage.ParamTypes.TermDynamicModification;
+                @params.Add(tmpSpec, tmpValue, tmpType);
+            }
+
+            // Find C-Term Dynamic Mods
+            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'");
+            if (foundRows.Length > 0)
+            {
+                tmpSpec = GetDynModSpecifier(foundRows);
+                tmpValue = foundRows[0]["Monoisotopic_Mass"].ToString();
+                tmpType = DMSParamStorage.ParamTypes.TermDynamicModification;
+                @params.Add(tmpSpec, tmpValue, tmpType);
+            }
+
+            // Look for Static and terminal mods
+
+            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'S' OR [Mod_Type_Symbol] = 'P' or [Mod_Type_Symbol] = 'T'");
+
+            foreach (var currentFoundRow in foundRows)
+            {
+                foundRow = currentFoundRow;
+                tmpSpec = foundRow["Residue_Symbol"].ToString();
+                switch (tmpSpec ?? "")
+                {
+                    case "<":
+                        {
+                            tmpSpec = "N_Term_Peptide";
+                            break;
+                        }
+                    case ">":
+                        {
+                            tmpSpec = "C_Term_Peptide";
+                            break;
+                        }
+                    case "[":
+                        {
+                            tmpSpec = "N_Term_Protein";
+                            break;
+                        }
+                    case "]":
+                        {
+                            tmpSpec = "C_Term_Protein";
+                            break;
+                        }
+                }
+                tmpValue = foundRow["Monoisotopic_Mass"].ToString();
+                tmpType = DMSParamStorage.ParamTypes.StaticModification;
+                @params.Add(tmpSpec, tmpValue, tmpType);
+            }
+
+            // TODO Still need code to handle import/export of isotopic mods
+
+            foundRows = m_MassMods.Select("[Mod_Type_Symbol] = 'I'");
+
+            foreach (var currentFoundRow1 in foundRows)
+            {
+                foundRow = currentFoundRow1;
+                tmpSpec = foundRow["Affected_Atom"].ToString();
+                tmpValue = foundRow["Monoisotopic_Mass"].ToString();
+                tmpType = DMSParamStorage.ParamTypes.IsotopicModification;
+                @params.Add(tmpSpec, tmpValue, tmpType);
+            }
+
+
+            return @params;
+
+        }
+
+        private string GetDynModSpecifier(DataRow[] rowSet)
+        {
+
+            string tmpSpec = "";
+
+            if (rowSet.Length > 0)               // We have dynamic mods
+            {
+                foreach (DataRow foundRow in rowSet)
+                    tmpSpec += foundRow["Residue_Symbol"].ToString();
+                return tmpSpec;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private int GetIDWithName(string Name, eParamFileTypeConstants eParamFileType)
+        {
+
+            var foundRows = m_ParamFileTable.Select("[Param_File_Name] = '" + Name + "' AND [Param_File_Type_ID] = " + ((int)eParamFileType).ToString());
+            DataRow foundRow;
+            int tmpID;
+            if (foundRows.Length > 0)
+            {
+                foundRow = foundRows[0];
+                tmpID = Conversions.ToInteger(foundRow["Param_File_ID"]);
+            }
+            else
+            {
+                tmpID = -1;
+            }
+            return tmpID;
+        }
+
+        private eParamFileTypeConstants GetTypeWithID(int paramFileID)
+        {
+            var foundRows = m_ParamFileTable.Select("[Param_File_ID] = " + paramFileID.ToString());
+            DataRow foundRow;
+            eParamFileTypeConstants tmpID;
+            if (foundRows.Length > 0)
+            {
+                foundRow = foundRows[0];
+                tmpID = (eParamFileTypeConstants)Conversions.ToInteger(foundRow["Param_File_Type_ID"]);
+            }
+            else
+            {
+                tmpID = eParamFileTypeConstants.None;
+            }
+            return tmpID;
+        }
+
+        private eParamFileTypeConstants GetTypeWithName(string paramFileName)
+        {
+
+            var foundRows = m_ParamFileTable.Select("[Param_File_Name] = '" + paramFileName + "'");
+            DataRow foundRow;
+            eParamFileTypeConstants tmpID;
+            if (foundRows.Length > 0)
+            {
+                foundRow = foundRows[0];
+                tmpID = (eParamFileTypeConstants)Conversions.ToInteger(foundRow["Param_File_Type_ID"]);
+            }
+            else
+            {
+                tmpID = eParamFileTypeConstants.None;
+            }
+            return tmpID;
+        }
+
+        private string GetDescriptionWithID(int paramFileID)
+        {
+            DataRow matchingRow = null;
+
+            if (GetParamFileRowByID(paramFileID, out matchingRow))
+            {
+                string tmpString = Conversions.ToString(matchingRow["Param_File_Description"]);
+                if (string.IsNullOrWhiteSpace(tmpString))
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    return tmpString;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Finds the row in m_ParamFileTable with the given parameter file ID
+        /// </summary>
+        /// <param name="paramFileID"></param>
+        /// <param name="matchingRow">The row if found, otherwise null</param>
+        /// <returns>True if the parameter file was found, otherwise false</returns>
+        private bool GetParamFileRowByID(int paramFileID, out DataRow matchingRow)
+        {
+
+            var foundRows = m_ParamFileTable.Select("[Param_File_ID] = " + paramFileID);
+
+            if (foundRows.Length > 0)
+            {
+                matchingRow = foundRows[0];
+                return true;
+            }
+
+            matchingRow = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Finds parameter file info for SEQUEST, X!Tandem, MSGF+, MSPathFinder, MODPlus, TopPIC, MSFragger, or MaxQuant
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks></remarks>
+        private DataTable GetAvailableParamSets()
+        {
+            string paramTableSQL = "SELECT " + "  Param_File_ID as ID, " + "  Param_File_Name AS Filename, " + "  Param_File_Description as Diffs, " + "  Param_File_Type_ID as Type_ID " + "FROM T_Param_Files " + "WHERE Param_File_Type_ID = " + ((int)eParamFileTypeConstants.Sequest).ToString() + "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.XTandem).ToString() + "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MSGFDB).ToString() + "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MSPathFinder).ToString() + "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MODPlus).ToString() + "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.TopPIC).ToString() + "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MSFragger).ToString() + "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MaxQuant).ToString();
+
+            var tmpIDTable = GetTable(paramTableSQL);
+
+            // 'Load tmpIDTable
+            int tmpID;
+            string tmpDiffs;
+            int tmpType;
+
+            foreach (DataRow dr in tmpIDTable.Rows)
+            {
+
+                tmpType = (int)dr["Type_ID"];
+
+                if (tmpType == (int)eParamFileTypeConstants.Sequest)
+                {
+
+                    tmpID = (int)dr["ID"];
+                    tmpDiffs = (string)dr["Diffs"];
+                    if (tmpDiffs is null)
+                    {
+                        eParamFileTypeConstants eParamFileTypeID;
+                        eParamFileTypeID = (eParamFileTypeConstants)tmpType;
+
+                        tmpDiffs = DistillFeaturesFromParamSet(tmpID, eParamFileTypeID);
+
+                        dr["Diffs"] = tmpDiffs;
+                        dr.AcceptChanges();
+                    }
+                }
+            }
+
+            return tmpIDTable;
+
+            // Need filtering code for tmpIDTable here...
+
+        }
+
+        private DataTable GetParamFileTypes()
+        {
+            DataTable tmpTypeTable;
+            string tableTypesSQL;
+            tableTypesSQL = "SELECT Param_File_Type_ID as ID, Param_File_Type AS Type " + "FROM T_Param_File_Types";
+
+            tmpTypeTable = GetTable(tableTypesSQL);
+
+            return tmpTypeTable;
+
+        }
+
+        protected string DistillFeaturesFromParamSet(Params paramSet)
+        {
+            var templateColl = WriteDataCollectionFromParamSet(m_BaseLineParamSet);
+            var checkColl = WriteDataCollectionFromParamSet(paramSet);
+
+
+            var diffColl = CompareDataCollections(templateColl, checkColl);
+            return SummarizeDiffColl(ref diffColl);
+
+        }
+
+        protected string DistillFeaturesFromParamSet(int paramSetID, eParamFileTypeConstants eParamFileTypeID)
+        {
+            var p = GetParamSetWithID(paramSetID, eParamFileTypeID);
+
+            return p.Description;
+
+        }
+
+        private DMSParamStorage WriteDataCollectionFromParamSet(Params paramSet)
+        {
+            var c = new DMSParamStorage();
+
+            var pType = paramSet.GetType();
+            Type tmpType;
+            var pProps = pType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            string tmpName;
+            string tmpValue;
+
+            foreach (var pProp in pProps)
+            {
+                tmpName = pProp.Name;
+                tmpType = pProp.PropertyType;
+                if (m_AcceptableParams.Contains(tmpName))
+                {
+                    if (tmpType.Name == "IonSeries")
+                    {
+                        c = ExpandIonSeries(paramSet.IonSeries, ref c);
+                    }
+
+                    else if (tmpType.Name == "IsoMods")
+                    {
+                        c = ExpandIsoTopicMods(paramSet.IsotopicMods, ref c);
+                    }
+
+                    else if (tmpType.Name == "DynamicMods")
+                    {
+                        c = ExpandDynamicMods(paramSet.DynamicMods, ref c, DMSParamStorage.ParamTypes.DynamicModification);
+                    }
+
+                    else if (tmpType.Name == "TermDynamicMods")
+                    {
+                        c = ExpandDynamicMods(paramSet.TermDynamicMods, ref c, DMSParamStorage.ParamTypes.TermDynamicModification);
+                    }
+
+                    else if (tmpType.Name == "StaticMods")
+                    {
+                        c = ExpandStaticMods(paramSet.StaticModificationsList, ref c);
+                    }
+
+                    else if (m_BasicParams.Contains(tmpName))
+                    {
+                        tmpValue = pProp.GetValue(paramSet, null).ToString();
+                        c.Add(tmpName, tmpValue.ToString(), DMSParamStorage.ParamTypes.BasicParam);
+                    }
+                    else if (m_AdvancedParams.Contains(tmpName))
+                    {
+                        tmpValue = pProp.GetValue(paramSet, null).ToString();
+                        c.Add(tmpName, tmpValue.ToString(), DMSParamStorage.ParamTypes.AdvancedParam);
+                    }
+                }
+
+            }
+
+            return c;
+
+        }
+
+        private Params UpdateParamSetFromDataCollection(DMSParamStorage dc)
+        {
+            var p = new Params();
+            string tmpSpec;
+            object tmpValue;
+            DMSParamStorage.ParamTypes tmpType;
+            string tmpTypeName;
+
+            // p = MainProcess.BaseLineParamSet
+            p.LoadTemplate(MainProcess.TemplateFileName);
+            var pType = typeof(Params);
+            var pFields = pType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo pField = null;
+
+            var ionType = typeof(IonSeries);
+            var ionFields = ionType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+            foreach (DMSParamStorage.ParamsEntry paramEntry in dc)
+            {
+                tmpSpec = paramEntry.Specifier;
+                tmpValue = paramEntry.Value;
+                tmpType = paramEntry.Type;
+
+                if (tmpType == DMSParamStorage.ParamTypes.BasicParam & m_BasicParams.Contains(tmpSpec))
+                {
+
+                    foreach (var currentPField in pFields)
+                    {
+                        pField = currentPField;
+                        if ((pField.Name ?? "") == (tmpSpec ?? ""))
+                        {
+                            tmpTypeName = pField.PropertyType.Name;
+                            if (tmpTypeName == "Int32")
+                            {
+                                pField.SetValue(p, Conversions.ToInteger(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "Single")
+                            {
+                                pField.SetValue(p, Conversions.ToSingle(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "String")
+                            {
+                                pField.SetValue(p, Conversions.ToString(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "Boolean")
+                            {
+                                pField.SetValue(p, Conversions.ToBoolean(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "MassTypeList")
+                            {
+                                pField.SetValue(p, (IBasicParams.MassTypeList)Conversions.ToInteger(Enum.Parse(typeof(IBasicParams.MassTypeList), Conversions.ToString(tmpValue), true)), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "MassUnitList")
+                            {
+                                pField.SetValue(p, (IAdvancedParams.MassUnitList)Conversions.ToInteger(Enum.Parse(typeof(IAdvancedParams.MassUnitList), Conversions.ToString(tmpValue), true)), null);
+                            }
+                            else
+                            {
+                                Console.WriteLine(pField.PropertyType.Name.ToString());
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+                else if (tmpType == DMSParamStorage.ParamTypes.AdvancedParam & m_AdvancedParams.Contains(tmpSpec))
+                {
+
+                    foreach (var currentPField1 in pFields)
+                    {
+                        pField = currentPField1;
+                        if ((pField.Name ?? "") == (tmpSpec ?? ""))
+                        {
+                            tmpTypeName = pField.PropertyType.Name;
+                            if (tmpTypeName == "Int32")
+                            {
+                                pField.SetValue(p, Conversions.ToInteger(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "Single")
+                            {
+                                pField.SetValue(p, Conversions.ToSingle(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "String")
+                            {
+                                pField.SetValue(p, Conversions.ToString(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "Boolean")
+                            {
+                                pField.SetValue(p, Conversions.ToBoolean(tmpValue), null);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine(pField.PropertyType.Name.ToString());
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+                else if (tmpType == DMSParamStorage.ParamTypes.AdvancedParam & m_IonSeriesParams.Contains(tmpSpec))
+                {
+
+                    foreach (var ionField in ionFields)
+                    {
+                        if ((ionField.Name ?? "") == (tmpSpec ?? ""))
+                        {
+                            tmpTypeName = ionField.PropertyType.Name;
+                            if (tmpTypeName == "Int32")
+                            {
+                                ionField.SetValue(p.IonSeries, Conversions.ToInteger(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "Single")
+                            {
+                                ionField.SetValue(p.IonSeries, Conversions.ToSingle(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "String")
+                            {
+                                ionField.SetValue(p.IonSeries, Conversions.ToString(tmpValue), null);
+                                break;
+                            }
+                            else if (tmpTypeName == "Boolean")
+                            {
+                                ionField.SetValue(p.IonSeries, Conversions.ToBoolean(tmpValue), null);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine(pField.PropertyType.Name.ToString());
+                            }
+                        }
+                    }
+                }
+
+                else if (tmpType == DMSParamStorage.ParamTypes.DynamicModification)
+                {
+
+                    p.DynamicMods.Add(tmpSpec.ToString(), Conversion.Val(tmpValue.ToString()));
+                }
+                else if (tmpType == DMSParamStorage.ParamTypes.StaticModification)
+                {
+                    p.StaticModificationsList.Add(tmpSpec.ToString(), Conversion.Val(tmpValue.ToString()));
+                }
+                else if (tmpType == DMSParamStorage.ParamTypes.IsotopicModification)
+                {
+                    p.IsotopicMods.Add(tmpSpec.ToString(), Conversion.Val(tmpValue));
+                }
+                else if (tmpType == DMSParamStorage.ParamTypes.TermDynamicModification)
+                {
+                    p.TermDynamicMods.Add(tmpSpec.ToString(), Conversion.Val(tmpValue));
+                }
+            }
+
+            return p;
+
+        }
+
+        private DMSParamStorage ExpandDynamicMods(DynamicMods DynModSet, ref DMSParamStorage ParamCollection, DMSParamStorage.ParamTypes eDynModType)
+        {
+            int maxCount = DynModSet.Count;
+            int counter;
+            string tmpName;
+            string tmpValue;
+
+            if (maxCount == 0)
+            {
+                return ParamCollection;
+            }
+
+            if (eDynModType != DMSParamStorage.ParamTypes.DynamicModification & eDynModType != DMSParamStorage.ParamTypes.TermDynamicModification)
+            {
+                // This is unexpected; force eDynModType to be .DynamicModification
+                eDynModType = DMSParamStorage.ParamTypes.DynamicModification;
+            }
+
+            var loopTo = maxCount;
+            for (counter = 1; counter <= loopTo; counter++)
+            {
+                tmpName = DynModSet.Dyn_Mod_n_AAList(counter);
+                tmpValue = Strings.Format(DynModSet.Dyn_Mod_n_MassDiff(counter), "0.00000");
+                ParamCollection.Add(tmpName, tmpValue, eDynModType);
+            }
+
+            return ParamCollection;
+
+        }
+
+        private DMSParamStorage ExpandStaticMods(StaticMods StatModSet, ref DMSParamStorage ParamCollection)
+        {
+            int maxCount = StatModSet.Count;
+            int counter;
+            string tmpName;
+            string tmpValue;
+
+            if (maxCount == 0)
+            {
+                return ParamCollection;
+            }
+
+            var loopTo = maxCount - 1;
+            for (counter = 0; counter <= loopTo; counter++)
+            {
+                tmpName = StatModSet.GetResidue(counter);
+                tmpValue = StatModSet.GetMassDiff(counter);
+                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.StaticModification);
+            }
+
+            return ParamCollection;
+
+        }
+
+        private DMSParamStorage ExpandIsoTopicMods(IsoMods IsoModSet, ref DMSParamStorage ParamCollection)
+        {
+            int maxCount = IsoModSet.Count;
+            int counter;
+            string tmpName;
+            string tmpValue;
+
+            if (maxCount == 0)
+            {
+                return ParamCollection;
+            }
+
+            var loopTo = maxCount - 1;
+            for (counter = 0; counter <= loopTo; counter++)
+            {
+                tmpName = IsoModSet.GetAtom(counter);
+                tmpValue = IsoModSet.GetMassDiff(counter);
+                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.IsotopicModification);
+            }
+
+            return ParamCollection;
+        }
+
+        private DMSParamStorage ExpandIonSeries(IonSeries IonSeriesSet, ref DMSParamStorage ParamCollection)
+        {
+            var pType = typeof(IonSeries);
+            var pFields = pType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+            foreach (var pField in pFields)
+            {
+                string tmpName = pField.Name;
+                string tmpValue = pField.GetValue(IonSeriesSet, null).ToString();
+                ParamCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.AdvancedParam);
+            }
+
+            return ParamCollection;
+        }
+
+        private bool DoesParamSetNameExist(string paramSetName)
+        {
+
+            eParamFileTypeConstants eParamFileType;
+            eParamFileType = GetTypeWithName(paramSetName);
+
+            if (eParamFileType == eParamFileTypeConstants.Unknown)
+            {
+                Console.WriteLine("Parameter file " + paramSetName + "  was not found in table " + Param_File_Table);
+                return false;
+            }
+
+            if (eParamFileType != eParamFileTypeConstants.Sequest)
+            {
+                // This param file type is not supported for export from DMS
+                string paramFileTypeName = Enum.GetName(typeof(eParamFileTypeConstants), eParamFileType);
+                if (string.IsNullOrEmpty(paramFileTypeName))
+                {
+                    paramFileTypeName = "Unknown";
+                }
+
+                Console.WriteLine("Parameter file " + paramSetName + " is of type " + paramFileTypeName + ", which isn't supported for export from DMS");
+                return false;
+            }
+
+            int tmpID = GetIDWithName(paramSetName, eParamFileType);
+            if (tmpID < 0)
+            {
+                Console.WriteLine("Parameter file " + paramSetName + " with type ID " + eParamFileType.ToString() + " was not found in table " + Param_File_Table);
+                return false;
+            }
+
+            return true;
+
+        }
+
+        private bool DoesParamSetIDExist(int paramSetID)
+        {
+            DataRow matchingRow = null;
+            return GetParamFileRowByID(paramSetID, out matchingRow);
+        }
+
+        protected string CompareParamSets(ref Params templateSet, ref Params checkSet)
+        {
+            var diffCollection = GetDiffColl(ref templateSet, ref checkSet);
+            return SummarizeDiffColl(ref diffCollection);
+        }
+
+        protected DMSParamStorage GetDiffColl(ref Params templateSet, ref Params checkSet)
+        {
+            var templateColl = WriteDataCollectionFromParamSet(templateSet);
+            var checkColl = WriteDataCollectionFromParamSet(checkSet);
+
+            var diffCollection = CompareDataCollections(templateColl, checkColl);
+            return diffCollection;
+        }
+
+        private string SummarizeDiffColl(ref DMSParamStorage diffColl)
+        {
+
+            int maxIndex = diffColl.Count - 1;
+            int index;
+            string tmpString;
+
+            string tmpIsoMods = "";
+            string tmpOtherParams = "";
+
+            Queue tmpDynModsList = null;
+            Queue tmpTermDynModsList = null;
+            Queue tmpStatModsList = null;
+            Queue tmpIsoModsList = null;
+            Queue tmpOtherParamsList = null;
+
+            int intDynModCount = 0;
+            int intTermDynModCount = 0;
+
+            var loopTo = maxIndex;
+            for (index = 0; index <= loopTo; index++)
+            {
+                var tmpType = diffColl[index].Type;
+                string tmpSpec = diffColl[index].Specifier;
+                string tmpValue = diffColl[index].Value;
+
+                double dblValue;
+                string tmpValueFormatted;
+                string tmpSign;
+
+                if (double.TryParse(tmpValue, out dblValue))
+                {
+                    tmpValueFormatted = dblValue.ToString("0.0000");
+                    if (dblValue > 0d)
+                    {
+                        tmpSign = "+";
+                    }
+                    else
+                    {
+                        tmpSign = "";
+                    }
+                }
+                else
+                {
+                    tmpValueFormatted = string.Copy(tmpValue);
+                    tmpSign = "";
+                }
+
+                if (tmpType == DMSParamStorage.ParamTypes.StaticModification)
+                {
+
+                    if (tmpStatModsList is null)
+                    {
+                        tmpStatModsList = new Queue();
+                        tmpStatModsList.Enqueue("Static Mods: ");
+                    }
+                    tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                }
+
+
+                else if (tmpType == DMSParamStorage.ParamTypes.DynamicModification)
+                {
+
+                    if (tmpDynModsList is null)
+                    {
+                        tmpDynModsList = new Queue();
+                        tmpDynModsList.Enqueue("Dynamic Mods: ");
+                    }
+                    tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+
+                    intDynModCount += 1;
+                }
+
+
+                else if (tmpType == DMSParamStorage.ParamTypes.TermDynamicModification)
+                {
+
+                    if (tmpSpec == "<")
+                    {
+                        tmpSpec = "N-Term Peptide";
+                    }
+                    else if (tmpSpec == ">")
+                    {
+                        tmpSpec = "C-Term Peptide";
+                    }
+
+                    if (tmpTermDynModsList is null)
+                    {
+                        tmpTermDynModsList = new Queue();
+                        tmpTermDynModsList.Enqueue("PepTerm Dynamic Mods: ");
+                    }
+                    tmpTermDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+
+                    intTermDynModCount += 1;
+                }
+
+
+                else if (tmpType == DMSParamStorage.ParamTypes.IsotopicModification)
+                {
+
+                    if (string.IsNullOrEmpty(tmpIsoMods))
+                    {
+                        tmpIsoMods = "Isotopic Mods: ";
+                    }
+
+                    if (tmpIsoModsList is null)
+                    {
+                        tmpIsoModsList = new Queue();
+                        tmpIsoModsList.Enqueue(tmpIsoMods);
+                    }
+                    tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                }
+
+
+                else
+                {
+                    if (string.IsNullOrEmpty(tmpOtherParams))
+                    {
+                        tmpOtherParams = "Other Parameters: ";
+                    }
+
+                    if (tmpOtherParamsList is null)
+                    {
+                        tmpOtherParamsList = new Queue();
+                        tmpOtherParamsList.Enqueue(tmpOtherParams);
+                    }
+                    tmpOtherParamsList.Enqueue(tmpSpec + " = " + tmpValue);
+
+                }
+            }
+
+            // Build the string describing the mods
+            tmpString = "";
+
+            tmpString = MakeListOfMods(tmpString, tmpDynModsList, true);
+
+            tmpString = MakeListOfMods(tmpString, tmpTermDynModsList, false);
+            if (intDynModCount == 0 & intTermDynModCount > 0)
+            {
+                tmpString = "Dynamic Mods: " + tmpString;
+            }
+
+            tmpString = MakeListOfMods(tmpString, tmpStatModsList, true);
+            tmpString = MakeListOfMods(tmpString, tmpIsoModsList, true);
+            tmpString = MakeListOfMods(tmpString, tmpOtherParamsList, true);
+
+
+            if (string.IsNullOrEmpty(tmpString) || tmpString.Length == 0)
+            {
+                tmpString = " --No Change-- ";
+            }
+
+            return tmpString;
+
+
+        }
+
+        private string MakeListOfMods(string strModDescriptionPrevious, Queue objModList, bool blnAddTitlePrefix)
+        {
+
+            if (strModDescriptionPrevious is null)
+                strModDescriptionPrevious = "";
+            if (objModList is null)
+            {
+                return strModDescriptionPrevious;
+            }
+
+            if (objModList.Count > 0)
+            {
+                if (strModDescriptionPrevious.Length > 0)
+                    strModDescriptionPrevious += ", ";
+
+                string tmpElement = "";
+                string elementTitle = objModList.Dequeue().ToString();
+                while (objModList.Count > 0)
+                {
+                    string subItem = objModList.Dequeue().ToString();
+                    if (tmpElement.Length > 0)
+                        tmpElement += ", ";
+                    tmpElement += subItem;
+                }
+
+                if (blnAddTitlePrefix)
+                {
+                    strModDescriptionPrevious += elementTitle + tmpElement;
+                }
+                else
+                {
+                    strModDescriptionPrevious += tmpElement;
+                }
+
+            }
+
+            return strModDescriptionPrevious;
+
+        }
+
+        private DMSParamStorage CompareDataCollections(DMSParamStorage templateColl, DMSParamStorage checkColl)
+        {
+            var diffColl = new DMSParamStorage();
+            int maxIndex = checkColl.Count - 1;
+
+            for (int checkIndex = 0, loopTo = maxIndex; checkIndex <= loopTo; checkIndex++)
+            {
+                var tmpCType = checkColl[checkIndex].Type;
+                string tmpCSpec = checkColl[checkIndex].Specifier;
+                string tmpCVal = checkColl[checkIndex].Value;
+
+
+                int templateIndex = templateColl.IndexOf(tmpCSpec, tmpCType);
+
+                if (templateIndex >= 0)
+                {
+                    var tmpTType = templateColl[templateIndex].Type;
+                    string tmpTSpec = templateColl[templateIndex].Specifier;
+                    string tmpTVal = templateColl[templateIndex].Value;
+                    // Dim tmpTemp = tmpTType.ToString & " - " & tmpTSpec & " = " & tmpTVal
+                    // Dim tmpCheck = tmpCType.ToString & " - " & tmpCSpec & " = " & tmpCVal
+
+                    if ((tmpTType.ToString() + tmpTSpec ?? "") == (tmpCType.ToString() + tmpCSpec ?? ""))
+                    {
+                        if (tmpTVal.Equals(tmpCVal))
+                        {
+                        }
+
+                        else
+                        {
+                            diffColl.Add(tmpCSpec, tmpCVal, tmpTType);
+                        }
+                    }
+                }
+                else
+                {
+                    diffColl.Add(tmpCSpec, tmpCVal, tmpCType);
+                }
+
+
+            }
+
+            return diffColl;
+
+        }
+
+    }
+
+}

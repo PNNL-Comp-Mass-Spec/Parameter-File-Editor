@@ -1,89 +1,100 @@
-Imports System.Collections.Generic
-Imports PRISMDatabaseUtils
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.VisualBasic;
+using PRISMDatabaseUtils;
 
-Public Interface IReconstituteIsoMods
+namespace ParamFileGenerator
+{
 
-    Function ReconstituteIsoMods(ParamsClass As Params) As Params
+    public interface IReconstituteIsoMods
+    {
 
-End Interface
+        Params ReconstituteIsoMods(Params ParamsClass);
 
-Public Class ReconstituteIsoMods
-    Implements IReconstituteIsoMods
-    Public Enum AvailableAtoms
-        N
-        C
-        H
-        O
-        S
-    End Enum
+    }
 
-    ''' <summary>
-    ''' Dictionary where keys are amino acid residue (one letter abbreviation)
-    ''' and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
-    ''' </summary>
-    Private ReadOnly m_ResidueAtomCounts As Dictionary(Of Char, Dictionary(Of Char, Integer))
+    public class ReconstituteIsoMods : IReconstituteIsoMods
+    {
+        public enum AvailableAtoms
+        {
+            N,
+            C,
+            H,
+            O,
+            S
+        }
 
-#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
-    ''' <summary>
-    ''' Constructor
-    ''' </summary>
-    ''' <param name="dbTools"></param>
-    Public Sub New(dbTools As IDBTools)
-        Dim getResTable As New GetResiduesList(dbTools)
-        m_ResidueAtomCounts = getResTable.ResidueAtomCounts
-    End Sub
-#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
+        /// <summary>
+        /// Dictionary where keys are amino acid residue (one letter abbreviation)
+        /// and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
+        /// </summary>
+        private readonly Dictionary<char, Dictionary<char, int>> m_ResidueAtomCounts;
 
-    Friend Function ReconIsoMods(ParamsClass As Params) As Params Implements IReconstituteIsoMods.ReconstituteIsoMods
-        Return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods)
-    End Function
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="dbTools"></param>
+        #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+        public ReconstituteIsoMods(IDBTools dbTools)
+        #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
+        {
+            var getResTable = new GetResiduesList(dbTools);
+            m_ResidueAtomCounts = getResTable.ResidueAtomCounts;
+        }
+        internal Params ReconIsoMods(Params ParamsClass)
+        {
+            return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicMods);
+        }
 
-    Protected Function GetMultiplier(AA As Char, Atom As AvailableAtoms) As Integer
+        Params IReconstituteIsoMods.ReconstituteIsoMods(Params ParamsClass) => ReconIsoMods(ParamsClass);
 
-        Dim atomCounts As Dictionary(Of Char, Integer) = Nothing
-        If m_ResidueAtomCounts.TryGetValue(AA, atomCounts) Then
-            Dim atomSymbol = Atom.ToString().Chars(0)
+        protected int GetMultiplier(char AA, AvailableAtoms Atom)
+        {
 
-            Dim atomCount As Integer
-            If atomCounts.TryGetValue(atomSymbol, atomCount) Then
-                Return atomCount
-            End If
-        End If
+            Dictionary<char, int> atomCounts = null;
+            if (m_ResidueAtomCounts.TryGetValue(AA, out atomCounts))
+            {
+                char atomSymbol = Atom.ToString()[0];
 
-        Return 0
+                int atomCount;
+                if (atomCounts.TryGetValue(atomSymbol, out atomCount))
+                {
+                    return atomCount;
+                }
+            }
 
-    End Function
+            return 0;
 
-    Protected Function StreamlineIsoModsToStatics(
-        ParamsClass As Params,
-        IsoMods As IsoMods) As Params
+        }
 
-        Dim im As ModEntry
+        protected Params StreamlineIsoModsToStatics(Params ParamsClass, IsoMods IsoMods)
+        {
 
-        Dim tmpAtom As String
-        Dim tmpIsoMass As Double
+            string tmpAtom;
+            double tmpIsoMass;
 
-        Dim AAEnums() As String = [Enum].GetNames(GetType(Mods.ResidueCode))
-        Dim tmpAA As String
+            var AAEnums = Enum.GetNames(typeof(Mods.ResidueCode));
 
 
-        For Each im In IsoMods
-            tmpAtom = im.ReturnResidueAffected(0)
-            tmpIsoMass = im.MassDifference
+            foreach (ModEntry im in IsoMods)
+            {
+                tmpAtom = im.ReturnResidueAffected(0);
+                tmpIsoMass = im.MassDifference;
 
-            For Each tmpAA In AAEnums
-                If InStr(tmpAA, "Term") = 0 Then
-                    Dim tmpAASLC = Left(tmpAA, 1).Chars(0)
-                    Dim tmpAtomCount = GetMultiplier(tmpAASLC, DirectCast([Enum].Parse(GetType(AvailableAtoms), tmpAtom), AvailableAtoms))
-                    ParamsClass.StaticModificationsList.ChangeAAModification(
-                        DirectCast([Enum].Parse(GetType(Mods.ResidueCode), tmpAA), Mods.ResidueCode),
-                        tmpIsoMass * tmpAtomCount, True)
-                End If
-            Next
+                foreach (var tmpAA in AAEnums)
+                {
+                    if (Strings.InStr(tmpAA, "Term") == 0)
+                    {
+                        char tmpAASLC = Strings.Left(tmpAA, 1)[0];
+                        int tmpAtomCount = GetMultiplier(tmpAASLC, (AvailableAtoms)Enum.Parse(typeof(AvailableAtoms), tmpAtom));
+                        ParamsClass.StaticModificationsList.ChangeAAModification((Mods.ResidueCode)Enum.Parse(typeof(Mods.ResidueCode), tmpAA), tmpIsoMass * tmpAtomCount, true);
+                    }
+                }
 
-        Next
+            }
 
-        Return ParamsClass
+            return ParamsClass;
 
-    End Function
-End Class
+        }
+    }
+}

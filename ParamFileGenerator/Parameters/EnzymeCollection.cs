@@ -1,20 +1,29 @@
-Public Class EnzymeCollection
-    Inherits CollectionBase
+﻿using System.Collections;
 
-    Public Sub New()
-        MyBase.New()
-    End Sub
+namespace ParamFileGenerator
+{
+    public class EnzymeCollection : CollectionBase
+    {
 
-    Public Sub add(Enzyme As EnzymeDetails)
-        List.Add(Enzyme)
-    End Sub
+        public EnzymeCollection() : base()
+        {
+        }
 
-    Default Public Property Item(index As Integer) As EnzymeDetails
-        Get
-            Return DirectCast(List(index), EnzymeDetails)
-        End Get
-        Set
-            List(index) = Value
-        End Set
-    End Property
-End Class
+        public void add(EnzymeDetails Enzyme)
+        {
+            List.Add(Enzyme);
+        }
+
+        public EnzymeDetails this[int index]
+        {
+            get
+            {
+                return (EnzymeDetails)List[index];
+            }
+            set
+            {
+                List[index] = value;
+            }
+        }
+    }
+}

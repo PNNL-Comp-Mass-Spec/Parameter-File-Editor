@@ -1,54 +1,66 @@
-Imports PRISMDatabaseUtils
+﻿using System;
+using System.Data;
+using PRISMDatabaseUtils;
 
-Public Class DBTask
+namespace ParamFileGenerator
+{
 
-    ' DB access
+    public class DBTask
+    {
+        // DB access
 
-#Disable Warning BC40025 ' Type of member is not CLS-compliant
-    Protected ReadOnly mDBTools As IDBTools
-#Enable Warning BC40025 ' Type of member is not CLS-compliant
+        #pragma warning disable CS3003 // Type of member is not CLS-compliant
+        protected readonly IDBTools mDBTools;
+        #pragma warning restore CS3003 // Type of member is not CLS-compliant
 
-    ''' <summary>
-    ''' Constructor
-    ''' </summary>
-    ''' <param name="connectionString"></param>
-    Public Sub New(connectionString As String)
-        Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator")
-        mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse)
-    End Sub
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="connectionString"></param>
+        public DBTask(string connectionString)
+        {
+            string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator");
+            mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse);
+        }
 
-#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
-    Public Sub New(existingDbTools As IDBTools)
-        mDBTools = existingDbTools
-    End Sub
-#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
+        #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+        public DBTask(IDBTools existingDbTools)
+        #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
+        {
+            mDBTools = existingDbTools;
+        }
 
-    <Obsolete("Use the constructor that only has a connection string")>
-    Public Sub New(connectionString As String, persistConnection As Boolean)
-        Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator")
-        mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse)
-    End Sub
+        [Obsolete("Use the constructor that only has a connection string")]
+        public DBTask(string connectionString, bool persistConnection)
+        {
+            string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator");
+            mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse);
+        }
 
-    <Obsolete("Use the constructor that accepts a connection string", True)>
-    Public Sub New(Optional persistConnection As Boolean = False)
-        Throw New NotImplementedException()
-    End Sub
+        [Obsolete("Use the constructor that accepts a connection string", true)]
+        public DBTask(bool persistConnection = false)
+        {
+            throw new NotImplementedException();
+        }
 
-    Protected Function GetTable(selectSQL As String) As DataTable
+        protected DataTable GetTable(string selectSQL)
+        {
 
-        Dim retryCount = 3
-        Dim retryDelaySeconds = 5
-        Dim timeoutSeconds = 120
+            int retryCount = 3;
+            int retryDelaySeconds = 5;
+            int timeoutSeconds = 120;
 
-        Dim queryResults As DataTable = Nothing
-        Dim success = mDBTools.GetQueryResultsDataTable(selectSQL, queryResults, retryCount, retryDelaySeconds, timeoutSeconds)
+            DataTable queryResults = null;
+            bool success = mDBTools.GetQueryResultsDataTable(selectSQL, out queryResults, retryCount, retryDelaySeconds, timeoutSeconds);
 
-        If Not success Then
-            Throw New Exception("Could not get records after three tries; query: " & selectSQL)
-        End If
+            if (!success)
+            {
+                throw new Exception("Could not get records after three tries; query: " + selectSQL);
+            }
 
-        Return queryResults
+            return queryResults;
 
-    End Function
+        }
 
-End Class
+    }
+}

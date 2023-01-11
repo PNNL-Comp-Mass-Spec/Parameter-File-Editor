@@ -1,498 +1,495 @@
-Imports System.Collections.Generic
-Imports System.IO
-Imports System.Linq
-Imports ParamFileGenerator.DownloadParams
-Imports PRISM
-Imports PRISMDatabaseUtils
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using ParamFileGenerator.DownloadParams;
+using PRISM;
+using PRISMDatabaseUtils;
 
-' ReSharper disable once CheckNamespace
-Namespace MakeParams
+// ReSharper disable once CheckNamespace
+namespace ParamFileGenerator.MakeParams
+{
 
-    Public Interface IGenerateFile
+    public interface IGenerateFile
+    {
 
-        ' Ignore Spelling: Sequest
+        // Ignore Spelling: Sequest
 
-        Enum ParamFileType
-            Invalid = -1            ' Other stuff not currently handled
-            BioWorks_20 = 0         ' Normal BioWorks 2.0 SEQUEST
-            BioWorks_30 = 1         ' BioWorks 3.0+ TurboSequest
-            BioWorks_31 = 2         ' BioWorks 3.1 ClusterQuest
-            BioWorks_32 = 3         ' BioWorks 3.2 Cluster
-            BioWorks_Current = 4
-            X_Tandem = 5            ' X!Tandem XML file
-            Inspect = 6             ' Inspect
-            MSGFPlus = 7            ' MSGF-DB or MSGF+
-            MSAlign = 8             ' MSAlign
-            MSAlignHistone = 9      ' MSAlign_Histone (which is MS-Align+)
-            MODa = 10
-            MSPathFinder = 11
-            MODPlus = 12
-            TopPIC = 13
-            MSFragger = 14
+        public enum ParamFileType
+        {
+            Invalid = -1,            // Other stuff not currently handled
+            BioWorks_20 = 0,         // Normal BioWorks 2.0 SEQUEST
+            BioWorks_30 = 1,         // BioWorks 3.0+ TurboSequest
+            BioWorks_31 = 2,         // BioWorks 3.1 ClusterQuest
+            BioWorks_32 = 3,         // BioWorks 3.2 Cluster
+            BioWorks_Current = 4,
+            X_Tandem = 5,            // X!Tandem XML file
+            Inspect = 6,             // Inspect
+            MSGFPlus = 7,            // MSGF-DB or MSGF+
+            MSAlign = 8,             // MSAlign
+            MSAlignHistone = 9,      // MSAlign_Histone (which is MS-Align+)
+            MODa = 10,
+            MSPathFinder = 11,
+            MODPlus = 12,
+            TopPIC = 13,
+            MSFragger = 14,
             MaxQuant = 15
-        End Enum
+        }
 
-        Function MakeFile(
-             paramFileName As String,
-             paramFileType As ParamFileType,
-             fastaFilePath As String,
-             outputFilePath As String,
-             dmsConnectionString As String) As Boolean
+        bool MakeFile(string paramFileName, ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString);
 
-        Function MakeFile(
-             paramFileName As String,
-             paramFileType As ParamFileType,
-             fastaFilePath As String,
-             outputFilePath As String,
-             dmsConnectionString As String,
-             DatasetID As Integer) As Boolean
+        bool MakeFile(string paramFileName, ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, int DatasetID);
 
-        Function MakeFile(
-             paramFileName As String,
-             paramFileType As ParamFileType,
-             fastaFilePath As String,
-             outputFilePath As String,
-             dmsConnectionString As String,
-             datasetName As String) As Boolean
+        bool MakeFile(string paramFileName, ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, string datasetName);
 
-#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
+        #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+        List<string> GetAvailableParamSetNames(IDBTools dbTools);
+        DataTable GetAvailableParamSetTable(IDBTools dbTools);
+        DataTable GetAvailableParamFileTypes(IDBTools dbTools);
+        #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
 
-        Function GetAvailableParamSetNames(dbTools As IDBTools) As List(Of String)
-        Function GetAvailableParamSetTable(dbTools As IDBTools) As DataTable
-        Function GetAvailableParamFileTypes(dbTools As IDBTools) As DataTable
+        string LastError { get; }
+    }
 
-#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
 
-        ReadOnly Property LastError As String
-    End Interface
+    public class MakeParameterFile : EventNotifier, IGenerateFile
+    {
 
+        private IDBTools m_DbTools;
+        private WriteOutput m_FileWriter;
 
-    Public Class MakeParameterFile
-        Inherits EventNotifier
-        Implements IGenerateFile
+        public string TemplateFilePath { get; set; }
 
-        Private m_DbTools As IDBTools
-        Private m_FileWriter As WriteOutput
+        private string LastErrorMsg { get; set; } = string.Empty;
 
-        Public Property TemplateFilePath As String
+        private bool MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString)
+        {
 
-        Private Property LastErrorMsg As String = String.Empty
+            return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, false);
 
-        Private Function MakeFile(
-            paramFileName As String,
-            paramFileType As IGenerateFile.ParamFileType,
-            fastaFilePath As String,
-            outputFilePath As String,
-            dmsConnectionString As String) As Boolean Implements IGenerateFile.MakeFile
+        }
 
-            Return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, False)
+        bool IGenerateFile.MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString) => MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString);
 
-        End Function
+        private bool MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, string datasetName)
+        {
 
-        Private Function MakeFile(
-            paramFileName As String,
-            paramFileType As IGenerateFile.ParamFileType,
-            fastaFilePath As String,
-            outputFilePath As String,
-            dmsConnectionString As String,
-            datasetName As String) As Boolean Implements IGenerateFile.MakeFile
+            bool forceMonoStatus = GetMonoMassStatus(datasetName, dmsConnectionString);
 
-            Dim forceMonoStatus As Boolean = GetMonoMassStatus(datasetName, dmsConnectionString)
+            return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus);
 
-            Return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus)
+        }
 
-        End Function
+        bool IGenerateFile.MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, string datasetName) => MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, datasetName);
 
-        Private Function MakeFile(
-            paramFileName As String,
-            paramFileType As IGenerateFile.ParamFileType,
-            fastaFilePath As String,
-            outputFilePath As String,
-            dmsConnectionString As String,
-            DatasetID As Integer) As Boolean Implements IGenerateFile.MakeFile
+        private bool MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, int DatasetID)
+        {
 
-            Dim forceMonoStatus As Boolean = GetMonoMassStatus(DatasetID, dmsConnectionString)
+            bool forceMonoStatus = GetMonoMassStatus(DatasetID, dmsConnectionString);
 
-            Return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus)
+            return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus);
 
-        End Function
+        }
 
-        Private Function MakeFile(
-          paramFileName As String,
-          paramFileType As IGenerateFile.ParamFileType,
-          fastaFilePath As String,
-          outputFilePath As String,
-          dmsConnectionString As String,
-          forceMonoParentMass As Boolean) As Boolean
+        bool IGenerateFile.MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, int DatasetID) => MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, DatasetID);
 
-            LastErrorMsg = String.Empty
+        private bool MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, bool forceMonoParentMass)
+        {
 
-            Try
-                Select Case paramFileType
-                    Case IGenerateFile.ParamFileType.X_Tandem
-                        Return RetrieveStaticPSMParameterFile("XTandem", paramFileName, outputFilePath, dmsConnectionString)
+            LastErrorMsg = string.Empty;
 
-                    Case IGenerateFile.ParamFileType.Inspect
-                        Return RetrieveStaticPSMParameterFile("Inspect", paramFileName, outputFilePath, dmsConnectionString)
+            try
+            {
+                switch (paramFileType)
+                {
+                    case IGenerateFile.ParamFileType.X_Tandem:
+                        {
+                            return RetrieveStaticPSMParameterFile("XTandem", paramFileName, outputFilePath, dmsConnectionString);
+                        }
 
-                    Case IGenerateFile.ParamFileType.MODa
-                        Return RetrieveStaticPSMParameterFile("MODa", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.MSGFPlus
-                        Return RetrieveStaticPSMParameterFile("MSGFPlus", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.MSAlign
-                        Return RetrieveStaticPSMParameterFile("MSAlign", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.MSAlignHistone
-                        Return RetrieveStaticPSMParameterFile("MSAlign_Histone", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.MSPathFinder
-                        Return RetrieveStaticPSMParameterFile("MSPathFinder", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.MODPlus
-                        Return RetrieveStaticPSMParameterFile("MODPlus", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.TopPIC
-                        Return RetrieveStaticPSMParameterFile("TopPIC", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.MSFragger
-                        Return RetrieveStaticPSMParameterFile("MSFragger", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.MaxQuant
-                        Return RetrieveStaticPSMParameterFile("MaxQuant", paramFileName, outputFilePath, dmsConnectionString)
-
-                    Case IGenerateFile.ParamFileType.Invalid
-                        Exit Function
-
-                    Case Else
-                        paramFileType = IGenerateFile.ParamFileType.BioWorks_32
-                        Return MakeFileSQ(
-                         paramFileName,
-                         paramFileType,
-                         fastaFilePath,
-                         outputFilePath,
-                         dmsConnectionString,
-                         forceMonoParentMass)
-                End Select
-
-            Catch ex As Exception
-                ReportError("Error in MakeFile: " + ex.Message, ex)
-                Return False
-            End Try
-
-
-        End Function
-
-        Private Function GetMonoMassStatus(DatasetID As Integer, dmsConnectionString As String) As Boolean
-            Dim TypeCheckSQL As String = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + DatasetID.ToString
-            Return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString)
-        End Function
-
-        Private Function GetMonoMassStatus(datasetName As String, dmsConnectionString As String) As Boolean
-            Dim TypeCheckSQL As String = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_name = '" + datasetName + "'"
-            Return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString)
-        End Function
-
-        Private Function GetMonoParentStatusWorker(sqlQuery As String, dmsConnectionString As String) As Boolean
-
-            If m_DbTools Is Nothing Then
-                Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator")
-                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse)
-            End If
+                    case IGenerateFile.ParamFileType.Inspect:
+                        {
+                            return RetrieveStaticPSMParameterFile("Inspect", paramFileName, outputFilePath, dmsConnectionString);
+                        }
 
-            Dim typeCheckTable As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(sqlQuery, typeCheckTable)
+                    case IGenerateFile.ParamFileType.MODa:
+                        {
+                            return RetrieveStaticPSMParameterFile("MODa", paramFileName, outputFilePath, dmsConnectionString);
+                        }
 
-            If typeCheckTable.Count > 0 Then
+                    case IGenerateFile.ParamFileType.MSGFPlus:
+                        {
+                            return RetrieveStaticPSMParameterFile("MSGFPlus", paramFileName, outputFilePath, dmsConnectionString);
+                        }
 
-                Dim useMonoMassInt As Integer
+                    case IGenerateFile.ParamFileType.MSAlign:
+                        {
+                            return RetrieveStaticPSMParameterFile("MSAlign", paramFileName, outputFilePath, dmsConnectionString);
+                        }
 
-                If Integer.TryParse(typeCheckTable.Item(0).First(), useMonoMassInt) Then
-                    If useMonoMassInt > 0 Then
-                        Return True
-                    Else
-                        Return False
-                    End If
-                End If
-            End If
+                    case IGenerateFile.ParamFileType.MSAlignHistone:
+                        {
+                            return RetrieveStaticPSMParameterFile("MSAlign_Histone", paramFileName, outputFilePath, dmsConnectionString);
+                        }
 
-            Return False
-
-        End Function
-
-        ''' <summary>
-        ''' Create SEQUEST parameter file
-        ''' </summary>
-        ''' <param name="paramFileName"></param>
-        ''' <param name="paramFileType"></param>
-        ''' <param name="fastaFilePath"></param>
-        ''' <param name="outputFilePath"></param>
-        ''' <param name="dmsConnectionString"></param>
-        ''' <param name="forceMonoParentMass"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Private Function MakeFileSQ(
-            paramFileName As String,
-            paramFileType As IGenerateFile.ParamFileType,
-            fastaFilePath As String,
-            outputFilePath As String,
-            dmsConnectionString As String,
-            forceMonoParentMass As Boolean) As Boolean
-
-            If m_DbTools Is Nothing Then
-                Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator")
-                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse)
-            End If
-
-            Const DEF_TEMPLATE_FILEPATH = "\\Gigasax\DMS_Parameter_Files\Sequest\sequest_N14_NE_Template.params"
-
-            If String.IsNullOrWhiteSpace(TemplateFilePath) Then
-                TemplateFilePath = DEF_TEMPLATE_FILEPATH
-            End If
-
-            Dim fi As New FileInfo(TemplateFilePath)
-            If Not fi.Exists Then
-                ReportError("Default template file '" & TemplateFilePath & "' does not exist")
-                Return False
-            End If
-
-            ' Instantiate MainProcess so we can access its properties later
-
-            ' ReSharper disable once UnusedVariable.Compiler
-            Dim processor As New MainProcess(TemplateFilePath)
-
-            Dim loadedParams As Params
-            Dim dmsParams As New ParamsFromDMS(m_DbTools)
-            Dim modProcessor As IReconstituteIsoMods
-            modProcessor = New ReconstituteIsoMods(m_DbTools)
-
-            If Not dmsParams.ParamFileTableLoaded Then
-                ReportError("Could Not Establish Database Connection")
-                Return False
-            End If
-
-            If Not dmsParams.ParamSetNameExists(paramFileName) Then
-                ReportError("Parameter File '" & paramFileName & "' does not exist in the database")
-                Return False
-            End If
-
-            loadedParams = dmsParams.ReadParamsFromDMS(paramFileName)
-            loadedParams = modProcessor.ReconstituteIsoMods(loadedParams)
-
-            If forceMonoParentMass And Not loadedParams.LoadedParamNames.ContainsKey("ParentMassType") Then
-                loadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic
-            End If
-
-            If Not loadedParams.LoadedParamNames.ContainsKey("PeptideMassUnits") Then
-                loadedParams.PeptideMassUnits = IAdvancedParams.MassUnitList.amu
-            End If
-
-            If Not loadedParams.LoadedParamNames.ContainsKey("FragmentMassUnits") Then
-                loadedParams.FragmentMassUnits = IAdvancedParams.MassUnitList.amu
-            End If
-
-            loadedParams.DefaultFASTAPath = fastaFilePath
-
-            If m_FileWriter Is Nothing Then
-                m_FileWriter = New WriteOutput
-            End If
-
-            Dim writeSuccess = m_FileWriter.WriteOutputFile(loadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType)
-
-            MakeSeqInfoRelatedFiles(paramFileName, outputFilePath, dmsConnectionString)
-
-            Return writeSuccess
-
-        End Function
-
-        Private Sub MakeSeqInfoRelatedFiles(
-            paramFileName As String,
-            targetDirectory As String,
-            dmsConnectionString As String)
-
-            Const MAXQUANT_MOD_NAME_COLUMN = "MaxQuant_Mod_Name"
-            Const UNIMOD_MOD_NAME_COLUMN = "UniMod_Mod_Name"
-
-            Dim mctSQL As String
-            Dim mdSQL As String
-
-            If m_DbTools Is Nothing Then
-                Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator")
-                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse)
-            End If
-
-            Dim baseParamFileName As String = Path.GetFileNameWithoutExtension(paramFileName)
-
-            If m_FileWriter Is Nothing Then
-                m_FileWriter = New WriteOutput
-            End If
-
-            Dim massCorrectionTagsHeaderNames = New List(Of String) From {
-                "Mass_Correction_Tag",
-                "Monoisotopic_Mass",
-                "Affected_Atom"
+                    case IGenerateFile.ParamFileType.MSPathFinder:
+                        {
+                            return RetrieveStaticPSMParameterFile("MSPathFinder", paramFileName, outputFilePath, dmsConnectionString);
+                        }
+
+                    case IGenerateFile.ParamFileType.MODPlus:
+                        {
+                            return RetrieveStaticPSMParameterFile("MODPlus", paramFileName, outputFilePath, dmsConnectionString);
+                        }
+
+                    case IGenerateFile.ParamFileType.TopPIC:
+                        {
+                            return RetrieveStaticPSMParameterFile("TopPIC", paramFileName, outputFilePath, dmsConnectionString);
+                        }
+
+                    case IGenerateFile.ParamFileType.MSFragger:
+                        {
+                            return RetrieveStaticPSMParameterFile("MSFragger", paramFileName, outputFilePath, dmsConnectionString);
+                        }
+
+                    case IGenerateFile.ParamFileType.MaxQuant:
+                        {
+                            return RetrieveStaticPSMParameterFile("MaxQuant", paramFileName, outputFilePath, dmsConnectionString);
+                        }
+
+                    case IGenerateFile.ParamFileType.Invalid:
+                        {
+                            return default;
+                        }
+
+                    default:
+                        {
+                            paramFileType = IGenerateFile.ParamFileType.BioWorks_32;
+                            return MakeFileSQ(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoParentMass);
+                        }
+                }
             }
 
-            ' Note that "MaxQuant_Mod_Name" will be added below if MaxQuant mods are defined
-            Dim modDefHeaderNames = New List(Of String) From {
-                "Modification_Symbol",
-                "Monoisotopic_Mass",
-                "Target_Residues",
-                "Modification_Type",
-                "Mass_Correction_Tag"
+            catch (Exception ex)
+            {
+                ReportError("Error in MakeFile: " + ex.Message, ex);
+                return false;
             }
 
-            mctSQL =
-                "SELECT Mass_Correction_Tag, Monoisotopic_Mass, Affected_Atom " &
-                "FROM T_Mass_Correction_Factors " &
-                "ORDER BY Mass_Correction_Tag"
 
-            mdSQL =
-                "SELECT " &
-                    "Local_Symbol As Modification_Symbol, " &
-                    "Monoisotopic_Mass, " &
-                    "Residue_Symbol As Target_Residues, " &
-                    "Mod_Type_Symbol As Modification_Type, " &
-                    "Mass_Correction_Tag, " &
-                    MAXQUANT_MOD_NAME_COLUMN & ", " &
-                    UNIMOD_MOD_NAME_COLUMN & " " &
-                "FROM V_Param_File_Mass_Mod_Info " &
-                "WHERE Param_File_Name = '" & paramFileName & "'"
+        }
 
-            Dim massCorrectionTags As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(mctSQL, massCorrectionTags)
+        private bool GetMonoMassStatus(int DatasetID, string dmsConnectionString)
+        {
+            string TypeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + DatasetID.ToString();
+            return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString);
+        }
 
-            Dim paramFileModInfo As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(mdSQL, paramFileModInfo)
+        private bool GetMonoMassStatus(string datasetName, string dmsConnectionString)
+        {
+            string TypeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_name = '" + datasetName + "'";
+            return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString);
+        }
 
-            ' Create the Mass_Correction_Tags file in the working directory
-            m_FileWriter.WriteDataTableToOutputFile(massCorrectionTags, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"), massCorrectionTagsHeaderNames)
+        private bool GetMonoParentStatusWorker(string sqlQuery, string dmsConnectionString)
+        {
 
-            ' Check whether any MaxQuant mods are actually defined
-            Dim includeMaxQuant = False
-            For Each item In paramFileModInfo
-                If item(5).Length > 0 Then
-                    includeMaxQuant = True
-                    modDefHeaderNames.Add(MAXQUANT_MOD_NAME_COLUMN)
-                    Exit For
-                End If
-            Next
+            if (m_DbTools is null)
+            {
+                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
+                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse);
+            }
 
-            ' Populate a new list, only including the MaxQuant column if includeMaxQuant is true
-            Dim paramFileModInfoToWrite As New List(Of List(Of String))
+            List<List<string>> typeCheckTable = null;
+            m_DbTools.GetQueryResults(sqlQuery, out typeCheckTable);
 
-            For Each item In paramFileModInfo
-                Dim currentRow = New List(Of String)
+            if (typeCheckTable.Count > 0)
+            {
 
-                currentRow.AddRange(item.Take(5))
+                int useMonoMassInt;
 
-                If includeMaxQuant Then
-                    currentRow.Add(item(5))
-                End If
+                if (int.TryParse(typeCheckTable[0].First(), out useMonoMassInt))
+                {
+                    if (useMonoMassInt > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
 
-                currentRow.Add(item(6))
+            return false;
 
-                paramFileModInfoToWrite.Add(currentRow)
-            Next
+        }
 
-            ' Always include the UniMod column
-            modDefHeaderNames.Add(UNIMOD_MOD_NAME_COLUMN)
+        /// <summary>
+        /// Create SEQUEST parameter file
+        /// </summary>
+        /// <param name="paramFileName"></param>
+        /// <param name="paramFileType"></param>
+        /// <param name="fastaFilePath"></param>
+        /// <param name="outputFilePath"></param>
+        /// <param name="dmsConnectionString"></param>
+        /// <param name="forceMonoParentMass"></param>
+        /// <returns></returns>
+        /// <remarks></remarks>
+        private bool MakeFileSQ(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, bool forceMonoParentMass)
+        {
 
-            ' Create the param file specific modification definitions file in the working directory
-            m_FileWriter.WriteDataTableToOutputFile(paramFileModInfoToWrite, Path.Combine(targetDirectory, baseParamFileName & "_ModDefs.txt"), modDefHeaderNames)
+            if (m_DbTools is null)
+            {
+                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
+                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse);
+            }
 
-        End Sub
+            const string DEF_TEMPLATE_FILEPATH = @"\\Gigasax\DMS_Parameter_Files\Sequest\sequest_N14_NE_Template.params";
 
-        Private Function RetrieveStaticPSMParameterFile(
-           analysisToolName As String,
-           paramFileName As String,
-           targetDirectory As String,
-           dmsConnectionString As String) As Boolean
+            if (string.IsNullOrWhiteSpace(TemplateFilePath))
+            {
+                TemplateFilePath = DEF_TEMPLATE_FILEPATH;
+            }
 
-            Dim paramFilePath As String
+            var fi = new FileInfo(TemplateFilePath);
+            if (!fi.Exists)
+            {
+                ReportError("Default template file '" + TemplateFilePath + "' does not exist");
+                return false;
+            }
 
-            If m_DbTools Is Nothing Then
-                Dim connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator")
-                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse)
-            End If
+            // Instantiate MainProcess so we can access its properties later
 
-            ' ReSharper disable once StringLiteralTypo
-            Dim paramFilePathSQL =
-                "SELECT TOP 1 AJT_parmFileStoragePath " &
-                "FROM T_Analysis_Tool " &
-                "WHERE AJT_ToolName = '" & analysisToolName & "'"
+            // ReSharper disable once UnusedVariable.Compiler
+            var processor = new MainProcess(TemplateFilePath);
 
-            Dim paramFilePathTable As List(Of List(Of String)) = Nothing
-            m_DbTools.GetQueryResults(paramFilePathSQL, paramFilePathTable)
+            Params loadedParams;
+            var dmsParams = new ParamsFromDMS(m_DbTools);
+            IReconstituteIsoMods modProcessor;
+            modProcessor = new ReconstituteIsoMods(m_DbTools);
 
-            If paramFilePathTable.Count = 0 Then
-                ReportError("Tool not found in T_Analysis_Tool: " & analysisToolName)
-                Return False
-            End If
+            if (!dmsParams.ParamFileTableLoaded)
+            {
+                ReportError("Could Not Establish Database Connection");
+                return false;
+            }
 
-            Dim paramFileDirectory = paramFilePathTable.Item(0).First()
-            paramFilePath = Path.Combine(paramFileDirectory, paramFileName)
+            if (!dmsParams.ParamSetNameExists(paramFileName))
+            {
+                ReportError("Parameter File '" + paramFileName + "' does not exist in the database");
+                return false;
+            }
 
-            If Not Directory.Exists(paramFileDirectory) Then
-                ReportError(String.Format("Directory defined in T_Analysis_Tool for {0} was not found: {1}",
-                                            analysisToolName, paramFileDirectory))
+            loadedParams = dmsParams.ReadParamsFromDMS(paramFileName);
+            loadedParams = modProcessor.ReconstituteIsoMods(loadedParams);
 
-                Return False
-            End If
+            if (forceMonoParentMass & !loadedParams.LoadedParamNames.ContainsKey("ParentMassType"))
+            {
+                loadedParams.ParentMassType = IBasicParams.MassTypeList.Monoisotopic;
+            }
 
-            Dim fiSource = New FileInfo(paramFilePath)
-            If Not fiSource.Exists Then
-                ReportError("Parameter file not found: " & fiSource.FullName)
-                Return False
-            End If
+            if (!loadedParams.LoadedParamNames.ContainsKey("PeptideMassUnits"))
+            {
+                loadedParams.PeptideMassUnits = (int)IAdvancedParams.MassUnitList.amu;
+            }
 
-            ' Copy the param file from Gigasax to the working directory
-            fiSource.CopyTo(Path.Combine(targetDirectory, paramFileName), True)
+            if (!loadedParams.LoadedParamNames.ContainsKey("FragmentMassUnits"))
+            {
+                loadedParams.FragmentMassUnits = (int)IAdvancedParams.MassUnitList.amu;
+            }
 
-            MakeSeqInfoRelatedFiles(paramFileName, targetDirectory, dmsConnectionString)
+            loadedParams.DefaultFASTAPath = fastaFilePath;
 
-            Return True
+            if (m_FileWriter is null)
+            {
+                m_FileWriter = new WriteOutput();
+            }
 
-        End Function
+            bool writeSuccess = m_FileWriter.WriteOutputFile(loadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType);
 
-        Private Function GetAvailableParamSetNames(dbTools As IDBTools) As List(Of String) Implements IGenerateFile.GetAvailableParamSetNames
+            MakeSeqInfoRelatedFiles(paramFileName, outputFilePath, dmsConnectionString);
 
-            Dim availableParamSets As New List(Of String)
-            Dim dmsParams As New ParamsFromDMS(dbTools)
+            return writeSuccess;
 
-            Dim retrievedParamSets As DataTable = dmsParams.RetrieveAvailableParams()
-            Dim dr As DataRow
-            For Each dr In retrievedParamSets.Rows
-                availableParamSets.Add(dr.Item("FileName").ToString)
-            Next
-            Return availableParamSets
-        End Function
+        }
 
-        Private Function GetAvailableParamSetTable(dbTools As IDBTools) As DataTable Implements IGenerateFile.GetAvailableParamSetTable
-            Dim paramGenerator As New ParamsFromDMS(dbTools)
-            Dim paramSetsAvailable As DataTable = paramGenerator.RetrieveAvailableParams
+        private void MakeSeqInfoRelatedFiles(string paramFileName, string targetDirectory, string dmsConnectionString)
+        {
 
-            Return paramSetsAvailable
+            const string MAXQUANT_MOD_NAME_COLUMN = "MaxQuant_Mod_Name";
+            const string UNIMOD_MOD_NAME_COLUMN = "UniMod_Mod_Name";
 
-        End Function
+            string mctSQL;
+            string mdSQL;
 
-        Private Function GetAvailableParamSetTypes(dbTools As IDBTools) As DataTable Implements IGenerateFile.GetAvailableParamFileTypes
-            Dim paramGenerator As New ParamsFromDMS(dbTools)
-            Dim paramTypesAvailable As DataTable = paramGenerator.RetrieveParamFileTypes
-            Return paramTypesAvailable
-        End Function
+            if (m_DbTools is null)
+            {
+                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
+                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse);
+            }
 
-        Public ReadOnly Property LastError As String Implements IGenerateFile.LastError
-            Get
-                Return LastErrorMsg
-            End Get
-        End Property
+            string baseParamFileName = Path.GetFileNameWithoutExtension(paramFileName);
 
-        Private Sub ReportError(errorMessage As String, Optional ex As Exception = Nothing)
-            OnErrorEvent(errorMessage, ex)
-            LastErrorMsg = errorMessage
-        End Sub
+            if (m_FileWriter is null)
+            {
+                m_FileWriter = new WriteOutput();
+            }
 
-    End Class
-End Namespace
+            var massCorrectionTagsHeaderNames = new List<string>() { "Mass_Correction_Tag", "Monoisotopic_Mass", "Affected_Atom" };
+
+            // Note that "MaxQuant_Mod_Name" will be added below if MaxQuant mods are defined
+            var modDefHeaderNames = new List<string>() { "Modification_Symbol", "Monoisotopic_Mass", "Target_Residues", "Modification_Type", "Mass_Correction_Tag" };
+
+            mctSQL = "SELECT Mass_Correction_Tag, Monoisotopic_Mass, Affected_Atom " + "FROM T_Mass_Correction_Factors " + "ORDER BY Mass_Correction_Tag";
+
+            mdSQL = "SELECT " + "Local_Symbol As Modification_Symbol, " + "Monoisotopic_Mass, " + "Residue_Symbol As Target_Residues, " + "Mod_Type_Symbol As Modification_Type, " + "Mass_Correction_Tag, " + MAXQUANT_MOD_NAME_COLUMN + ", " + UNIMOD_MOD_NAME_COLUMN + " " + "FROM V_Param_File_Mass_Mod_Info " + "WHERE Param_File_Name = '" + paramFileName + "'";
+
+            List<List<string>> massCorrectionTags = null;
+            m_DbTools.GetQueryResults(mctSQL, out massCorrectionTags);
+
+            List<List<string>> paramFileModInfo = null;
+            m_DbTools.GetQueryResults(mdSQL, out paramFileModInfo);
+
+            // Create the Mass_Correction_Tags file in the working directory
+            m_FileWriter.WriteDataTableToOutputFile(massCorrectionTags, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"), massCorrectionTagsHeaderNames);
+
+            // Check whether any MaxQuant mods are actually defined
+            bool includeMaxQuant = false;
+            foreach (var item in paramFileModInfo)
+            {
+                if (item[5].Length > 0)
+                {
+                    includeMaxQuant = true;
+                    modDefHeaderNames.Add(MAXQUANT_MOD_NAME_COLUMN);
+                    break;
+                }
+            }
+
+            // Populate a new list, only including the MaxQuant column if includeMaxQuant is true
+            var paramFileModInfoToWrite = new List<List<string>>();
+
+            foreach (var item in paramFileModInfo)
+            {
+                var currentRow = new List<string>();
+
+                currentRow.AddRange(item.Take(5));
+
+                if (includeMaxQuant)
+                {
+                    currentRow.Add(item[5]);
+                }
+
+                currentRow.Add(item[6]);
+
+                paramFileModInfoToWrite.Add(currentRow);
+            }
+
+            // Always include the UniMod column
+            modDefHeaderNames.Add(UNIMOD_MOD_NAME_COLUMN);
+
+            // Create the param file specific modification definitions file in the working directory
+            m_FileWriter.WriteDataTableToOutputFile(paramFileModInfoToWrite, Path.Combine(targetDirectory, baseParamFileName + "_ModDefs.txt"), modDefHeaderNames);
+
+        }
+
+        private bool RetrieveStaticPSMParameterFile(string analysisToolName, string paramFileName, string targetDirectory, string dmsConnectionString)
+        {
+
+            string paramFilePath;
+
+            if (m_DbTools is null)
+            {
+                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
+                m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse);
+            }
+
+            // ReSharper disable once StringLiteralTypo
+            string paramFilePathSQL = "SELECT TOP 1 AJT_parmFileStoragePath " + "FROM T_Analysis_Tool " + "WHERE AJT_ToolName = '" + analysisToolName + "'";
+
+            List<List<string>> paramFilePathTable = null;
+            m_DbTools.GetQueryResults(paramFilePathSQL, out paramFilePathTable);
+
+            if (paramFilePathTable.Count == 0)
+            {
+                ReportError("Tool not found in T_Analysis_Tool: " + analysisToolName);
+                return false;
+            }
+
+            string paramFileDirectory = paramFilePathTable[0].First();
+            paramFilePath = Path.Combine(paramFileDirectory, paramFileName);
+
+            if (!Directory.Exists(paramFileDirectory))
+            {
+                ReportError(string.Format("Directory defined in T_Analysis_Tool for {0} was not found: {1}", analysisToolName, paramFileDirectory));
+
+                return false;
+            }
+
+            var fiSource = new FileInfo(paramFilePath);
+            if (!fiSource.Exists)
+            {
+                ReportError("Parameter file not found: " + fiSource.FullName);
+                return false;
+            }
+
+            // Copy the param file from Gigasax to the working directory
+            fiSource.CopyTo(Path.Combine(targetDirectory, paramFileName), true);
+
+            MakeSeqInfoRelatedFiles(paramFileName, targetDirectory, dmsConnectionString);
+
+            return true;
+
+        }
+
+        private List<string> GetAvailableParamSetNames(IDBTools dbTools)
+        {
+
+            var availableParamSets = new List<string>();
+            var dmsParams = new ParamsFromDMS(dbTools);
+
+            var retrievedParamSets = dmsParams.RetrieveAvailableParams();
+            foreach (DataRow dr in retrievedParamSets.Rows)
+                availableParamSets.Add(dr["FileName"].ToString());
+            return availableParamSets;
+        }
+
+        List<string> IGenerateFile.GetAvailableParamSetNames(IDBTools dbTools) => GetAvailableParamSetNames(dbTools);
+
+        private DataTable GetAvailableParamSetTable(IDBTools dbTools)
+        {
+            var paramGenerator = new ParamsFromDMS(dbTools);
+            var paramSetsAvailable = paramGenerator.RetrieveAvailableParams();
+
+            return paramSetsAvailable;
+
+        }
+
+        DataTable IGenerateFile.GetAvailableParamSetTable(IDBTools dbTools) => GetAvailableParamSetTable(dbTools);
+
+        private DataTable GetAvailableParamSetTypes(IDBTools dbTools)
+        {
+            var paramGenerator = new ParamsFromDMS(dbTools);
+            var paramTypesAvailable = paramGenerator.RetrieveParamFileTypes();
+            return paramTypesAvailable;
+        }
+
+        DataTable IGenerateFile.GetAvailableParamFileTypes(IDBTools dbTools) => GetAvailableParamSetTypes(dbTools);
+
+        public string LastError
+        {
+            get
+            {
+                return LastErrorMsg;
+            }
+        }
+
+        private void ReportError(string errorMessage, Exception ex = null)
+        {
+            OnErrorEvent(errorMessage, ex);
+            LastErrorMsg = errorMessage;
+        }
+
+    }
+}

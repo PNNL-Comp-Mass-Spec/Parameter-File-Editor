@@ -1,303 +1,402 @@
-Imports System.Linq
+﻿using System;
+using System.Linq;
+using Microsoft.VisualBasic;
 
-Public Class StaticMods
-    Inherits Mods
+namespace ParamFileGenerator
+{
 
-    Public Property CtermPeptide As Double
-        Get
-            Return FindAAMod(ResidueCode.C_Term_Peptide).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.C_Term_Peptide, Value)
-        End Set
-    End Property
+    public class StaticMods : Mods
+    {
 
-    Public Property CtermProtein As Double
-        Get
-            Return FindAAMod(ResidueCode.C_Term_Protein).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.C_Term_Protein, Value)
-        End Set
-    End Property
-    Public Property NtermPeptide As Double
-        Get
-            Return FindAAMod(ResidueCode.N_Term_Peptide).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.N_Term_Peptide, Value)
-        End Set
-    End Property
+        public double CtermPeptide
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.C_Term_Peptide).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.C_Term_Peptide, value);
+            }
+        }
 
-    Public Property NtermProtein As Double
-        Get
-            Return FindAAMod(ResidueCode.N_Term_Protein).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.N_Term_Protein, Value)
-        End Set
-    End Property
+        public double CtermProtein
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.C_Term_Protein).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.C_Term_Protein, value);
+            }
+        }
+        public double NtermPeptide
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.N_Term_Peptide).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.N_Term_Peptide, value);
+            }
+        }
 
-    Public Property G_Glycine As Double
-        Get
-            Return FindAAMod(ResidueCode.G_Glycine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.G_Glycine, Value)
-        End Set
-    End Property
+        public double NtermProtein
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.N_Term_Protein).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.N_Term_Protein, value);
+            }
+        }
 
-    Public Property A_Alanine As Double
-        Get
-            Return FindAAMod(ResidueCode.A_Alanine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.A_Alanine, Value)
-        End Set
-    End Property
+        public double G_Glycine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.G_Glycine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.G_Glycine, value);
+            }
+        }
 
-    Public Property S_Serine As Double
-        Get
-            Return FindAAMod(ResidueCode.S_Serine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.S_Serine, Value)
-        End Set
-    End Property
+        public double A_Alanine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.A_Alanine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.A_Alanine, value);
+            }
+        }
 
-    Public Property P_Proline As Double
-        Get
-            Return FindAAMod(ResidueCode.P_Proline).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.P_Proline, Value)
-        End Set
-    End Property
+        public double S_Serine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.S_Serine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.S_Serine, value);
+            }
+        }
 
-    Public Property V_Valine As Double
-        Get
-            Return FindAAMod(ResidueCode.V_Valine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.V_Valine, Value)
-        End Set
-    End Property
+        public double P_Proline
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.P_Proline).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.P_Proline, value);
+            }
+        }
 
-    Public Property T_Threonine As Double
-        Get
-            Return FindAAMod(ResidueCode.T_Threonine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.T_Threonine, Value)
-        End Set
-    End Property
-    Public Property C_Cysteine As Double
-        Get
-            Return FindAAMod(ResidueCode.C_Cysteine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.C_Cysteine, Value)
-        End Set
-    End Property
+        public double V_Valine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.V_Valine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.V_Valine, value);
+            }
+        }
 
-    Public Property L_Leucine As Double
-        Get
-            Return FindAAMod(ResidueCode.L_Leucine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.L_Leucine, Value)
-        End Set
-    End Property
+        public double T_Threonine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.T_Threonine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.T_Threonine, value);
+            }
+        }
+        public double C_Cysteine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.C_Cysteine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.C_Cysteine, value);
+            }
+        }
 
-    Public Property I_Isoleucine As Double
-        Get
-            Return FindAAMod(ResidueCode.I_Isoleucine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.I_Isoleucine, Value)
-        End Set
-    End Property
+        public double L_Leucine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.L_Leucine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.L_Leucine, value);
+            }
+        }
 
-    Public Property X_LorI As Double
-        Get
-            Return FindAAMod(ResidueCode.X_LorI).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.X_LorI, Value)
-        End Set
-    End Property
+        public double I_Isoleucine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.I_Isoleucine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.I_Isoleucine, value);
+            }
+        }
 
-    Public Property N_Asparagine As Double
-        Get
-            Return FindAAMod(ResidueCode.N_Asparagine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.N_Asparagine, Value)
-        End Set
-    End Property
+        public double X_LorI
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.X_LorI).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.X_LorI, value);
+            }
+        }
 
-    Public Property O_Ornithine As Double
-        Get
-            Return FindAAMod(ResidueCode.O_Ornithine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.O_Ornithine, Value)
-        End Set
-    End Property
+        public double N_Asparagine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.N_Asparagine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.N_Asparagine, value);
+            }
+        }
 
-    Public Property B_avg_NandD As Double
-        Get
-            Return FindAAMod(ResidueCode.B_avg_NandD).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.B_avg_NandD, Value)
-        End Set
-    End Property
+        public double O_Ornithine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.O_Ornithine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.O_Ornithine, value);
+            }
+        }
 
-    Public Property D_Aspartic_Acid As Double
-        Get
-            Return FindAAMod(ResidueCode.D_Aspartic_Acid).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.D_Aspartic_Acid, Value)
-        End Set
-    End Property
+        public double B_avg_NandD
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.B_avg_NandD).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.B_avg_NandD, value);
+            }
+        }
 
-    Public Property Q_Glutamine As Double
-        Get
-            Return FindAAMod(ResidueCode.Q_Glutamine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.Q_Glutamine, Value)
-        End Set
-    End Property
+        public double D_Aspartic_Acid
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.D_Aspartic_Acid).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.D_Aspartic_Acid, value);
+            }
+        }
 
-    Public Property K_Lysine As Double
-        Get
-            Return FindAAMod(ResidueCode.K_Lysine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.K_Lysine, Value)
-        End Set
-    End Property
+        public double Q_Glutamine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.Q_Glutamine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.Q_Glutamine, value);
+            }
+        }
 
-    Public Property Z_avg_QandE As Double
-        Get
-            Return FindAAMod(ResidueCode.Z_avg_QandE).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.Z_avg_QandE, Value)
-        End Set
-    End Property
+        public double K_Lysine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.K_Lysine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.K_Lysine, value);
+            }
+        }
 
-    Public Property E_Glutamic_Acid As Double
-        Get
-            Return FindAAMod(ResidueCode.E_Glutamic_Acid).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.E_Glutamic_Acid, Value)
-        End Set
-    End Property
+        public double Z_avg_QandE
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.Z_avg_QandE).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.Z_avg_QandE, value);
+            }
+        }
 
-    Public Property M_Methionine As Double
-        Get
-            Return FindAAMod(ResidueCode.M_Methionine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.M_Methionine, Value)
-        End Set
-    End Property
+        public double E_Glutamic_Acid
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.E_Glutamic_Acid).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.E_Glutamic_Acid, value);
+            }
+        }
 
-    Public Property H_Histidine As Double
-        Get
-            Return FindAAMod(ResidueCode.H_Histidine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.H_Histidine, Value)
-        End Set
-    End Property
+        public double M_Methionine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.M_Methionine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.M_Methionine, value);
+            }
+        }
 
-    Public Property F_Phenylalanine As Double
-        Get
-            Return FindAAMod(ResidueCode.F_Phenylalanine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.F_Phenylalanine, Value)
-        End Set
-    End Property
+        public double H_Histidine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.H_Histidine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.H_Histidine, value);
+            }
+        }
 
-    Public Property R_Arginine As Double
-        Get
-            Return FindAAMod(ResidueCode.R_Arginine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.R_Arginine, Value)
-        End Set
-    End Property
+        public double F_Phenylalanine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.F_Phenylalanine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.F_Phenylalanine, value);
+            }
+        }
 
-    Public Property Y_Tyrosine As Double
-        Get
-            Return FindAAMod(ResidueCode.Y_Tyrosine).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.Y_Tyrosine, Value)
-        End Set
-    End Property
+        public double R_Arginine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.R_Arginine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.R_Arginine, value);
+            }
+        }
 
-    Public Property W_Tryptophan As Double
-        Get
-            Return FindAAMod(ResidueCode.W_Tryptophan).MassDifference
-        End Get
-        Set
-            ChangeAAMod(ResidueCode.W_Tryptophan, Value)
-        End Set
-    End Property
+        public double Y_Tyrosine
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.Y_Tyrosine).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.Y_Tyrosine, value);
+            }
+        }
 
-    Public Sub New()
-        MyBase.New()
-    End Sub
+        public double W_Tryptophan
+        {
+            get
+            {
+                return FindAAMod(ResidueCode.W_Tryptophan).MassDifference;
+            }
+            set
+            {
+                ChangeAAMod(ResidueCode.W_Tryptophan, value);
+            }
+        }
 
-    Public Function GetResidue(index As Integer) As String
-        Dim m = DirectCast(List.Item(index), ModEntry)
-        Return m.ReturnResidueAffected(0)
-    End Function
-    Public Sub ChangeAAModification(ModifiedAA As ResidueCode, MassDifference As Double, Optional Additive As Boolean = False)
-        ChangeAAMod(ModifiedAA, MassDifference, Additive)
-    End Sub
-    Public Sub EradicateEmptyMods()
-        KillBlankMods()
-    End Sub
+        public StaticMods() : base()
+        {
+        }
 
-    Private Function FindAAMod(ModifiedAA As ResidueCode) As ModEntry
-        Return m_FindMod(ConvertResidueCodeToSLC(ModifiedAA))
-    End Function
+        public string GetResidue(int index)
+        {
+            ModEntry m = (ModEntry)List[index];
+            return m.ReturnResidueAffected(0);
+        }
+        public void ChangeAAModification(ResidueCode ModifiedAA, double MassDifference, bool Additive = false)
+        {
+            ChangeAAMod(ModifiedAA, MassDifference, Additive);
+        }
+        public void EradicateEmptyMods()
+        {
+            KillBlankMods();
+        }
 
-    Private Sub ChangeAAMod(ModifiedAA As ResidueCode, MassDifference As Double, Optional Additive As Boolean = False)
-        Dim foundMod As ModEntry = FindAAMod(ModifiedAA)
-        Dim ModAAString As String = ConvertResidueCodeToSLC(ModifiedAA)
-        m_ChangeMod(foundMod, ModAAString, MassDifference, Additive)
+        private ModEntry FindAAMod(ResidueCode ModifiedAA)
+        {
+            return m_FindMod(ConvertResidueCodeToSLC(ModifiedAA));
+        }
 
-    End Sub
+        private void ChangeAAMod(ResidueCode ModifiedAA, double MassDifference, bool Additive = false)
+        {
+            var foundMod = FindAAMod(ModifiedAA);
+            string ModAAString = ConvertResidueCodeToSLC(ModifiedAA);
+            m_ChangeMod(foundMod, ModAAString, MassDifference, Additive);
 
-    Private Sub KillBlankMods()
-        Dim AA As String
-        Dim AASLC As String
-        Dim AAEnums = [Enum].GetNames(GetType(ResidueCode)).ToList()
-        Dim currIndex As Integer
-        Dim modEntry As ModEntry
+        }
 
-        For Each AA In AAEnums
-            If InStr(AA, "Term") = 0 Then
-                AASLC = Left(AA, 1)
-                currIndex = m_FindModIndex(AASLC)
-                If currIndex <> -1 Then
-                    modEntry = GetModEntry(currIndex)
-                    If Math.Abs(modEntry.MassDifference) < Single.Epsilon Then
-                        List.Remove(modEntry)
-                    End If
-                End If
-            End If
-        Next
-    End Sub
+        private void KillBlankMods()
+        {
+            string AASLC;
+            var AAEnums = Enum.GetNames(typeof(ResidueCode)).ToList();
+            int currIndex;
+            ModEntry modEntry;
 
-End Class
+            foreach (var AA in AAEnums)
+            {
+                if (Strings.InStr(AA, "Term") == 0)
+                {
+                    AASLC = Strings.Left(AA, 1);
+                    currIndex = m_FindModIndex(AASLC);
+                    if (currIndex != -1)
+                    {
+                        modEntry = GetModEntry(currIndex);
+                        if (Math.Abs(modEntry.MassDifference) < float.Epsilon)
+                        {
+                            List.Remove(modEntry);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}

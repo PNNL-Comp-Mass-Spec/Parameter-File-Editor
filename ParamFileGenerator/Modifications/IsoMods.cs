@@ -1,68 +1,91 @@
-Public Class IsoMods
-    Inherits Mods
+﻿
+namespace ParamFileGenerator
+{
+    public class IsoMods : Mods
+    {
 
-    Public Overloads Sub Add(AffectedAtom As IsotopeList, MassDifference As Double, Optional GlobalModID As Integer = 0)
-        m_Add(AffectedAtom.ToString, MassDifference, ModEntry.ModificationTypes.Isotopic, GlobalModID)
-    End Sub
+        public void Add(IsotopeList AffectedAtom, double MassDifference, int GlobalModID = 0)
+        {
+            m_Add(AffectedAtom.ToString(), MassDifference, ModEntry.ModificationTypes.Isotopic, GlobalModID);
+        }
 
-    Public Function GetAtom(index As Integer) As String
-        Dim m = DirectCast(List.Item(index), ModEntry)
-        Return m.ReturnResidueAffected(0)
-    End Function
+        public string GetAtom(int index)
+        {
+            ModEntry m = (ModEntry)List[index];
+            return m.ReturnResidueAffected(0);
+        }
 
-    Public Property Iso_C As Double
-        Get
-            Return FindIsoMod(IsotopeList.C).MassDifference
-        End Get
-        Set
-            ChangeIsoMod(IsotopeList.C, Value)
-        End Set
-    End Property
+        public double Iso_C
+        {
+            get
+            {
+                return FindIsoMod(IsotopeList.C).MassDifference;
+            }
+            set
+            {
+                ChangeIsoMod(IsotopeList.C, value);
+            }
+        }
 
-    Public Property Iso_H As Double
-        Get
-            Return FindIsoMod(IsotopeList.H).MassDifference
-        End Get
-        Set
-            ChangeIsoMod(IsotopeList.H, Value)
-        End Set
-    End Property
+        public double Iso_H
+        {
+            get
+            {
+                return FindIsoMod(IsotopeList.H).MassDifference;
+            }
+            set
+            {
+                ChangeIsoMod(IsotopeList.H, value);
+            }
+        }
 
-    Public Property Iso_O As Double
-        Get
-            Return FindIsoMod(IsotopeList.O).MassDifference
-        End Get
-        Set
-            ChangeIsoMod(IsotopeList.O, Value)
-        End Set
-    End Property
+        public double Iso_O
+        {
+            get
+            {
+                return FindIsoMod(IsotopeList.O).MassDifference;
+            }
+            set
+            {
+                ChangeIsoMod(IsotopeList.O, value);
+            }
+        }
 
-    Public Property Iso_N As Double
-        Get
-            Return FindIsoMod(IsotopeList.N).MassDifference
-        End Get
-        Set
-            ChangeIsoMod(IsotopeList.N, Value)
-        End Set
-    End Property
+        public double Iso_N
+        {
+            get
+            {
+                return FindIsoMod(IsotopeList.N).MassDifference;
+            }
+            set
+            {
+                ChangeIsoMod(IsotopeList.N, value);
+            }
+        }
 
-    Public Property Iso_S As Double
-        Get
-            Return FindIsoMod(IsotopeList.S).MassDifference
-        End Get
-        Set
-            ChangeIsoMod(IsotopeList.S, Value)
-        End Set
-    End Property
+        public double Iso_S
+        {
+            get
+            {
+                return FindIsoMod(IsotopeList.S).MassDifference;
+            }
+            set
+            {
+                ChangeIsoMod(IsotopeList.S, value);
+            }
+        }
 
-    Private Sub ChangeIsoMod(AffectedAtom As IsotopeList, MassDifference As Double)
-        Dim foundMod As ModEntry = FindIsoMod(AffectedAtom)
-        Dim ModAAString As String = AffectedAtom.ToString
-        m_ChangeMod(foundMod, ModAAString, MassDifference)
-    End Sub
+        private void ChangeIsoMod(IsotopeList AffectedAtom, double MassDifference)
+        {
+            var foundMod = FindIsoMod(AffectedAtom);
+            string ModAAString = AffectedAtom.ToString();
+            m_ChangeMod(foundMod, ModAAString, MassDifference);
+        }
 
-    Private Function FindIsoMod(AffectedAtom As IsotopeList) As ModEntry
-        Return m_FindMod(AffectedAtom.ToString)
-    End Function
+        private ModEntry FindIsoMod(IsotopeList AffectedAtom)
+        {
+            return m_FindMod(AffectedAtom.ToString());
+        }
 
-End Class
+    }
+}

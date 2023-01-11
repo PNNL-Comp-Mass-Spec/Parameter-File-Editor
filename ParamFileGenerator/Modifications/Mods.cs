@@ -1,261 +1,306 @@
-Imports System.Collections.Generic
-Imports System.Linq
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
 
-Public Class Mods
-    Inherits CollectionBase
+namespace ParamFileGenerator
+{
 
-    Public Enum ResidueCode
-        C_Term_Protein
-        C_Term_Peptide
-        N_Term_Protein
-        N_Term_Peptide
-        G_Glycine
-        A_Alanine
-        S_Serine
-        P_Proline
-        V_Valine
-        T_Threonine
-        C_Cysteine
-        L_Leucine
-        I_Isoleucine
-        X_LorI
-        N_Asparagine
-        O_Ornithine
-        B_avg_NandD
-        D_Aspartic_Acid
-        Q_Glutamine
-        K_Lysine
-        Z_avg_QandE
-        E_Glutamic_Acid
-        M_Methionine
-        H_Histidine
-        F_Phenylalanine
-        R_Arginine
-        Y_Tyrosine
-        W_Tryptophan
-    End Enum
+    public class Mods : CollectionBase
+    {
 
-    Public Enum IsotopeList
-        C
-        H
-        O
-        N
-        S
-    End Enum
+        public enum ResidueCode
+        {
+            C_Term_Protein,
+            C_Term_Peptide,
+            N_Term_Protein,
+            N_Term_Peptide,
+            G_Glycine,
+            A_Alanine,
+            S_Serine,
+            P_Proline,
+            V_Valine,
+            T_Threonine,
+            C_Cysteine,
+            L_Leucine,
+            I_Isoleucine,
+            X_LorI,
+            N_Asparagine,
+            O_Ornithine,
+            B_avg_NandD,
+            D_Aspartic_Acid,
+            Q_Glutamine,
+            K_Lysine,
+            Z_avg_QandE,
+            E_Glutamic_Acid,
+            M_Methionine,
+            H_Histidine,
+            F_Phenylalanine,
+            R_Arginine,
+            Y_Tyrosine,
+            W_Tryptophan
+        }
 
-    Public ReadOnly Property ModCount As Integer
-        Get
-            Return List.Count
-        End Get
-    End Property
-    Public ReadOnly Property Initialized As Boolean
-        Get
-            If List.Count > 0 Then
-                Return True
-            Else
-                Return False
-            End If
-        End Get
-    End Property
+        public enum IsotopeList
+        {
+            C,
+            H,
+            O,
+            N,
+            S
+        }
 
-    Public ReadOnly Property GetModEntry(index As Integer) As ModEntry
-        Get
-            Return CType(List.Item(index), ModEntry)
-        End Get
-    End Property
+        public int ModCount
+        {
+            get
+            {
+                return List.Count;
+            }
+        }
+        public bool Initialized
+        {
+            get
+            {
+                if (List.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
 
-    Public ReadOnly Property NumMods As Integer
-        Get
-            Return List.Count()
-        End Get
-    End Property
+        public ModEntry GetModEntry(int index)
+        {
+            return (ModEntry)List[index];
+        }
 
-    Public Sub New()
-        MyBase.New()
-        LoadAAMappingColl()
-    End Sub
+        public int NumMods
+        {
+            get
+            {
+                return List.Count;
+            }
+        }
 
-    Public Overridable Sub Add(
-        AffectedResidue As ResidueCode,
-        MassDifference As Double,
-        Optional GlobalModID As Integer = 0)
+        public Mods() : base()
+        {
+            LoadAAMappingColl();
+        }
 
-        m_Add(ConvertResidueCodeToSLC(AffectedResidue), MassDifference, ModEntry.ModificationTypes.Static, GlobalModID)
-    End Sub
+        public virtual void Add(ResidueCode AffectedResidue, double MassDifference, int GlobalModID = 0)
+        {
 
-    Public Sub Add(
-        AffectedResidueString As String,
-        MassDifference As Double)
+            m_Add(ConvertResidueCodeToSLC(AffectedResidue), MassDifference, ModEntry.ModificationTypes.Static, GlobalModID);
+        }
 
-        Dim residueList = ConvertAffectedResStringToList(AffectedResidueString)
-        Dim newMod As New ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Static)
-        List.Add(newMod)
-    End Sub
+        public void Add(string AffectedResidueString, double MassDifference)
+        {
 
-    Public Sub Insert(index As Integer, newMod As ModEntry)
-        List.Insert(index, newMod)
-    End Sub
+            var residueList = ConvertAffectedResStringToList(AffectedResidueString);
+            var newMod = new ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Static);
+            List.Add(newMod);
+        }
 
-    Public Sub Remove(index As Integer)
-        List.RemoveAt(index)
-    End Sub
+        public void Insert(int index, ModEntry newMod)
+        {
+            List.Insert(index, newMod);
+        }
 
-    Public Sub Replace(index As Integer, newMod As ModEntry)
-        List.RemoveAt(index)
-        List.Insert(index, newMod)
-    End Sub
+        public void Remove(int index)
+        {
+            List.RemoveAt(index);
+        }
 
-    Public Function GetMassDiff(index As Integer) As String
-        Dim m = DirectCast(List.Item(index), ModEntry)
-        Return Format(m.MassDifference, "0.00000")
-    End Function
+        public void Replace(int index, ModEntry newMod)
+        {
+            List.RemoveAt(index);
+            List.Insert(index, newMod);
+        }
 
-    ''' <summary>
-    ''' Keys are residue names from ResidueCode (e.g. P_Proline)
-    ''' Values are the single letter abbreviation if an amino acid
-    ''' Or, if not an amino acid, one of: C_Term_Protein, C_Term_Peptide, N_Term_Protein, or N_Term_Peptide
-    ''' </summary>
-    Protected m_AAMappingTable As Dictionary(Of String, String)
-    Protected Sub m_Add(
-        AffectedEntity As String,
-        MassDifference As Double,
-        ModType As ModEntry.ModificationTypes,
-        Optional GlobalModID As Integer = 0)
+        public string GetMassDiff(int index)
+        {
+            ModEntry m = (ModEntry)List[index];
+            return Strings.Format(m.MassDifference, "0.00000");
+        }
 
-        Dim residueList = ConvertAffectedResStringToList(AffectedEntity)
-        Dim newMod As New ModEntry(residueList, MassDifference, ModType, GlobalModID)
-        List.Add(newMod)
+        /// <summary>
+    /// Keys are residue names from ResidueCode (e.g. P_Proline)
+    /// Values are the single letter abbreviation if an amino acid
+    /// Or, if not an amino acid, one of: C_Term_Protein, C_Term_Peptide, N_Term_Protein, or N_Term_Peptide
+    /// </summary>
+        protected Dictionary<string, string> m_AAMappingTable;
+        protected void m_Add(string AffectedEntity, double MassDifference, ModEntry.ModificationTypes ModType, int GlobalModID = 0)
+        {
 
-    End Sub
+            var residueList = ConvertAffectedResStringToList(AffectedEntity);
+            var newMod = new ModEntry(residueList, MassDifference, ModType, GlobalModID);
+            List.Add(newMod);
 
-    Protected Sub LoadAAMappingColl()
-        Dim AAEnums = [Enum].GetNames(GetType(ResidueCode)).ToList()
+        }
 
-        m_AAMappingTable = New Dictionary(Of String, String)
+        protected void LoadAAMappingColl()
+        {
+            var AAEnums = Enum.GetNames(typeof(ResidueCode)).ToList();
 
-        For Each AA In AAEnums
-            If AA = "C_Term_Protein" Or AA = "C_Term_Peptide" Or AA = "N_Term_Protein" Or AA = "N_Term_Peptide" Then
-                m_AAMappingTable.Add(AA, AA)
-            Else
-                m_AAMappingTable.Add(AA, AA.Substring(0, 1))
-            End If
-        Next
-    End Sub
+            m_AAMappingTable = new Dictionary<string, string>();
 
-    Protected Function ConvertAffectedResStringToList(affectedResidueString As String) As List(Of String)
-        Dim aaList As New List(Of String)
+            foreach (var AA in AAEnums)
+            {
+                if (AA == "C_Term_Protein" | AA == "C_Term_Peptide" | AA == "N_Term_Protein" | AA == "N_Term_Peptide")
+                {
+                    m_AAMappingTable.Add(AA, AA);
+                }
+                else
+                {
+                    m_AAMappingTable.Add(AA, AA.Substring(0, 1));
+                }
+            }
+        }
 
-        If affectedResidueString = "C_Term_Protein" OrElse
-           affectedResidueString = "C_Term_Peptide" OrElse
-           affectedResidueString = "N_Term_Protein" OrElse
-           affectedResidueString = "N_Term_Peptide" Then
-            aaList.Add(affectedResidueString)
-        Else
-            For counter = 1 To Len(affectedResidueString)
-                Dim tmpAA = Mid(affectedResidueString, counter, 1)
-                'If InStr("><[]",tmpAA) = 0 Then
-                aaList.Add(tmpAA)
-                'End If
+        protected List<string> ConvertAffectedResStringToList(string affectedResidueString)
+        {
+            var aaList = new List<string>();
 
-            Next
-        End If
+            if (affectedResidueString == "C_Term_Protein" || affectedResidueString == "C_Term_Peptide" || affectedResidueString == "N_Term_Protein" || affectedResidueString == "N_Term_Peptide")
+            {
+                aaList.Add(affectedResidueString);
+            }
+            else
+            {
+                for (int counter = 1, loopTo = Strings.Len(affectedResidueString); counter <= loopTo; counter++)
+                {
+                    string tmpAA = Strings.Mid(affectedResidueString, counter, 1);
+                    // If InStr("><[]",tmpAA) = 0 Then
+                    aaList.Add(tmpAA);
+                    // End If
 
-        Return aaList
-    End Function
-
-    Protected Function ConvertResidueCodeToSLC(Residue As ResidueCode) As String
-        Dim tmpRes As String = Residue.ToString()
-
-        Dim tmpSLC As String = Nothing
-        If m_AAMappingTable.TryGetValue(tmpRes, tmpSLC) Then
-            Return tmpSLC
-        End If
-
-        Return String.Empty
-    End Function
-
-    Protected Function ConvertSLCToResidueCode(SingleLetterAA As String) As ResidueCode
-
-        For Each item In m_AAMappingTable
-            Dim ResString = item.Key
-            If SingleLetterAA = ResString.Substring(0, 1) And Not ResString.Contains("Term") Then
-                Return DirectCast([Enum].Parse(GetType(ResidueCode), ResString), ResidueCode)
-            End If
-        Next
-
-    End Function
-
-    Protected Function m_FindModIndex(modifiedEntity As String) As Integer
-        Dim statMod As ModEntry
-
-        For Each statMod In List
-            Dim testCase = statMod.ReturnResidueAffected(0)
-            If testCase = modifiedEntity Then
-                Return List.IndexOf(statMod)
-            End If
-        Next
-
-        Return -1
-    End Function
-
-    Protected Function m_FindMod(ModifiedEntity As String) As ModEntry
-        Dim ModEntry As ModEntry
-        Dim ModIndex As Integer = m_FindModIndex(ModifiedEntity)
-        If ModIndex = -1 Then
-            ModEntry = Nothing
-        Else
-            ModEntry = DirectCast(List.Item(ModIndex), ModEntry)
-        End If
-
-        If ModEntry Is Nothing Then
-            Dim sc As New List(Of String) From {
-                ModifiedEntity
+                }
             }
 
-            Dim emptyMod As New ModEntry(sc, 0.0, ModEntry.ModificationTypes.Dynamic)
-            Return emptyMod
-        Else
-            Return ModEntry
-        End If
+            return aaList;
+        }
 
-    End Function
+        protected string ConvertResidueCodeToSLC(ResidueCode Residue)
+        {
+            string tmpRes = Residue.ToString();
 
-    Protected Sub m_ChangeMod(
-        foundMod As ModEntry,
-        ModifiedEntity As String,
-        MassDifference As Double,
-        Optional Additive As Boolean = False)
+            string tmpSLC = null;
+            if (m_AAMappingTable.TryGetValue(tmpRes, out tmpSLC))
+            {
+                return tmpSLC;
+            }
 
-        If Math.Abs(foundMod.MassDifference) < Single.Epsilon And Math.Abs(MassDifference) > Single.Epsilon Then
-            m_Add(ModifiedEntity, MassDifference, foundMod.ModificationType)
-            Exit Sub
-        ElseIf Math.Abs(foundMod.MassDifference) < Single.Epsilon And Math.Abs(MassDifference) < Single.Epsilon Then
-            Exit Sub
-        ElseIf Math.Abs(foundMod.MassDifference) > Single.Epsilon Then          'Not an emptyMod
-            Dim counter As Integer
-            Dim tempMod As ModEntry
+            return string.Empty;
+        }
 
-            Dim residueList As List(Of String) = ConvertAffectedResStringToList(ModifiedEntity)
-            Dim changeMod As ModEntry
+        protected ResidueCode ConvertSLCToResidueCode(string SingleLetterAA)
+        {
 
-            If Additive Then
-                changeMod = New ModEntry(residueList, MassDifference + foundMod.MassDifference, foundMod.ModificationType)
-            Else
-                changeMod = New ModEntry(residueList, MassDifference, foundMod.ModificationType)
-            End If
+            foreach (var item in m_AAMappingTable)
+            {
+                string ResString = item.Key;
+                if ((SingleLetterAA ?? "") == (ResString.Substring(0, 1) ?? "") & !ResString.Contains("Term"))
+                {
+                    return (ResidueCode)Enum.Parse(typeof(ResidueCode), ResString);
+                }
+            }
 
-            For Each tempMod In List
-                If foundMod.Equals(tempMod) And Math.Abs(MassDifference) > Single.Epsilon Then
-                    Replace(counter, changeMod)
-                    Exit Sub
-                ElseIf foundMod.Equals(tempMod) And Math.Abs(MassDifference) < Single.Epsilon Then
-                    RemoveAt(counter)
-                End If
-                If List.Count = 0 Then Exit For
-                counter += 1
-            Next
+            return default;
 
-        End If
-    End Sub
+        }
 
-End Class
+        protected int m_FindModIndex(string modifiedEntity)
+        {
+
+            foreach (ModEntry statMod in List)
+            {
+                string testCase = statMod.ReturnResidueAffected(0);
+                if ((testCase ?? "") == (modifiedEntity ?? ""))
+                {
+                    return List.IndexOf(statMod);
+                }
+            }
+
+            return -1;
+        }
+
+        protected ModEntry m_FindMod(string ModifiedEntity)
+        {
+            ModEntry ModEntry;
+            int ModIndex = m_FindModIndex(ModifiedEntity);
+            if (ModIndex == -1)
+            {
+                ModEntry = null;
+            }
+            else
+            {
+                ModEntry = (ModEntry)List[ModIndex];
+            }
+
+            if (ModEntry is null)
+            {
+                var sc = new List<string>() { ModifiedEntity };
+
+                var emptyMod = new ModEntry(sc, 0.0d, ModEntry.ModificationTypes.Dynamic);
+                return emptyMod;
+            }
+            else
+            {
+                return ModEntry;
+            }
+
+        }
+
+        protected void m_ChangeMod(ModEntry foundMod, string ModifiedEntity, double MassDifference, bool Additive = false)
+        {
+
+            if (Math.Abs(foundMod.MassDifference) < float.Epsilon & Math.Abs(MassDifference) > float.Epsilon)
+            {
+                m_Add(ModifiedEntity, MassDifference, foundMod.ModificationType);
+                return;
+            }
+            else if (Math.Abs(foundMod.MassDifference) < float.Epsilon & Math.Abs(MassDifference) < float.Epsilon)
+            {
+                return;
+            }
+            else if (Math.Abs(foundMod.MassDifference) > float.Epsilon)          // Not an emptyMod
+            {
+                var counter = default(int);
+
+                var residueList = ConvertAffectedResStringToList(ModifiedEntity);
+                ModEntry changeMod;
+
+                if (Additive)
+                {
+                    changeMod = new ModEntry(residueList, MassDifference + foundMod.MassDifference, foundMod.ModificationType);
+                }
+                else
+                {
+                    changeMod = new ModEntry(residueList, MassDifference, foundMod.ModificationType);
+                }
+
+                foreach (ModEntry tempMod in List)
+                {
+                    if (foundMod.Equals(tempMod) & Math.Abs(MassDifference) > float.Epsilon)
+                    {
+                        Replace(counter, changeMod);
+                        return;
+                    }
+                    else if (foundMod.Equals(tempMod) & Math.Abs(MassDifference) < float.Epsilon)
+                    {
+                        RemoveAt(counter);
+                    }
+                    if (List.Count == 0)
+                        break;
+                    counter += 1;
+                }
+
+            }
+        }
+
+    }
+}

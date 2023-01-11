@@ -1,74 +1,67 @@
-Imports System.Collections.Generic
-Imports PRISMDatabaseUtils
+﻿using System.Collections.Generic;
+using PRISMDatabaseUtils;
 
-Public Class GetResiduesList
+namespace ParamFileGenerator
+{
 
-    ''' <summary>
-    ''' Dictionary where keys are amino acid residue (one letter abbreviation)
-    ''' and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
-    ''' </summary>
-    ''' <returns></returns>
-    Public ReadOnly Property ResidueAtomCounts As Dictionary(Of Char, Dictionary(Of Char, Integer))
+    public class GetResiduesList
+    {
 
-#Disable Warning BC40028 ' Type of parameter is not CLS-compliant
-    Public Sub New(dbTools As IDBTools)
-#Enable Warning BC40028 ' Type of parameter is not CLS-compliant
+        /// <summary>
+    /// Dictionary where keys are amino acid residue (one letter abbreviation)
+    /// and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
+    /// </summary>
+    /// <returns></returns>
+        public Dictionary<char, Dictionary<char, int>> ResidueAtomCounts { get; private set; }
 
-        ResidueAtomCounts = New Dictionary(Of Char, Dictionary(Of Char, Integer))
+        #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+        public GetResiduesList(IDBTools dbTools)
+        #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
+        {
+            ResidueAtomCounts = new Dictionary<char, Dictionary<char, int>>();
 
-        Dim SQL = "SELECT * FROM T_Residues WHERE [Num_C] > 0"
+            string SQL = "SELECT * FROM T_Residues WHERE [Num_C] > 0";
 
 
-        Dim residuesTable As List(Of List(Of String)) = Nothing
-        dbTools.GetQueryResults(SQL, residuesTable)
+            List<List<string>> residuesTable = null;
+            dbTools.GetQueryResults(SQL, out residuesTable);
 
-        Dim columnNames = New List(Of String) From {
-            "Residue_ID",
-            "Residue_Symbol",
-            "Description",
-            "Average_Mass",
-            "Monoisotopic_Mass",
-            "Num_C",
-            "Num_H",
-            "Num_N",
-            "Num_O",
-            "Num_S"
+            var columnNames = new List<string>() { "Residue_ID", "Residue_Symbol", "Description", "Average_Mass", "Monoisotopic_Mass", "Num_C", "Num_H", "Num_N", "Num_O", "Num_S" };
+
+            // ' This maps column name to column index
+            var columnMap = dbTools.GetColumnMapping(columnNames);
+
+            var elementSymbols = new List<char>() { 'C', 'H', 'N', 'O', 'S' };
+
+            foreach (var resultRow in residuesTable)
+            {
+
+                string residueSymbol = dbTools.GetColumnValue(resultRow, columnMap, "Residue_Symbol");
+
+                var atomCountsForResidue = new Dictionary<char, int>();
+
+                // Get the atom counts
+                // This for loop access columns Num_C, Num_H, Num_N, etc.
+                foreach (var elementSymbol in elementSymbols)
+                {
+                    string columnName = "Num_" + elementSymbol;
+                    string elementCount = dbTools.GetColumnValue(resultRow, columnMap, columnName);
+
+                    int elementCountVal;
+                    if (int.TryParse(elementCount, out elementCountVal))
+                    {
+                        atomCountsForResidue.Add(elementSymbol, elementCountVal);
+                    }
+                    else
+                    {
+                        atomCountsForResidue.Add(elementSymbol, 0);
+                    }
+
+                }
+
+                ResidueAtomCounts.Add(residueSymbol[0], atomCountsForResidue);
+            }
+
         }
-
-        '' This maps column name to column index
-        Dim columnMap = dbTools.GetColumnMapping(columnNames)
-
-        Dim elementSymbols = New List(Of Char) From {
-            "C"c,
-            "H"c,
-            "N"c,
-            "O"c,
-            "S"c
-        }
-
-        For Each resultRow In residuesTable
-
-            Dim residueSymbol = dbTools.GetColumnValue(resultRow, columnMap, "Residue_Symbol")
-
-            Dim atomCountsForResidue = New Dictionary(Of Char, Integer)
-
-            ' Get the atom counts
-            ' This for loop access columns Num_C, Num_H, Num_N, etc.
-            For Each elementSymbol In elementSymbols
-                Dim columnName = "Num_" & elementSymbol
-                Dim elementCount = dbTools.GetColumnValue(resultRow, columnMap, columnName)
-
-                Dim elementCountVal As Integer
-                If (Integer.TryParse(elementCount, elementCountVal)) Then
-                    atomCountsForResidue.Add(elementSymbol, elementCountVal)
-                Else
-                    atomCountsForResidue.Add(elementSymbol, 0)
-                End If
-
-            Next
-
-            ResidueAtomCounts.Add(residueSymbol.Chars(0), atomCountsForResidue)
-        Next
-
-    End Sub
-End Class
+    }
+}

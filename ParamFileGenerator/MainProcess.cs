@@ -1,59 +1,72 @@
-Imports System.IO
-Imports System.Reflection
+﻿using System.IO;
+using System.Reflection;
 
-Public Class MainProcess
+namespace ParamFileGenerator
+{
 
-    'Private basicTemplate As IBasicParams
-    ' Private advTemplate As IAdvancedParams
+    public class MainProcess
+    {
 
-    'Private m_SettingsFileName As String = "ParamFileEditorSettings.xml"
-    Shared m_TemplateFileName As String
-    Shared m_TemplateFilePath As String
-    'Private m_modsUpdate As UpdateModsTable
-    'Private m_mainProcess As MainProcess
-    Shared m_BaseLineParams As Params
-    'Const DEF_TEMPLATE_LABEL_TEXT As String = "Currently Loaded Template: "
-    Const DEF_TEMPLATE_FILENAME As String = "sequest_N14_NE.params"
-    Shared ReadOnly DEF_TEMPLATE_FILEPATH As String = Path.GetDirectoryName(Assembly.GetEntryAssembly.Location)
+        // Private basicTemplate As IBasicParams
+        // Private advTemplate As IAdvancedParams
 
-    'Public Shared mySettings As Settings
+        // Private m_SettingsFileName As String = "ParamFileEditorSettings.xml"
+        private static string m_TemplateFileName;
+        private static string m_TemplateFilePath;
+        // Private m_modsUpdate As UpdateModsTable
+        // Private m_mainProcess As MainProcess
+        private static Params m_BaseLineParams;
+        // Const DEF_TEMPLATE_LABEL_TEXT As String = "Currently Loaded Template: "
+        private const string DEF_TEMPLATE_FILENAME = "sequest_N14_NE.params";
+        private static readonly string DEF_TEMPLATE_FILEPATH = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-    Public Shared ReadOnly Property BaseLineParamSet As Params
-        Get
-            Return m_BaseLineParams
-        End Get
-    End Property
+        // Public Shared mySettings As Settings
 
-    Public Shared ReadOnly Property TemplateFileName As String
-        Get
-            Return Path.Combine(m_TemplateFilePath, Path.GetFileName(m_TemplateFileName))
-        End Get
-    End Property
+        public static Params BaseLineParamSet
+        {
+            get
+            {
+                return m_BaseLineParams;
+            }
+        }
 
-    Public Sub New()
+        public static string TemplateFileName
+        {
+            get
+            {
+                return Path.Combine(m_TemplateFilePath, Path.GetFileName(m_TemplateFileName));
+            }
+        }
 
-        m_TemplateFileName = Path.Combine(DEF_TEMPLATE_FILEPATH, DEF_TEMPLATE_FILENAME)
-        m_BaseLineParams = New Params
-        m_TemplateFilePath = DEF_TEMPLATE_FILEPATH
+        public MainProcess()
+        {
+
+            m_TemplateFileName = Path.Combine(DEF_TEMPLATE_FILEPATH, DEF_TEMPLATE_FILENAME);
+            m_BaseLineParams = new Params();
+            m_TemplateFilePath = DEF_TEMPLATE_FILEPATH;
 
 
-        With m_BaseLineParams
-            .FileName = DEF_TEMPLATE_FILENAME
-            .LoadTemplate(m_TemplateFileName)
-        End With
+            {
+                ref var withBlock = ref m_BaseLineParams;
+                withBlock.FileName = DEF_TEMPLATE_FILENAME;
+                withBlock.LoadTemplate(m_TemplateFileName);
+            }
 
-    End Sub
+        }
 
-    Public Sub New(templateFilePath As String)
-        m_TemplateFileName = templateFilePath
-        m_BaseLineParams = New Params
-        m_TemplateFilePath = Path.GetDirectoryName(templateFilePath)
+        public MainProcess(string templateFilePath)
+        {
+            m_TemplateFileName = templateFilePath;
+            m_BaseLineParams = new Params();
+            m_TemplateFilePath = Path.GetDirectoryName(templateFilePath);
 
-        With m_BaseLineParams
-            .FileName = Path.GetFileName(templateFilePath)
-            .LoadTemplate(templateFilePath)
+            {
+                ref var withBlock = ref m_BaseLineParams;
+                withBlock.FileName = Path.GetFileName(templateFilePath);
+                withBlock.LoadTemplate(templateFilePath);
 
-        End With
-    End Sub
+            }
+        }
 
-End Class
+    }
+}
