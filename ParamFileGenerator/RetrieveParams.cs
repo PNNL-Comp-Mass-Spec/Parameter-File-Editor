@@ -3,17 +3,7 @@ using System.Collections.Generic;
 
 namespace ParamFileGenerator
 {
-    public interface IRetrieveParams
-    {
-        string GetParam(string section, string item, string attributeName);
-        string GetParam(string section, string item);
-        string GetParam(string item);
-        void SetParam(string section, string name, string value);
-        void SetParam(string name, string value);
-        void SetSection(string name);
-    }
-
-    public class RetrieveParams : IRetrieveParams
+    public class RetrieveParams
     {
         private IniFileReader mIniFileReader;
 

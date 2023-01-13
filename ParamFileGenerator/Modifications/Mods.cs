@@ -49,27 +49,14 @@ namespace ParamFileGenerator
 
         public int ModCount => Count;
 
-        public bool Initialized
-        {
-            get
-            {
-                if (Count > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        public int NumMods => Count;
+
+        public bool Initialized => Count > 0;
 
         public ModEntry GetModEntry(int index)
         {
             return base[index];
         }
-
-        public int NumMods => Count;
 
         public Mods() : base()
         {
