@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
+using ParamFileGenerator;
 using ParamFileGenerator.MakeParams;
 using PRISMDatabaseUtils;
 
@@ -78,7 +78,7 @@ namespace ParamGenTest
             int datasetID;
             if (!string.IsNullOrEmpty(txtDatasetID.Text))
             {
-                datasetID = Conversions.ToInteger(txtDatasetID.Text);
+                datasetID = Params.SafeCastInt(txtDatasetID.Text);
             }
             else
             {
@@ -116,7 +116,7 @@ namespace ParamGenTest
 
         private void cboFileTypes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            mParamTypeID = Conversions.ToInteger(cboFileTypes.SelectedValue);
+            mParamTypeID = Params.SafeCastInt(cboFileTypes.SelectedValue);
 
             switch (mParamTypeID)
             {
@@ -188,7 +188,7 @@ namespace ParamGenTest
             txtParamFileName.Text = string.Empty;
 
             foreach (DataRow dr in foundRows)
-                cboAvailableParams.Items.Add(new ParamFileEntry(Conversions.ToInteger(dr["ID"]), dr["Filename"].ToString()));
+                cboAvailableParams.Items.Add(new ParamFileEntry(Params.SafeCastInt(dr["ID"]), dr["Filename"].ToString()));
 
             cboAvailableParams.DisplayMember = "Description";
             cboAvailableParams.ValueMember = "Value";
