@@ -3,7 +3,7 @@ Imports System.IO
 Imports ParamFileGenerator.MakeParams
 Imports PRISMDatabaseUtils
 
-Public Class frmMain
+Public Class Main
     Inherits Form
 
     ' Ignore Spelling: SEQUEST
@@ -222,7 +222,7 @@ Public Class frmMain
         Me.lblFASTAFilePath.TabIndex = 16
         Me.lblFASTAFilePath.Text = "FASTA File Path (only for SEQUEST)"
         '
-        'frmMain
+        'Main
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(576, 346)
@@ -242,7 +242,7 @@ Public Class frmMain
         Me.Controls.Add(Me.lblPickList)
         Me.Controls.Add(Me.lblOutputPath)
         Me.Controls.Add(Me.cboFileTypes)
-        Me.Name = "frmMain"
+        Me.Name = "Main"
         Me.Text = "DMS Param File Generator"
         Me.ResumeLayout(False)
         Me.PerformLayout()

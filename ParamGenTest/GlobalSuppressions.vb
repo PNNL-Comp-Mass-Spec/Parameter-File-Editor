@@ -5,26 +5,26 @@
 
 Imports System.Diagnostics.CodeAnalysis
 
-<Assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification:="Auto-generated code", Scope:="member", Target:="~F:ParamGenTest.frmMain.components")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.cboAvailableParams_SelectedIndexChanged(System.Object,System.EventArgs)")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.cboFileTypes_SelectedIndexChanged(System.Object,System.EventArgs)")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.cmdDoIt_Click(System.Object,System.EventArgs)")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.txtDMSConnectionString_TextChanged(System.Object,System.EventArgs)")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.txtFASTAPath_TextChanged(System.Object,System.EventArgs)")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.frmMain.txtOutputPath_TextChanged(System.Object,System.EventArgs)")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.cboAvailableParams")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.cboFileTypes")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.cmdDoIt")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.lblConnectionString")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.lblDatasetID")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.lblOutputPath")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.lblParamFileName")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.lblParamFileType")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.lblPickList")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.txtDatasetID")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.txtDMSConnectionString")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.txtFASTAPath")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.txtOutputPath")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.txtParamFileName")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.frmMain.txtResults")>
-<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="type", Target:="~T:ParamGenTest.frmMain")>
+<Assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification:="Auto-generated code", Scope:="member", Target:="~F:ParamGenTest.Main.components")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.Main.cboAvailableParams_SelectedIndexChanged(System.Object,System.EventArgs)")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.Main.cboFileTypes_SelectedIndexChanged(System.Object,System.EventArgs)")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.Main.cmdDoIt_Click(System.Object,System.EventArgs)")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.Main.txtDMSConnectionString_TextChanged(System.Object,System.EventArgs)")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.Main.txtFASTAPath_TextChanged(System.Object,System.EventArgs)")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~M:ParamGenTest.Main.txtOutputPath_TextChanged(System.Object,System.EventArgs)")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.cboAvailableParams")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.cboFileTypes")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.cmdDoIt")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.lblConnectionString")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.lblDatasetID")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.lblOutputPath")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.lblParamFileName")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.lblParamFileType")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.lblPickList")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.txtDatasetID")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.txtDMSConnectionString")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.txtFASTAPath")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.txtOutputPath")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.txtParamFileName")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="member", Target:="~P:ParamGenTest.Main.txtResults")>
+<Assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification:="Allowed name", Scope:="type", Target:="~T:ParamGenTest.Main")>

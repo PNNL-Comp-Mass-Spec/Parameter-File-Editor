@@ -214,7 +214,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ParamFileEditorSettings.xml" />
     <EmbeddedResource Include="sequest_N14_NE.params" />
-    <Content Include="SQ Win.ico" />
+    <Content Include="SQ_Win.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

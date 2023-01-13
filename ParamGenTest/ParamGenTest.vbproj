@@ -7,7 +7,7 @@
     <ProjectGuid>{C99B2126-0B2B-4C48-A063-A5784C7C3774}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>SQ Win.ico</ApplicationIcon>
+    <ApplicationIcon>SQ_Win.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>ParamGenTest</AssemblyName>
@@ -103,10 +103,10 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.vb">
+    <Compile Include="Properties\AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="frmMain.vb">
+    <Compile Include="Main.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GlobalSuppressions.vb" />
@@ -115,8 +115,8 @@
       <DependentUpon>Application.myapp</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="frmMain.resx">
-      <DependentUpon>frmMain.vb</DependentUpon>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -125,7 +125,7 @@
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </Content>
-    <Content Include="SQ Win.ico" />
+    <Content Include="SQ_Win.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ParamFileGenerator\ParamFileGenerator.csproj">
@@ -134,7 +134,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="PRISM-DatabaseUtils">
