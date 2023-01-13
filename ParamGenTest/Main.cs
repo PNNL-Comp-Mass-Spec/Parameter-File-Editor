@@ -89,7 +89,7 @@ namespace ParamGenTest
             else
             {
                 txtResults.Text = "Error!";
-                if (mDMS.LastError is not null && mDMS.LastError.Length > 0)
+                if (!string.IsNullOrWhiteSpace(mDMS.LastError))
                 {
                     txtResults.Text += " " + mDMS.LastError;
                 }

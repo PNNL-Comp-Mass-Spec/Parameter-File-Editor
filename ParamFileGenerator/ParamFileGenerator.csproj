@@ -6,12 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0E902ED7-5BCE-43F9-8F07-F195BCE7285D}</ProjectGuid>
     <AssemblyName>ParamFileGenerator</AssemblyName>
-    <OutputType>Library</OutputType>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionStrict>On</OptionStrict>
     <RootNamespace>ParamFileGenerator</RootNamespace>
-    <MyType>Windows</MyType>
+    <OutputType>Library</OutputType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -46,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBTask.cs" />
-    <Compile Include="DMSParamStorage.cs" />
     <Compile Include="GetResiduesList.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="INIFileReader.cs" />
@@ -66,6 +61,7 @@
     <Compile Include="Parameters\Params.cs" />
     <Compile Include="ParamsEntry.cs" />
     <Compile Include="ParamsFromDMS.cs" />
+    <Compile Include="ParamTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReconstituteIsoMods.cs" />
     <Compile Include="RetrieveParams.cs" />

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using PRISMDatabaseUtils;
 
@@ -359,45 +360,39 @@ namespace ParamFileGenerator.DownloadParams
             return p;
         }
 
-        private DMSParamStorage MakeStorageClassFromTableRowSet(IEnumerable<DataRow> foundRows)
+        private List<ParamsEntry> MakeStorageClassFromTableRowSet(IEnumerable<DataRow> foundRows)
         {
-            var storageClass = new DMSParamStorage();
+            var storageClass = new List<ParamsEntry>();
 
             foreach (var foundRow in foundRows)
             {
-                var tmpSpec = (string)foundRow["Entry_Specifier"];
-                var tmpValue = (string)foundRow["Entry_Value"];
-                var tmpType = (DMSParamStorage.ParamTypes)Enum.Parse(typeof(DMSParamStorage.ParamTypes), foundRow["Entry_Type"].ToString());
+                var param = new ParamsEntry(
+                    (string)foundRow["Entry_Specifier"],
+                    (string)foundRow["Entry_Value"],
+                    (ParamTypes)Enum.Parse(typeof(ParamTypes), foundRow["Entry_Type"].ToString()));
 
-                storageClass.Add(tmpSpec, tmpValue, tmpType);
+                storageClass.Add(param);
             }
 
             return storageClass;
         }
 
-        private DMSParamStorage GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType, ref DMSParamStorage @params)
+        private List<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType, ref List<ParamsEntry> @params)
         {
             const int MaxDynMods = 15;
 
             DataRow foundRow;
             DataRow[] foundRows;
-            string tmpSpec;
-            string tmpValue;
 
-            DMSParamStorage.ParamTypes tmpType;
+            var sql = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " +
+                      "mc.Monoisotopic_Mass as Monoisotopic_Mass, " +
+                      "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " +
+                      "FROM " + Param_Mass_Mods_Table + " mm INNER JOIN " +
+                      Mass_Corr_Factors + " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " +
+                      Residues_Table + " r ON mm.Residue_ID = r.Residue_ID " +
+                      "WHERE mm.Param_File_ID = " + paramSetID;
 
-            // If m_MassMods Is Nothing Or m_MassMods.Rows.Count = 0 Then
-            string SQL;
-
-            SQL = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " +
-                  "mc.Monoisotopic_Mass as Monoisotopic_Mass, " +
-                  "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " +
-                  "FROM " + Param_Mass_Mods_Table + " mm INNER JOIN " +
-                  Mass_Corr_Factors + " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " +
-                  Residues_Table + " r ON mm.Residue_ID = r.Residue_ID " +
-                  "WHERE mm.Param_File_ID = " + paramSetID;
-
-            mMassMods = GetTable(SQL);
+            mMassMods = GetTable(sql);
 
             // Look for Dynamic mods
 
@@ -437,10 +432,11 @@ namespace ParamFileGenerator.DownloadParams
                 foundRows = mMassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " + intSymbolID + " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]");
                 if (foundRows.Length > 0)
                 {
-                    tmpSpec = GetDynModSpecifier(foundRows);
-                    tmpValue = foundRows[0]["Monoisotopic_Mass"].ToString();
-                    tmpType = DMSParamStorage.ParamTypes.DynamicModification;
-                    @params.Add(tmpSpec, tmpValue, tmpType);
+                    var param = new ParamsEntry(
+                        GetDynModSpecifier(foundRows),
+                        foundRows[0]["Monoisotopic_Mass"].ToString(),
+                        ParamTypes.DynamicModification);
+                    @params.Add(param);
                 }
             }
 
@@ -448,20 +444,22 @@ namespace ParamFileGenerator.DownloadParams
             foundRows = mMassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'");
             if (foundRows.Length > 0)
             {
-                tmpSpec = GetDynModSpecifier(foundRows);
-                tmpValue = foundRows[0]["Monoisotopic_Mass"].ToString();
-                tmpType = DMSParamStorage.ParamTypes.TermDynamicModification;
-                @params.Add(tmpSpec, tmpValue, tmpType);
+                var param = new ParamsEntry(
+                    GetDynModSpecifier(foundRows),
+                    foundRows[0]["Monoisotopic_Mass"].ToString(),
+                    ParamTypes.TermDynamicModification);
+                @params.Add(param);
             }
 
             // Find C-Term Dynamic Mods
             foundRows = mMassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'");
             if (foundRows.Length > 0)
             {
-                tmpSpec = GetDynModSpecifier(foundRows);
-                tmpValue = foundRows[0]["Monoisotopic_Mass"].ToString();
-                tmpType = DMSParamStorage.ParamTypes.TermDynamicModification;
-                @params.Add(tmpSpec, tmpValue, tmpType);
+                var param = new ParamsEntry(
+                    GetDynModSpecifier(foundRows),
+                    foundRows[0]["Monoisotopic_Mass"].ToString(),
+                    ParamTypes.TermDynamicModification);
+                @params.Add(param);
             }
 
             // Look for Static and terminal mods
@@ -471,8 +469,8 @@ namespace ParamFileGenerator.DownloadParams
             foreach (var currentFoundRow in foundRows)
             {
                 foundRow = currentFoundRow;
-                tmpSpec = foundRow["Residue_Symbol"].ToString();
-                switch (tmpSpec)
+                string tmpSpec = "";
+                switch (foundRow["Residue_Symbol"].ToString())
                 {
                     case "<":
                         tmpSpec = "N_Term_Peptide";
@@ -488,9 +486,11 @@ namespace ParamFileGenerator.DownloadParams
                         break;
                 }
 
-                tmpValue = foundRow["Monoisotopic_Mass"].ToString();
-                tmpType = DMSParamStorage.ParamTypes.StaticModification;
-                @params.Add(tmpSpec, tmpValue, tmpType);
+                var param = new ParamsEntry(
+                    tmpSpec,
+                    foundRow["Monoisotopic_Mass"].ToString(),
+                    ParamTypes.StaticModification);
+                @params.Add(param);
             }
 
             // TODO Still need code to handle import/export of isotopic mods
@@ -500,10 +500,11 @@ namespace ParamFileGenerator.DownloadParams
             foreach (var currentFoundRow1 in foundRows)
             {
                 foundRow = currentFoundRow1;
-                tmpSpec = foundRow["Affected_Atom"].ToString();
-                tmpValue = foundRow["Monoisotopic_Mass"].ToString();
-                tmpType = DMSParamStorage.ParamTypes.IsotopicModification;
-                @params.Add(tmpSpec, tmpValue, tmpType);
+                var param = new ParamsEntry(
+                    foundRow["Affected_Atom"].ToString(),
+                    foundRow["Monoisotopic_Mass"].ToString(),
+                    ParamTypes.IsotopicModification);
+                @params.Add(param);
             }
 
             return @params;
@@ -691,9 +692,9 @@ namespace ParamFileGenerator.DownloadParams
             return p.Description;
         }
 
-        private DMSParamStorage WriteDataCollectionFromParamSet(Params paramSet)
+        private List<ParamsEntry> WriteDataCollectionFromParamSet(Params paramSet)
         {
-            var c = new DMSParamStorage();
+            var c = new List<ParamsEntry>();
 
             var pType = paramSet.GetType();
             var pProps = pType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -716,12 +717,12 @@ namespace ParamFileGenerator.DownloadParams
 
                     else if (tmpType.Name == "DynamicMods")
                     {
-                        c = ExpandDynamicMods(paramSet.DynamicMods, ref c, DMSParamStorage.ParamTypes.DynamicModification);
+                        c = ExpandDynamicMods(paramSet.DynamicMods, ref c, ParamTypes.DynamicModification);
                     }
 
                     else if (tmpType.Name == "TermDynamicMods")
                     {
-                        c = ExpandDynamicMods(paramSet.TermDynamicMods, ref c, DMSParamStorage.ParamTypes.TermDynamicModification);
+                        c = ExpandDynamicMods(paramSet.TermDynamicMods, ref c, ParamTypes.TermDynamicModification);
                     }
 
                     else if (tmpType.Name == "StaticMods")
@@ -731,16 +732,14 @@ namespace ParamFileGenerator.DownloadParams
 
                     else
                     {
-                        string tmpValue;
+                        var tmpValue = pProp.GetValue(paramSet, null).ToString();
                         if (mBasicParams.Contains(tmpName))
                         {
-                            tmpValue = pProp.GetValue(paramSet, null).ToString();
-                            c.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.BasicParam);
+                            c.Add(new ParamsEntry(tmpName, tmpValue, ParamTypes.BasicParam));
                         }
                         else if (mAdvancedParams.Contains(tmpName))
                         {
-                            tmpValue = pProp.GetValue(paramSet, null).ToString();
-                            c.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.AdvancedParam);
+                            c.Add(new ParamsEntry(tmpName, tmpValue, ParamTypes.AdvancedParam));
                         }
                     }
                 }
@@ -749,7 +748,7 @@ namespace ParamFileGenerator.DownloadParams
             return c;
         }
 
-        private Params UpdateParamSetFromDataCollection(DMSParamStorage dc)
+        private Params UpdateParamSetFromDataCollection(List<ParamsEntry> dc)
         {
             var p = new Params();
 
@@ -782,7 +781,7 @@ namespace ParamFileGenerator.DownloadParams
                     valueBool = tmpValueBool;
                 }
 
-                if (tmpType == DMSParamStorage.ParamTypes.BasicParam &&
+                if (tmpType == ParamTypes.BasicParam &&
                     mBasicParams.Contains(tmpSpec))
                 {
                     foreach (var currentPField in pFields)
@@ -825,7 +824,7 @@ namespace ParamFileGenerator.DownloadParams
                     }
                 }
 
-                else if (tmpType == DMSParamStorage.ParamTypes.AdvancedParam &&
+                else if (tmpType == ParamTypes.AdvancedParam &&
                          mAdvancedParams.Contains(tmpSpec))
                 {
                     foreach (var currentPField1 in pFields)
@@ -860,7 +859,7 @@ namespace ParamFileGenerator.DownloadParams
                     }
                 }
 
-                else if (tmpType == DMSParamStorage.ParamTypes.AdvancedParam &&
+                else if (tmpType == ParamTypes.AdvancedParam &&
                          mIonSeriesParams.Contains(tmpSpec))
                 {
                     foreach (var ionField in ionFields)
@@ -896,19 +895,19 @@ namespace ParamFileGenerator.DownloadParams
                     }
                 }
 
-                else if (tmpType == DMSParamStorage.ParamTypes.DynamicModification)
+                else if (tmpType == ParamTypes.DynamicModification)
                 {
                     p.DynamicMods.Add(tmpSpec, valueDouble);
                 }
-                else if (tmpType == DMSParamStorage.ParamTypes.StaticModification)
+                else if (tmpType == ParamTypes.StaticModification)
                 {
                     p.StaticModificationsList.Add(tmpSpec, valueDouble);
                 }
-                else if (tmpType == DMSParamStorage.ParamTypes.IsotopicModification)
+                else if (tmpType == ParamTypes.IsotopicModification)
                 {
                     p.IsotopicModificationsList.Add(tmpSpec, valueDouble);
                 }
-                else if (tmpType == DMSParamStorage.ParamTypes.TermDynamicModification)
+                else if (tmpType == ParamTypes.TermDynamicModification)
                 {
                     p.TermDynamicMods.Add(tmpSpec, valueDouble);
                 }
@@ -917,7 +916,7 @@ namespace ParamFileGenerator.DownloadParams
             return p;
         }
 
-        private DMSParamStorage ExpandDynamicMods(DynamicMods dynModSet, ref DMSParamStorage paramCollection, DMSParamStorage.ParamTypes eDynModType)
+        private List<ParamsEntry> ExpandDynamicMods(DynamicMods dynModSet, ref List<ParamsEntry> paramCollection, ParamTypes eDynModType)
         {
             var maxCount = dynModSet.Count;
 
@@ -926,24 +925,26 @@ namespace ParamFileGenerator.DownloadParams
                 return paramCollection;
             }
 
-            if (eDynModType != DMSParamStorage.ParamTypes.DynamicModification &&
-                eDynModType != DMSParamStorage.ParamTypes.TermDynamicModification)
+            if (eDynModType != ParamTypes.DynamicModification &&
+                eDynModType != ParamTypes.TermDynamicModification)
             {
                 // This is unexpected; force eDynModType to be .DynamicModification
-                eDynModType = DMSParamStorage.ParamTypes.DynamicModification;
+                eDynModType = ParamTypes.DynamicModification;
             }
 
             for (var counter = 1; counter < maxCount; counter++)
             {
-                var tmpName = dynModSet.Dyn_Mod_n_AAList(counter);
-                var tmpValue = dynModSet.Dyn_Mod_n_MassDiff(counter).ToString("0.00000");
-                paramCollection.Add(tmpName, tmpValue, eDynModType);
+                var param = new ParamsEntry(
+                    dynModSet.Dyn_Mod_n_AAList(counter),
+                    dynModSet.Dyn_Mod_n_MassDiff(counter).ToString("0.00000"),
+                    eDynModType);
+                paramCollection.Add(param);
             }
 
             return paramCollection;
         }
 
-        private DMSParamStorage ExpandStaticMods(StaticMods statModSet, ref DMSParamStorage paramCollection)
+        private List<ParamsEntry> ExpandStaticMods(StaticMods statModSet, ref List<ParamsEntry> paramCollection)
         {
             var maxCount = statModSet.Count;
 
@@ -954,15 +955,17 @@ namespace ParamFileGenerator.DownloadParams
 
             for (var counter = 0; counter < maxCount; counter++)
             {
-                var tmpName = statModSet.GetResidue(counter);
-                var tmpValue = statModSet.GetMassDiff(counter);
-                paramCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.StaticModification);
+                var param = new ParamsEntry(
+                    statModSet.GetResidue(counter),
+                    statModSet.GetMassDiff(counter),
+                    ParamTypes.StaticModification);
+                paramCollection.Add(param);
             }
 
             return paramCollection;
         }
 
-        private DMSParamStorage ExpandIsoTopicMods(IsoMods isoModSet, ref DMSParamStorage paramCollection)
+        private List<ParamsEntry> ExpandIsoTopicMods(IsoMods isoModSet, ref List<ParamsEntry> paramCollection)
         {
             var maxCount = isoModSet.Count;
 
@@ -973,24 +976,28 @@ namespace ParamFileGenerator.DownloadParams
 
             for (var counter = 0; counter < maxCount; counter++)
             {
-                var tmpName = isoModSet.GetAtom(counter);
-                var tmpValue = isoModSet.GetMassDiff(counter);
-                paramCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.IsotopicModification);
+                var param = new ParamsEntry(
+                    isoModSet.GetAtom(counter),
+                    isoModSet.GetMassDiff(counter),
+                    ParamTypes.StaticModification);
+                paramCollection.Add(param);
             }
 
             return paramCollection;
         }
 
-        private DMSParamStorage ExpandIonSeries(IonSeries ionSeriesSet, ref DMSParamStorage paramCollection)
+        private List<ParamsEntry> ExpandIonSeries(IonSeries ionSeriesSet, ref List<ParamsEntry> paramCollection)
         {
             var pType = typeof(IonSeries);
             var pFields = pType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             foreach (var pField in pFields)
             {
-                var tmpName = pField.Name;
-                var tmpValue = pField.GetValue(ionSeriesSet, null).ToString();
-                paramCollection.Add(tmpName, tmpValue, DMSParamStorage.ParamTypes.AdvancedParam);
+                var param = new ParamsEntry(
+                    pField.Name,
+                    pField.GetValue(ionSeriesSet, null).ToString(),
+                    ParamTypes.AdvancedParam);
+                paramCollection.Add(param);
             }
 
             return paramCollection;
@@ -1041,7 +1048,7 @@ namespace ParamFileGenerator.DownloadParams
             return SummarizeDiffColl(ref diffCollection);
         }
 
-        protected DMSParamStorage GetDiffColl(ref Params templateSet, ref Params checkSet)
+        protected List<ParamsEntry> GetDiffColl(ref Params templateSet, ref Params checkSet)
         {
             var templateColl = WriteDataCollectionFromParamSet(templateSet);
             var checkColl = WriteDataCollectionFromParamSet(checkSet);
@@ -1050,7 +1057,7 @@ namespace ParamFileGenerator.DownloadParams
             return diffCollection;
         }
 
-        private string SummarizeDiffColl(ref DMSParamStorage diffColl)
+        private string SummarizeDiffColl(ref List<ParamsEntry> diffColl)
         {
             int index;
 
@@ -1093,7 +1100,7 @@ namespace ParamFileGenerator.DownloadParams
                     tmpSign = "";
                 }
 
-                if (tmpType == DMSParamStorage.ParamTypes.StaticModification)
+                if (tmpType == ParamTypes.StaticModification)
                 {
                     if (tmpStatModsList is null)
                     {
@@ -1103,7 +1110,7 @@ namespace ParamFileGenerator.DownloadParams
                     tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
                 }
 
-                else if (tmpType == DMSParamStorage.ParamTypes.DynamicModification)
+                else if (tmpType == ParamTypes.DynamicModification)
                 {
                     if (tmpDynModsList is null)
                     {
@@ -1115,7 +1122,7 @@ namespace ParamFileGenerator.DownloadParams
                     intDynModCount += 1;
                 }
 
-                else if (tmpType == DMSParamStorage.ParamTypes.TermDynamicModification)
+                else if (tmpType == ParamTypes.TermDynamicModification)
                 {
                     if (tmpSpec == "<")
                     {
@@ -1136,7 +1143,7 @@ namespace ParamFileGenerator.DownloadParams
                     intTermDynModCount += 1;
                 }
 
-                else if (tmpType == DMSParamStorage.ParamTypes.IsotopicModification)
+                else if (tmpType == ParamTypes.IsotopicModification)
                 {
                     if (string.IsNullOrEmpty(tmpIsoMods))
                     {
@@ -1229,41 +1236,23 @@ namespace ParamFileGenerator.DownloadParams
             return strModDescriptionPrevious;
         }
 
-        private DMSParamStorage CompareDataCollections(DMSParamStorage templateColl, DMSParamStorage checkColl)
+        private List<ParamsEntry> CompareDataCollections(List<ParamsEntry> templateColl, List<ParamsEntry> checkColl)
         {
-            var diffColl = new DMSParamStorage();
+            var diffColl = new List<ParamsEntry>();
 
             foreach (var check in checkColl)
             {
-                var tmpCType = check.Type;
-                var tmpCSpec = check.Specifier;
-                var tmpCVal = check.Value;
-
-                var templateIndex = templateColl.IndexOf(tmpCSpec, tmpCType);
-
-                if (templateIndex >= 0)
+                var template = templateColl.FirstOrDefault(x => x.TypeSpecifierEquals(check));
+                if (template is not null)
                 {
-                    var tmpTType = templateColl[templateIndex].Type;
-                    var tmpTSpec = templateColl[templateIndex].Specifier;
-                    var tmpTVal = templateColl[templateIndex].Value;
-                    //var tmpTemp = tmpTType.ToString() + " - " + tmpTSpec + " = " + tmpTVal
-                    //var tmpCheck = tmpCType.ToString() + " - " + tmpCSpec + " = " + tmpCVal
-
-                    if ((tmpTType.ToString() + tmpTSpec) == (tmpCType.ToString() + tmpCSpec))
+                    if (!template.Value.Equals(check.Value))
                     {
-                        if (tmpTVal.Equals(tmpCVal))
-                        {
-                        }
-
-                        else
-                        {
-                            diffColl.Add(tmpCSpec, tmpCVal, tmpTType);
-                        }
+                        diffColl.Add(check);
                     }
                 }
                 else
                 {
-                    diffColl.Add(tmpCSpec, tmpCVal, tmpCType);
+                    diffColl.Add(check);
                 }
             }
 

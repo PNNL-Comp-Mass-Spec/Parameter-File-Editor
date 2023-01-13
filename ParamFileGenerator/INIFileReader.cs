@@ -94,10 +94,7 @@ namespace ParamFileGenerator
                 }
                 finally
                 {
-                    if (tr is not null)
-                    {
-                        tr.Close();
-                    }
+                    tr?.Close();
                 }
             }
         }
