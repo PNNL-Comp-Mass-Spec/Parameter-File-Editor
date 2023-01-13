@@ -72,14 +72,7 @@ namespace ParamFileGenerator
 
         public new void Add(string AffectedResidueString, double MassDifference)
         {
-            var residueList = ConvertAffectedResStringToList(AffectedResidueString);
-            var newDynMod = new ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Dynamic);
-            List.Add(newDynMod);
-        }
-
-        public void Add(ModEntry ModToAdd)
-        {
-            List.Add(ModToAdd);
+            m_Add(AffectedResidueString, MassDifference, ModEntry.ModificationTypes.Dynamic);
         }
 
         public double Dyn_Mod_n_MassDiff(int DynModNumber)
@@ -88,7 +81,7 @@ namespace ParamFileGenerator
             int index = DynModNumber - 1;
             try
             {
-                dm = (ModEntry)List[index];
+                dm = this[index];
             }
             catch
             {
@@ -101,9 +94,9 @@ namespace ParamFileGenerator
         {
             int index = DynModNumber - 1;
             ModEntry dm;
-            if (index <= List.Count - 1)
+            if (index < Count)
             {
-                dm = (ModEntry)List[index];
+                dm = this[index];
                 dm.MassDifference = value;
                 Replace(index, dm);
             }
@@ -119,7 +112,7 @@ namespace ParamFileGenerator
             int index = DynModNumber - 1;
             try
             {
-                dm = (ModEntry)List[index];
+                dm = this[index];
             }
             catch
             {
@@ -132,9 +125,9 @@ namespace ParamFileGenerator
         {
             int index = DynModNumber - 1;
             ModEntry dm;
-            if (index <= List.Count - 1)
+            if (index < Count)
             {
-                dm = (ModEntry)List[index];
+                dm = this[index];
                 dm.ResidueCollection = ConvertAffectedResStringToList(value);
                 Replace(index, dm);
             }
@@ -150,7 +143,7 @@ namespace ParamFileGenerator
             int index = DynModNumber - 1;
             try
             {
-                dm = (ModEntry)List[index];
+                dm = this[index];
             }
             catch
             {
@@ -163,9 +156,9 @@ namespace ParamFileGenerator
         {
             int index = DynModNumber - 1;
             ModEntry dm;
-            if (index <= List.Count - 1)
+            if (index < Count)
             {
-                dm = (ModEntry)List[index];
+                dm = this[index];
                 dm.GlobalModID = value;
                 Replace(index, dm);
             }
@@ -180,7 +173,7 @@ namespace ParamFileGenerator
             string s = "";
             int padCount;
 
-            foreach (ModEntry dynMod in List)
+            foreach (ModEntry dynMod in this)
             {
                 var tmpModMass = dynMod.MassDifference;
                 var tmpModString = dynMod.ReturnAllAffectedResiduesString;

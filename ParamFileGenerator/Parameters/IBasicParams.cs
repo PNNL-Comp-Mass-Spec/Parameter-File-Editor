@@ -1,4 +1,6 @@
-﻿namespace ParamFileGenerator
+﻿using System.Collections.Generic;
+
+namespace ParamFileGenerator
 {
     public interface IBasicParams
     {
@@ -23,7 +25,7 @@
         StaticMods StaticModificationsList { get; set; }
         IsoMods IsotopicModificationsList { get; set; }
         string PartialSequenceToMatch { get; set; }
-        EnzymeCollection EnzymeList { get; set; }
+        List<EnzymeDetails> EnzymeList { get; set; }
         EnzymeDetails RetrieveEnzymeDetails(int index);
     }
 }

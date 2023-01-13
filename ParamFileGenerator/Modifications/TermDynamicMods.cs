@@ -63,12 +63,11 @@ namespace ParamFileGenerator
             // Update the mass (or remove it if sngMass is zero)
             else if (Math.Abs(sngMass) < float.Epsilon)
             {
-                Remove(intIndex);
+                RemoveAt(intIndex);
             }
             else
             {
-                ModEntry objModEntry;
-                objModEntry = GetModEntry(intIndex);
+                var objModEntry = GetModEntry(intIndex);
                 objModEntry.MassDifference = sngMass;
             }
         }
@@ -111,7 +110,7 @@ namespace ParamFileGenerator
 
             double tmpModMass;
 
-            foreach (ModEntry dynMod in List)
+            foreach (ModEntry dynMod in this)
             {
                 tmpModMass = dynMod.MassDifference;
                 tmpModString = dynMod.ReturnAllAffectedResiduesString;

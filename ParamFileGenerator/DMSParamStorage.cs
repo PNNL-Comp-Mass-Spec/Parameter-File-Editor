@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 
 namespace ParamFileGenerator
 {
-    public class DMSParamStorage : CollectionBase
+    public class DMSParamStorage : List<ParamsEntry>
     {
         public enum ParamTypes
         {
@@ -20,18 +20,7 @@ namespace ParamFileGenerator
             ParamTypes ParamType)
         {
             var e = new ParamsEntry(ParamSpecifier, ParamValue, ParamType);
-            List.Add(e);
-        }
-
-        public void Remove(int index)
-        {
-            List.RemoveAt(index);
-        }
-
-        public ParamsEntry this[int index]
-        {
-            get => (ParamsEntry)List[index];
-            set => List[index] = value;
+            Add(e);
         }
 
         public ParamsEntry this[string ParamName, ParamTypes ParamType]
@@ -56,7 +45,7 @@ namespace ParamFileGenerator
         public int IndexOf(string paramName, ParamTypes paramType)
         {
             var counter = default(int);
-            foreach (ParamsEntry e in List)
+            foreach (ParamsEntry e in this)
             {
                 if (e.Type == paramType && (e.Specifier ?? "") == (paramName ?? ""))
                 {

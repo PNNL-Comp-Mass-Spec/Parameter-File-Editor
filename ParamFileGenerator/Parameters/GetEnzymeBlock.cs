@@ -9,7 +9,7 @@ namespace ParamFileGenerator
         private readonly string m_sectionName;
         private readonly List<string> m_EnzymeBlockCollection;
 
-        public EnzymeCollection EnzymeList { get; set; }
+        public List<EnzymeDetails> EnzymeList { get; set; }
 
         public GetEnzymeBlockType(
             string TemplateFilePath,
@@ -92,9 +92,9 @@ namespace ParamFileGenerator
             return defaultEnzymes;
         }
 
-        private EnzymeCollection InterpretEnzymeBlockCollection(IEnumerable<string> enzymeBlock)
+        private List<EnzymeDetails> InterpretEnzymeBlockCollection(IEnumerable<string> enzymeBlock)
         {
-            var enzymeInfo = new EnzymeCollection();
+            var enzymeInfo = new List<EnzymeDetails>();
 
             foreach (var s in enzymeBlock)
             {
@@ -102,7 +102,7 @@ namespace ParamFileGenerator
                 if (sTmp.IndexOf(". ") >= 0)
                 {
                     var tempEnzyme = new EnzymeDetails(s);
-                    enzymeInfo.add(tempEnzyme);
+                    enzymeInfo.Add(tempEnzyme);
                 }
             }
 

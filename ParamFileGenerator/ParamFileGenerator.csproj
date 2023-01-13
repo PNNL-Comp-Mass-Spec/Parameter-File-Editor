@@ -58,7 +58,6 @@
     <Compile Include="Modifications\Mods.cs" />
     <Compile Include="Modifications\StaticMods.cs" />
     <Compile Include="Modifications\TermDynamicMods.cs" />
-    <Compile Include="Parameters\EnzymeCollection.cs" />
     <Compile Include="Parameters\EnzymeDetails.cs" />
     <Compile Include="Parameters\GetEnzymeBlock.cs" />
     <Compile Include="Parameters\IAdvancedParams.cs" />

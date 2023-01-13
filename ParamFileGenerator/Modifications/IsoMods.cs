@@ -9,7 +9,7 @@
 
         public string GetAtom(int index)
         {
-            ModEntry m = (ModEntry)List[index];
+            ModEntry m = this[index];
             return m.ReturnResidueAffected(0);
         }
 

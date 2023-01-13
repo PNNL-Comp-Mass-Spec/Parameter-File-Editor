@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -125,7 +126,7 @@ namespace ParamFileGenerator
 
         public StaticMods StaticModificationsList { get; set; }
 
-        public EnzymeCollection EnzymeList { get; set; }
+        public List<EnzymeDetails> EnzymeList { get; set; }
 
         public Hashtable LoadedParamNames { get; set; } = new Hashtable();
 
@@ -152,7 +153,7 @@ namespace ParamFileGenerator
         public Params()
         {
             IonSeries = new IonSeries();
-            EnzymeList = new EnzymeCollection();
+            EnzymeList = new List<EnzymeDetails>();
             SelectedEnzymeDetails = new EnzymeDetails();
             DynamicMods = new DynamicMods();
             StaticModificationsList = new StaticMods();
@@ -189,7 +190,7 @@ namespace ParamFileGenerator
             m_fullTemplate.SetSection(SectionName);
             FileName = Path.GetFileName(m_templateFilePath);
             SelectedEnzymeIndex = SafeCastInt(m_fullTemplate.GetParam("enzyme_number"));
-            SelectedEnzymeDetails = EnzymeList[SelectedEnzymeIndex];
+            SelectedEnzymeDetails = EnzymeList[SelectedEnzymeIndex]; // TODO: Add an item first!!
             SelectedEnzymeCleavagePosition = 1;
             MaximumNumberMissedCleavages = SafeCastInt(m_fullTemplate.GetParam("max_num_internal_cleavage_sites"));
             ParentMassType = (IBasicParams.MassTypeList)SafeCastInt(m_fullTemplate.GetParam("mass_type_parent"));

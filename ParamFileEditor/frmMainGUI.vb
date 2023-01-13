@@ -3542,7 +3542,7 @@ Public Class frmMainGUI
             Else
                 ' If this mod, and all other mods after this mod are 0, then remove this mod and all subsequent mods
                 If newParams.DynamicMods.Count = intModNumber Then
-                    newParams.DynamicMods.Remove(intModNumber - 1)
+                    newParams.DynamicMods.RemoveAt(intModNumber - 1)
                 End If
             End If
         Catch ex As Exception
@@ -3573,7 +3573,7 @@ Public Class frmMainGUI
                 Else
                     ' If this mod, and all other mods after this mod are 0, then remove this mod and all subsequent mods
                     If newParams.DynamicMods.Count = intModNumber Then
-                        newParams.DynamicMods.Remove(intModNumber - 1)
+                        newParams.DynamicMods.RemoveAt(intModNumber - 1)
                     Else
                         newParams.DynamicMods.Dyn_Mod_n_MassDiff(intModNumber, dblModMass)
                     End If

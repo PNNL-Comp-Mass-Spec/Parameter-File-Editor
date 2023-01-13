@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ParamFileGenerator
@@ -179,7 +180,7 @@ namespace ParamFileGenerator
 
         public string GetResidue(int index)
         {
-            ModEntry m = (ModEntry)List[index];
+            ModEntry m = this[index];
             return m.ReturnResidueAffected(0);
         }
 
@@ -220,7 +221,7 @@ namespace ParamFileGenerator
                         var modEntry = GetModEntry(currIndex);
                         if (Math.Abs(modEntry.MassDifference) < float.Epsilon)
                         {
-                            List.Remove(modEntry);
+                            Remove(modEntry);
                         }
                     }
                 }

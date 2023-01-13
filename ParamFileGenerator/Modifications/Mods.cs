@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ParamFileGenerator
 {
-    public class Mods : CollectionBase
+    public class Mods : List<ModEntry>
     {
         public enum ResidueCode
         {
@@ -48,13 +47,13 @@ namespace ParamFileGenerator
             S
         }
 
-        public int ModCount => List.Count;
+        public int ModCount => Count;
 
         public bool Initialized
         {
             get
             {
-                if (List.Count > 0)
+                if (Count > 0)
                 {
                     return true;
                 }
@@ -67,10 +66,10 @@ namespace ParamFileGenerator
 
         public ModEntry GetModEntry(int index)
         {
-            return (ModEntry)List[index];
+            return base[index];
         }
 
-        public int NumMods => List.Count;
+        public int NumMods => Count;
 
         public Mods() : base()
         {
@@ -89,30 +88,17 @@ namespace ParamFileGenerator
             string AffectedResidueString,
             double MassDifference)
         {
-            var residueList = ConvertAffectedResStringToList(AffectedResidueString);
-            var newMod = new ModEntry(residueList, MassDifference, ModEntry.ModificationTypes.Static);
-            List.Add(newMod);
-        }
-
-        public void Insert(int index, ModEntry newMod)
-        {
-            List.Insert(index, newMod);
-        }
-
-        public void Remove(int index)
-        {
-            List.RemoveAt(index);
+            m_Add(AffectedResidueString, MassDifference, ModEntry.ModificationTypes.Static);
         }
 
         public void Replace(int index, ModEntry newMod)
         {
-            List.RemoveAt(index);
-            List.Insert(index, newMod);
+            this[index] = newMod;
         }
 
         public string GetMassDiff(int index)
         {
-            ModEntry m = (ModEntry)List[index];
+            ModEntry m = this[index];
             return m.MassDifference.ToString("0.00000");
         }
 
@@ -130,7 +116,7 @@ namespace ParamFileGenerator
         {
             var residueList = ConvertAffectedResStringToList(AffectedEntity);
             var newMod = new ModEntry(residueList, MassDifference, ModType, GlobalModID);
-            List.Add(newMod);
+            Add(newMod);
         }
 
         protected void LoadAAMappingColl()
@@ -207,12 +193,12 @@ namespace ParamFileGenerator
 
         protected int m_FindModIndex(string modifiedEntity)
         {
-            foreach (ModEntry statMod in List)
+            foreach (ModEntry statMod in this)
             {
                 string testCase = statMod.ReturnResidueAffected(0);
                 if ((testCase ?? "") == (modifiedEntity ?? ""))
                 {
-                    return List.IndexOf(statMod);
+                    return IndexOf(statMod);
                 }
             }
 
@@ -229,7 +215,7 @@ namespace ParamFileGenerator
             }
             else
             {
-                ModEntry = (ModEntry)List[ModIndex];
+                ModEntry = this[ModIndex];
             }
 
             if (ModEntry is null)
@@ -279,7 +265,7 @@ namespace ParamFileGenerator
                     changeMod = new ModEntry(residueList, MassDifference, foundMod.ModificationType);
                 }
 
-                foreach (ModEntry tempMod in List)
+                foreach (ModEntry tempMod in this)
                 {
                     if (foundMod.Equals(tempMod) && Math.Abs(MassDifference) > float.Epsilon)
                     {
@@ -290,7 +276,7 @@ namespace ParamFileGenerator
                     {
                         RemoveAt(counter);
                     }
-                    if (List.Count == 0)
+                    if (Count == 0)
                         break;
                     counter += 1;
                 }
