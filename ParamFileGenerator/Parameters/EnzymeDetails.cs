@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace ParamFileGenerator
@@ -25,34 +26,17 @@ namespace ParamFileGenerator
 
         private void ParseEnzymeString(string enzStr)
         {
-            string[] s = null;
-            int placeCounter = 0;
-            string prevChar = "";
-            string tmpString = "";
-
-            for (int counter = 0; counter < enzStr.Length; counter++)
+            var parts = enzStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (parts.Count < 5)
             {
-                string currChar = enzStr.Substring(counter, 1);
-                if (currChar == " " && prevChar != " " || counter == enzStr.Length + 1)
-                {
-                    Array.Resize(ref s, placeCounter + 1);
-                    s[placeCounter] = tmpString;
-                    placeCounter += 1;
-                    tmpString = "";
-                }
-                else if (currChar != " ")
-                {
-                    tmpString += currChar;
-                }
-
-                prevChar = currChar;
+                parts.AddRange(Enumerable.Range(1, 5 - parts.Count).Select(x => ""));
             }
 
-            m_Number = Params.SafeCastInt(s[0]);
-            m_Name = s[1];
-            m_Offset = Params.SafeCastInt(s[2]);
-            m_CleavePoints = s[3];
-            m_NoCleavePoints = s[4];
+            m_Number = Params.SafeCastInt(parts[0]);
+            m_Name = parts[1];
+            m_Offset = Params.SafeCastInt(parts[2]);
+            m_CleavePoints = parts[3];
+            m_NoCleavePoints = parts[4];
         }
 
         public int EnzymeID

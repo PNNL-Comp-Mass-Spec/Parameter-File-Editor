@@ -98,7 +98,7 @@ namespace ParamFileGenerator
 
             foreach (var s in enzymeBlock)
             {
-                string sTmp = s.Substring(0, s.IndexOf(" "));
+                string sTmp = s.Substring(0, s.IndexOf(" ") + 1);
                 if (sTmp.IndexOf(". ") >= 0)
                 {
                     var tempEnzyme = new EnzymeDetails(s);
