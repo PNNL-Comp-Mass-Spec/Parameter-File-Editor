@@ -75,7 +75,7 @@ namespace ParamFileGenerator
                         {
                             if (s.Contains(";"))
                             {
-                                s = s.Substring(s.IndexOf(";") - 1).Trim();
+                                s = s.Substring(0, Math.Max(s.IndexOf(";") - 1, 0)).Trim();
                             }
                             ParseLineXml(s, m_XmlDoc);
                             s = tr.ReadLine();
