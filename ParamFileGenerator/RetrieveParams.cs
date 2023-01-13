@@ -8,41 +8,41 @@ namespace ParamFileGenerator
         string GetParam(string section, string item, string attributeName);
         string GetParam(string section, string item);
         string GetParam(string item);
-        void SetParam(string section, string name, string Value);
-        void SetParam(string name, string Value);
+        void SetParam(string section, string name, string value);
+        void SetParam(string name, string value);
         void SetSection(string name);
     }
 
     public class RetrieveParams : IRetrieveParams
     {
-        private IniFileReader m_iniFileReader;
+        private IniFileReader mIniFileReader;
 
         /// <summary>
         /// Default section name
         /// </summary>
-        private string m_defaultSection = "";
+        private string mDefaultSection = "";
 
-        public RetrieveParams(string iniFilePath = "", bool IsCaseSensitive = false)
+        public RetrieveParams(string iniFilePath = "", bool isCaseSensitive = false)
         {
             if (!string.IsNullOrEmpty(iniFilePath))
             {
                 IniFilePath = iniFilePath;
-                LoadSettings(IsCaseSensitive);
+                LoadSettings(isCaseSensitive);
             }
         }
 
         public string IniFilePath { get; set; } = "";
 
-        public bool LoadSettings(bool IsCaseSensitive = false)
+        public bool LoadSettings(bool isCaseSensitive = false)
         {
-            m_iniFileReader = new IniFileReader(IniFilePath, IsCaseSensitive);
-            return m_iniFileReader is not null;
+            mIniFileReader = new IniFileReader(IniFilePath, isCaseSensitive);
+            return mIniFileReader is not null;
         }
 
         public void SaveSettings()
         {
-            m_iniFileReader.OutputFilename = IniFilePath;
-            m_iniFileReader.Save();
+            mIniFileReader.OutputFilename = IniFilePath;
+            mIniFileReader.Save();
         }
 
         public bool LoadSettings(string settingsFilePath)
@@ -53,12 +53,12 @@ namespace ParamFileGenerator
 
         public string GetParam(string item)
         {
-            return m_iniFileReader.GetIniValue(m_defaultSection, item);
+            return mIniFileReader.GetIniValue(mDefaultSection, item);
         }
 
         public string GetParam(string section, string item)
         {
-            string s = m_iniFileReader.GetIniValue(section, item);
+            var s = mIniFileReader.GetIniValue(section, item);
             if (s is null)
                 throw new Exception("No ini value for parameter '" + item + "'");
             return s;
@@ -66,32 +66,31 @@ namespace ParamFileGenerator
 
         public string GetParam(string section, string item, string attributeName)
         {
-            string s = m_iniFileReader.GetCustomIniAttribute(section, item, attributeName);
+            var s = mIniFileReader.GetCustomIniAttribute(section, item, attributeName);
             if (s is null)
                 throw new Exception("No custom ini value for parameter '" + item + "'");
 
             return s;
         }
 
-        public void SetParam(string name, string Value)
+        public void SetParam(string name, string value)
         {
-            m_iniFileReader.SetIniValue(m_defaultSection, name, Value);
+            mIniFileReader.SetIniValue(mDefaultSection, name, value);
         }
 
-        public void SetParam(string section, string name, string Value)
+        public void SetParam(string section, string name, string value)
         {
-            m_iniFileReader.SetIniValue(section, name, Value);
+            mIniFileReader.SetIniValue(section, name, value);
         }
 
         public void SetSection(string name)
         {
-            m_defaultSection = name;
+            mDefaultSection = name;
         }
 
         public List<string> GetAllKeysInSection(string section)
         {
-            List<string> keyNames;
-            keyNames = m_iniFileReader.AllKeysInSection(section);
+            var keyNames = mIniFileReader.AllKeysInSection(section);
             if (keyNames is null)
                 throw new Exception("No Keys in section '" + section + "'");
 

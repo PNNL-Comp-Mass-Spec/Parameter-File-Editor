@@ -97,7 +97,7 @@ namespace ParamFileGenerator
             //}
             paramList.Add("print_duplicate_references = " + ConvertBoolToInteger(@params.PrintDuplicateReferences).ToString());
 
-            if (!(type == IGenerateFile.ParamFileType.BioWorks_32))
+            if (type != IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("enzyme_number = " + @params.SelectedEnzymeIndex.ToString());
             }
@@ -183,10 +183,10 @@ namespace ParamFileGenerator
 
             paramList.Add("");
 
-            if (!(type == IGenerateFile.ParamFileType.BioWorks_32))
+            if (type != IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("[SEQUEST_ENZYME_INFO]");
-                foreach (EnzymeDetails item in @params.EnzymeList)
+                foreach (var item in @params.EnzymeList)
                     paramList.Add(item.ReturnEnzymeString());
             }
 
@@ -204,14 +204,7 @@ namespace ParamFileGenerator
 
         private int ConvertBoolToInteger(bool value)
         {
-            if (value == true)
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
+            return value ? 1 : 0;
         }
     }
 }

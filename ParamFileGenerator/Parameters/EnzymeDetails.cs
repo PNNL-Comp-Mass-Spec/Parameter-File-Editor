@@ -6,18 +6,9 @@ namespace ParamFileGenerator
 {
     public class EnzymeDetails
     {
-        private readonly string m_EnzymeString;
-
-        private int m_Number;             // Enzyme ID Number
-        private string m_Name;            // Descriptive Name
-        private int m_Offset;             // Cut position --> 0 = N-terminal, 1 = C-Terminal
-        private string m_CleavePoints;    // Amino Acids at which to cleave
-        private string m_NoCleavePoints;  // Amino Acids to skip cleavage
-
-        public EnzymeDetails(string EnzymeString)
+        public EnzymeDetails(string enzymeString)
         {
-            m_EnzymeString = EnzymeString;
-            ParseEnzymeString(m_EnzymeString);
+            ParseEnzymeString(enzymeString);
         }
 
         public EnzymeDetails()
@@ -32,48 +23,26 @@ namespace ParamFileGenerator
                 parts.AddRange(Enumerable.Range(1, 5 - parts.Count).Select(x => ""));
             }
 
-            m_Number = Params.SafeCastInt(parts[0]);
-            m_Name = parts[1];
-            m_Offset = Params.SafeCastInt(parts[2]);
-            m_CleavePoints = parts[3];
-            m_NoCleavePoints = parts[4];
+            EnzymeID = Params.SafeCastInt(parts[0]);
+            EnzymeName = parts[1];
+            EnzymeCleaveOffset = Params.SafeCastInt(parts[2]);
+            EnzymeCleavePoints = parts[3];
+            EnzymeNoCleavePoints = parts[4];
         }
 
-        public int EnzymeID
-        {
-            get => m_Number;
-            set => m_Number = value;
-        }
+        public int EnzymeID { get; set; }
 
-        public string EnzymeName
-        {
-            get => m_Name;
-            set => m_Name = value;
-        }
+        public string EnzymeName { get; set; }
 
-        public int EnzymeCleaveOffset
-        {
-            get => m_Offset;
-            set => m_Offset = value;
-        }
+        public int EnzymeCleaveOffset { get; set; }
 
-        public string EnzymeCleavePoints
-        {
-            get => m_CleavePoints;
-            set => m_CleavePoints = value;
-        }
+        public string EnzymeCleavePoints { get; set; }
 
-        public string EnzymeNoCleavePoints
-        {
-            get => m_NoCleavePoints;
-            set => m_NoCleavePoints = value;
-        }
+        public string EnzymeNoCleavePoints { get; set; }
 
         public string ReturnEnzymeString()
         {
-            string s;
-
-            s = EnzymeID.ToString() + ".";
+            var s = EnzymeID.ToString() + ".";
             s = s.PadRight(4, Convert.ToChar(" ")) + EnzymeName;
             s = s.PadRight(30, Convert.ToChar(" ")) + EnzymeCleaveOffset.ToString();
             s = s.PadRight(35, Convert.ToChar(" ")) + EnzymeCleavePoints;

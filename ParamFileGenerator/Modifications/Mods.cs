@@ -98,7 +98,7 @@ namespace ParamFileGenerator
 
         public string GetMassDiff(int index)
         {
-            ModEntry m = this[index];
+            var m = this[index];
             return m.MassDifference.ToString("0.00000");
         }
 
@@ -151,9 +151,9 @@ namespace ParamFileGenerator
             }
             else
             {
-                for (int counter = 0; counter < affectedResidueString.Length; counter++)
+                for (var counter = 0; counter < affectedResidueString.Length; counter++)
                 {
-                    string tmpAA = affectedResidueString.Substring(counter, 1);
+                    var tmpAA = affectedResidueString.Substring(counter, 1);
                     //if ("><[]".Contains(tmpAA))
                     //{
                     aaList.Add(tmpAA);
@@ -166,10 +166,9 @@ namespace ParamFileGenerator
 
         protected string ConvertResidueCodeToSLC(ResidueCode Residue)
         {
-            string tmpRes = Residue.ToString();
+            var tmpRes = Residue.ToString();
 
-            string tmpSLC = null;
-            if (m_AAMappingTable.TryGetValue(tmpRes, out tmpSLC))
+            if (m_AAMappingTable.TryGetValue(tmpRes, out var tmpSLC))
             {
                 return tmpSLC;
             }
@@ -181,8 +180,8 @@ namespace ParamFileGenerator
         {
             foreach (var item in m_AAMappingTable)
             {
-                string ResString = item.Key;
-                if ((SingleLetterAA ?? "") == (ResString.Substring(0, 1) ?? "") && !ResString.Contains("Term"))
+                var ResString = item.Key;
+                if ((SingleLetterAA ?? "") == (ResString.Substring(0, 1)) && !ResString.Contains("Term"))
                 {
                     return (ResidueCode)Enum.Parse(typeof(ResidueCode), ResString);
                 }
@@ -193,9 +192,9 @@ namespace ParamFileGenerator
 
         protected int m_FindModIndex(string modifiedEntity)
         {
-            foreach (ModEntry statMod in this)
+            foreach (var statMod in this)
             {
-                string testCase = statMod.ReturnResidueAffected(0);
+                var testCase = statMod.ReturnResidueAffected(0);
                 if ((testCase ?? "") == (modifiedEntity ?? ""))
                 {
                     return IndexOf(statMod);
@@ -208,7 +207,7 @@ namespace ParamFileGenerator
         protected ModEntry m_FindMod(string ModifiedEntity)
         {
             ModEntry ModEntry;
-            int ModIndex = m_FindModIndex(ModifiedEntity);
+            var ModIndex = m_FindModIndex(ModifiedEntity);
             if (ModIndex == -1)
             {
                 ModEntry = null;
@@ -265,7 +264,7 @@ namespace ParamFileGenerator
                     changeMod = new ModEntry(residueList, MassDifference, foundMod.ModificationType);
                 }
 
-                foreach (ModEntry tempMod in this)
+                foreach (var tempMod in this)
                 {
                     if (foundMod.Equals(tempMod) && Math.Abs(MassDifference) > float.Epsilon)
                     {

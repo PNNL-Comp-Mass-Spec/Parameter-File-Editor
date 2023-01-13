@@ -2,14 +2,14 @@
 {
     public class IsoMods : Mods
     {
-        public void Add(IsotopeList AffectedAtom, double MassDifference, int GlobalModID = 0)
+        public void Add(IsotopeList affectedAtom, double massDifference, int globalModId = 0)
         {
-            m_Add(AffectedAtom.ToString(), MassDifference, ModEntry.ModificationTypes.Isotopic, GlobalModID);
+            m_Add(affectedAtom.ToString(), massDifference, ModEntry.ModificationTypes.Isotopic, globalModId);
         }
 
         public string GetAtom(int index)
         {
-            ModEntry m = this[index];
+            var m = this[index];
             return m.ReturnResidueAffected(0);
         }
 
@@ -43,16 +43,16 @@
             set => ChangeIsoMod(IsotopeList.S, value);
         }
 
-        private void ChangeIsoMod(IsotopeList AffectedAtom, double MassDifference)
+        private void ChangeIsoMod(IsotopeList affectedAtom, double massDifference)
         {
-            var foundMod = FindIsoMod(AffectedAtom);
-            string ModAAString = AffectedAtom.ToString();
-            m_ChangeMod(foundMod, ModAAString, MassDifference);
+            var foundMod = FindIsoMod(affectedAtom);
+            var modAAString = affectedAtom.ToString();
+            m_ChangeMod(foundMod, modAAString, massDifference);
         }
 
-        private ModEntry FindIsoMod(IsotopeList AffectedAtom)
+        private ModEntry FindIsoMod(IsotopeList affectedAtom)
         {
-            return m_FindMod(AffectedAtom.ToString());
+            return m_FindMod(affectedAtom.ToString());
         }
     }
 }

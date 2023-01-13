@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ParamFileGenerator
@@ -180,7 +179,7 @@ namespace ParamFileGenerator
 
         public string GetResidue(int index)
         {
-            ModEntry m = this[index];
+            var m = this[index];
             return m.ReturnResidueAffected(0);
         }
 
@@ -202,7 +201,7 @@ namespace ParamFileGenerator
         private void ChangeAAMod(ResidueCode ModifiedAA, double MassDifference, bool Additive = false)
         {
             var foundMod = FindAAMod(ModifiedAA);
-            string ModAAString = ConvertResidueCodeToSLC(ModifiedAA);
+            var ModAAString = ConvertResidueCodeToSLC(ModifiedAA);
             m_ChangeMod(foundMod, ModAAString, MassDifference, Additive);
         }
 

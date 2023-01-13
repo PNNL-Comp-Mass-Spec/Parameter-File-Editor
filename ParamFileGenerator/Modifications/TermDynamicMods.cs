@@ -10,10 +10,9 @@ namespace ParamFileGenerator
         public const string NTERM_SYMBOL = "<";
         public const string CTERM_SYMBOL = ">";
 
-        public TermDynamicMods(string TermDynModString) : base()
+        public TermDynamicMods(string termDynModString) : base()
         {
-            m_OrigDynModString = TermDynModString;
-            ParseDynModString(m_OrigDynModString);
+            ParseDynModString(termDynModString);
         }
 
         public double Dyn_Mod_NTerm
@@ -30,8 +29,7 @@ namespace ParamFileGenerator
 
         protected double GetTermDynMod(string strSymbol)
         {
-            ModEntry objModEntry;
-            objModEntry = m_FindMod(strSymbol);
+            var objModEntry = m_FindMod(strSymbol);
 
             if (objModEntry is null)
             {
@@ -45,8 +43,7 @@ namespace ParamFileGenerator
 
         protected void UpdateTermDynMod(string strSymbol, double sngMass)
         {
-            int intIndex;
-            intIndex = m_FindModIndex(strSymbol);
+            var intIndex = m_FindModIndex(strSymbol);
 
             if (intIndex < 0)
             {
@@ -72,28 +69,21 @@ namespace ParamFileGenerator
             }
         }
 
-        protected override void ParseDynModString(string DMString)
+        protected override void ParseDynModString(string dmString)
         {
-            double tmpCTMass;
-            double tmpNTMass;
-
             var splitRE = new Regex(@"(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)");
-            Match m;
 
-            if (DMString is null)
+            if (dmString is null)
             {
                 return;
             }
 
-            if (splitRE.IsMatch(DMString))
+            if (splitRE.IsMatch(dmString))
             {
-                m = splitRE.Match(DMString);
+                var m = splitRE.Match(dmString);
 
-                tmpCTMass = double.Parse(m.Groups["ctmodmass"].Value);
-                tmpNTMass = double.Parse(m.Groups["ntmodmass"].Value);
-
-                Dyn_Mod_NTerm = tmpNTMass;
-                Dyn_Mod_CTerm = tmpCTMass;
+                Dyn_Mod_NTerm = double.Parse(m.Groups["ntmodmass"].Value);
+                Dyn_Mod_CTerm = double.Parse(m.Groups["ctmodmass"].Value);
             }
         }
 
@@ -101,19 +91,16 @@ namespace ParamFileGenerator
         {
             var sb = new StringBuilder();
 
-            string tmpModString;
-            // var ctRes = ">";
-            // var ntRes = "<";
+            //const string ctRes = ">";
+            //const string ntRes = "<";
 
-            double ctModMass = 0.0d;
-            double ntModMass = 0.0d;
+            var ctModMass = 0.0d;
+            var ntModMass = 0.0d;
 
-            double tmpModMass;
-
-            foreach (ModEntry dynMod in this)
+            foreach (var dynMod in this)
             {
-                tmpModMass = dynMod.MassDifference;
-                tmpModString = dynMod.ReturnAllAffectedResiduesString;
+                var tmpModMass = dynMod.MassDifference;
+                var tmpModString = dynMod.ReturnAllAffectedResiduesString;
                 if (tmpModString == ">")
                 {
                     ctModMass = tmpModMass;

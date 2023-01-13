@@ -14,28 +14,22 @@ namespace ParamFileGenerator
             IsotopicModification
         }
 
-        public void Add(
-            string ParamSpecifier,
-            string ParamValue,
-            ParamTypes ParamType)
+        public void Add(string paramSpecifier, string paramValue, ParamTypes paramType)
         {
-            var e = new ParamsEntry(ParamSpecifier, ParamValue, ParamType);
-            Add(e);
+            Add(new ParamsEntry(paramSpecifier, paramValue, paramType));
         }
 
-        public ParamsEntry this[string ParamName, ParamTypes ParamType]
+        public ParamsEntry this[string paramName, ParamTypes paramType]
         {
             get
             {
-                int index = IndexOf(ParamName, ParamType);
+                var index = IndexOf(paramName, paramType);
                 if (index >= 0)
                 {
-                    return this[IndexOf(ParamName, ParamType)];
+                    return this[index];
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
             set
             {
@@ -44,18 +38,19 @@ namespace ParamFileGenerator
 
         public int IndexOf(string paramName, ParamTypes paramType)
         {
-            var counter = default(int);
-            foreach (ParamsEntry e in this)
+            if (string.IsNullOrWhiteSpace(paramName))
             {
-                if (e.Type == paramType && (e.Specifier ?? "") == (paramName ?? ""))
+                return -1;
+            }
+
+            for (var i = 0; i < Count; i++)
+            {
+                if (this[i].TypeSpecifierEquals(paramType, paramName))
                 {
-                    return counter;
-                }
-                else
-                {
-                    counter += 1;
+                    return i;
                 }
             }
+
             return -1;
         }
     }

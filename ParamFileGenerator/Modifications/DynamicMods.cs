@@ -38,24 +38,20 @@ namespace ParamFileGenerator
         //    set => Dyn_Mod_n_AAList(3, value);
         //}
 
-        public DynamicMods(string DynamicModString) : base()
+        public DynamicMods(string dynamicModString) : base()
         {
-            m_OrigDynModString = DynamicModString;
-            ParseDynModString(m_OrigDynModString);
+            ParseDynModString(dynamicModString);
         }
 
         public DynamicMods() : base()
         {
-            m_OrigDynModString = null;
         }
 
         public string ReturnDynModString(int maxDynMods)
         {
-            string s;
             //if (Initialized)
             //{
-            s = AssembleModString(maxDynMods);
-            return s;
+            return AssembleModString(maxDynMods);
             //}
             //else
             //{
@@ -70,15 +66,15 @@ namespace ParamFileGenerator
         //    return "0.0000 0.0000";
         //}
 
-        public new void Add(string AffectedResidueString, double MassDifference)
+        public new void Add(string affectedResidueString, double massDifference)
         {
-            m_Add(AffectedResidueString, MassDifference, ModEntry.ModificationTypes.Dynamic);
+            m_Add(affectedResidueString, massDifference, ModEntry.ModificationTypes.Dynamic);
         }
 
-        public double Dyn_Mod_n_MassDiff(int DynModNumber)
+        public double Dyn_Mod_n_MassDiff(int dynModNumber)
         {
             ModEntry dm;
-            int index = DynModNumber - 1;
+            var index = dynModNumber - 1;
             try
             {
                 dm = this[index];
@@ -90,13 +86,12 @@ namespace ParamFileGenerator
             return dm.MassDifference;
         }
 
-        public void Dyn_Mod_n_MassDiff(int DynModNumber, double value)
+        public void Dyn_Mod_n_MassDiff(int dynModNumber, double value)
         {
-            int index = DynModNumber - 1;
-            ModEntry dm;
+            var index = dynModNumber - 1;
             if (index < Count)
             {
-                dm = this[index];
+                var dm = this[index];
                 dm.MassDifference = value;
                 Replace(index, dm);
             }
@@ -106,10 +101,10 @@ namespace ParamFileGenerator
             }
         }
 
-        public string Dyn_Mod_n_AAList(int DynModNumber)
+        public string Dyn_Mod_n_AAList(int dynModNumber)
         {
             ModEntry dm;
-            int index = DynModNumber - 1;
+            var index = dynModNumber - 1;
             try
             {
                 dm = this[index];
@@ -121,13 +116,12 @@ namespace ParamFileGenerator
             return dm.ReturnAllAffectedResiduesString;
         }
 
-        public void Dyn_Mod_n_AAList(int DynModNumber, string value)
+        public void Dyn_Mod_n_AAList(int dynModNumber, string value)
         {
-            int index = DynModNumber - 1;
-            ModEntry dm;
+            var index = dynModNumber - 1;
             if (index < Count)
             {
-                dm = this[index];
+                var dm = this[index];
                 dm.ResidueCollection = ConvertAffectedResStringToList(value);
                 Replace(index, dm);
             }
@@ -137,10 +131,10 @@ namespace ParamFileGenerator
             }
         }
 
-        public int Dyn_Mod_n_Global_ModID(int DynModNumber)
+        public int Dyn_Mod_n_Global_ModID(int dynModNumber)
         {
             ModEntry dm;
-            int index = DynModNumber - 1;
+            var index = dynModNumber - 1;
             try
             {
                 dm = this[index];
@@ -152,13 +146,12 @@ namespace ParamFileGenerator
             return dm.GlobalModID;
         }
 
-        public void Dyn_Mod_n_Global_ModID(int DynModNumber, int value)
+        public void Dyn_Mod_n_Global_ModID(int dynModNumber, int value)
         {
-            int index = DynModNumber - 1;
-            ModEntry dm;
+            var index = dynModNumber - 1;
             if (index < Count)
             {
-                dm = this[index];
+                var dm = this[index];
                 dm.GlobalModID = value;
                 Replace(index, dm);
             }
@@ -170,10 +163,10 @@ namespace ParamFileGenerator
 
         protected virtual string AssembleModString(int counter)
         {
-            string s = "";
+            var s = "";
             int padCount;
 
-            foreach (ModEntry dynMod in this)
+            foreach (var dynMod in this)
             {
                 var tmpModMass = dynMod.MassDifference;
                 var tmpModString = dynMod.ReturnAllAffectedResiduesString;
@@ -196,22 +189,22 @@ namespace ParamFileGenerator
             return s.Trim();
         }
 
-        protected virtual void ParseDynModString(string DMString)
+        protected virtual void ParseDynModString(string dmString)
         {
             var splitRE = new Regex(@"(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)");
-            var matches = splitRE.Matches(DMString);
+            var matches = splitRE.Matches(dmString);
 
             foreach (Match m in matches)
             {
-                double tmpMass = double.Parse(m.Groups["modmass"].Value);
-                string tmpResString = m.Groups["residues"].ToString();
+                var tmpMass = double.Parse(m.Groups["modmass"].Value);
+                var tmpResString = m.Groups["residues"].ToString();
 
                 if (Math.Abs(tmpMass) > float.Epsilon)
                 {
                     var residueList = new List<string>();
-                    for (int resCounter = 0; resCounter < tmpResString.Length; resCounter++)
+                    for (var resCounter = 0; resCounter < tmpResString.Length; resCounter++)
                     {
-                        string tmpRes = tmpResString.Substring(resCounter, 1);
+                        var tmpRes = tmpResString.Substring(resCounter, 1);
                         residueList.Add(tmpRes);
                     }
                     var modEntry = new ModEntry(residueList, tmpMass, ModEntry.ModificationTypes.Dynamic);
@@ -219,8 +212,5 @@ namespace ParamFileGenerator
                 }
             }
         }
-
-        protected string m_OrigDynModString;
-        //private ModEntry m_EmptyMod = new ModEntry(
     }
 }

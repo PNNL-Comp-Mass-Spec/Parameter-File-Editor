@@ -32,7 +32,7 @@ namespace ParamFileGenerator
 
         public string ModificationTypeString => GetModTypeSymbol();
 
-        public ModificationTypes ModificationType { get; private set; }
+        public ModificationTypes ModificationType { get; }
 
         private void AddResidue(string newResidue)
         {
@@ -46,7 +46,7 @@ namespace ParamFileGenerator
 
         private string ConvertListToAAString(IEnumerable<string> resCollection)
         {
-            string returnString = "";
+            var returnString = "";
             foreach (var s in resCollection)
             {
                 var s1 = s.Substring(0, 1);
@@ -91,9 +91,9 @@ namespace ParamFileGenerator
             AddResidue(residueToAdd);
         }
 
-        public void RemoveAffectedResidue(string ResidueToRemove)
+        public void RemoveAffectedResidue(string residueToRemove)
         {
-            RemoveResidue(ResidueToRemove);
+            RemoveResidue(residueToRemove);
         }
     }
 }

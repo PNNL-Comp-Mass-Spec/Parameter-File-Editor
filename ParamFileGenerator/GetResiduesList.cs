@@ -10,7 +10,7 @@ namespace ParamFileGenerator
         /// and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
         /// </summary>
         /// <returns></returns>
-        public Dictionary<char, Dictionary<char, int>> ResidueAtomCounts { get; private set; }
+        public Dictionary<char, Dictionary<char, int>> ResidueAtomCounts { get; }
 
 #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
         public GetResiduesList(IDBTools dbTools)
@@ -18,10 +18,9 @@ namespace ParamFileGenerator
         {
             ResidueAtomCounts = new Dictionary<char, Dictionary<char, int>>();
 
-            string SQL = "SELECT * FROM T_Residues WHERE [Num_C] > 0";
+            var sql = "SELECT * FROM T_Residues WHERE [Num_C] > 0";
 
-            List<List<string>> residuesTable = null;
-            dbTools.GetQueryResults(SQL, out residuesTable);
+            dbTools.GetQueryResults(sql, out var residuesTable);
 
             var columnNames = new List<string>()
             {
@@ -51,7 +50,7 @@ namespace ParamFileGenerator
 
             foreach (var resultRow in residuesTable)
             {
-                string residueSymbol = dbTools.GetColumnValue(resultRow, columnMap, "Residue_Symbol");
+                var residueSymbol = dbTools.GetColumnValue(resultRow, columnMap, "Residue_Symbol");
 
                 var atomCountsForResidue = new Dictionary<char, int>();
 
@@ -59,11 +58,10 @@ namespace ParamFileGenerator
                 // This for loop access columns Num_C, Num_H, Num_N, etc.
                 foreach (var elementSymbol in elementSymbols)
                 {
-                    string columnName = "Num_" + elementSymbol;
-                    string elementCount = dbTools.GetColumnValue(resultRow, columnMap, columnName);
+                    var columnName = "Num_" + elementSymbol;
+                    var elementCount = dbTools.GetColumnValue(resultRow, columnMap, columnName);
 
-                    int elementCountVal;
-                    if (int.TryParse(elementCount, out elementCountVal))
+                    if (int.TryParse(elementCount, out var elementCountVal))
                     {
                         atomCountsForResidue.Add(elementSymbol, elementCountVal);
                     }

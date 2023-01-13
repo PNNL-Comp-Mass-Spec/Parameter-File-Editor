@@ -22,12 +22,12 @@ namespace ParamFileGenerator
 
     public class IniFileReader
     {
-        private string m_IniFilename;
-        private XmlDocument m_XmlDoc;
+        private string mIniFilename;
+        private XmlDocument mXmlDoc;
         private List<string> sections = new List<string>();
-        private bool m_CaseSensitive = false;
-        private string m_SaveFilename;
-        private bool m_initialized = false;
+        private bool mCaseSensitive = false;
+        private string mSaveFilename;
+        private bool mInitialized = false;
 
         public IniFileReader(string settingsFileName)
         {
@@ -41,11 +41,9 @@ namespace ParamFileGenerator
 
         private void InitIniFileReader(string settingsFileName, bool isCaseSensitive)
         {
-            FileInfo fi;
-            string s;
             TextReader tr = null;
-            m_CaseSensitive = isCaseSensitive;
-            m_XmlDoc = new XmlDocument();
+            mCaseSensitive = isCaseSensitive;
+            mXmlDoc = new XmlDocument();
 
             if (string.IsNullOrWhiteSpace(settingsFileName))
             {
@@ -55,39 +53,39 @@ namespace ParamFileGenerator
             // try to load the file as an XML file
             try
             {
-                m_XmlDoc.Load(settingsFileName);
+                mXmlDoc.Load(settingsFileName);
                 UpdateSections();
-                m_IniFilename = settingsFileName;
-                m_initialized = true;
+                mIniFilename = settingsFileName;
+                mInitialized = true;
             }
             catch
             {
                 // load the default XML
-                m_XmlDoc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><sections></sections>");
+                mXmlDoc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?><sections></sections>");
                 try
                 {
-                    fi = new FileInfo(settingsFileName);
+                    var fi = new FileInfo(settingsFileName);
                     if (fi.Exists)
                     {
                         tr = fi.OpenText();
-                        s = tr.ReadLine();
+                        var s = tr.ReadLine();
                         while (s is not null)
                         {
                             if (s.Contains(";"))
                             {
                                 s = s.Substring(0, Math.Max(s.IndexOf(";") - 1, 0)).Trim();
                             }
-                            ParseLineXml(s, m_XmlDoc);
+                            ParseLineXml(s, mXmlDoc);
                             s = tr.ReadLine();
                         }
-                        m_IniFilename = settingsFileName;
-                        m_initialized = true;
+                        mIniFilename = settingsFileName;
+                        mInitialized = true;
                     }
                     else
                     {
-                        m_XmlDoc.Save(settingsFileName);
-                        m_IniFilename = settingsFileName;
-                        m_initialized = true;
+                        mXmlDoc.Save(settingsFileName);
+                        mIniFilename = settingsFileName;
+                        mInitialized = true;
                     }
                 }
                 catch //(Exception e)
@@ -110,13 +108,13 @@ namespace ParamFileGenerator
             {
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
-                return m_IniFilename;
+                return mIniFilename;
             }
         }
 
-        public bool Initialized => m_initialized;
+        public bool Initialized => mInitialized;
 
-        public bool CaseSensitive => m_CaseSensitive;
+        public bool CaseSensitive => mCaseSensitive;
 
         private string SetNameCase(string aName)
         {
@@ -132,7 +130,7 @@ namespace ParamFileGenerator
 
         private XmlElement GetRoot()
         {
-            return m_XmlDoc.DocumentElement;
+            return mXmlDoc.DocumentElement;
         }
 
         private XmlElement GetLastSection()
@@ -152,18 +150,17 @@ namespace ParamFileGenerator
             if (sectionName != default && !string.IsNullOrEmpty(sectionName))
             {
                 sectionName = SetNameCase(sectionName);
-                return (XmlElement)m_XmlDoc.SelectSingleNode("//section[@name='" + sectionName + "']");
+                return (XmlElement)mXmlDoc.SelectSingleNode("//section[@name='" + sectionName + "']");
             }
             return null;
         }
 
         private XmlElement GetItem(string sectionName, string keyName)
         {
-            XmlElement section;
             if (keyName is not null && !string.IsNullOrEmpty(keyName))
             {
                 keyName = SetNameCase(keyName);
-                section = GetSection(sectionName);
+                var section = GetSection(sectionName);
                 if (section is not null)
                 {
                     return (XmlElement)section.SelectSingleNode("item[@key='" + keyName + "']");
@@ -174,14 +171,13 @@ namespace ParamFileGenerator
 
         public bool SetIniSection(string oldSection, string newSection)
         {
-            XmlElement section;
             if (!Initialized)
             {
                 throw new IniFileReaderNotInitializedException();
             }
             if (newSection is not null && !string.IsNullOrEmpty(newSection))
             {
-                section = GetSection(oldSection);
+                var section = GetSection(oldSection);
                 if (section is not null)
                 {
                     section.SetAttribute("name", SetNameCase(newSection));
@@ -194,11 +190,9 @@ namespace ParamFileGenerator
 
         public bool SetIniValue(string sectionName, string keyName, string newValue)
         {
-            XmlElement item;
-            XmlElement section;
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
-            section = GetSection(sectionName);
+            var section = GetSection(sectionName);
             if (section is null)
             {
                 if (CreateSection(sectionName))
@@ -222,7 +216,7 @@ namespace ParamFileGenerator
                 return DeleteSection(sectionName);
             }
 
-            item = GetItem(sectionName, keyName);
+            var item = GetItem(sectionName, keyName);
             if (item is not null)
             {
                 if (newValue is null)
@@ -241,7 +235,7 @@ namespace ParamFileGenerator
             else if (!string.IsNullOrEmpty(keyName) && newValue is not null)
             {
                 // construct a new item (blank values are OK)
-                item = m_XmlDoc.CreateElement("item");
+                item = mXmlDoc.CreateElement("item");
                 item.SetAttribute("key", SetNameCase(keyName));
                 item.SetAttribute("value", newValue);
                 section.AppendChild(item);
@@ -302,7 +296,7 @@ namespace ParamFileGenerator
         {
             sections = new List<string>();
 
-            foreach (XmlElement item in m_XmlDoc.SelectNodes("sections/section"))
+            foreach (XmlElement item in mXmlDoc.SelectNodes("sections/section"))
                 sections.Add(item.GetAttribute("name"));
         }
 
@@ -320,7 +314,6 @@ namespace ParamFileGenerator
 
         private List<string> GetItemsInSection(string sectionName, IniItemTypeEnum itemType)
         {
-            XmlNodeList nodes;
             var items = new List<string>();
             XmlNode section = GetSection(sectionName);
 
@@ -329,7 +322,7 @@ namespace ParamFileGenerator
                 return null;
             }
 
-            nodes = section.SelectNodes("item");
+            var nodes = section.SelectNodes("item");
             if (nodes.Count > 0)
             {
                 foreach (XmlNode currentNode in nodes)
@@ -429,18 +422,16 @@ namespace ParamFileGenerator
 
         private bool CreateSection(string sectionName)
         {
-            XmlElement item;
-            XmlAttribute itemAttribute;
             if (sectionName is not null && !string.IsNullOrEmpty(sectionName))
             {
                 sectionName = SetNameCase(sectionName);
                 try
                 {
-                    item = m_XmlDoc.CreateElement("section");
-                    itemAttribute = m_XmlDoc.CreateAttribute("name");
+                    var item = mXmlDoc.CreateElement("section");
+                    var itemAttribute = mXmlDoc.CreateAttribute("name");
                     itemAttribute.Value = SetNameCase(sectionName);
                     item.Attributes.SetNamedItem(itemAttribute);
-                    m_XmlDoc.DocumentElement.AppendChild(item);
+                    mXmlDoc.DocumentElement.AppendChild(item);
                     sections.Add(itemAttribute.Value);
                     return true;
                 }
@@ -455,14 +446,12 @@ namespace ParamFileGenerator
 
         private bool CreateItem(string sectionName, string keyName, string newValue)
         {
-            XmlElement item;
-            XmlElement section;
             try
             {
-                section = GetSection(sectionName);
+                var section = GetSection(sectionName);
                 if (section is not null)
                 {
-                    item = m_XmlDoc.CreateElement("item");
+                    var item = mXmlDoc.CreateElement("item");
                     item.SetAttribute("key", keyName);
                     item.SetAttribute("newValue", newValue);
                     section.AppendChild(item);
@@ -486,7 +475,7 @@ namespace ParamFileGenerator
                 return;
             }
 
-            switch (dataLine.Substring(0, 1) ?? "")
+            switch (dataLine.Substring(0, 1))
             {
                 case "[":
                     // this is a section
@@ -541,21 +530,20 @@ namespace ParamFileGenerator
             {
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
-                return m_SaveFilename;
+                return mSaveFilename;
             }
             set
             {
-                FileInfo fi;
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
-                fi = new FileInfo(value);
+                var fi = new FileInfo(value);
                 if (!fi.Directory.Exists)
                 {
                 }
                 // MessageBox.Show("Invalid path.")
                 else
                 {
-                    m_SaveFilename = value;
+                    mSaveFilename = value;
                 }
             }
         }
@@ -564,7 +552,7 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
-            if (OutputFilename is not null && m_XmlDoc is not null)
+            if (OutputFilename is not null && mXmlDoc is not null)
             {
                 var fi = new FileInfo(OutputFilename);
                 if (!fi.Directory.Exists)
@@ -575,11 +563,11 @@ namespace ParamFileGenerator
                 if (fi.Exists)
                 {
                     fi.Delete();
-                    m_XmlDoc.Save(OutputFilename);
+                    mXmlDoc.Save(OutputFilename);
                 }
                 else
                 {
-                    m_XmlDoc.Save(OutputFilename);
+                    mXmlDoc.Save(OutputFilename);
                 }
             }
         }
@@ -611,7 +599,7 @@ namespace ParamFileGenerator
             {
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
-                return m_XmlDoc;
+                return mXmlDoc;
             }
         }
 
@@ -628,7 +616,7 @@ namespace ParamFileGenerator
                     Indentation = 3,
                     Formatting = Formatting.Indented
                 };
-                m_XmlDoc.WriteContentTo(xw);
+                mXmlDoc.WriteContentTo(xw);
                 xw.Close();
                 sw.Close();
                 return sb.ToString();

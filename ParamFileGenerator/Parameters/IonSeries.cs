@@ -4,11 +4,11 @@ namespace ParamFileGenerator
 {
     public class IonSeries
     {
-        public string m_origIonSeriesString;
+        public string mOrigIonSeriesString;
 
-        private int m_use_a_Ions;
-        private int m_use_b_Ions;
-        private int m_use_y_Ions;
+        private int mUse_a_Ions;
+        private int mUse_b_Ions;
+        private int mUse_y_Ions;
         private float m_aWeight;
         private float m_bWeight;
         private float m_cWeight;
@@ -19,33 +19,32 @@ namespace ParamFileGenerator
         private float m_yWeight;
         private float m_zWeight;
 
-        public IonSeries(string IonSeriesString)
+        public IonSeries(string ionSeriesString)
         {
-            m_origIonSeriesString = IonSeriesString;
-            ParseISS(m_origIonSeriesString);
+            mOrigIonSeriesString = ionSeriesString;
+            ParseISS(mOrigIonSeriesString);
         }
 
         public IonSeries()
         {
-            m_origIonSeriesString = null;
+            mOrigIonSeriesString = null;
             Initialized = true;
         }
 
         public void RevertToOriginalIonString()
         {
-            if (!string.IsNullOrEmpty(m_origIonSeriesString))
+            if (!string.IsNullOrEmpty(mOrigIonSeriesString))
             {
-                ParseISS(m_origIonSeriesString);
+                ParseISS(mOrigIonSeriesString);
             }
         }
 
         private void ParseISS(string ionString)
         {
-            string[] tmpSplit;
-            tmpSplit = ionString.Split(' ');
-            m_use_a_Ions = Params.SafeCastInt(tmpSplit[0]);
-            m_use_b_Ions = Params.SafeCastInt(tmpSplit[1]);
-            m_use_y_Ions = Params.SafeCastInt(tmpSplit[2]);
+            var tmpSplit = ionString.Split(' ');
+            mUse_a_Ions = Params.SafeCastInt(tmpSplit[0]);
+            mUse_b_Ions = Params.SafeCastInt(tmpSplit[1]);
+            mUse_y_Ions = Params.SafeCastInt(tmpSplit[2]);
             m_aWeight = float.Parse(tmpSplit[3]);
             m_bWeight = float.Parse(tmpSplit[4]);
             m_cWeight = float.Parse(tmpSplit[5]);
@@ -61,20 +60,20 @@ namespace ParamFileGenerator
 
         public int Use_a_Ions
         {
-            get => Math.Abs(m_use_a_Ions);
-            set => m_use_a_Ions = Math.Abs(value);
+            get => Math.Abs(mUse_a_Ions);
+            set => mUse_a_Ions = Math.Abs(value);
         }
 
         public int Use_b_Ions
         {
-            get => Math.Abs(m_use_b_Ions);
-            set => m_use_b_Ions = Math.Abs(value);
+            get => Math.Abs(mUse_b_Ions);
+            set => mUse_b_Ions = Math.Abs(value);
         }
 
         public int Use_y_Ions
         {
-            get => Math.Abs(m_use_y_Ions);
-            set => m_use_y_Ions = Math.Abs(value);
+            get => Math.Abs(mUse_y_Ions);
+            set => mUse_y_Ions = Math.Abs(value);
         }
 
         public float a_Ion_Weighting
@@ -133,7 +132,7 @@ namespace ParamFileGenerator
 
         public string ReturnIonString()
         {
-            string s = AssembleIonString();
+            var s = AssembleIonString();
             return s;
         }
 

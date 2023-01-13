@@ -2,20 +2,26 @@
 
 public class ParamsEntry
 {
-    protected string m_Spec;
-    protected string m_Value;
-    protected DMSParamStorage.ParamTypes m_Type;
-
-    public ParamsEntry(string ParamSpecifier, string ParamValue, DMSParamStorage.ParamTypes ParamType)
+    public ParamsEntry(string paramSpecifier, string paramValue, DMSParamStorage.ParamTypes paramType)
     {
-        m_Spec = ParamSpecifier;
-        m_Value = ParamValue;
-        m_Type = ParamType;
+        Specifier = paramSpecifier ?? string.Empty;
+        Value = paramValue ?? string.Empty;
+        Type = paramType;
     }
 
-    public string Specifier => m_Spec;
+    public string Specifier { get; }
 
-    public string Value => m_Value;
+    public string Value { get; }
 
-    public DMSParamStorage.ParamTypes Type => m_Type;
+    public DMSParamStorage.ParamTypes Type { get; }
+
+    public bool TypeSpecifierEquals(ParamsEntry other)
+    {
+        return TypeSpecifierEquals(other.Type, other.Specifier);
+    }
+
+    public bool TypeSpecifierEquals(DMSParamStorage.ParamTypes type, string specifier)
+    {
+        return Type == type && Specifier == specifier;
+    }
 }

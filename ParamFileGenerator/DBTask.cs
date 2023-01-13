@@ -18,7 +18,7 @@ namespace ParamFileGenerator
         /// <param name="connectionString"></param>
         public DBTask(string connectionString)
         {
-            string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator");
+            var connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator");
             mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse);
         }
 
@@ -29,31 +29,17 @@ namespace ParamFileGenerator
             mDBTools = existingDbTools;
         }
 
-        [Obsolete("Use the constructor that only has a connection string")]
-        public DBTask(string connectionString, bool persistConnection)
+        protected DataTable GetTable(string sqlSelect)
         {
-            string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(connectionString, "ParamFileGenerator");
-            mDBTools = DbToolsFactory.GetDBTools(connectionStringToUse);
-        }
+            const int retryCount = 3;
+            const int retryDelaySeconds = 5;
+            const int timeoutSeconds = 120;
 
-        [Obsolete("Use the constructor that accepts a connection string", true)]
-        public DBTask(bool persistConnection = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected DataTable GetTable(string selectSQL)
-        {
-            int retryCount = 3;
-            int retryDelaySeconds = 5;
-            int timeoutSeconds = 120;
-
-            DataTable queryResults = null;
-            bool success = mDBTools.GetQueryResultsDataTable(selectSQL, out queryResults, retryCount, retryDelaySeconds, timeoutSeconds);
+            var success = mDBTools.GetQueryResultsDataTable(sqlSelect, out var queryResults, retryCount, retryDelaySeconds, timeoutSeconds);
 
             if (!success)
             {
-                throw new Exception("Could not get records after three tries; query: " + selectSQL);
+                throw new Exception("Could not get records after three tries; query: " + sqlSelect);
             }
 
             return queryResults;

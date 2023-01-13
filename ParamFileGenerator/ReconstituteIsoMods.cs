@@ -6,7 +6,7 @@ namespace ParamFileGenerator
 {
     public interface IReconstituteIsoMods
     {
-        Params ReconstituteIsoMods(Params ParamsClass);
+        Params ReconstituteIsoMods(Params paramsClass);
     }
 
     public class ReconstituteIsoMods : IReconstituteIsoMods
@@ -24,7 +24,7 @@ namespace ParamFileGenerator
         /// Dictionary where keys are amino acid residue (one letter abbreviation)
         /// and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
         /// </summary>
-        private readonly Dictionary<char, Dictionary<char, int>> m_ResidueAtomCounts;
+        private readonly Dictionary<char, Dictionary<char, int>> mResidueAtomCounts;
 
         /// <summary>
         /// Constructor
@@ -35,24 +35,22 @@ namespace ParamFileGenerator
 #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
         {
             var getResTable = new GetResiduesList(dbTools);
-            m_ResidueAtomCounts = getResTable.ResidueAtomCounts;
+            mResidueAtomCounts = getResTable.ResidueAtomCounts;
         }
-        internal Params ReconIsoMods(Params ParamsClass)
+        internal Params ReconIsoMods(Params paramsClass)
         {
-            return StreamlineIsoModsToStatics(ParamsClass, ParamsClass.IsotopicModificationsList);
+            return StreamlineIsoModsToStatics(paramsClass, paramsClass.IsotopicModificationsList);
         }
 
-        Params IReconstituteIsoMods.ReconstituteIsoMods(Params ParamsClass) => ReconIsoMods(ParamsClass);
+        Params IReconstituteIsoMods.ReconstituteIsoMods(Params paramsClass) => ReconIsoMods(paramsClass);
 
-        protected int GetMultiplier(char AA, AvailableAtoms Atom)
+        protected int GetMultiplier(char aa, AvailableAtoms atom)
         {
-            Dictionary<char, int> atomCounts = null;
-            if (m_ResidueAtomCounts.TryGetValue(AA, out atomCounts))
+            if (mResidueAtomCounts.TryGetValue(aa, out var atomCounts))
             {
-                char atomSymbol = Atom.ToString()[0];
+                var atomSymbol = atom.ToString()[0];
 
-                int atomCount;
-                if (atomCounts.TryGetValue(atomSymbol, out atomCount))
+                if (atomCounts.TryGetValue(atomSymbol, out var atomCount))
                 {
                     return atomCount;
                 }
@@ -62,33 +60,30 @@ namespace ParamFileGenerator
         }
 
         protected Params StreamlineIsoModsToStatics(
-            Params ParamsClass,
-            IsoMods IsoMods)
+            Params paramsClass,
+            IsoMods isoMods)
         {
-            string tmpAtom;
-            double tmpIsoMass;
-
             var AAEnums = Enum.GetNames(typeof(Mods.ResidueCode));
 
-            foreach (ModEntry im in IsoMods)
+            foreach (var im in isoMods)
             {
-                tmpAtom = im.ReturnResidueAffected(0);
-                tmpIsoMass = im.MassDifference;
+                var tmpAtom = im.ReturnResidueAffected(0);
+                var tmpIsoMass = im.MassDifference;
 
                 foreach (var tmpAA in AAEnums)
                 {
                     if (!tmpAA.StartsWith("Term"))
                     {
-                        char tmpAASLC = tmpAA[0];
-                        int tmpAtomCount = GetMultiplier(tmpAASLC, (AvailableAtoms)Enum.Parse(typeof(AvailableAtoms), tmpAtom));
-                        ParamsClass.StaticModificationsList.ChangeAAModification(
+                        var tmpAASLC = tmpAA[0];
+                        var tmpAtomCount = GetMultiplier(tmpAASLC, (AvailableAtoms)Enum.Parse(typeof(AvailableAtoms), tmpAtom));
+                        paramsClass.StaticModificationsList.ChangeAAModification(
                             (Mods.ResidueCode)Enum.Parse(typeof(Mods.ResidueCode), tmpAA),
                             tmpIsoMass * tmpAtomCount, true);
                     }
                 }
             }
 
-            return ParamsClass;
+            return paramsClass;
         }
     }
 }

@@ -94,7 +94,7 @@ namespace ParamFileGenerator.MakeParams
             string dmsConnectionString,
             string datasetName)
         {
-            bool forceMonoStatus = GetMonoMassStatus(datasetName, dmsConnectionString);
+            var forceMonoStatus = GetMonoMassStatus(datasetName, dmsConnectionString);
 
             return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus);
         }
@@ -107,7 +107,7 @@ namespace ParamFileGenerator.MakeParams
             string dmsConnectionString,
             int DatasetID)
         {
-            bool forceMonoStatus = GetMonoMassStatus(DatasetID, dmsConnectionString);
+            var forceMonoStatus = GetMonoMassStatus(DatasetID, dmsConnectionString);
 
             return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus);
         }
@@ -183,13 +183,13 @@ namespace ParamFileGenerator.MakeParams
 
         private bool GetMonoMassStatus(int DatasetID, string dmsConnectionString)
         {
-            string TypeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + DatasetID.ToString();
+            var TypeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + DatasetID.ToString();
             return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString);
         }
 
         private bool GetMonoMassStatus(string datasetName, string dmsConnectionString)
         {
-            string TypeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_name = '" + datasetName + "'";
+            var TypeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_name = '" + datasetName + "'";
             return GetMonoParentStatusWorker(TypeCheckSQL, dmsConnectionString);
         }
 
@@ -197,18 +197,15 @@ namespace ParamFileGenerator.MakeParams
         {
             if (m_DbTools is null)
             {
-                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
+                var connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
                 m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse);
             }
 
-            List<List<string>> typeCheckTable = null;
-            m_DbTools.GetQueryResults(sqlQuery, out typeCheckTable);
+            m_DbTools.GetQueryResults(sqlQuery, out var typeCheckTable);
 
             if (typeCheckTable.Count > 0)
             {
-                int useMonoMassInt;
-
-                if (int.TryParse(typeCheckTable[0].First(), out useMonoMassInt))
+                if (int.TryParse(typeCheckTable[0].First(), out var useMonoMassInt))
                 {
                     if (useMonoMassInt > 0)
                     {
@@ -245,7 +242,7 @@ namespace ParamFileGenerator.MakeParams
         {
             if (m_DbTools is null)
             {
-                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
+                var connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
                 m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse);
             }
 
@@ -268,10 +265,8 @@ namespace ParamFileGenerator.MakeParams
             // ReSharper disable once UnusedVariable.Compiler
             var processor = new MainProcess(TemplateFilePath);
 
-            Params loadedParams;
             var dmsParams = new ParamsFromDMS(m_DbTools);
-            IReconstituteIsoMods modProcessor;
-            modProcessor = new ReconstituteIsoMods(m_DbTools);
+            IReconstituteIsoMods modProcessor = new ReconstituteIsoMods(m_DbTools);
 
             if (!dmsParams.ParamFileTableLoaded)
             {
@@ -285,7 +280,7 @@ namespace ParamFileGenerator.MakeParams
                 return false;
             }
 
-            loadedParams = dmsParams.ReadParamsFromDMS(paramFileName);
+            var loadedParams = dmsParams.ReadParamsFromDMS(paramFileName);
             loadedParams = modProcessor.ReconstituteIsoMods(loadedParams);
 
             if (forceMonoParentMass && !loadedParams.LoadedParamNames.ContainsKey("ParentMassType"))
@@ -305,12 +300,9 @@ namespace ParamFileGenerator.MakeParams
 
             loadedParams.DefaultFASTAPath = fastaFilePath;
 
-            if (m_FileWriter is null)
-            {
-                m_FileWriter = new WriteOutput();
-            }
+            m_FileWriter ??= new WriteOutput();
 
-            bool writeSuccess = m_FileWriter.WriteOutputFile(loadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType);
+            var writeSuccess = m_FileWriter.WriteOutputFile(loadedParams, Path.Combine(outputFilePath, paramFileName), paramFileType);
 
             MakeSeqInfoRelatedFiles(paramFileName, outputFilePath, dmsConnectionString);
 
@@ -330,16 +322,13 @@ namespace ParamFileGenerator.MakeParams
 
             if (m_DbTools is null)
             {
-                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
+                var connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
                 m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse);
             }
 
-            string baseParamFileName = Path.GetFileNameWithoutExtension(paramFileName);
+            var baseParamFileName = Path.GetFileNameWithoutExtension(paramFileName);
 
-            if (m_FileWriter is null)
-            {
-                m_FileWriter = new WriteOutput();
-            }
+            m_FileWriter ??= new WriteOutput();
 
             var massCorrectionTagsHeaderNames = new List<string>()
             {
@@ -375,17 +364,15 @@ namespace ParamFileGenerator.MakeParams
                 "FROM V_Param_File_Mass_Mod_Info " +
                 "WHERE Param_File_Name = '" + paramFileName + "'";
 
-            List<List<string>> massCorrectionTags = null;
-            m_DbTools.GetQueryResults(mctSQL, out massCorrectionTags);
+            m_DbTools.GetQueryResults(mctSQL, out var massCorrectionTags);
 
-            List<List<string>> paramFileModInfo = null;
-            m_DbTools.GetQueryResults(mdSQL, out paramFileModInfo);
+            m_DbTools.GetQueryResults(mdSQL, out var paramFileModInfo);
 
             // Create the Mass_Correction_Tags file in the working directory
             m_FileWriter.WriteDataTableToOutputFile(massCorrectionTags, Path.Combine(targetDirectory, "Mass_Correction_Tags.txt"), massCorrectionTagsHeaderNames);
 
             // Check whether any MaxQuant mods are actually defined
-            bool includeMaxQuant = false;
+            var includeMaxQuant = false;
             foreach (var item in paramFileModInfo)
             {
                 if (item[5].Length > 0)
@@ -428,22 +415,19 @@ namespace ParamFileGenerator.MakeParams
             string targetDirectory,
             string dmsConnectionString)
         {
-            string paramFilePath;
-
             if (m_DbTools is null)
             {
-                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
+                var connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
                 m_DbTools = DbToolsFactory.GetDBTools(connectionStringToUse);
             }
 
             // ReSharper disable once StringLiteralTypo
-            string paramFilePathSQL =
+            var paramFilePathSQL =
                 "SELECT TOP 1 AJT_parmFileStoragePath " +
                 "FROM T_Analysis_Tool " +
                 "WHERE AJT_ToolName = '" + analysisToolName + "'";
 
-            List<List<string>> paramFilePathTable = null;
-            m_DbTools.GetQueryResults(paramFilePathSQL, out paramFilePathTable);
+            m_DbTools.GetQueryResults(paramFilePathSQL, out var paramFilePathTable);
 
             if (paramFilePathTable.Count == 0)
             {
@@ -451,8 +435,8 @@ namespace ParamFileGenerator.MakeParams
                 return false;
             }
 
-            string paramFileDirectory = paramFilePathTable[0].First();
-            paramFilePath = Path.Combine(paramFileDirectory, paramFileName);
+            var paramFileDirectory = paramFilePathTable[0].First();
+            var paramFilePath = Path.Combine(paramFileDirectory, paramFileName);
 
             if (!Directory.Exists(paramFileDirectory))
             {

@@ -36,10 +36,7 @@ namespace ParamGenTest
             mDMSConnectString = txtDMSConnectionString.Text;
             mOutputPath = txtOutputPath.Text;
             mFASTAPath = txtFASTAPath.Text;
-            if (mDMS is null)
-            {
-                mDMS = new MakeParameterFile();
-            }
+            mDMS = new MakeParameterFile();
 
             LoadParamFileTypes();
         }
@@ -85,7 +82,7 @@ namespace ParamGenTest
                 datasetID = -1;
             }
             bool success = mDMS.MakeFile(mParamFileName, mParamFileType, mFASTAPath, mOutputPath, mDMSConnectString, datasetID);
-            if (success == true)
+            if (success)
             {
                 txtResults.Text = "File successfully written to: " + Path.Combine(mOutputPath, mParamFileName);
             }
@@ -231,8 +228,7 @@ namespace ParamGenTest
 
         private void PopulateParamFileNameTextBox()
         {
-            ParamFileEntry entry;
-            entry = (ParamFileEntry)cboAvailableParams.SelectedItem;
+            var entry = (ParamFileEntry)cboAvailableParams.SelectedItem;
 
             txtParamFileName.Text = entry.Description;
             mParamFileName = txtParamFileName.Text;
@@ -245,10 +241,10 @@ namespace ParamGenTest
 
         public class ParamFileEntry
         {
-            public ParamFileEntry(int Value, string Description)
+            public ParamFileEntry(int value, string description)
             {
-                this.Value = Value;
-                this.Description = Description;
+                Value = value;
+                Description = description;
             }
 
             public int Value { get; set; }

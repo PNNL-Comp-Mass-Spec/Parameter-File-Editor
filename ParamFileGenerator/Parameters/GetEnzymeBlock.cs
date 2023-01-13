@@ -5,44 +5,44 @@ namespace ParamFileGenerator
 {
     public class GetEnzymeBlockType
     {
-        private readonly string m_templateFilePath;
-        private readonly string m_sectionName;
-        private readonly List<string> m_EnzymeBlockCollection;
+        private readonly string mTemplateFilePath;
+        private readonly string mSectionName;
+        private readonly List<string> mEnzymeBlockCollection;
 
         public List<EnzymeDetails> EnzymeList { get; set; }
 
         public GetEnzymeBlockType(
-            string TemplateFilePath,
-            string SectionName)
+            string templateFilePath,
+            string sectionName)
         {
-            m_templateFilePath = TemplateFilePath;
-            m_sectionName = SectionName;
+            mTemplateFilePath = templateFilePath;
+            mSectionName = sectionName;
 
-            m_EnzymeBlockCollection = GetEnzymeBlock();
-            EnzymeList = InterpretEnzymeBlockCollection(m_EnzymeBlockCollection);
+            mEnzymeBlockCollection = GetEnzymeBlock();
+            EnzymeList = InterpretEnzymeBlockCollection(mEnzymeBlockCollection);
         }
 
         private List<string> GetEnzymeBlock()
         {
             var enzymesFromFile = new List<string>();
 
-            var fi = new FileInfo(m_templateFilePath);
+            var fi = new FileInfo(mTemplateFilePath);
 
             using (var reader = new StreamReader(new FileStream(fi.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
             {
                 while (!reader.EndOfStream)
                 {
-                    string dataLine = reader.ReadLine();
+                    var dataLine = reader.ReadLine();
                     if (string.IsNullOrWhiteSpace(dataLine))
                     {
                         continue;
                     }
 
-                    if ((dataLine ?? "") == ("[" + m_sectionName + "]" ?? ""))
+                    if ((dataLine) == ("[" + mSectionName + "]"))
                     {
                         while (!reader.EndOfStream)
                         {
-                            string enzymeLine = reader.ReadLine();
+                            var enzymeLine = reader.ReadLine();
                             if (string.IsNullOrWhiteSpace(enzymeLine))
                             {
                                 continue;
@@ -98,7 +98,7 @@ namespace ParamFileGenerator
 
             foreach (var s in enzymeBlock)
             {
-                string sTmp = s.Substring(0, s.IndexOf(" ") + 1);
+                var sTmp = s.Substring(0, s.IndexOf(" ") + 1);
                 if (sTmp.IndexOf(". ") >= 0)
                 {
                     var tempEnzyme = new EnzymeDetails(s);
