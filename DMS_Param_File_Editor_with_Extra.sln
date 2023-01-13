@@ -13,7 +13,7 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DMS5_T3", "DMS5_T3\DMS5_T3.
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ParamFileEditorInstaller", "ParamFileEditorInstaller\ParamFileEditorInstaller.vdproj", "{12E4F8AD-5DB6-4473-9634-4AD22ADCEC3E}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamGenTest", "ParamGenTest\ParamGenTest.vbproj", "{C99B2126-0B2B-4C48-A063-A5784C7C3774}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParamGenTest", "ParamGenTest\ParamGenTest.csproj", "{C99B2126-0B2B-4C48-A063-A5784C7C3774}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

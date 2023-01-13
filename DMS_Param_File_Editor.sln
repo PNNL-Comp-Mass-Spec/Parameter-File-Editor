@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParamFileGenerator", "Param
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamFileEditor", "ParamFileEditor\ParamFileEditor.vbproj", "{DF84F4CE-B4B1-43B7-B169-84078341607F}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ParamGenTest", "ParamGenTest\ParamGenTest.vbproj", "{C99B2126-0B2B-4C48-A063-A5784C7C3774}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParamGenTest", "ParamGenTest\ParamGenTest.csproj", "{C99B2126-0B2B-4C48-A063-A5784C7C3774}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
