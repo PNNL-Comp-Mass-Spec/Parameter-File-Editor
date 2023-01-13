@@ -781,7 +781,7 @@ namespace ParamFileGenerator.DownloadParams
             var ionType = typeof(IonSeries);
             var ionFields = ionType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-            foreach (DMSParamStorage.ParamsEntry paramEntry in dc)
+            foreach (ParamsEntry paramEntry in dc)
             {
                 var tmpSpec = paramEntry.Specifier;
                 var tmpValue = paramEntry.Value;

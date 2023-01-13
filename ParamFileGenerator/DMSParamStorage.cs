@@ -69,25 +69,5 @@ namespace ParamFileGenerator
             }
             return -1;
         }
-
-        public class ParamsEntry
-        {
-            protected string m_Spec;
-            protected string m_Value;
-            protected ParamTypes m_Type;
-
-            public ParamsEntry(string ParamSpecifier, string ParamValue, ParamTypes ParamType)
-            {
-                m_Spec = ParamSpecifier;
-                m_Value = ParamValue;
-                m_Type = ParamType;
-            }
-
-            public string Specifier => m_Spec;
-
-            public string Value => m_Value;
-
-            public ParamTypes Type => m_Type;
-        }
     }
 }

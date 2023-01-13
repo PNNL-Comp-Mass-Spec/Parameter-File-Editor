@@ -45,10 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DBTask.cs" />
     <Compile Include="DMSParamStorage.cs" />
     <Compile Include="GetResiduesList.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="INIFileReader.cs" />
     <Compile Include="MainProcess.cs" />
     <Compile Include="MakeParameterFile.cs" />
     <Compile Include="Modifications\DynamicMods.cs" />
@@ -64,12 +65,12 @@
     <Compile Include="Parameters\IBasicParams.cs" />
     <Compile Include="Parameters\IonSeries.cs" />
     <Compile Include="Parameters\Params.cs" />
+    <Compile Include="ParamsEntry.cs" />
     <Compile Include="ParamsFromDMS.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReconstituteIsoMods.cs" />
     <Compile Include="RetrieveParams.cs" />
     <Compile Include="WriteOutput.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="INIFileReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="PRISM-DatabaseUtils">
