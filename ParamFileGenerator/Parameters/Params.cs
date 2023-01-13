@@ -331,9 +331,7 @@ namespace ParamFileGenerator
             return default;
         }
 
-        private string ReturnMassFilterString(
-            float minMass,
-            float maxMass)
+        private string ReturnMassFilterString(float minMass, float maxMass)
         {
             return minMass.ToString("0") + " " + maxMass.ToString("0");
         }

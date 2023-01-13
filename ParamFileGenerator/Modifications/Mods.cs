@@ -76,19 +76,14 @@ namespace ParamFileGenerator
             LoadAAMappingColl();
         }
 
-        public virtual void Add(
-            ResidueCode AffectedResidue,
-            double MassDifference,
-            int GlobalModID = 0)
+        public virtual void Add(ResidueCode affectedResidue, double massDifference, int globalModID = 0)
         {
-            m_Add(ConvertResidueCodeToSLC(AffectedResidue), MassDifference, ModEntry.ModificationTypes.Static, GlobalModID);
+            Add(ConvertResidueCodeToSLC(affectedResidue), massDifference, ModEntry.ModificationTypes.Static, globalModID);
         }
 
-        public void Add(
-            string AffectedResidueString,
-            double MassDifference)
+        public void Add(string affectedResidueString, double massDifference)
         {
-            m_Add(AffectedResidueString, MassDifference, ModEntry.ModificationTypes.Static);
+            Add(affectedResidueString, massDifference, ModEntry.ModificationTypes.Static);
         }
 
         public void Replace(int index, ModEntry newMod)
@@ -107,33 +102,29 @@ namespace ParamFileGenerator
         /// Values are the single letter abbreviation if an amino acid
         /// Or, if not an amino acid, one of: C_Term_Protein, C_Term_Peptide, N_Term_Protein, or N_Term_Peptide
         /// </summary>
-        protected Dictionary<string, string> m_AAMappingTable;
-        protected void m_Add(
-            string AffectedEntity,
-            double MassDifference,
-            ModEntry.ModificationTypes ModType,
-            int GlobalModID = 0)
+        protected Dictionary<string, string> mAAMappingTable;
+        protected void Add(string affectedEntity, double massDifference, ModEntry.ModificationTypes modType, int globalModID = 0)
         {
-            var residueList = ConvertAffectedResStringToList(AffectedEntity);
-            var newMod = new ModEntry(residueList, MassDifference, ModType, GlobalModID);
+            var residueList = ConvertAffectedResStringToList(affectedEntity);
+            var newMod = new ModEntry(residueList, massDifference, modType, globalModID);
             Add(newMod);
         }
 
         protected void LoadAAMappingColl()
         {
-            var AAEnums = Enum.GetNames(typeof(ResidueCode)).ToList();
+            var aaEnums = Enum.GetNames(typeof(ResidueCode)).ToList();
 
-            m_AAMappingTable = new Dictionary<string, string>();
+            mAAMappingTable = new Dictionary<string, string>();
 
-            foreach (var AA in AAEnums)
+            foreach (var aa in aaEnums)
             {
-                if (AA == "C_Term_Protein" || AA == "C_Term_Peptide" || AA == "N_Term_Protein" || AA == "N_Term_Peptide")
+                if (aa == "C_Term_Protein" || aa == "C_Term_Peptide" || aa == "N_Term_Protein" || aa == "N_Term_Peptide")
                 {
-                    m_AAMappingTable.Add(AA, AA);
+                    mAAMappingTable.Add(aa, aa);
                 }
                 else
                 {
-                    m_AAMappingTable.Add(AA, AA.Substring(0, 1));
+                    mAAMappingTable.Add(aa, aa.Substring(0, 1));
                 }
             }
         }
@@ -164,11 +155,11 @@ namespace ParamFileGenerator
             return aaList;
         }
 
-        protected string ConvertResidueCodeToSLC(ResidueCode Residue)
+        protected string ConvertResidueCodeToSLC(ResidueCode residue)
         {
-            var tmpRes = Residue.ToString();
+            var tmpRes = residue.ToString();
 
-            if (m_AAMappingTable.TryGetValue(tmpRes, out var tmpSLC))
+            if (mAAMappingTable.TryGetValue(tmpRes, out var tmpSLC))
             {
                 return tmpSLC;
             }
@@ -176,21 +167,21 @@ namespace ParamFileGenerator
             return string.Empty;
         }
 
-        protected ResidueCode ConvertSLCToResidueCode(string SingleLetterAA)
+        protected ResidueCode ConvertSLCToResidueCode(string singleLetterAA)
         {
-            foreach (var item in m_AAMappingTable)
+            foreach (var item in mAAMappingTable)
             {
-                var ResString = item.Key;
-                if ((SingleLetterAA ?? "") == (ResString.Substring(0, 1)) && !ResString.Contains("Term"))
+                var resString = item.Key;
+                if ((singleLetterAA ?? "") == (resString.Substring(0, 1)) && !resString.Contains("Term"))
                 {
-                    return (ResidueCode)Enum.Parse(typeof(ResidueCode), ResString);
+                    return (ResidueCode)Enum.Parse(typeof(ResidueCode), resString);
                 }
             }
 
             return default;
         }
 
-        protected int m_FindModIndex(string modifiedEntity)
+        protected int FindModIndex(string modifiedEntity)
         {
             foreach (var statMod in this)
             {
@@ -204,24 +195,24 @@ namespace ParamFileGenerator
             return -1;
         }
 
-        protected ModEntry m_FindMod(string ModifiedEntity)
+        protected ModEntry FindMod(string modifiedEntity)
         {
-            ModEntry ModEntry;
-            var ModIndex = m_FindModIndex(ModifiedEntity);
-            if (ModIndex == -1)
+            ModEntry modEntry;
+            var modIndex = FindModIndex(modifiedEntity);
+            if (modIndex == -1)
             {
-                ModEntry = null;
+                modEntry = null;
             }
             else
             {
-                ModEntry = this[ModIndex];
+                modEntry = this[modIndex];
             }
 
-            if (ModEntry is null)
+            if (modEntry is null)
             {
                 var sc = new List<string>()
                 {
-                    ModifiedEntity
+                    modifiedEntity
                 };
 
                 var emptyMod = new ModEntry(sc, 0.0d, ModEntry.ModificationTypes.Dynamic);
@@ -229,22 +220,18 @@ namespace ParamFileGenerator
             }
             else
             {
-                return ModEntry;
+                return modEntry;
             }
         }
 
-        protected void m_ChangeMod(
-            ModEntry foundMod,
-            string ModifiedEntity,
-            double MassDifference,
-            bool Additive = false)
+        protected void ChangeMod(ModEntry foundMod, string modifiedEntity, double massDifference, bool additive = false)
         {
-            if (Math.Abs(foundMod.MassDifference) < float.Epsilon && Math.Abs(MassDifference) > float.Epsilon)
+            if (Math.Abs(foundMod.MassDifference) < float.Epsilon && Math.Abs(massDifference) > float.Epsilon)
             {
-                m_Add(ModifiedEntity, MassDifference, foundMod.ModificationType);
+                Add(modifiedEntity, massDifference, foundMod.ModificationType);
                 return;
             }
-            else if (Math.Abs(foundMod.MassDifference) < float.Epsilon && Math.Abs(MassDifference) < float.Epsilon)
+            else if (Math.Abs(foundMod.MassDifference) < float.Epsilon && Math.Abs(massDifference) < float.Epsilon)
             {
                 return;
             }
@@ -252,26 +239,26 @@ namespace ParamFileGenerator
             {
                 var counter = default(int);
 
-                var residueList = ConvertAffectedResStringToList(ModifiedEntity);
+                var residueList = ConvertAffectedResStringToList(modifiedEntity);
                 ModEntry changeMod;
 
-                if (Additive)
+                if (additive)
                 {
-                    changeMod = new ModEntry(residueList, MassDifference + foundMod.MassDifference, foundMod.ModificationType);
+                    changeMod = new ModEntry(residueList, massDifference + foundMod.MassDifference, foundMod.ModificationType);
                 }
                 else
                 {
-                    changeMod = new ModEntry(residueList, MassDifference, foundMod.ModificationType);
+                    changeMod = new ModEntry(residueList, massDifference, foundMod.ModificationType);
                 }
 
                 foreach (var tempMod in this)
                 {
-                    if (foundMod.Equals(tempMod) && Math.Abs(MassDifference) > float.Epsilon)
+                    if (foundMod.Equals(tempMod) && Math.Abs(massDifference) > float.Epsilon)
                     {
                         Replace(counter, changeMod);
                         return;
                     }
-                    else if (foundMod.Equals(tempMod) && Math.Abs(MassDifference) < float.Epsilon)
+                    else if (foundMod.Equals(tempMod) && Math.Abs(massDifference) < float.Epsilon)
                     {
                         RemoveAt(counter);
                     }

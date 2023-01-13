@@ -68,7 +68,7 @@ namespace ParamFileGenerator
 
         public new void Add(string affectedResidueString, double massDifference)
         {
-            m_Add(affectedResidueString, massDifference, ModEntry.ModificationTypes.Dynamic);
+            Add(affectedResidueString, massDifference, ModEntry.ModificationTypes.Dynamic);
         }
 
         public double Dyn_Mod_n_MassDiff(int dynModNumber)

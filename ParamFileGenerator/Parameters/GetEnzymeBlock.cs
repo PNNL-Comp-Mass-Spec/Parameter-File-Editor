@@ -11,9 +11,7 @@ namespace ParamFileGenerator
 
         public List<EnzymeDetails> EnzymeList { get; set; }
 
-        public GetEnzymeBlockType(
-            string templateFilePath,
-            string sectionName)
+        public GetEnzymeBlockType(string templateFilePath, string sectionName)
         {
             mTemplateFilePath = templateFilePath;
             mSectionName = sectionName;

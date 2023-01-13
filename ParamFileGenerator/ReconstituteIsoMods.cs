@@ -59,9 +59,7 @@ namespace ParamFileGenerator
             return 0;
         }
 
-        protected Params StreamlineIsoModsToStatics(
-            Params paramsClass,
-            IsoMods isoMods)
+        protected Params StreamlineIsoModsToStatics(Params paramsClass, IsoMods isoMods)
         {
             var AAEnums = Enum.GetNames(typeof(Mods.ResidueCode));
 

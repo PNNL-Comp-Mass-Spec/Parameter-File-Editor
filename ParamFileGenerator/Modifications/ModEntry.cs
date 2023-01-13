@@ -74,11 +74,7 @@ namespace ParamFileGenerator
             }
         }
 
-        public ModEntry(
-            List<string> affectedResidueList,
-            double massDiff,
-            ModificationTypes modType,
-            int modID = 0)
+        public ModEntry(List<string> affectedResidueList, double massDiff, ModificationTypes modType, int modID = 0)
         {
             ModificationType = modType;
             ResidueCollection = affectedResidueList;

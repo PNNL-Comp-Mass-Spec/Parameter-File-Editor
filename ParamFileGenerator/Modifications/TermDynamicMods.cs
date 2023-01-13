@@ -29,7 +29,7 @@ namespace ParamFileGenerator
 
         protected double GetTermDynMod(string strSymbol)
         {
-            var objModEntry = m_FindMod(strSymbol);
+            var objModEntry = FindMod(strSymbol);
 
             if (objModEntry is null)
             {
@@ -43,7 +43,7 @@ namespace ParamFileGenerator
 
         protected void UpdateTermDynMod(string strSymbol, double sngMass)
         {
-            var intIndex = m_FindModIndex(strSymbol);
+            var intIndex = FindModIndex(strSymbol);
 
             if (intIndex < 0)
             {

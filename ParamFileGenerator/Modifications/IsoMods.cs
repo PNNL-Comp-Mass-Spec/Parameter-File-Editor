@@ -4,7 +4,7 @@
     {
         public void Add(IsotopeList affectedAtom, double massDifference, int globalModId = 0)
         {
-            m_Add(affectedAtom.ToString(), massDifference, ModEntry.ModificationTypes.Isotopic, globalModId);
+            Add(affectedAtom.ToString(), massDifference, ModEntry.ModificationTypes.Isotopic, globalModId);
         }
 
         public string GetAtom(int index)
@@ -47,12 +47,12 @@
         {
             var foundMod = FindIsoMod(affectedAtom);
             var modAAString = affectedAtom.ToString();
-            m_ChangeMod(foundMod, modAAString, massDifference);
+            ChangeMod(foundMod, modAAString, massDifference);
         }
 
         private ModEntry FindIsoMod(IsotopeList affectedAtom)
         {
-            return m_FindMod(affectedAtom.ToString());
+            return FindMod(affectedAtom.ToString());
         }
     }
 }

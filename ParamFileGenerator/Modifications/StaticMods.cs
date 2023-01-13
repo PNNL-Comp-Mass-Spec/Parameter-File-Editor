@@ -195,14 +195,14 @@ namespace ParamFileGenerator
 
         private ModEntry FindAAMod(ResidueCode ModifiedAA)
         {
-            return m_FindMod(ConvertResidueCodeToSLC(ModifiedAA));
+            return FindMod(ConvertResidueCodeToSLC(ModifiedAA));
         }
 
         private void ChangeAAMod(ResidueCode ModifiedAA, double MassDifference, bool Additive = false)
         {
             var foundMod = FindAAMod(ModifiedAA);
             var ModAAString = ConvertResidueCodeToSLC(ModifiedAA);
-            m_ChangeMod(foundMod, ModAAString, MassDifference, Additive);
+            ChangeMod(foundMod, ModAAString, MassDifference, Additive);
         }
 
         private void KillBlankMods()
@@ -214,7 +214,7 @@ namespace ParamFileGenerator
                 if (AA.Contains("Term"))
                 {
                     var AASLC = AA.Substring(0, 1);
-                    var currIndex = m_FindModIndex(AASLC);
+                    var currIndex = FindModIndex(AASLC);
                     if (currIndex != -1)
                     {
                         var modEntry = GetModEntry(currIndex);

@@ -8,11 +8,11 @@ namespace ParamFileGenerator
         //private IBasicParams basicTemplate;
         //private IAdvancedParams advTemplate;
 
-        //private string m_SettingsFileName = "ParamFileEditorSettings.xml";
+        //private string mSettingsFileName = "ParamFileEditorSettings.xml";
         private static string mTemplateFileName;
         private static string mTemplateFilePath;
-        //private UpdateModsTable m_modsUpdate;
-        //private MainProcess m_mainProcess;
+        //private UpdateModsTable mModsUpdate;
+        //private MainProcess mMainProcess;
         private static Params mBaseLineParams;
         //private const string DEF_TEMPLATE_LABEL_TEXT = "Currently Loaded Template: ";
         private const string DEF_TEMPLATE_FILENAME = "sequest_N14_NE.params";

@@ -579,7 +579,7 @@ namespace ParamFileGenerator
         //        xsl.Load(@"c:\\XMLToIni.xslt");
         //        var sb = new StringBuilder();
         //        var sw = new StringWriter(sb);
-        //        xsl.Transform(m_XmlDoc, default, sw, default);
+        //        xsl.Transform(mXmlDoc, default, sw, default);
         //        sw.Close();
         //        return sb.ToString();
         //    }

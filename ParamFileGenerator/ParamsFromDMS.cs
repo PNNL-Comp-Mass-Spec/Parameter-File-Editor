@@ -377,7 +377,7 @@ namespace ParamFileGenerator.DownloadParams
             return storageClass;
         }
 
-        private List<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType, ref List<ParamsEntry> @params)
+        private List<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType, ref List<ParamsEntry> paramList)
         {
             const int MaxDynMods = 15;
 
@@ -436,7 +436,7 @@ namespace ParamFileGenerator.DownloadParams
                         GetDynModSpecifier(foundRows),
                         foundRows[0]["Monoisotopic_Mass"].ToString(),
                         ParamTypes.DynamicModification);
-                    @params.Add(param);
+                    paramList.Add(param);
                 }
             }
 
@@ -448,7 +448,7 @@ namespace ParamFileGenerator.DownloadParams
                     GetDynModSpecifier(foundRows),
                     foundRows[0]["Monoisotopic_Mass"].ToString(),
                     ParamTypes.TermDynamicModification);
-                @params.Add(param);
+                paramList.Add(param);
             }
 
             // Find C-Term Dynamic Mods
@@ -459,7 +459,7 @@ namespace ParamFileGenerator.DownloadParams
                     GetDynModSpecifier(foundRows),
                     foundRows[0]["Monoisotopic_Mass"].ToString(),
                     ParamTypes.TermDynamicModification);
-                @params.Add(param);
+                paramList.Add(param);
             }
 
             // Look for Static and terminal mods
@@ -490,7 +490,7 @@ namespace ParamFileGenerator.DownloadParams
                     tmpSpec,
                     foundRow["Monoisotopic_Mass"].ToString(),
                     ParamTypes.StaticModification);
-                @params.Add(param);
+                paramList.Add(param);
             }
 
             // TODO Still need code to handle import/export of isotopic mods
@@ -504,10 +504,10 @@ namespace ParamFileGenerator.DownloadParams
                     foundRow["Affected_Atom"].ToString(),
                     foundRow["Monoisotopic_Mass"].ToString(),
                     ParamTypes.IsotopicModification);
-                @params.Add(param);
+                paramList.Add(param);
             }
 
-            return @params;
+            return paramList;
         }
 
         private string GetDynModSpecifier(DataRow[] rowSet)
@@ -1197,10 +1197,7 @@ namespace ParamFileGenerator.DownloadParams
             return tmpString;
         }
 
-        private string MakeListOfMods(
-            string strModDescriptionPrevious,
-            Queue objModList,
-            bool blnAddTitlePrefix)
+        private string MakeListOfMods(string strModDescriptionPrevious, Queue objModList, bool blnAddTitlePrefix)
         {
             strModDescriptionPrevious ??= "";
             if (objModList is null)
