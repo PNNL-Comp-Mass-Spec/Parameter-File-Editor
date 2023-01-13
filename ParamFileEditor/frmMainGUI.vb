@@ -2795,9 +2795,9 @@ Public Class frmMainGUI
 
             With at
                 'Setup checkboxes
-                frm.chkUseAIons.Checked = Convert.ToBoolean(.IonSeries.Use_a_Ions)
-                frm.chkUseBIons.Checked = Convert.ToBoolean(.IonSeries.Use_b_Ions)
-                frm.chkUseYIons.Checked = Convert.ToBoolean(.IonSeries.Use_y_Ions)
+                frm.chkUseAIons.Checked = .IonSeries.Use_a_Ions
+                frm.chkUseBIons.Checked = .IonSeries.Use_b_Ions
+                frm.chkUseYIons.Checked = .IonSeries.Use_y_Ions
                 frm.cboParentMassUnits.SelectedIndex = .PeptideMassUnits
 
                 If .FragmentMassUnits <> 0 Then
@@ -4020,17 +4020,17 @@ Public Class frmMainGUI
 #Region "[Advanced] Option Checkboxes"
 
     Private Sub chkUseAIons_CheckedChanged(sender As Object, e As EventArgs)
-        newParams.IonSeries.Use_a_Ions = CInt(IIf(chkUseAIons.Checked, 1, 0))
+        newParams.IonSeries.Use_a_Ions = CBool(IIf(chkUseAIons.Checked, 1, 0))
         UpdateDescription()
     End Sub
 
     Private Sub chkUseBIons_CheckedChanged(sender As Object, e As EventArgs)
-        newParams.IonSeries.Use_b_Ions = CInt(IIf(chkUseBIons.Checked, 1, 0))
+        newParams.IonSeries.Use_b_Ions = CBool(IIf(chkUseBIons.Checked, 1, 0))
         UpdateDescription()
     End Sub
 
     Private Sub chkUseYIons_CheckedChanged(sender As Object, e As EventArgs)
-        newParams.IonSeries.Use_y_Ions = CInt(IIf(chkUseYIons.Checked, 1, 0))
+        newParams.IonSeries.Use_y_Ions = CBool(IIf(chkUseYIons.Checked, 1, 0))
         UpdateDescription()
     End Sub
 

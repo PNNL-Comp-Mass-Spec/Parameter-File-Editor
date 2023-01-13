@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace ParamFileGenerator
 {
@@ -61,6 +60,7 @@ namespace ParamFileGenerator
         public TermDynamicMods TermDynamicMods { get; set; }
 
         public IsoMods IsotopicModificationsList { get; set; }
+
         [Obsolete("Use IsotopicModificationsList instead.")]
         public IsoMods IsotopicMods => IsotopicModificationsList;
 
@@ -270,12 +270,12 @@ namespace ParamFileGenerator
             mProtMassFilterString = mFullTemplate.GetParam("protein_mass_filter");
 
             var protMassFilterList = mProtMassFilterString.Split(' ');
-            if (protMassFilterList.Count() > 0)
+            if (protMassFilterList.Length > 0)
             {
                 MinimumProteinMassToSearch = (float) SafeCastDouble(protMassFilterList[0]);
             }
 
-            if (protMassFilterList.Count() > 1)
+            if (protMassFilterList.Length > 1)
             {
                 MaximumProteinMassToSearch = (float) SafeCastDouble(protMassFilterList[1]);
             }
