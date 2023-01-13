@@ -347,12 +347,12 @@ namespace ParamFileGenerator.DownloadParams
 
             if (!disableMassLookup)
             {
-                storageSet = GetMassModsFromDMS(paramSetID, eParamFileType, ref storageSet);
+                storageSet.AddRange(GetMassModsFromDMS(paramSetID, eParamFileType));
             }
 
             var p = UpdateParamSetFromDataCollection(storageSet);
             p.FileName = (string)matchingRow["Param_File_Name"];
-            p.Description = SummarizeDiffColl(ref storageSet);
+            p.Description = SummarizeDiffColl(storageSet);
 
             foreach (var paramRow in foundRows)
                 p.AddLoadedParamName(paramRow["Entry_Specifier"].ToString(), paramRow["Entry_Value"].ToString());
@@ -377,9 +377,10 @@ namespace ParamFileGenerator.DownloadParams
             return storageClass;
         }
 
-        private List<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType, ref List<ParamsEntry> paramList)
+        private List<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType)
         {
             const int MaxDynMods = 15;
+            var paramList = new List<ParamsEntry>();
 
             DataRow foundRow;
             DataRow[] foundRows;
@@ -682,7 +683,7 @@ namespace ParamFileGenerator.DownloadParams
             var checkColl = WriteDataCollectionFromParamSet(paramSet);
 
             var diffColl = CompareDataCollections(templateColl, checkColl);
-            return SummarizeDiffColl(ref diffColl);
+            return SummarizeDiffColl(diffColl);
         }
 
         protected string DistillFeaturesFromParamSet(int paramSetID, eParamFileTypeConstants eParamFileTypeID)
@@ -707,29 +708,24 @@ namespace ParamFileGenerator.DownloadParams
                 {
                     if (tmpType.Name == "IonSeries")
                     {
-                        c = ExpandIonSeries(paramSet.IonSeries, ref c);
+                        c.AddRange(ExpandIonSeries(paramSet.IonSeries));
                     }
-
                     else if (tmpType.Name == "IsoMods")
                     {
-                        c = ExpandIsoTopicMods(paramSet.IsotopicModificationsList, ref c);
+                        c.AddRange(ExpandIsoTopicMods(paramSet.IsotopicModificationsList));
                     }
-
                     else if (tmpType.Name == "DynamicMods")
                     {
-                        c = ExpandDynamicMods(paramSet.DynamicMods, ref c, ParamTypes.DynamicModification);
+                        c.AddRange(ExpandDynamicMods(paramSet.DynamicMods, ParamTypes.DynamicModification));
                     }
-
                     else if (tmpType.Name == "TermDynamicMods")
                     {
-                        c = ExpandDynamicMods(paramSet.TermDynamicMods, ref c, ParamTypes.TermDynamicModification);
+                        c.AddRange(ExpandDynamicMods(paramSet.TermDynamicMods, ParamTypes.TermDynamicModification));
                     }
-
                     else if (tmpType.Name == "StaticMods")
                     {
-                        c = ExpandStaticMods(paramSet.StaticModificationsList, ref c);
+                        c.AddRange(ExpandStaticMods(paramSet.StaticModificationsList));
                     }
-
                     else
                     {
                         var tmpValue = pProp.GetValue(paramSet, null).ToString();
@@ -748,7 +744,7 @@ namespace ParamFileGenerator.DownloadParams
             return c;
         }
 
-        private Params UpdateParamSetFromDataCollection(List<ParamsEntry> dc)
+        private Params UpdateParamSetFromDataCollection(IReadOnlyList<ParamsEntry> dc)
         {
             var p = new Params();
 
@@ -916,13 +912,14 @@ namespace ParamFileGenerator.DownloadParams
             return p;
         }
 
-        private List<ParamsEntry> ExpandDynamicMods(DynamicMods dynModSet, ref List<ParamsEntry> paramCollection, ParamTypes eDynModType)
+        private List<ParamsEntry> ExpandDynamicMods(DynamicMods dynModSet, ParamTypes eDynModType)
         {
             var maxCount = dynModSet.Count;
+            var paramList = new List<ParamsEntry>();
 
             if (maxCount == 0)
             {
-                return paramCollection;
+                return paramList;
             }
 
             if (eDynModType != ParamTypes.DynamicModification &&
@@ -938,19 +935,20 @@ namespace ParamFileGenerator.DownloadParams
                     dynModSet.Dyn_Mod_n_AAList(counter),
                     dynModSet.Dyn_Mod_n_MassDiff(counter).ToString("0.00000"),
                     eDynModType);
-                paramCollection.Add(param);
+                paramList.Add(param);
             }
 
-            return paramCollection;
+            return paramList;
         }
 
-        private List<ParamsEntry> ExpandStaticMods(StaticMods statModSet, ref List<ParamsEntry> paramCollection)
+        private List<ParamsEntry> ExpandStaticMods(StaticMods statModSet)
         {
             var maxCount = statModSet.Count;
+            var paramList = new List<ParamsEntry>();
 
             if (maxCount == 0)
             {
-                return paramCollection;
+                return paramList;
             }
 
             for (var counter = 0; counter < maxCount; counter++)
@@ -959,19 +957,20 @@ namespace ParamFileGenerator.DownloadParams
                     statModSet.GetResidue(counter),
                     statModSet.GetMassDiff(counter),
                     ParamTypes.StaticModification);
-                paramCollection.Add(param);
+                paramList.Add(param);
             }
 
-            return paramCollection;
+            return paramList;
         }
 
-        private List<ParamsEntry> ExpandIsoTopicMods(IsoMods isoModSet, ref List<ParamsEntry> paramCollection)
+        private List<ParamsEntry> ExpandIsoTopicMods(IsoMods isoModSet)
         {
             var maxCount = isoModSet.Count;
+            var paramList = new List<ParamsEntry>();
 
             if (maxCount == 0)
             {
-                return paramCollection;
+                return paramList;
             }
 
             for (var counter = 0; counter < maxCount; counter++)
@@ -980,15 +979,16 @@ namespace ParamFileGenerator.DownloadParams
                     isoModSet.GetAtom(counter),
                     isoModSet.GetMassDiff(counter),
                     ParamTypes.StaticModification);
-                paramCollection.Add(param);
+                paramList.Add(param);
             }
 
-            return paramCollection;
+            return paramList;
         }
 
-        private List<ParamsEntry> ExpandIonSeries(IonSeries ionSeriesSet, ref List<ParamsEntry> paramCollection)
+        private List<ParamsEntry> ExpandIonSeries(IonSeries ionSeriesSet)
         {
             var pType = typeof(IonSeries);
+            var paramList = new List<ParamsEntry>();
             var pFields = pType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             foreach (var pField in pFields)
@@ -997,10 +997,10 @@ namespace ParamFileGenerator.DownloadParams
                     pField.Name,
                     pField.GetValue(ionSeriesSet, null).ToString(),
                     ParamTypes.AdvancedParam);
-                paramCollection.Add(param);
+                paramList.Add(param);
             }
 
-            return paramCollection;
+            return paramList;
         }
 
         private bool DoesParamSetNameExist(string paramSetName)
@@ -1038,26 +1038,24 @@ namespace ParamFileGenerator.DownloadParams
 
         private bool DoesParamSetIDExist(int paramSetID)
         {
-            DataRow matchingRow = null;
-            return GetParamFileRowByID(paramSetID, out matchingRow);
+            return GetParamFileRowByID(paramSetID, out _);
         }
 
-        protected string CompareParamSets(ref Params templateSet, ref Params checkSet)
+        protected string CompareParamSets(Params templateSet, Params checkSet)
         {
-            var diffCollection = GetDiffColl(ref templateSet, ref checkSet);
-            return SummarizeDiffColl(ref diffCollection);
+            var diffCollection = GetDiffColl(templateSet, checkSet);
+            return SummarizeDiffColl(diffCollection);
         }
 
-        protected List<ParamsEntry> GetDiffColl(ref Params templateSet, ref Params checkSet)
+        protected List<ParamsEntry> GetDiffColl(Params templateSet, Params checkSet)
         {
             var templateColl = WriteDataCollectionFromParamSet(templateSet);
             var checkColl = WriteDataCollectionFromParamSet(checkSet);
 
-            var diffCollection = CompareDataCollections(templateColl, checkColl);
-            return diffCollection;
+            return CompareDataCollections(templateColl, checkColl);
         }
 
-        private string SummarizeDiffColl(ref List<ParamsEntry> diffColl)
+        private string SummarizeDiffColl(IReadOnlyList<ParamsEntry> diffColl)
         {
             int index;
 
@@ -1233,7 +1231,7 @@ namespace ParamFileGenerator.DownloadParams
             return strModDescriptionPrevious;
         }
 
-        private List<ParamsEntry> CompareDataCollections(List<ParamsEntry> templateColl, List<ParamsEntry> checkColl)
+        private List<ParamsEntry> CompareDataCollections(IReadOnlyList<ParamsEntry> templateColl, IReadOnlyList<ParamsEntry> checkColl)
         {
             var diffColl = new List<ParamsEntry>();
 
