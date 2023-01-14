@@ -293,21 +293,21 @@ namespace ParamFileGenerator.MakeParams
             };
 
             mctSQL =
-                "SELECT Mass_Correction_Tag, Monoisotopic_Mass, Affected_Atom " +
-                "FROM T_Mass_Correction_Factors " +
-                "ORDER BY Mass_Correction_Tag";
+                "SELECT mass_correction_tag, monoisotopic_mass, affected_atom " +
+                "FROM V_Mass_Correction_Factors " +
+                "ORDER BY mass_correction_tag";
 
             mdSQL =
                 "SELECT " +
-                "Local_Symbol As Modification_Symbol, " +
-                "Monoisotopic_Mass, " +
-                "Residue_Symbol As Target_Residues, " +
-                "Mod_Type_Symbol As Modification_Type, " +
-                "Mass_Correction_Tag, " +
-                MAXQUANT_MOD_NAME_COLUMN + ", " +
-                UNIMOD_MOD_NAME_COLUMN + " " +
+                "local_symbol As modification_symbol, " +
+                "monoisotopic_mass, " +
+                "residue_symbol As target_residues, " +
+                "mod_type_symbol As modification_type, " +
+                "mass_correction_tag, " +
+                MAXQUANT_MOD_NAME_COLUMN.ToLowerInvariant() + ", " +
+                UNIMOD_MOD_NAME_COLUMN.ToLowerInvariant() + " " +
                 "FROM V_Param_File_Mass_Mod_Info " +
-                "WHERE Param_File_Name = '" + paramFileName + "'";
+                "WHERE param_file_name = '" + paramFileName + "'";
 
             mDbTools.GetQueryResults(mctSQL, out var massCorrectionTags);
 
@@ -364,15 +364,16 @@ namespace ParamFileGenerator.MakeParams
 
             // ReSharper disable once StringLiteralTypo
             var paramFilePathSQL =
-                "SELECT TOP 1 AJT_parmFileStoragePath " +
-                "FROM T_Analysis_Tool " +
-                "WHERE AJT_ToolName = '" + analysisToolName + "'";
+                "SELECT param_file_storage_path " +
+                "FROM V_Analysis_Tool_Paths " +
+                "WHERE tool_name = '" + analysisToolName + "'";
 
+            // The query should only return one row
             mDbTools.GetQueryResults(paramFilePathSQL, out var paramFilePathTable);
 
             if (paramFilePathTable.Count == 0)
             {
-                ReportError("Tool not found in T_Analysis_Tool: " + analysisToolName);
+                ReportError("Tool not found in V_Analysis_Tool_Paths: " + analysisToolName);
                 return false;
             }
 
@@ -381,7 +382,7 @@ namespace ParamFileGenerator.MakeParams
 
             if (!Directory.Exists(paramFileDirectory))
             {
-                ReportError(string.Format("Directory defined in T_Analysis_Tool for {0} was not found: {1}",
+                ReportError(string.Format("Directory defined in V_Analysis_Tool_Paths for {0} was not found: {1}",
                     analysisToolName, paramFileDirectory));
 
                 return false;

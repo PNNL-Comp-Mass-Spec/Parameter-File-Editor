@@ -18,22 +18,24 @@ namespace ParamFileGenerator
         {
             ResidueAtomCounts = new Dictionary<char, Dictionary<char, int>>();
 
-            var sql = "SELECT * FROM T_Residues WHERE [Num_C] > 0";
+            var sql = "SELECT residue_id, residue_symbol, description, average_mass, " +
+                      "monoisotopic_mass, num_c, num_h, num_n, num_o, num_s " +
+                      "FROM V_Residues WHERE num_c > 0";
 
             dbTools.GetQueryResults(sql, out var residuesTable);
 
             var columnNames = new List<string>()
             {
-                "Residue_ID",
-                "Residue_Symbol",
-                "Description",
-                "Average_Mass",
-                "Monoisotopic_Mass",
-                "Num_C",
-                "Num_H",
-                "Num_N",
-                "Num_O",
-                "Num_S"
+                "residue_id",
+                "residue_symbol",
+                "description",
+                "average_mass",
+                "monoisotopic_mass",
+                "num_c",
+                "num_h",
+                "num_n",
+                "num_o",
+                "num_s"
             };
 
             // ' This maps column name to column index

@@ -13,10 +13,8 @@ namespace ParamFileGenerator.DownloadParams
         // Ignore Spelling: diffs, mc
 
         private const string Param_File_Table = "T_Param_Files";
+        private const string Param_File_Type_Table = "T_Param_File_Types";
         private const string Param_Entry_Table = "T_Param_Entries";
-        private const string Param_Mass_Mods_Table = "T_Param_File_Mass_Mods";
-        private const string Mass_Corr_Factors = "T_Mass_Correction_Factors";
-        private const string Residues_Table = "T_Residues";
 
         public enum AcceptableParams
         {
@@ -308,18 +306,18 @@ namespace ParamFileGenerator.DownloadParams
         private bool GetParamsFromDMS()
         {
             // SQL to grab param file table
-            // The ID column is named Param_File_ID
-            var query1 = "SELECT Param_File_ID, Param_File_Name, Param_File_Description, Param_File_Type_ID " +
+            // The ID column is named param_file_id
+            var query1 = "SELECT param_file_id, param_file_name, param_file_description, param_file_type_id " +
                          "FROM " + Param_File_Table;
-            // Optional: " WHERE [Param_File_Type_ID] = 1000"
+            // Optional: " WHERE param_file_type_id = 1000"
 
             mParamFileTable = GetTable(query1);
 
             // SQL to grab param entry table
-            // The ID column is named Param_Entry_ID
-            var query2 = "SELECT Param_Entry_ID, Entry_Sequence_Order, Entry_Type, Entry_Specifier, Entry_Value, Param_File_ID " +
+            // The ID column is named param_entry_id
+            var query2 = "SELECT param_entry_id, entry_sequence_order, entry_type, entry_specifier, entry_value, param_file_id " +
                          "FROM " + Param_Entry_Table + " " +
-                         "WHERE [Entry_Type] not like '%Modification'";
+                         "WHERE entry_type not like '%Modification'";
 
             mParamEntryTable = GetTable(query2);
 
@@ -341,7 +339,7 @@ namespace ParamFileGenerator.DownloadParams
                 return new Params();
             }
 
-            var foundRows = mParamEntryTable.Select("[Param_File_ID] = " + paramSetID, "[Entry_Sequence_Order]");
+            var foundRows = mParamEntryTable.Select("param_file_id = " + paramSetID, "entry_sequence_order");
 
             var storageSet = MakeStorageClassFromTableRowSet(foundRows);
 
@@ -351,11 +349,11 @@ namespace ParamFileGenerator.DownloadParams
             }
 
             var p = UpdateParamSetFromDataCollection(storageSet);
-            p.FileName = (string)matchingRow["Param_File_Name"];
+            p.FileName = (string)matchingRow["param_file_name"];
             p.Description = SummarizeDiffColl(storageSet);
 
             foreach (var paramRow in foundRows)
-                p.AddLoadedParamName(paramRow["Entry_Specifier"].ToString(), paramRow["Entry_Value"].ToString());
+                p.AddLoadedParamName(paramRow["entry_specifier"].ToString(), paramRow["entry_value"].ToString());
 
             return p;
         }
@@ -367,9 +365,9 @@ namespace ParamFileGenerator.DownloadParams
             foreach (var foundRow in foundRows)
             {
                 var param = new ParamsEntry(
-                    (string)foundRow["Entry_Specifier"],
-                    (string)foundRow["Entry_Value"],
-                    (ParamTypes)Enum.Parse(typeof(ParamTypes), foundRow["Entry_Type"].ToString()));
+                    (string)foundRow["entry_specifier"],
+                    (string)foundRow["entry_value"],
+                    (ParamTypes)Enum.Parse(typeof(ParamTypes), foundRow["entry_type"].ToString()));
 
                 storageClass.Add(param);
             }
@@ -385,13 +383,9 @@ namespace ParamFileGenerator.DownloadParams
             DataRow foundRow;
             DataRow[] foundRows;
 
-            var sql = "SELECT mm.Mod_Type_Symbol as Mod_Type_Symbol, r.Residue_Symbol as Residue_Symbol, " +
-                      "mc.Monoisotopic_Mass as Monoisotopic_Mass, " +
-                      "mm.Local_Symbol_ID as Local_Symbol_ID, mc.Affected_Atom as Affected_Atom " +
-                      "FROM " + Param_Mass_Mods_Table + " mm INNER JOIN " +
-                      Mass_Corr_Factors + " mc ON mm.Mass_Correction_ID = mc.Mass_Correction_ID INNER JOIN " +
-                      Residues_Table + " r ON mm.Residue_ID = r.Residue_ID " +
-                      "WHERE mm.Param_File_ID = " + paramSetID;
+            var sql = "SELECT mod_type_symbol, residue_symbol, monoisotopic_mass, local_symbol_id, affected_atom " +
+                      "FROM V_Param_File_Mass_Mod_Info " +
+                      "WHERE param_file_id = " + paramSetID;
 
             mMassMods = GetTable(sql);
 
@@ -430,48 +424,48 @@ namespace ParamFileGenerator.DownloadParams
 
             foreach (var intSymbolID in lstLocalSymbolIDs)
             {
-                foundRows = mMassMods.Select("[Mod_Type_Symbol] = 'D' AND [Local_Symbol_ID] = " + intSymbolID + " AND [Residue_Symbol] <> '<' AND [Residue_Symbol] <> '>'", "[Local_Symbol_ID]");
+                foundRows = mMassMods.Select("mod_type_symbol = 'D' AND local_symbol_id = " + intSymbolID + " AND residue_symbol <> '<' AND residue_symbol <> '>'", "local_symbol_id");
                 if (foundRows.Length > 0)
                 {
                     var param = new ParamsEntry(
                         GetDynModSpecifier(foundRows),
-                        foundRows[0]["Monoisotopic_Mass"].ToString(),
+                        foundRows[0]["monoisotopic_mass"].ToString(),
                         ParamTypes.DynamicModification);
                     paramList.Add(param);
                 }
             }
 
             // Find N-Term Dynamic Mods
-            foundRows = mMassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '<'");
+            foundRows = mMassMods.Select("mod_type_symbol = 'D' AND residue_symbol = '<'");
             if (foundRows.Length > 0)
             {
                 var param = new ParamsEntry(
                     GetDynModSpecifier(foundRows),
-                    foundRows[0]["Monoisotopic_Mass"].ToString(),
+                    foundRows[0]["monoisotopic_mass"].ToString(),
                     ParamTypes.TermDynamicModification);
                 paramList.Add(param);
             }
 
             // Find C-Term Dynamic Mods
-            foundRows = mMassMods.Select("[Mod_Type_Symbol] = 'D' AND [Residue_Symbol] = '>'");
+            foundRows = mMassMods.Select("mod_type_symbol = 'D' AND residue_symbol = '>'");
             if (foundRows.Length > 0)
             {
                 var param = new ParamsEntry(
                     GetDynModSpecifier(foundRows),
-                    foundRows[0]["Monoisotopic_Mass"].ToString(),
+                    foundRows[0]["monoisotopic_mass"].ToString(),
                     ParamTypes.TermDynamicModification);
                 paramList.Add(param);
             }
 
             // Look for Static and terminal mods
 
-            foundRows = mMassMods.Select("[Mod_Type_Symbol] = 'S' OR [Mod_Type_Symbol] = 'P' or [Mod_Type_Symbol] = 'T'");
+            foundRows = mMassMods.Select("mod_type_symbol = 'S' OR mod_type_symbol = 'P' or mod_type_symbol = 'T'");
 
             foreach (var currentFoundRow in foundRows)
             {
                 foundRow = currentFoundRow;
                 string tmpSpec = "";
-                switch (foundRow["Residue_Symbol"].ToString())
+                switch (foundRow["residue_symbol"].ToString())
                 {
                     case "<":
                         tmpSpec = "N_Term_Peptide";
@@ -489,21 +483,21 @@ namespace ParamFileGenerator.DownloadParams
 
                 var param = new ParamsEntry(
                     tmpSpec,
-                    foundRow["Monoisotopic_Mass"].ToString(),
+                    foundRow["monoisotopic_mass"].ToString(),
                     ParamTypes.StaticModification);
                 paramList.Add(param);
             }
 
             // TODO Still need code to handle import/export of isotopic mods
 
-            foundRows = mMassMods.Select("[Mod_Type_Symbol] = 'I'");
+            foundRows = mMassMods.Select("mod_type_symbol = 'I'");
 
             foreach (var currentFoundRow1 in foundRows)
             {
                 foundRow = currentFoundRow1;
                 var param = new ParamsEntry(
-                    foundRow["Affected_Atom"].ToString(),
-                    foundRow["Monoisotopic_Mass"].ToString(),
+                    foundRow["affected_atom"].ToString(),
+                    foundRow["monoisotopic_mass"].ToString(),
                     ParamTypes.IsotopicModification);
                 paramList.Add(param);
             }
@@ -518,7 +512,7 @@ namespace ParamFileGenerator.DownloadParams
             if (rowSet.Length > 0)               // We have dynamic mods
             {
                 foreach (var foundRow in rowSet)
-                    tmpSpec += foundRow["Residue_Symbol"].ToString();
+                    tmpSpec += foundRow["residue_symbol"].ToString();
                 return tmpSpec;
             }
             else
@@ -529,12 +523,12 @@ namespace ParamFileGenerator.DownloadParams
 
         private int GetIDWithName(string name, eParamFileTypeConstants eParamFileType)
         {
-            var foundRows = mParamFileTable.Select("[Param_File_Name] = '" + name + "' AND [Param_File_Type_ID] = " + ((int)eParamFileType).ToString());
+            var foundRows = mParamFileTable.Select("param_file_name = '" + name + "' AND param_file_type_id = " + ((int)eParamFileType).ToString());
             int tmpID;
             if (foundRows.Length > 0)
             {
                 var foundRow = foundRows[0];
-                tmpID = Params.SafeCastInt(foundRow["Param_File_ID"]);
+                tmpID = Params.SafeCastInt(foundRow["param_file_id"]);
             }
             else
             {
@@ -545,12 +539,12 @@ namespace ParamFileGenerator.DownloadParams
 
         private eParamFileTypeConstants GetTypeWithID(int paramFileID)
         {
-            var foundRows = mParamFileTable.Select("[Param_File_ID] = " + paramFileID.ToString());
+            var foundRows = mParamFileTable.Select("param_file_id = " + paramFileID.ToString());
             eParamFileTypeConstants tmpID;
             if (foundRows.Length > 0)
             {
                 var foundRow = foundRows[0];
-                tmpID = (eParamFileTypeConstants)Params.SafeCastInt(foundRow["Param_File_Type_ID"]);
+                tmpID = (eParamFileTypeConstants)Params.SafeCastInt(foundRow["param_file_type_id"]);
             }
             else
             {
@@ -561,12 +555,12 @@ namespace ParamFileGenerator.DownloadParams
 
         private eParamFileTypeConstants GetTypeWithName(string paramFileName)
         {
-            var foundRows = mParamFileTable.Select("[Param_File_Name] = '" + paramFileName + "'");
+            var foundRows = mParamFileTable.Select("param_file_name = '" + paramFileName + "'");
             eParamFileTypeConstants tmpID;
             if (foundRows.Length > 0)
             {
                 var foundRow = foundRows[0];
-                tmpID = (eParamFileTypeConstants)Params.SafeCastInt(foundRow["Param_File_Type_ID"]);
+                tmpID = (eParamFileTypeConstants)Params.SafeCastInt(foundRow["param_file_type_id"]);
             }
             else
             {
@@ -579,7 +573,7 @@ namespace ParamFileGenerator.DownloadParams
         {
             if (GetParamFileRowByID(paramFileID, out var matchingRow))
             {
-                var tmpString = matchingRow["Param_File_Description"].ToString();
+                var tmpString = matchingRow["param_file_description"].ToString();
                 if (string.IsNullOrWhiteSpace(tmpString))
                 {
                     return string.Empty;
@@ -603,7 +597,7 @@ namespace ParamFileGenerator.DownloadParams
         /// <returns>True if the parameter file was found, otherwise false</returns>
         private bool GetParamFileRowByID(int paramFileID, out DataRow matchingRow)
         {
-            var foundRows = mParamFileTable.Select("[Param_File_ID] = " + paramFileID);
+            var foundRows = mParamFileTable.Select("param_file_id = " + paramFileID);
 
             if (foundRows.Length > 0)
             {
@@ -624,31 +618,31 @@ namespace ParamFileGenerator.DownloadParams
         {
             var paramTableSQL =
                 "SELECT " +
-                "  Param_File_ID as ID, " +
-                "  Param_File_Name AS Filename, " +
-                "  Param_File_Description as Diffs, " +
-                "  Param_File_Type_ID as Type_ID " +
-                "FROM T_Param_Files " +
-                "WHERE Param_File_Type_ID = " + ((int)eParamFileTypeConstants.Sequest).ToString() +
-                "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.XTandem).ToString() +
-                "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MSGFDB).ToString() +
-                "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MSPathFinder).ToString() +
-                "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MODPlus).ToString() +
-                "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.TopPIC).ToString() +
-                "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MSFragger).ToString() +
-                "   or Param_File_Type_ID = " + ((int)eParamFileTypeConstants.MaxQuant).ToString();
+                "  param_file_id AS id, " +
+                "  param_file_name AS filename, " +
+                "  param_file_description AS diffs, " +
+                "  param_file_type_id AS type_id " +
+                "FROM " + Param_File_Table + " " +
+                "WHERE param_file_type_id = " + ((int)eParamFileTypeConstants.Sequest).ToString() +
+                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.XTandem).ToString() +
+                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MSGFDB).ToString() +
+                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MSPathFinder).ToString() +
+                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MODPlus).ToString() +
+                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.TopPIC).ToString() +
+                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MSFragger).ToString() +
+                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MaxQuant).ToString();
 
             var tmpIDTable = GetTable(paramTableSQL);
 
             // Load tmpIDTable
             foreach (DataRow dr in tmpIDTable.Rows)
             {
-                var tmpType = (int)dr["Type_ID"];
+                var tmpType = (int)dr["type_id"];
 
                 if (tmpType == (int)eParamFileTypeConstants.Sequest)
                 {
-                    var tmpID = (int)dr["ID"];
-                    var tmpDiffs = (string)dr["Diffs"];
+                    var tmpID = (int)dr["id"];
+                    var tmpDiffs = (string)dr["diffs"];
                     if (tmpDiffs is null)
                     {
                         eParamFileTypeConstants eParamFileTypeID;
@@ -656,7 +650,7 @@ namespace ParamFileGenerator.DownloadParams
 
                         tmpDiffs = DistillFeaturesFromParamSet(tmpID, eParamFileTypeID);
 
-                        dr["Diffs"] = tmpDiffs;
+                        dr["diffs"] = tmpDiffs;
                         dr.AcceptChanges();
                     }
                 }
@@ -669,8 +663,8 @@ namespace ParamFileGenerator.DownloadParams
 
         private DataTable GetParamFileTypes()
         {
-            var tableTypesSQL = "SELECT Param_File_Type_ID as ID, Param_File_Type AS Type " +
-                                "FROM T_Param_File_Types";
+            var tableTypesSQL = "SELECT param_file_type_id AS id, param_file_type AS type " +
+                                "FROM " + Param_File_Type_Table;
 
             var tmpTypeTable = GetTable(tableTypesSQL);
 
