@@ -813,7 +813,6 @@ namespace ParamFileGenerator.DownloadParams
                         }
                     }
                 }
-
                 else if (tmpType == ParamTypes.AdvancedParam &&
                          mAdvancedParams.Contains(tmpSpec))
                 {
@@ -848,7 +847,6 @@ namespace ParamFileGenerator.DownloadParams
                         }
                     }
                 }
-
                 else if (tmpType == ParamTypes.AdvancedParam &&
                          mIonSeriesParams.Contains(tmpSpec))
                 {
@@ -884,7 +882,6 @@ namespace ParamFileGenerator.DownloadParams
                         }
                     }
                 }
-
                 else if (tmpType == ParamTypes.DynamicModification)
                 {
                     p.DynamicMods.Add(tmpSpec, valueDouble);
@@ -1101,7 +1098,6 @@ namespace ParamFileGenerator.DownloadParams
                     }
                     tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
                 }
-
                 else if (tmpType == ParamTypes.DynamicModification)
                 {
                     if (tmpDynModsList is null)
@@ -1113,7 +1109,6 @@ namespace ParamFileGenerator.DownloadParams
 
                     intDynModCount += 1;
                 }
-
                 else if (tmpType == ParamTypes.TermDynamicModification)
                 {
                     if (tmpSpec == "<")
@@ -1134,7 +1129,6 @@ namespace ParamFileGenerator.DownloadParams
 
                     intTermDynModCount += 1;
                 }
-
                 else if (tmpType == ParamTypes.IsotopicModification)
                 {
                     if (string.IsNullOrEmpty(tmpIsoMods))
@@ -1149,7 +1143,6 @@ namespace ParamFileGenerator.DownloadParams
                     }
                     tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
                 }
-
                 else
                 {
                     if (string.IsNullOrEmpty(tmpOtherParams))

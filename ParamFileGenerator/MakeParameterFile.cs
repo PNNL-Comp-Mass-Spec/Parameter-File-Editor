@@ -127,7 +127,6 @@ namespace ParamFileGenerator.MakeParams
                         return MakeFileSQL(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoParentMass);
                 }
             }
-
             catch (Exception ex)
             {
                 ReportError("Error in MakeFile: " + ex.Message, ex);

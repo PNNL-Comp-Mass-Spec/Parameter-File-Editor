@@ -407,7 +407,6 @@ namespace ParamFileGenerator
                         return true;
                     }
                 }
-
                 catch //(Exception e)
                 {
                     // MessageBox.Show(e.Message)
