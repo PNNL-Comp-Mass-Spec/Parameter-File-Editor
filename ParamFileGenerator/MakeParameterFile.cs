@@ -156,19 +156,9 @@ namespace ParamFileGenerator.MakeParams
 
             mDbTools.GetQueryResults(sqlQuery, out var typeCheckTable);
 
-            if (typeCheckTable.Count > 0)
+            if (typeCheckTable.Count > 0 && int.TryParse(typeCheckTable[0].First(), out var useMonoMassInt))
             {
-                if (int.TryParse(typeCheckTable[0].First(), out var useMonoMassInt))
-                {
-                    if (useMonoMassInt > 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
+                return useMonoMassInt > 0;
             }
 
             return false;

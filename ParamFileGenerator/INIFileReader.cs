@@ -115,14 +115,7 @@ namespace ParamFileGenerator
 
         private string SetNameCase(string aName)
         {
-            if (CaseSensitive)
-            {
-                return aName;
-            }
-            else
-            {
-                return aName.ToLower();
-            }
+            return CaseSensitive ? aName : aName.ToLower();
         }
 
         private XmlElement GetRoot()
@@ -132,14 +125,7 @@ namespace ParamFileGenerator
 
         private XmlElement GetLastSection()
         {
-            if (sections.Count == 0)
-            {
-                return GetRoot();
-            }
-            else
-            {
-                return GetSection(sections[sections.Count - 1]);
-            }
+            return sections.Count == 0 ? GetRoot() : GetSection(sections[sections.Count - 1]);
         }
 
         private XmlElement GetSection(string sectionName)
@@ -221,15 +207,14 @@ namespace ParamFileGenerator
                     // delete this item
                     return DeleteItem(sectionName, keyName);
                 }
-                else
-                {
-                    // add or update the value attribute
-                    item.SetAttribute("value", newValue);
-                    return true;
-                }
+
+                // add or update the value attribute
+                item.SetAttribute("value", newValue);
+                return true;
             }
+
             // try to create the item
-            else if (!string.IsNullOrEmpty(keyName) && newValue is not null)
+            if (!string.IsNullOrEmpty(keyName) && newValue is not null)
             {
                 // construct a new item (blank values are OK)
                 item = mXmlDoc.CreateElement("item");
