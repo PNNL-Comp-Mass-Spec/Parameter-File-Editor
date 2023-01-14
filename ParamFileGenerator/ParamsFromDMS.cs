@@ -1107,7 +1107,7 @@ namespace ParamFileGenerator.DownloadParams
                     }
                     tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
 
-                    intDynModCount += 1;
+                    intDynModCount++;
                 }
                 else if (tmpType == ParamTypes.TermDynamicModification)
                 {
@@ -1127,7 +1127,7 @@ namespace ParamFileGenerator.DownloadParams
                     }
                     tmpTermDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
 
-                    intTermDynModCount += 1;
+                    intTermDynModCount++;
                 }
                 else if (tmpType == ParamTypes.IsotopicModification)
                 {

@@ -171,7 +171,7 @@ namespace ParamFileGenerator
                 var tmpModMass = dynMod.MassDifference;
                 var tmpModString = dynMod.ReturnAllAffectedResiduesString;
                 s = s + tmpModMass.ToString("0.0000") + " " + tmpModString + " ";
-                counter -= 1;
+                counter--;
             }
 
             for (padCount = 0; padCount < counter; padCount++)

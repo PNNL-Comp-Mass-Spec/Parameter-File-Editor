@@ -251,7 +251,7 @@ namespace ParamFileGenerator
                     }
                     if (Count == 0)
                         break;
-                    counter += 1;
+                    counter++;
                 }
             }
         }
