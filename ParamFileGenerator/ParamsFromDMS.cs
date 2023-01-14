@@ -666,8 +666,7 @@ namespace ParamFileGenerator.DownloadParams
                     var tmpDiffs = (string)dr["diffs"];
                     if (tmpDiffs is null)
                     {
-                        eParamFileTypeConstants eParamFileTypeID;
-                        eParamFileTypeID = (eParamFileTypeConstants)tmpType;
+                        var eParamFileTypeID = (eParamFileTypeConstants)tmpType;
 
                         tmpDiffs = DistillFeaturesFromParamSet(tmpID, eParamFileTypeID);
 

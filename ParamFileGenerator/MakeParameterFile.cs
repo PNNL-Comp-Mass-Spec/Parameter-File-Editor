@@ -261,9 +261,6 @@ namespace ParamFileGenerator.MakeParams
             const string MAXQUANT_MOD_NAME_COLUMN = "MaxQuant_Mod_Name";
             const string UNIMOD_MOD_NAME_COLUMN = "UniMod_Mod_Name";
 
-            string mctSQL;
-            string mdSQL;
-
             if (mDbTools is null)
             {
                 var connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(dmsConnectionString, "ParamFileGenerator");
@@ -291,22 +288,20 @@ namespace ParamFileGenerator.MakeParams
                 "Mass_Correction_Tag"
             };
 
-            mctSQL =
-                "SELECT mass_correction_tag, monoisotopic_mass, affected_atom " +
-                "FROM V_Mass_Correction_Factors " +
-                "ORDER BY mass_correction_tag";
+            const string mctSQL = "SELECT mass_correction_tag, monoisotopic_mass, affected_atom " +
+                         "FROM V_Mass_Correction_Factors " +
+                         "ORDER BY mass_correction_tag";
 
-            mdSQL =
-                "SELECT " +
-                "local_symbol As modification_symbol, " +
-                "monoisotopic_mass, " +
-                "residue_symbol As target_residues, " +
-                "mod_type_symbol As modification_type, " +
-                "mass_correction_tag, " +
-                MAXQUANT_MOD_NAME_COLUMN.ToLowerInvariant() + ", " +
-                UNIMOD_MOD_NAME_COLUMN.ToLowerInvariant() + " " +
-                "FROM V_Param_File_Mass_Mod_Info " +
-                "WHERE param_file_name = '" + paramFileName + "'";
+            var mdSQL = "SELECT " +
+                        "local_symbol As modification_symbol, " +
+                        "monoisotopic_mass, " +
+                        "residue_symbol As target_residues, " +
+                        "mod_type_symbol As modification_type, " +
+                        "mass_correction_tag, " +
+                        MAXQUANT_MOD_NAME_COLUMN.ToLowerInvariant() + ", " +
+                        UNIMOD_MOD_NAME_COLUMN.ToLowerInvariant() + " " +
+                        "FROM V_Param_File_Mass_Mod_Info " +
+                        "WHERE param_file_name = '" + paramFileName + "'";
 
             mDbTools.GetQueryResults(mctSQL, out var massCorrectionTags);
 
@@ -317,6 +312,7 @@ namespace ParamFileGenerator.MakeParams
 
             // Check whether any MaxQuant mods are actually defined
             var includeMaxQuant = false;
+
             foreach (var item in paramFileModInfo)
             {
                 if (item[5].Length > 0)
