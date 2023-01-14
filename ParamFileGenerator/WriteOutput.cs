@@ -16,14 +16,13 @@ namespace ParamFileGenerator
 
         public void WriteDataTableToOutputFile(List<List<string>> tableToWrite, string outputFilePath, List<string> headerNames)
         {
-            using (var writer = new StreamWriter(new FileStream(outputFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)))
-            {
-                writer.WriteLine(string.Join("\t", headerNames));
+            using var writer = new StreamWriter(new FileStream(outputFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite));
 
-                foreach (var tableRow in tableToWrite)
-                {
-                    writer.WriteLine(string.Join("\t", tableRow));
-                }
+            writer.WriteLine(string.Join("\t", headerNames));
+
+            foreach (var tableRow in tableToWrite)
+            {
+                writer.WriteLine(string.Join("\t", tableRow));
             }
         }
 
@@ -191,12 +190,11 @@ namespace ParamFileGenerator
 
         private void OutputTextParamFile(IEnumerable<string> paramList, string outputPath)
         {
-            using (var writer = new StreamWriter(outputPath))
+            using var writer = new StreamWriter(outputPath);
+
+            foreach (var item in paramList)
             {
-                foreach (var item in paramList)
-                {
-                    writer.WriteLine(item);
-                }
+                writer.WriteLine(item);
             }
         }
 
