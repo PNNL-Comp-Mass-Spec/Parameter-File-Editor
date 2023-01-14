@@ -73,7 +73,7 @@ namespace ParamFileGenerator
                         {
                             if (s.Contains(";"))
                             {
-                                s = s.Substring(0, Math.Max(s.IndexOf(";") - 1, 0)).Trim();
+                                s = s.Substring(0, Math.Max(s.IndexOf(";", StringComparison.Ordinal) - 1, 0)).Trim();
                             }
                             ParseLineXml(s, mXmlDoc);
                             s = tr.ReadLine();
@@ -105,6 +105,7 @@ namespace ParamFileGenerator
             {
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
+
                 return mIniFilename;
             }
         }
@@ -158,6 +159,7 @@ namespace ParamFileGenerator
             {
                 throw new IniFileReaderNotInitializedException();
             }
+
             if (newSection is not null && !string.IsNullOrEmpty(newSection))
             {
                 var section = GetSection(oldSection);
@@ -175,7 +177,9 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             var section = GetSection(sectionName);
+
             if (section is null)
             {
                 if (CreateSection(sectionName))
@@ -200,6 +204,7 @@ namespace ParamFileGenerator
             }
 
             var item = GetItem(sectionName, keyName);
+
             if (item is not null)
             {
                 if (newValue is null)
@@ -241,6 +246,7 @@ namespace ParamFileGenerator
         private bool DeleteItem(string sectionName, string keyName)
         {
             var item = GetItem(sectionName, keyName);
+
             if (item is not null)
             {
                 item.ParentNode.RemoveChild(item);
@@ -253,7 +259,9 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             var item = GetItem(sectionName, keyName);
+
             if (item is not null)
             {
                 item.SetAttribute("key", SetNameCase(newValue));
@@ -266,11 +274,14 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             XmlNode N = GetItem(sectionName, keyName);
+
             if (N is not null)
             {
                 return N.Attributes.GetNamedItem("value").Value;
             }
+
             return null;
         }
 
@@ -292,6 +303,7 @@ namespace ParamFileGenerator
                 {
                     throw new IniFileReaderNotInitializedException();
                 }
+
                 return sections;
             }
         }
@@ -333,6 +345,7 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             return GetItemsInSection(sectionName, IniItemTypeEnum.GetKeys);
         }
 
@@ -340,6 +353,7 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             return GetItemsInSection(sectionName, IniItemTypeEnum.GetValues);
         }
 
@@ -347,6 +361,7 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             return GetItemsInSection(sectionName, IniItemTypeEnum.GetKeysAndValues);
         }
 
@@ -355,9 +370,11 @@ namespace ParamFileGenerator
             XmlElement N;
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             if (attributeName is not null && !string.IsNullOrEmpty(attributeName))
             {
                 N = GetItem(sectionName, keyName);
+
                 if (N is not null)
                 {
                     attributeName = SetNameCase(attributeName);
@@ -371,12 +388,14 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             if (string.IsNullOrEmpty(attributeName))
             {
                 return false;
             }
 
             var item = GetItem(sectionName, keyName);
+
             if (item is not null)
             {
                 try
@@ -432,6 +451,7 @@ namespace ParamFileGenerator
             try
             {
                 var section = GetSection(sectionName);
+
                 if (section is not null)
                 {
                     var item = mXmlDoc.CreateElement("item");
@@ -513,13 +533,16 @@ namespace ParamFileGenerator
             {
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
+
                 return mSaveFilename;
             }
             set
             {
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
+
                 var fi = new FileInfo(value);
+
                 if (!fi.Directory.Exists)
                 {
                 }
@@ -535,6 +558,7 @@ namespace ParamFileGenerator
         {
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
+
             if (OutputFilename is not null && mXmlDoc is not null)
             {
                 var fi = new FileInfo(OutputFilename);
@@ -559,6 +583,7 @@ namespace ParamFileGenerator
         //{
         //    if (!Initialized)
         //        throw new IniFileReaderNotInitializedException();
+        //
         //    try
         //    {
         //        var xsl = new XslTransform();
@@ -582,6 +607,7 @@ namespace ParamFileGenerator
             {
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
+
                 return mXmlDoc;
             }
         }
@@ -592,6 +618,7 @@ namespace ParamFileGenerator
             {
                 if (!Initialized)
                     throw new IniFileReaderNotInitializedException();
+
                 var sb = new StringBuilder();
                 var sw = new StringWriter(sb);
                 var xw = new XmlTextWriter(sw)

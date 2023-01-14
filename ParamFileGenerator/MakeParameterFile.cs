@@ -136,7 +136,7 @@ namespace ParamFileGenerator.MakeParams
 
         private bool GetMonoMassStatus(int DatasetID, string dmsConnectionString)
         {
-            var typeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + DatasetID.ToString();
+            var typeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + DatasetID;
             return GetMonoParentStatusWorker(typeCheckSQL, dmsConnectionString);
         }
 

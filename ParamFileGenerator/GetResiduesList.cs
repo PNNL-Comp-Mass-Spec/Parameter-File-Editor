@@ -12,15 +12,15 @@ namespace ParamFileGenerator
         /// <returns></returns>
         public Dictionary<char, Dictionary<char, int>> ResidueAtomCounts { get; }
 
-#pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+#pragma warning disable CS3001 // Argument type is not CLS-compliant
         public GetResiduesList(IDBTools dbTools)
-#pragma warning restore CS3001 // Type of parameter is not CLS-compliant
+#pragma warning restore CS3001 // Argument type is not CLS-compliant
         {
             ResidueAtomCounts = new Dictionary<char, Dictionary<char, int>>();
 
-            var sql = "SELECT residue_id, residue_symbol, description, average_mass, " +
-                      "monoisotopic_mass, num_c, num_h, num_n, num_o, num_s " +
-                      "FROM V_Residues WHERE num_c > 0";
+            const string sql = "SELECT residue_id, residue_symbol, description, average_mass, " +
+                                      "monoisotopic_mass, num_c, num_h, num_n, num_o, num_s " +
+                               "FROM V_Residues WHERE num_c > 0";
 
             dbTools.GetQueryResults(sql, out var residuesTable);
 

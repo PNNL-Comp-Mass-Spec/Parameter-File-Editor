@@ -51,6 +51,7 @@ namespace ParamFileGenerator
             var s = mIniFileReader.GetIniValue(section, item);
             if (s is null)
                 throw new Exception("No ini value for parameter '" + item + "'");
+
             return s;
         }
 

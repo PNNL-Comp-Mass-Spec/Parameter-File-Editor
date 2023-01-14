@@ -160,7 +160,7 @@ namespace ParamFileGenerator.DownloadParams
         private readonly List<string> mIonSeriesParams;
         private DataTable mMassMods;
 
-        public bool ParamFileTableLoaded => mParamFileTable is not null && mParamFileTable.Rows.Count > 0;
+        public bool ParamFileTableLoaded => mParamFileTable?.Rows.Count > 0;
 
 #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
         public ParamsFromDMS(IDBTools dbTools) : base(dbTools)
@@ -258,82 +258,56 @@ namespace ParamFileGenerator.DownloadParams
         {
             var eParamFileType = GetTypeWithName(name);
 
-            if (eParamFileType == eParamFileTypeConstants.Unknown)
-            {
-                Console.WriteLine("Parameter file " + name + "  was not found in table " + Param_File_Table);
-                return -1;
-            }
+            if (eParamFileType != eParamFileTypeConstants.Unknown)
+                return GetIDWithName(name, eParamFileType);
 
-            return GetIDWithName(name, eParamFileType);
+            Console.WriteLine("Parameter file " + name + "  was not found in table " + Param_File_Table);
+            return -1;
         }
 
         private List<string> LoadAcceptableParamList()
         {
             var paramEnum = Enum.GetNames(typeof(AcceptableParams));
-            var paramList = new List<string>();
 
-            foreach (var param in paramEnum)
-            {
-                paramList.Add(param);
-            }
-
-            return paramList;
+            return paramEnum.ToList();
         }
 
         private List<string> LoadBasicParams()
         {
             var paramEnum = Enum.GetNames(typeof(BasicParams));
-            var paramList = new List<string>();
 
-            foreach (var param in paramEnum)
-            {
-                paramList.Add(param);
-            }
-
-            return paramList;
+            return paramEnum.ToList();
         }
 
         private List<string> LoadAdvancedParams()
         {
             var paramEnum = Enum.GetNames(typeof(AdvancedParams));
-            var paramList = new List<string>();
 
-            foreach (var param in paramEnum)
-            {
-                paramList.Add(param);
-            }
-
-            return paramList;
+            return paramEnum.ToList();
         }
 
         private List<string> LoadIonSeriesParams()
         {
             var paramEnum = Enum.GetNames(typeof(IonSeriesParams));
-            var paramList = new List<string>();
 
-            foreach (var param in paramEnum)
-            {
-                paramList.Add(param);
-            }
-
-            return paramList;
+            return paramEnum.ToList();
         }
 
         private bool GetParamsFromDMS()
         {
             // SQL to grab param file table
             // The ID column is named param_file_id
-            var query1 = "SELECT param_file_id, param_file_name, param_file_description, param_file_type_id " +
-                         "FROM " + Param_File_Table;
+            const string query1 = "SELECT param_file_id, param_file_name, param_file_description, param_file_type_id " +
+                                  "FROM " + Param_File_Table;
             // Optional: " WHERE param_file_type_id = 1000"
 
             mParamFileTable = GetTable(query1);
 
             // SQL to grab param entry table
             // The ID column is named param_entry_id
-            var query2 = "SELECT param_entry_id, entry_sequence_order, entry_type, entry_specifier, entry_value, param_file_id " +
-                         "FROM " + Param_Entry_Table + " " +
-                         "WHERE entry_type not like '%Modification'";
+            const string query2 = "SELECT param_entry_id, entry_sequence_order, entry_type, entry_specifier, entry_value, param_file_id " +
+                                  "FROM " + Param_Entry_Table + " " +
+                                  "WHERE entry_type not like '%Modification'";
 
             mParamEntryTable = GetTable(query2);
 
@@ -342,8 +316,7 @@ namespace ParamFileGenerator.DownloadParams
 
         private Params RetrieveParams(int paramSetID, eParamFileTypeConstants eParamFileType)
         {
-            var p = GetParamSetWithID(paramSetID, eParamFileType);
-            return p;
+            return GetParamSetWithID(paramSetID, eParamFileType);
         }
 
         // TODO Fix this function for new mod handling
@@ -380,6 +353,7 @@ namespace ParamFileGenerator.DownloadParams
         {
             var storageClass = new List<ParamsEntry>();
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var foundRow in foundRows)
             {
                 var param = new ParamsEntry(
@@ -393,7 +367,7 @@ namespace ParamFileGenerator.DownloadParams
             return storageClass;
         }
 
-        private List<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType)
+        private IEnumerable<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType)
         {
             const int MaxDynMods = 15;
             var paramList = new List<ParamsEntry>();
@@ -411,6 +385,7 @@ namespace ParamFileGenerator.DownloadParams
 
             var lstLocalSymbolIDs = new List<int>();
 
+            // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (eParamFileType)
             {
                 case eParamFileTypeConstants.Sequest:
@@ -421,6 +396,7 @@ namespace ParamFileGenerator.DownloadParams
                     lstLocalSymbolIDs.Add(11);  // ~
                     lstLocalSymbolIDs.Add(4);   // $
                     break;
+
                 case eParamFileTypeConstants.XTandem:
                     lstLocalSymbolIDs.Add(1);   // *
                     lstLocalSymbolIDs.Add(2);   // #
@@ -432,29 +408,31 @@ namespace ParamFileGenerator.DownloadParams
                     break;
             }
 
-            for (var intSymbolID = 1; intSymbolID <= MaxDynMods; intSymbolID++)
+            for (var symbolID = 1; symbolID <= MaxDynMods; symbolID++)
             {
-                if (!lstLocalSymbolIDs.Contains(intSymbolID))
+                if (!lstLocalSymbolIDs.Contains(symbolID))
                 {
-                    lstLocalSymbolIDs.Add(intSymbolID);
+                    lstLocalSymbolIDs.Add(symbolID);
                 }
             }
 
             foreach (var intSymbolID in lstLocalSymbolIDs)
             {
                 foundRows = mMassMods.Select("mod_type_symbol = 'D' AND local_symbol_id = " + intSymbolID + " AND residue_symbol <> '<' AND residue_symbol <> '>'", "local_symbol_id");
-                if (foundRows.Length > 0)
-                {
-                    var param = new ParamsEntry(
-                        GetDynModSpecifier(foundRows),
-                        foundRows[0]["monoisotopic_mass"].ToString(),
-                        ParamTypes.DynamicModification);
-                    paramList.Add(param);
-                }
+
+                if (foundRows.Length == 0)
+                    continue;
+
+                var param = new ParamsEntry(
+                    GetDynModSpecifier(foundRows),
+                    foundRows[0]["monoisotopic_mass"].ToString(),
+                    ParamTypes.DynamicModification);
+                paramList.Add(param);
             }
 
             // Find N-Term Dynamic Mods
             foundRows = mMassMods.Select("mod_type_symbol = 'D' AND residue_symbol = '<'");
+
             if (foundRows.Length > 0)
             {
                 var param = new ParamsEntry(
@@ -466,6 +444,7 @@ namespace ParamFileGenerator.DownloadParams
 
             // Find C-Term Dynamic Mods
             foundRows = mMassMods.Select("mod_type_symbol = 'D' AND residue_symbol = '>'");
+
             if (foundRows.Length > 0)
             {
                 var param = new ParamsEntry(
@@ -482,23 +461,15 @@ namespace ParamFileGenerator.DownloadParams
             foreach (var currentFoundRow in foundRows)
             {
                 foundRow = currentFoundRow;
-                var tmpSpec = "";
 
-                switch (foundRow["residue_symbol"].ToString())
+                var tmpSpec = foundRow["residue_symbol"].ToString() switch
                 {
-                    case "<":
-                        tmpSpec = "N_Term_Peptide";
-                        break;
-                    case ">":
-                        tmpSpec = "C_Term_Peptide";
-                        break;
-                    case "[":
-                        tmpSpec = "N_Term_Protein";
-                        break;
-                    case "]":
-                        tmpSpec = "C_Term_Protein";
-                        break;
-                }
+                    "<" => "N_Term_Peptide",
+                    ">" => "C_Term_Peptide",
+                    "[" => "N_Term_Protein",
+                    "]" => "C_Term_Protein",
+                    _ => string.Empty
+                };
 
                 var param = new ParamsEntry(
                     tmpSpec,
@@ -539,78 +510,57 @@ namespace ParamFileGenerator.DownloadParams
 
                 return tmpSpec;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         private int GetIDWithName(string name, eParamFileTypeConstants eParamFileType)
         {
-            var foundRows = mParamFileTable.Select("param_file_name = '" + name + "' AND param_file_type_id = " + ((int)eParamFileType).ToString());
-            int tmpID;
-            if (foundRows.Length > 0)
+            var foundRows = mParamFileTable.Select("param_file_name = '" + name + "' AND param_file_type_id = " + (int)eParamFileType);
+
+            if (foundRows.Length == 0)
             {
-                var foundRow = foundRows[0];
-                tmpID = Params.SafeCastInt(foundRow["param_file_id"]);
+                return -1;
             }
-            else
-            {
-                tmpID = -1;
-            }
-            return tmpID;
+
+            var foundRow = foundRows[0];
+            return Params.SafeCastInt(foundRow["param_file_id"]);
         }
 
         private eParamFileTypeConstants GetTypeWithID(int paramFileID)
         {
-            var foundRows = mParamFileTable.Select("param_file_id = " + paramFileID.ToString());
-            eParamFileTypeConstants tmpID;
+            var foundRows = mParamFileTable.Select("param_file_id = " + paramFileID);
+
             if (foundRows.Length > 0)
             {
                 var foundRow = foundRows[0];
-                tmpID = (eParamFileTypeConstants)Params.SafeCastInt(foundRow["param_file_type_id"]);
+                return (eParamFileTypeConstants)Params.SafeCastInt(foundRow["param_file_type_id"]);
             }
-            else
-            {
-                tmpID = eParamFileTypeConstants.None;
-            }
-            return tmpID;
+
+            return eParamFileTypeConstants.None;
         }
 
         private eParamFileTypeConstants GetTypeWithName(string paramFileName)
         {
             var foundRows = mParamFileTable.Select("param_file_name = '" + paramFileName + "'");
-            eParamFileTypeConstants tmpID;
+
             if (foundRows.Length > 0)
             {
                 var foundRow = foundRows[0];
-                tmpID = (eParamFileTypeConstants)Params.SafeCastInt(foundRow["param_file_type_id"]);
+                return (eParamFileTypeConstants)Params.SafeCastInt(foundRow["param_file_type_id"]);
             }
-            else
-            {
-                tmpID = eParamFileTypeConstants.None;
-            }
-            return tmpID;
+
+            return eParamFileTypeConstants.None;
         }
 
         private string GetDescriptionWithID(int paramFileID)
         {
-            if (GetParamFileRowByID(paramFileID, out var matchingRow))
-            {
-                var tmpString = matchingRow["param_file_description"].ToString();
-                if (string.IsNullOrWhiteSpace(tmpString))
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    return tmpString;
-                }
-            }
-            else
-            {
+            if (!GetParamFileRowByID(paramFileID, out var matchingRow))
                 return string.Empty;
-            }
+
+            var tmpString = matchingRow["param_file_description"].ToString();
+
+            return string.IsNullOrWhiteSpace(tmpString) ? string.Empty : tmpString;
         }
 
         /// <summary>
@@ -647,14 +597,14 @@ namespace ParamFileGenerator.DownloadParams
                 "  param_file_description AS diffs, " +
                 "  param_file_type_id AS type_id " +
                 "FROM " + Param_File_Table + " " +
-                "WHERE param_file_type_id = " + ((int)eParamFileTypeConstants.Sequest).ToString() +
-                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.XTandem).ToString() +
-                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MSGFDB).ToString() +
-                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MSPathFinder).ToString() +
-                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MODPlus).ToString() +
-                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.TopPIC).ToString() +
-                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MSFragger).ToString() +
-                "   or param_file_type_id = " + ((int)eParamFileTypeConstants.MaxQuant).ToString();
+                "WHERE param_file_type_id = " + (int)eParamFileTypeConstants.Sequest +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.XTandem +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.MSGFDB +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.MSPathFinder +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.MODPlus +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.TopPIC +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.MSFragger +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.MaxQuant;
 
             var tmpIDTable = GetTable(paramTableSQL);
 
@@ -663,20 +613,21 @@ namespace ParamFileGenerator.DownloadParams
             {
                 var tmpType = (int)dr["type_id"];
 
-                if (tmpType == (int)eParamFileTypeConstants.Sequest)
-                {
-                    var tmpID = (int)dr["id"];
-                    var tmpDiffs = (string)dr["diffs"];
-                    if (tmpDiffs is null)
-                    {
-                        var eParamFileTypeID = (eParamFileTypeConstants)tmpType;
+                if (tmpType != (int)eParamFileTypeConstants.Sequest)
+                    continue;
 
-                        tmpDiffs = DistillFeaturesFromParamSet(tmpID, eParamFileTypeID);
+                var tmpID = (int)dr["id"];
+                var tmpDiffs = (string)dr["diffs"];
 
-                        dr["diffs"] = tmpDiffs;
-                        dr.AcceptChanges();
-                    }
-                }
+                if (tmpDiffs is not null)
+                    continue;
+
+                var paramFileTypeID = (eParamFileTypeConstants)tmpType;
+
+                tmpDiffs = DistillFeaturesFromParamSet(tmpID, paramFileTypeID);
+
+                dr["diffs"] = tmpDiffs;
+                dr.AcceptChanges();
             }
 
             return tmpIDTable;
@@ -686,12 +637,10 @@ namespace ParamFileGenerator.DownloadParams
 
         private DataTable GetParamFileTypes()
         {
-            var tableTypesSQL = "SELECT param_file_type_id AS id, param_file_type AS type " +
-                                "FROM " + Param_File_Type_Table;
+            const string tableTypesSQL = "SELECT param_file_type_id AS id, param_file_type AS type " +
+                                         "FROM " + Param_File_Type_Table;
 
-            var tmpTypeTable = GetTable(tableTypesSQL);
-
-            return tmpTypeTable;
+            return GetTable(tableTypesSQL);
         }
 
         protected string DistillFeaturesFromParamSet(Params paramSet)
@@ -715,36 +664,38 @@ namespace ParamFileGenerator.DownloadParams
             var c = new List<ParamsEntry>();
 
             var pType = paramSet.GetType();
-            var pProps = pType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            foreach (var pProp in pProps)
+            foreach (var pProp in pType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 var tmpName = pProp.Name;
                 var tmpType = pProp.PropertyType;
-                if (mAcceptableParams.Contains(tmpName))
+
+                if (!mAcceptableParams.Contains(tmpName))
+                    continue;
+
+                switch (tmpType.Name)
                 {
-                    if (tmpType.Name == "IonSeries")
-                    {
+                    case "IonSeries":
                         c.AddRange(ExpandIonSeries(paramSet.IonSeries));
-                    }
-                    else if (tmpType.Name == "IsoMods")
-                    {
+                        break;
+
+                    case "IsoMods":
                         c.AddRange(ExpandIsoTopicMods(paramSet.IsotopicModificationsList));
-                    }
-                    else if (tmpType.Name == "DynamicMods")
-                    {
+                        break;
+
+                    case "DynamicMods":
                         c.AddRange(ExpandDynamicMods(paramSet.DynamicMods, ParamTypes.DynamicModification));
-                    }
-                    else if (tmpType.Name == "TermDynamicMods")
-                    {
+                        break;
+
+                    case "TermDynamicMods":
                         c.AddRange(ExpandDynamicMods(paramSet.TermDynamicMods, ParamTypes.TermDynamicModification));
-                    }
-                    else if (tmpType.Name == "StaticMods")
-                    {
+                        break;
+
+                    case "StaticMods":
                         c.AddRange(ExpandStaticMods(paramSet.StaticModificationsList));
-                    }
-                    else
-                    {
+                        break;
+
+                    default:
                         var tmpValue = pProp.GetValue(paramSet, null).ToString();
                         if (mBasicParams.Contains(tmpName))
                         {
@@ -754,19 +705,21 @@ namespace ParamFileGenerator.DownloadParams
                         {
                             c.Add(new ParamsEntry(tmpName, tmpValue, ParamTypes.AdvancedParam));
                         }
-                    }
+
+                        break;
                 }
             }
 
             return c;
         }
 
-        private Params UpdateParamSetFromDataCollection(IReadOnlyList<ParamsEntry> dc)
+        private Params UpdateParamSetFromDataCollection(IEnumerable<ParamsEntry> dc)
         {
             var p = new Params();
 
             // p = MainProcess.BaseLineParamSet
             p.LoadTemplate(MainProcess.TemplateFileName);
+
             var pType = typeof(Params);
             var pFields = pType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             PropertyInfo pField = null;
@@ -800,40 +753,43 @@ namespace ParamFileGenerator.DownloadParams
                     foreach (var currentPField in pFields)
                     {
                         pField = currentPField;
-                        if ((pField.Name) == (tmpSpec ?? ""))
-                        {
-                            var tmpTypeName = pField.PropertyType.Name;
-                            if (tmpTypeName == "Int32")
-                            {
-                                pField.SetValue(p, valueInteger, null);
-                            }
-                            else if (tmpTypeName == "Single")
-                            {
-                                pField.SetValue(p, (float)valueDouble, null);
-                            }
-                            else if (tmpTypeName == "String")
-                            {
-                                pField.SetValue(p, tmpValue, null);
-                            }
-                            else if (tmpTypeName == "Boolean")
-                            {
-                                pField.SetValue(p, valueBool, null);
-                            }
-                            else if (tmpTypeName == "MassTypeList")
-                            {
-                                pField.SetValue(p, (IBasicParams.MassTypeList)Enum.Parse(typeof(IBasicParams.MassTypeList), tmpValue, true), null);
-                            }
-                            else if (tmpTypeName == "MassUnitList")
-                            {
-                                pField.SetValue(p, (IAdvancedParams.MassUnitList)Enum.Parse(typeof(IAdvancedParams.MassUnitList), tmpValue, true), null);
-                            }
-                            else
-                            {
-                                Console.WriteLine(pField.PropertyType.Name);
-                            }
+                        if (pField.Name != (tmpSpec ?? ""))
+                            continue;
 
-                            break;
+                        var tmpTypeName = pField.PropertyType.Name;
+
+                        switch (tmpTypeName)
+                        {
+                            case "Int32":
+                                pField.SetValue(p, valueInteger, null);
+                                break;
+
+                            case "Single":
+                                pField.SetValue(p, (float)valueDouble, null);
+                                break;
+
+                            case "String":
+                                pField.SetValue(p, tmpValue, null);
+                                break;
+
+                            case "Boolean":
+                                pField.SetValue(p, valueBool, null);
+                                break;
+
+                            case "MassTypeList":
+                                pField.SetValue(p, (IBasicParams.MassTypeList)Enum.Parse(typeof(IBasicParams.MassTypeList), tmpValue, true), null);
+                                break;
+
+                            case "MassUnitList":
+                                pField.SetValue(p, (IAdvancedParams.MassUnitList)Enum.Parse(typeof(IAdvancedParams.MassUnitList), tmpValue, true), null);
+                                break;
+
+                            default:
+                                Console.WriteLine(pField.PropertyType.Name);
+                                break;
                         }
+
+                        break;
                     }
                 }
                 else if (tmpType == ParamTypes.AdvancedParam &&
@@ -842,32 +798,33 @@ namespace ParamFileGenerator.DownloadParams
                     foreach (var currentPField1 in pFields)
                     {
                         pField = currentPField1;
-                        if ((pField.Name) == (tmpSpec ?? ""))
-                        {
-                            var tmpTypeName = pField.PropertyType.Name;
-                            if (tmpTypeName == "Int32")
-                            {
-                                pField.SetValue(p, valueInteger, null);
-                            }
-                            else if (tmpTypeName == "Single")
-                            {
-                                pField.SetValue(p, (float)valueDouble, null);
-                            }
-                            else if (tmpTypeName == "String")
-                            {
-                                pField.SetValue(p, tmpValue, null);
-                            }
-                            else if (tmpTypeName == "Boolean")
-                            {
-                                pField.SetValue(p, valueBool, null);
-                            }
-                            else
-                            {
-                                Console.WriteLine(pField.PropertyType.Name);
-                            }
+                        if (pField.Name != (tmpSpec ?? ""))
+                            continue;
 
-                            break;
+                        switch (pField.PropertyType.Name)
+                        {
+                            case "Int32":
+                                pField.SetValue(p, valueInteger, null);
+                                break;
+
+                            case "Single":
+                                pField.SetValue(p, (float)valueDouble, null);
+                                break;
+
+                            case "String":
+                                pField.SetValue(p, tmpValue, null);
+                                break;
+
+                            case "Boolean":
+                                pField.SetValue(p, valueBool, null);
+                                break;
+
+                            default:
+                                Console.WriteLine(pField.PropertyType.Name);
+                                break;
                         }
+
+                        break;
                     }
                 }
                 else if (tmpType == ParamTypes.AdvancedParam &&
@@ -875,34 +832,36 @@ namespace ParamFileGenerator.DownloadParams
                 {
                     foreach (var ionField in ionFields)
                     {
-                        if ((ionField.Name) == (tmpSpec ?? ""))
+                        if (ionField.Name != (tmpSpec ?? ""))
+                            continue;
+
+                        var tmpTypeName = ionField.PropertyType.Name;
+
+                        if (tmpTypeName == "Int32")
                         {
-                            var tmpTypeName = ionField.PropertyType.Name;
-                            if (tmpTypeName == "Int32")
-                            {
-                                ionField.SetValue(p.IonSeries, valueInteger, null);
-                                break;
-                            }
-                            else if (tmpTypeName == "Single")
-                            {
-                                ionField.SetValue(p.IonSeries, (float)valueDouble, null);
-                                break;
-                            }
-                            else if (tmpTypeName == "String")
-                            {
-                                ionField.SetValue(p.IonSeries, tmpValue, null);
-                                break;
-                            }
-                            else if (tmpTypeName == "Boolean")
-                            {
-                                ionField.SetValue(p.IonSeries, valueBool, null);
-                                break;
-                            }
-                            else
-                            {
-                                Console.WriteLine(pField.PropertyType.Name);
-                            }
+                            ionField.SetValue(p.IonSeries, valueInteger, null);
+                            break;
                         }
+
+                        if (tmpTypeName == "Single")
+                        {
+                            ionField.SetValue(p.IonSeries, (float)valueDouble, null);
+                            break;
+                        }
+
+                        if (tmpTypeName == "String")
+                        {
+                            ionField.SetValue(p.IonSeries, tmpValue, null);
+                            break;
+                        }
+
+                        if (tmpTypeName == "Boolean")
+                        {
+                            ionField.SetValue(p.IonSeries, valueBool, null);
+                            break;
+                        }
+
+                        Console.WriteLine(pField.PropertyType.Name);
                     }
                 }
                 else if (tmpType == ParamTypes.DynamicModification)
@@ -926,7 +885,7 @@ namespace ParamFileGenerator.DownloadParams
             return p;
         }
 
-        private List<ParamsEntry> ExpandDynamicMods(DynamicMods dynModSet, ParamTypes eDynModType)
+        private IEnumerable<ParamsEntry> ExpandDynamicMods(DynamicMods dynModSet, ParamTypes dynModType)
         {
             var maxCount = dynModSet.Count;
             var paramList = new List<ParamsEntry>();
@@ -936,11 +895,11 @@ namespace ParamFileGenerator.DownloadParams
                 return paramList;
             }
 
-            if (eDynModType != ParamTypes.DynamicModification &&
-                eDynModType != ParamTypes.TermDynamicModification)
+            if (dynModType != ParamTypes.DynamicModification &&
+                dynModType != ParamTypes.TermDynamicModification)
             {
                 // This is unexpected; force eDynModType to be .DynamicModification
-                eDynModType = ParamTypes.DynamicModification;
+                dynModType = ParamTypes.DynamicModification;
             }
 
             for (var counter = 1; counter < maxCount; counter++)
@@ -948,14 +907,15 @@ namespace ParamFileGenerator.DownloadParams
                 var param = new ParamsEntry(
                     dynModSet.Dyn_Mod_n_AAList(counter),
                     dynModSet.Dyn_Mod_n_MassDiff(counter).ToString("0.00000"),
-                    eDynModType);
+                    dynModType);
+
                 paramList.Add(param);
             }
 
             return paramList;
         }
 
-        private List<ParamsEntry> ExpandStaticMods(StaticMods statModSet)
+        private IEnumerable<ParamsEntry> ExpandStaticMods(StaticMods statModSet)
         {
             var maxCount = statModSet.Count;
             var paramList = new List<ParamsEntry>();
@@ -971,13 +931,14 @@ namespace ParamFileGenerator.DownloadParams
                     statModSet.GetResidue(counter),
                     statModSet.GetMassDiff(counter),
                     ParamTypes.StaticModification);
+
                 paramList.Add(param);
             }
 
             return paramList;
         }
 
-        private List<ParamsEntry> ExpandIsoTopicMods(IsoMods isoModSet)
+        private IEnumerable<ParamsEntry> ExpandIsoTopicMods(IsoMods isoModSet)
         {
             var maxCount = isoModSet.Count;
             var paramList = new List<ParamsEntry>();
@@ -999,13 +960,13 @@ namespace ParamFileGenerator.DownloadParams
             return paramList;
         }
 
-        private List<ParamsEntry> ExpandIonSeries(IonSeries ionSeriesSet)
+        private IEnumerable<ParamsEntry> ExpandIonSeries(IonSeries ionSeriesSet)
         {
             var pType = typeof(IonSeries);
             var paramList = new List<ParamsEntry>();
-            var pFields = pType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-            foreach (var pField in pFields)
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var pField in pType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 var param = new ParamsEntry(
                     pField.Name,
@@ -1041,9 +1002,10 @@ namespace ParamFileGenerator.DownloadParams
             }
 
             var tmpID = GetIDWithName(paramSetName, eParamFileType);
+
             if (tmpID < 0)
             {
-                Console.WriteLine("Parameter file " + paramSetName + " with type ID " + eParamFileType.ToString() + " was not found in table " + Param_File_Table);
+                Console.WriteLine("Parameter file " + paramSetName + " with type ID " + eParamFileType + " was not found in table " + Param_File_Table);
                 return false;
             }
 
@@ -1097,14 +1059,8 @@ namespace ParamFileGenerator.DownloadParams
                 if (double.TryParse(tmpValue, out var dblValue))
                 {
                     tmpValueFormatted = dblValue.ToString("0.0000");
-                    if (dblValue > 0d)
-                    {
-                        tmpSign = "+";
-                    }
-                    else
-                    {
-                        tmpSign = "";
-                    }
+
+                    tmpSign = dblValue > 0d ? "+" : string.Empty;
                 }
                 else
                 {
@@ -1112,73 +1068,79 @@ namespace ParamFileGenerator.DownloadParams
                     tmpSign = "";
                 }
 
-                if (tmpType == ParamTypes.StaticModification)
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+                switch (tmpType)
                 {
-                    if (tmpStatModsList is null)
-                    {
-                        tmpStatModsList = new Queue();
-                        tmpStatModsList.Enqueue("Static Mods: ");
-                    }
-                    tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
-                }
-                else if (tmpType == ParamTypes.DynamicModification)
-                {
-                    if (tmpDynModsList is null)
-                    {
-                        tmpDynModsList = new Queue();
-                        tmpDynModsList.Enqueue("Dynamic Mods: ");
-                    }
-                    tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                    case ParamTypes.StaticModification:
+                        if (tmpStatModsList is null)
+                        {
+                            tmpStatModsList = new Queue();
+                            tmpStatModsList.Enqueue("Static Mods: ");
+                        }
 
-                    intDynModCount++;
-                }
-                else if (tmpType == ParamTypes.TermDynamicModification)
-                {
-                    if (tmpSpec == "<")
-                    {
-                        tmpSpec = "N-Term Peptide";
-                    }
-                    else if (tmpSpec == ">")
-                    {
-                        tmpSpec = "C-Term Peptide";
-                    }
+                        tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                        break;
 
-                    if (tmpTermDynModsList is null)
-                    {
-                        tmpTermDynModsList = new Queue();
-                        tmpTermDynModsList.Enqueue("PepTerm Dynamic Mods: ");
-                    }
-                    tmpTermDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                    case ParamTypes.DynamicModification:
+                        if (tmpDynModsList is null)
+                        {
+                            tmpDynModsList = new Queue();
+                            tmpDynModsList.Enqueue("Dynamic Mods: ");
+                        }
 
-                    intTermDynModCount++;
-                }
-                else if (tmpType == ParamTypes.IsotopicModification)
-                {
-                    if (string.IsNullOrEmpty(tmpIsoMods))
-                    {
-                        tmpIsoMods = "Isotopic Mods: ";
-                    }
+                        tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
 
-                    if (tmpIsoModsList is null)
-                    {
-                        tmpIsoModsList = new Queue();
-                        tmpIsoModsList.Enqueue(tmpIsoMods);
-                    }
-                    tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
-                }
-                else
-                {
-                    if (string.IsNullOrEmpty(tmpOtherParams))
-                    {
-                        tmpOtherParams = "Other Parameters: ";
-                    }
+                        intDynModCount++;
+                        break;
 
-                    if (tmpOtherParamsList is null)
-                    {
-                        tmpOtherParamsList = new Queue();
-                        tmpOtherParamsList.Enqueue(tmpOtherParams);
-                    }
-                    tmpOtherParamsList.Enqueue(tmpSpec + " = " + tmpValue);
+                    case ParamTypes.TermDynamicModification:
+                        var tmpSpecToUse = tmpSpec switch
+                        {
+                            "<" => "N-Term Peptide",
+                            ">" => "C-Term Peptide",
+                            _ => tmpSpec
+                        };
+
+                        if (tmpTermDynModsList is null)
+                        {
+                            tmpTermDynModsList = new Queue();
+                            tmpTermDynModsList.Enqueue("PepTerm Dynamic Mods: ");
+                        }
+
+                        tmpTermDynModsList.Enqueue(tmpSpecToUse + " (" + tmpSign + tmpValueFormatted + ")");
+
+                        intTermDynModCount++;
+                        break;
+
+                    case ParamTypes.IsotopicModification:
+                        if (string.IsNullOrEmpty(tmpIsoMods))
+                        {
+                            tmpIsoMods = "Isotopic Mods: ";
+                        }
+
+                        if (tmpIsoModsList is null)
+                        {
+                            tmpIsoModsList = new Queue();
+                            tmpIsoModsList.Enqueue(tmpIsoMods);
+                        }
+
+                        tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                        break;
+
+                    default:
+                        if (string.IsNullOrEmpty(tmpOtherParams))
+                        {
+                            tmpOtherParams = "Other Parameters: ";
+                        }
+
+                        if (tmpOtherParamsList is null)
+                        {
+                            tmpOtherParamsList = new Queue();
+                            tmpOtherParamsList.Enqueue(tmpOtherParams);
+                        }
+
+                        tmpOtherParamsList.Enqueue(tmpSpec + " = " + tmpValue);
+                        break;
                 }
             }
 
@@ -1205,43 +1167,43 @@ namespace ParamFileGenerator.DownloadParams
             return tmpString;
         }
 
-        private string MakeListOfMods(string strModDescriptionPrevious, Queue objModList, bool blnAddTitlePrefix)
+        private string MakeListOfMods(string modDescriptionPrevious, Queue objModList, bool addTitlePrefix)
         {
-            strModDescriptionPrevious ??= "";
+            modDescriptionPrevious ??= "";
             if (objModList is null)
             {
-                return strModDescriptionPrevious;
+                return modDescriptionPrevious;
             }
 
-            if (objModList.Count > 0)
+            if (objModList.Count <= 0)
+                return modDescriptionPrevious;
+
+            if (modDescriptionPrevious.Length > 0)
+                modDescriptionPrevious += ", ";
+
+            var tmpElement = "";
+            var elementTitle = objModList.Dequeue().ToString();
+            while (objModList.Count > 0)
             {
-                if (strModDescriptionPrevious.Length > 0)
-                    strModDescriptionPrevious += ", ";
-
-                var tmpElement = "";
-                var elementTitle = objModList.Dequeue().ToString();
-                while (objModList.Count > 0)
-                {
-                    var subItem = objModList.Dequeue().ToString();
-                    if (tmpElement.Length > 0)
-                        tmpElement += ", ";
-                    tmpElement += subItem;
-                }
-
-                if (blnAddTitlePrefix)
-                {
-                    strModDescriptionPrevious += elementTitle + tmpElement;
-                }
-                else
-                {
-                    strModDescriptionPrevious += tmpElement;
-                }
+                var subItem = objModList.Dequeue().ToString();
+                if (tmpElement.Length > 0)
+                    tmpElement += ", ";
+                tmpElement += subItem;
             }
 
-            return strModDescriptionPrevious;
+            if (addTitlePrefix)
+            {
+                modDescriptionPrevious += elementTitle + tmpElement;
+            }
+            else
+            {
+                modDescriptionPrevious += tmpElement;
+            }
+
+            return modDescriptionPrevious;
         }
 
-        private List<ParamsEntry> CompareDataCollections(IReadOnlyList<ParamsEntry> templateColl, IReadOnlyList<ParamsEntry> checkColl)
+        private List<ParamsEntry> CompareDataCollections(IReadOnlyList<ParamsEntry> templateColl, IEnumerable<ParamsEntry> checkColl)
         {
             var diffColl = new List<ParamsEntry>();
 

@@ -159,7 +159,7 @@ namespace ParamFileGenerator
             foreach (var item in mAAMappingTable)
             {
                 var resString = item.Key;
-                if ((singleLetterAA ?? "") == (resString.Substring(0, 1)) && !resString.Contains("Term"))
+                if ((singleLetterAA ?? "") == resString.Substring(0, 1) && !resString.Contains("Term"))
                 {
                     return (ResidueCode)Enum.Parse(typeof(ResidueCode), resString);
                 }

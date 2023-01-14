@@ -57,21 +57,15 @@ namespace ParamFileGenerator
 
         private string GetModTypeSymbol()
         {
-            switch (ModificationType)
+            return ModificationType switch
             {
-                case ModificationTypes.Dynamic:
-                    return "D";
-                case ModificationTypes.Static:
-                    return "S";
-                case ModificationTypes.Isotopic:
-                    return "I";
-                case ModificationTypes.TermPep:
-                    return "T";
-                case ModificationTypes.TermProt:
-                    return "P";
-                default:
-                    return null;
-            }
+                ModificationTypes.Dynamic => "D",
+                ModificationTypes.Static => "S",
+                ModificationTypes.Isotopic => "I",
+                ModificationTypes.TermPep => "T",
+                ModificationTypes.TermProt => "P",
+                _ => null
+            };
         }
 
         public ModEntry(List<string> affectedResidueList, double massDiff, ModificationTypes modType, int modID = 0)

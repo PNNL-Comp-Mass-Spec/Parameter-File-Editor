@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ParamFileGenerator
@@ -36,7 +37,7 @@ namespace ParamFileGenerator
                         continue;
                     }
 
-                    if ((dataLine) == ("[" + mSectionName + "]"))
+                    if (dataLine == "[" + mSectionName + "]")
                     {
                         while (!reader.EndOfStream)
                         {
@@ -96,8 +97,8 @@ namespace ParamFileGenerator
 
             foreach (var s in enzymeBlock)
             {
-                var sTmp = s.Substring(0, s.IndexOf(" ") + 1);
-                if (sTmp.IndexOf(". ") >= 0)
+                var sTmp = s.Substring(0, s.IndexOf(" ", StringComparison.Ordinal) + 1);
+                if (sTmp.IndexOf(". ", StringComparison.Ordinal) >= 0)
                 {
                     var tempEnzyme = new EnzymeDetails(s);
                     enzymeInfo.Add(tempEnzyme);

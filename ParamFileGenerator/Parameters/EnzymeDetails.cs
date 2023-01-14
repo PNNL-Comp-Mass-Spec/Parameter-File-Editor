@@ -42,9 +42,9 @@ namespace ParamFileGenerator
 
         public string ReturnEnzymeString()
         {
-            var s = EnzymeID.ToString() + ".";
+            var s = EnzymeID + ".";
             s = s.PadRight(4, Convert.ToChar(" ")) + EnzymeName;
-            s = s.PadRight(30, Convert.ToChar(" ")) + EnzymeCleaveOffset.ToString();
+            s = s.PadRight(30, Convert.ToChar(" ")) + EnzymeCleaveOffset;
             s = s.PadRight(35, Convert.ToChar(" ")) + EnzymeCleavePoints;
             s = s.PadRight(48, Convert.ToChar(" ")) + EnzymeNoCleavePoints;
 

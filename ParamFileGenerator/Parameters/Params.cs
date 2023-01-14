@@ -128,7 +128,7 @@ namespace ParamFileGenerator
 
         public List<EnzymeDetails> EnzymeList { get; set; }
 
-        public Hashtable LoadedParamNames { get; set; } = new Hashtable();
+        public Hashtable LoadedParamNames { get; set; } = new();
 
         public void AddLoadedParamName(string parameterName, string parameterValue)
         {
@@ -195,37 +195,39 @@ namespace ParamFileGenerator
             PartialSequenceToMatch = mFullTemplate.GetParam("partial_sequence");
             DynamicMods = new DynamicMods(mFullTemplate.GetParam("diff_search_options"));
             TermDynamicMods = new TermDynamicMods(mFullTemplate.GetParam("term_diff_search_options"));
-            StaticModificationsList = new StaticMods();
 
-            // Get Static Mods
-            StaticModificationsList.CtermPeptide = SafeCastDouble(mFullTemplate.GetParam("add_Cterm_peptide"));
-            StaticModificationsList.CtermProtein = SafeCastDouble(mFullTemplate.GetParam("add_Cterm_protein"));
-            StaticModificationsList.NtermPeptide = SafeCastDouble(mFullTemplate.GetParam("add_Nterm_peptide"));
-            StaticModificationsList.NtermProtein = SafeCastDouble(mFullTemplate.GetParam("add_Nterm_protein"));
-            StaticModificationsList.G_Glycine = SafeCastDouble(mFullTemplate.GetParam("add_G_Glycine"));
-            StaticModificationsList.A_Alanine = SafeCastDouble(mFullTemplate.GetParam("add_A_Alanine"));
-            StaticModificationsList.S_Serine = SafeCastDouble(mFullTemplate.GetParam("add_S_Serine"));
-            StaticModificationsList.P_Proline = SafeCastDouble(mFullTemplate.GetParam("add_P_Proline"));
-            StaticModificationsList.V_Valine = SafeCastDouble(mFullTemplate.GetParam("add_V_Valine"));
-            StaticModificationsList.T_Threonine = SafeCastDouble(mFullTemplate.GetParam("add_T_Threonine"));
-            StaticModificationsList.C_Cysteine = SafeCastDouble(mFullTemplate.GetParam("add_C_Cysteine"));
-            StaticModificationsList.L_Leucine = SafeCastDouble(mFullTemplate.GetParam("add_L_Leucine"));
-            StaticModificationsList.I_Isoleucine = SafeCastDouble(mFullTemplate.GetParam("add_I_Isoleucine"));
-            StaticModificationsList.X_LorI = SafeCastDouble(mFullTemplate.GetParam("add_X_LorI"));
-            StaticModificationsList.N_Asparagine = SafeCastDouble(mFullTemplate.GetParam("add_N_Asparagine"));
-            StaticModificationsList.O_Ornithine = SafeCastDouble(mFullTemplate.GetParam("add_O_Ornithine"));
-            StaticModificationsList.B_avg_NandD = SafeCastDouble(mFullTemplate.GetParam("add_B_avg_NandD"));
-            StaticModificationsList.D_Aspartic_Acid = SafeCastDouble(mFullTemplate.GetParam("add_D_Aspartic_Acid"));
-            StaticModificationsList.Q_Glutamine = SafeCastDouble(mFullTemplate.GetParam("add_Q_Glutamine"));
-            StaticModificationsList.K_Lysine = SafeCastDouble(mFullTemplate.GetParam("add_K_Lysine"));
-            StaticModificationsList.Z_avg_QandE = SafeCastDouble(mFullTemplate.GetParam("add_Z_avg_QandE"));
-            StaticModificationsList.E_Glutamic_Acid = SafeCastDouble(mFullTemplate.GetParam("add_E_Glutamic_Acid"));
-            StaticModificationsList.M_Methionine = SafeCastDouble(mFullTemplate.GetParam("add_M_Methionine"));
-            StaticModificationsList.H_Histidine = SafeCastDouble(mFullTemplate.GetParam("add_H_Histidine"));
-            StaticModificationsList.F_Phenylalanine = SafeCastDouble(mFullTemplate.GetParam("add_F_Phenylalanine"));
-            StaticModificationsList.R_Arginine = SafeCastDouble(mFullTemplate.GetParam("add_R_Arginine"));
-            StaticModificationsList.Y_Tyrosine = SafeCastDouble(mFullTemplate.GetParam("add_Y_Tyrosine"));
-            StaticModificationsList.W_Tryptophan = SafeCastDouble(mFullTemplate.GetParam("add_W_Tryptophan"));
+            StaticModificationsList = new StaticMods
+            {
+                // Get Static Mods
+                CtermPeptide = SafeCastDouble(mFullTemplate.GetParam("add_Cterm_peptide")),
+                CtermProtein = SafeCastDouble(mFullTemplate.GetParam("add_Cterm_protein")),
+                NtermPeptide = SafeCastDouble(mFullTemplate.GetParam("add_Nterm_peptide")),
+                NtermProtein = SafeCastDouble(mFullTemplate.GetParam("add_Nterm_protein")),
+                G_Glycine = SafeCastDouble(mFullTemplate.GetParam("add_G_Glycine")),
+                A_Alanine = SafeCastDouble(mFullTemplate.GetParam("add_A_Alanine")),
+                S_Serine = SafeCastDouble(mFullTemplate.GetParam("add_S_Serine")),
+                P_Proline = SafeCastDouble(mFullTemplate.GetParam("add_P_Proline")),
+                V_Valine = SafeCastDouble(mFullTemplate.GetParam("add_V_Valine")),
+                T_Threonine = SafeCastDouble(mFullTemplate.GetParam("add_T_Threonine")),
+                C_Cysteine = SafeCastDouble(mFullTemplate.GetParam("add_C_Cysteine")),
+                L_Leucine = SafeCastDouble(mFullTemplate.GetParam("add_L_Leucine")),
+                I_Isoleucine = SafeCastDouble(mFullTemplate.GetParam("add_I_Isoleucine")),
+                X_LorI = SafeCastDouble(mFullTemplate.GetParam("add_X_LorI")),
+                N_Asparagine = SafeCastDouble(mFullTemplate.GetParam("add_N_Asparagine")),
+                O_Ornithine = SafeCastDouble(mFullTemplate.GetParam("add_O_Ornithine")),
+                B_avg_NandD = SafeCastDouble(mFullTemplate.GetParam("add_B_avg_NandD")),
+                D_Aspartic_Acid = SafeCastDouble(mFullTemplate.GetParam("add_D_Aspartic_Acid")),
+                Q_Glutamine = SafeCastDouble(mFullTemplate.GetParam("add_Q_Glutamine")),
+                K_Lysine = SafeCastDouble(mFullTemplate.GetParam("add_K_Lysine")),
+                Z_avg_QandE = SafeCastDouble(mFullTemplate.GetParam("add_Z_avg_QandE")),
+                E_Glutamic_Acid = SafeCastDouble(mFullTemplate.GetParam("add_E_Glutamic_Acid")),
+                M_Methionine = SafeCastDouble(mFullTemplate.GetParam("add_M_Methionine")),
+                H_Histidine = SafeCastDouble(mFullTemplate.GetParam("add_H_Histidine")),
+                F_Phenylalanine = SafeCastDouble(mFullTemplate.GetParam("add_F_Phenylalanine")),
+                R_Arginine = SafeCastDouble(mFullTemplate.GetParam("add_R_Arginine")),
+                Y_Tyrosine = SafeCastDouble(mFullTemplate.GetParam("add_Y_Tyrosine")),
+                W_Tryptophan = SafeCastDouble(mFullTemplate.GetParam("add_W_Tryptophan"))
+            };
 
             // add code to check for existence of isotopic mods
 
@@ -299,7 +301,7 @@ namespace ParamFileGenerator
             {
                 if (s.Contains(";DMS_Description = "))
                 {
-                    return s.Substring(s.IndexOf(" = ") + 3);
+                    return s.Substring(s.IndexOf(" = ", StringComparison.Ordinal) + 3);
                 }
                 s = tr.ReadLine();
             }
@@ -321,11 +323,9 @@ namespace ParamFileGenerator
                     type = ParamFileTypes.BioWorks_31;
                     return type;
                 }
-                else
-                {
-                    type = ParamFileTypes.BioWorks_20;
-                    return type;
-                }
+
+                type = ParamFileTypes.BioWorks_20;
+                return type;
             }
 
             return default;

@@ -57,7 +57,7 @@ namespace ParamFileGenerator
             paramList.Add("peptide_mass_tolerance = " + paramsIn.PeptideMassTolerance.ToString("0.0000"));
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
-                paramList.Add("peptide_mass_units = " + paramsIn.PeptideMassUnits.ToString());
+                paramList.Add("peptide_mass_units = " + paramsIn.PeptideMassUnits);
             }
 
             paramList.Add("ion_series = " + paramsIn.IonSeries.ReturnIonString());
@@ -70,29 +70,29 @@ namespace ParamFileGenerator
                 // In fact, it's possible it completely ignores the fragment_ion_units entry in the .params file
                 // Thus, it is advisable you always use fragment_ion_units = 0  (which means Da)
 
-                paramList.Add("fragment_ion_units = " + paramsIn.FragmentMassUnits.ToString());
+                paramList.Add("fragment_ion_units = " + paramsIn.FragmentMassUnits);
             }
 
-            paramList.Add("num_output_lines = " + paramsIn.NumberOfOutputLines.ToString());
+            paramList.Add("num_output_lines = " + paramsIn.NumberOfOutputLines);
             if ((int)type == (int)Params.ParamFileTypes.BioWorks_30 || type == IGenerateFile.ParamFileType.BioWorks_31 || type == IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("num_results = " + paramsIn.NumberOfResultsToProcess);
             }
 
-            paramList.Add("num_description_lines = " + paramsIn.NumberOfDescriptionLines.ToString());
+            paramList.Add("num_description_lines = " + paramsIn.NumberOfDescriptionLines);
             //if ((int)type == (int)Params.ParamFileTypes.BioWorks_30 || type == IGenerateFile.ParamFileType.BioWorks_31 || type == IGenerateFile.ParamFileType.BioWorks_32)
             //{
             //    paramList.add("show_fragment_ions = 0");
             //}
             //else
             //{
-            paramList.Add("show_fragment_ions = " + ConvertBoolToInteger(paramsIn.ShowFragmentIons).ToString());
+            paramList.Add("show_fragment_ions = " + ConvertBoolToInteger(paramsIn.ShowFragmentIons));
             //}
-            paramList.Add("print_duplicate_references = " + ConvertBoolToInteger(paramsIn.PrintDuplicateReferences).ToString());
+            paramList.Add("print_duplicate_references = " + ConvertBoolToInteger(paramsIn.PrintDuplicateReferences));
 
             if (type != IGenerateFile.ParamFileType.BioWorks_32)
             {
-                paramList.Add("enzyme_number = " + paramsIn.SelectedEnzymeIndex.ToString());
+                paramList.Add("enzyme_number = " + paramsIn.SelectedEnzymeIndex);
             }
             else
             {
@@ -100,15 +100,17 @@ namespace ParamFileGenerator
                 {
                     throw new IndexOutOfRangeException("Enzyme ID " + paramsIn.SelectedEnzymeIndex + " is not recognized; template file is out of date");
                 }
+
                 var enz = paramsIn.EnzymeList[paramsIn.SelectedEnzymeIndex];
+
                 paramList.Add("enzyme_info = " + enz.ReturnBW32EnzymeInfoString(paramsIn.SelectedEnzymeCleavagePosition));
             }
 
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
-                paramList.Add("max_num_differential_per_peptide = " + paramsIn.MaximumNumDifferentialPerPeptide.ToString());
+                paramList.Add("max_num_differential_per_peptide = " + paramsIn.MaximumNumDifferentialPerPeptide);
             }
-            paramList.Add("max_num_differential_AA_per_mod = " + paramsIn.MaximumNumAAPerDynMod.ToString());
+            paramList.Add("max_num_differential_AA_per_mod = " + paramsIn.MaximumNumAAPerDynMod);
 
             paramList.Add("diff_search_options = " + paramsIn.DynamicMods.ReturnDynModString(maxDynMods));
 
@@ -116,25 +118,25 @@ namespace ParamFileGenerator
 
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
-                paramList.Add("use_phospho_fragmentation = " + paramsIn.UsePhosphoFragmentation.ToString());
+                paramList.Add("use_phospho_fragmentation = " + paramsIn.UsePhosphoFragmentation);
             }
 
-            paramList.Add("nucleotide_reading_frame = " + ((int)paramsIn.SelectedNucReadingFrame).ToString());
-            paramList.Add("mass_type_parent = " + ((int)paramsIn.ParentMassType).ToString());
-            paramList.Add("mass_type_fragment = " + ((int)paramsIn.FragmentMassType).ToString());
+            paramList.Add("nucleotide_reading_frame = " + (int)paramsIn.SelectedNucReadingFrame);
+            paramList.Add("mass_type_parent = " + (int)paramsIn.ParentMassType);
+            paramList.Add("mass_type_fragment = " + (int)paramsIn.FragmentMassType);
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("normalize_xcorr = " + "0");
             }
 
-            paramList.Add("remove_precursor_peak = " + ConvertBoolToInteger(paramsIn.RemovePrecursorPeak).ToString());
+            paramList.Add("remove_precursor_peak = " + ConvertBoolToInteger(paramsIn.RemovePrecursorPeak));
             paramList.Add("ion_cutoff_percentage = " + paramsIn.IonCutoffPercentage.ToString("0.0000"));
-            paramList.Add("max_num_internal_cleavage_sites = " + paramsIn.MaximumNumberMissedCleavages.ToString());
+            paramList.Add("max_num_internal_cleavage_sites = " + paramsIn.MaximumNumberMissedCleavages);
             paramList.Add("protein_mass_filter = " + paramsIn.ReturnMassFilter(paramsIn.MinimumProteinMassToSearch, paramsIn.MaximumProteinMassToSearch));
-            paramList.Add("match_peak_count = " + paramsIn.NumberOfDetectedPeaksToMatch.ToString());
-            paramList.Add("match_peak_allowed_error = " + paramsIn.NumberOfAllowedDetectedPeakErrors.ToString());
+            paramList.Add("match_peak_count = " + paramsIn.NumberOfDetectedPeaksToMatch);
+            paramList.Add("match_peak_allowed_error = " + paramsIn.NumberOfAllowedDetectedPeakErrors);
             paramList.Add("match_peak_tolerance = " + paramsIn.MatchedPeakMassTolerance.ToString("0.0000"));
-            paramList.Add("create_output_files = " + ConvertBoolToInteger(paramsIn.CreateOutputFiles).ToString());
+            paramList.Add("create_output_files = " + ConvertBoolToInteger(paramsIn.CreateOutputFiles));
 
             //paramList.add("residues_in_upper_case = " + ConvertBoolToInteger(params.AminoAcidsAllUpperCase).ToString());
             paramList.Add("partial_sequence = " + paramsIn.PartialSequenceToMatch);

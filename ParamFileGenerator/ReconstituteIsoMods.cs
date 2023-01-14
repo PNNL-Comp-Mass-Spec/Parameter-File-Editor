@@ -30,13 +30,14 @@ namespace ParamFileGenerator
         /// Constructor
         /// </summary>
         /// <param name="dbTools"></param>
-#pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+#pragma warning disable CS3001 // Argument type is not CLS-compliant
         public ReconstituteIsoMods(IDBTools dbTools)
-#pragma warning restore CS3001 // Type of parameter is not CLS-compliant
+#pragma warning restore CS3001 // Argument type is not CLS-compliant
         {
             var getResTable = new GetResiduesList(dbTools);
             mResidueAtomCounts = getResTable.ResidueAtomCounts;
         }
+
         internal Params ReconIsoMods(Params paramsClass)
         {
             return StreamlineIsoModsToStatics(paramsClass, paramsClass.IsotopicModificationsList);
@@ -46,14 +47,14 @@ namespace ParamFileGenerator
 
         protected int GetMultiplier(char aa, AvailableAtoms atom)
         {
-            if (mResidueAtomCounts.TryGetValue(aa, out var atomCounts))
-            {
-                var atomSymbol = atom.ToString()[0];
+            if (!mResidueAtomCounts.TryGetValue(aa, out var atomCounts))
+                return 0;
 
-                if (atomCounts.TryGetValue(atomSymbol, out var atomCount))
-                {
-                    return atomCount;
-                }
+            var atomSymbol = atom.ToString()[0];
+
+            if (atomCounts.TryGetValue(atomSymbol, out var atomCount))
+            {
+                return atomCount;
             }
 
             return 0;
