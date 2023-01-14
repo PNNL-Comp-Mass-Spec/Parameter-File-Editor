@@ -271,8 +271,12 @@ namespace ParamFileGenerator.DownloadParams
         {
             var paramEnum = Enum.GetNames(typeof(AcceptableParams));
             var paramList = new List<string>();
+
             foreach (var param in paramEnum)
+            {
                 paramList.Add(param);
+            }
+
             return paramList;
         }
 
@@ -280,8 +284,12 @@ namespace ParamFileGenerator.DownloadParams
         {
             var paramEnum = Enum.GetNames(typeof(BasicParams));
             var paramList = new List<string>();
+
             foreach (var param in paramEnum)
+            {
                 paramList.Add(param);
+            }
+
             return paramList;
         }
 
@@ -289,8 +297,12 @@ namespace ParamFileGenerator.DownloadParams
         {
             var paramEnum = Enum.GetNames(typeof(AdvancedParams));
             var paramList = new List<string>();
+
             foreach (var param in paramEnum)
+            {
                 paramList.Add(param);
+            }
+
             return paramList;
         }
 
@@ -298,8 +310,12 @@ namespace ParamFileGenerator.DownloadParams
         {
             var paramEnum = Enum.GetNames(typeof(IonSeriesParams));
             var paramList = new List<string>();
+
             foreach (var param in paramEnum)
+            {
                 paramList.Add(param);
+            }
+
             return paramList;
         }
 
@@ -353,7 +369,9 @@ namespace ParamFileGenerator.DownloadParams
             p.Description = SummarizeDiffColl(storageSet);
 
             foreach (var paramRow in foundRows)
+            {
                 p.AddLoadedParamName(paramRow["entry_specifier"].ToString(), paramRow["entry_value"].ToString());
+            }
 
             return p;
         }
@@ -512,7 +530,10 @@ namespace ParamFileGenerator.DownloadParams
             if (rowSet.Length > 0)               // We have dynamic mods
             {
                 foreach (var foundRow in rowSet)
+                {
                     tmpSpec += foundRow["residue_symbol"].ToString();
+                }
+
                 return tmpSpec;
             }
             else

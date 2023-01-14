@@ -411,7 +411,10 @@ namespace ParamFileGenerator.MakeParams
 
             var retrievedParamSets = dmsParams.RetrieveAvailableParams();
             foreach (DataRow dr in retrievedParamSets.Rows)
+            {
                 availableParamSets.Add(dr["FileName"].ToString());
+            }
+
             return availableParamSets;
         }
 

@@ -294,7 +294,9 @@ namespace ParamFileGenerator
             sections = new List<string>();
 
             foreach (XmlElement item in mXmlDoc.SelectNodes("sections/section"))
+            {
                 sections.Add(item.GetAttribute("name"));
+            }
         }
 
         public List<string> AllSections

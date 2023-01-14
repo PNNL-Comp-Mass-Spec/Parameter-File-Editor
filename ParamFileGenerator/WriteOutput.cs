@@ -21,7 +21,9 @@ namespace ParamFileGenerator
                 writer.WriteLine(string.Join("\t", headerNames));
 
                 foreach (var tableRow in tableToWrite)
+                {
                     writer.WriteLine(string.Join("\t", tableRow));
+                }
             }
         }
 
@@ -179,7 +181,9 @@ namespace ParamFileGenerator
             {
                 paramList.Add("[SEQUEST_ENZYME_INFO]");
                 foreach (var item in paramsIn.EnzymeList)
+                {
                     paramList.Add(item.ReturnEnzymeString());
+                }
             }
 
             return paramList;
@@ -190,7 +194,9 @@ namespace ParamFileGenerator
             using (var writer = new StreamWriter(outputPath))
             {
                 foreach (var item in paramList)
+                {
                     writer.WriteLine(item);
+                }
             }
         }
 
