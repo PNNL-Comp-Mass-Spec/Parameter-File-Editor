@@ -526,11 +526,11 @@ namespace ParamFileGenerator.DownloadParams
             return paramList;
         }
 
-        private string GetDynModSpecifier(DataRow[] rowSet)
+        private string GetDynModSpecifier(IReadOnlyCollection<DataRow> rowSet)
         {
             var tmpSpec = "";
 
-            if (rowSet.Length > 0)               // We have dynamic mods
+            if (rowSet.Count > 0)               // We have dynamic mods
             {
                 foreach (var foundRow in rowSet)
                 {
