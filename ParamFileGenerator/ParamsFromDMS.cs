@@ -482,7 +482,8 @@ namespace ParamFileGenerator.DownloadParams
             foreach (var currentFoundRow in foundRows)
             {
                 foundRow = currentFoundRow;
-                string tmpSpec = "";
+                var tmpSpec = "";
+
                 switch (foundRow["residue_symbol"].ToString())
                 {
                     case "<":
@@ -503,6 +504,7 @@ namespace ParamFileGenerator.DownloadParams
                     tmpSpec,
                     foundRow["monoisotopic_mass"].ToString(),
                     ParamTypes.StaticModification);
+
                 paramList.Add(param);
             }
 
@@ -517,6 +519,7 @@ namespace ParamFileGenerator.DownloadParams
                     foundRow["affected_atom"].ToString(),
                     foundRow["monoisotopic_mass"].ToString(),
                     ParamTypes.IsotopicModification);
+
                 paramList.Add(param);
             }
 

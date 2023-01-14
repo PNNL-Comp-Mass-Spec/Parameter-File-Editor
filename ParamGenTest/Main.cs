@@ -73,6 +73,7 @@ namespace ParamGenTest
             }
 
             int datasetID;
+
             if (!string.IsNullOrEmpty(txtDatasetID.Text))
             {
                 datasetID = Params.SafeCastInt(txtDatasetID.Text);
@@ -81,7 +82,9 @@ namespace ParamGenTest
             {
                 datasetID = -1;
             }
-            bool success = mDMS.MakeFile(mParamFileName, mParamFileType, mFASTAPath, mOutputPath, mDMSConnectString, datasetID);
+
+            var success = mDMS.MakeFile(mParamFileName, mParamFileType, mFASTAPath, mOutputPath, mDMSConnectString, datasetID);
+
             if (success)
             {
                 txtResults.Text = "File successfully written to: " + Path.Combine(mOutputPath, mParamFileName);
@@ -155,7 +158,7 @@ namespace ParamGenTest
             {
                 mCurrentConnectionString = string.Copy(mDMSConnectString);
 
-                string connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(mCurrentConnectionString, "ParameterFileEditor_ParamGenTest");
+                var connectionStringToUse = DbToolsFactory.AddApplicationNameToConnectionString(mCurrentConnectionString, "ParameterFileEditor_ParamGenTest");
 
                 mCurrentDBTools = DbToolsFactory.GetDBTools(connectionStringToUse);
             }
@@ -184,8 +187,10 @@ namespace ParamGenTest
             cboAvailableParams.Items.Clear();
             txtParamFileName.Text = string.Empty;
 
-            foreach (DataRow dr in foundRows)
+            foreach (var dr in foundRows)
+            {
                 cboAvailableParams.Items.Add(new ParamFileEntry(Params.SafeCastInt(dr["ID"]), dr["Filename"].ToString()));
+            }
 
             cboAvailableParams.DisplayMember = "Description";
             cboAvailableParams.ValueMember = "Value";
@@ -208,7 +213,7 @@ namespace ParamGenTest
 
             foreach (DataRow currentRow in paramFileTypes.Rows)
             {
-                int paramFileTypeID = int.Parse(currentRow[0].ToString());
+                var paramFileTypeID = int.Parse(currentRow[0].ToString());
 
                 if (!mSupportedParamFileTypeIDs.Contains(paramFileTypeID))
                 {
