@@ -24,7 +24,8 @@ namespace ParamFileGenerator
 
         //private const string DEF_TEMPLATE_LABEL_TEXT = "Currently Loaded Template: ";
         private const string DEF_TEMPLATE_FILENAME = "sequest_N14_NE.params";
-        private static readonly string DEF_TEMPLATE_FILEPATH = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+        private static readonly string DEF_TEMPLATE_FILEPATH = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
 
         //public static Settings mySettings;
 
