@@ -85,5 +85,10 @@ namespace ParamFileGenerator.Modifications
         {
             RemoveResidue(residueToRemove);
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} mod on {1}, {2} Da", ModificationType, string.Join(string.Empty, ResidueCollection), MassDifference);
+        }
     }
 }
