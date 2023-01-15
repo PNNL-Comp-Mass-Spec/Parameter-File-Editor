@@ -94,9 +94,9 @@ namespace ParamFileGenerator
             string dmsConnectionString,
             string datasetName)
         {
-            var forceMonoStatus = GetMonoMassStatus(datasetName, dmsConnectionString);
+            var forceMonoParentMass = IsSequestParamFile(paramFileType) && GetMonoMassStatus(datasetName, dmsConnectionString);
 
-            return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus);
+            return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoParentMass);
         }
 
         /// <summary>
@@ -118,9 +118,9 @@ namespace ParamFileGenerator
             string dmsConnectionString,
             int datasetID)
         {
-            var forceMonoStatus = GetMonoMassStatus(datasetID, dmsConnectionString);
+            var forceMonoParentMass = IsSequestParamFile(paramFileType) && GetMonoMassStatus(datasetID, dmsConnectionString);
 
-            return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus);
+            return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoParentMass);
         }
 
         /// <summary>
@@ -223,6 +223,36 @@ namespace ParamFileGenerator
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Check whether paramFileType is a SEQUEST parameter file
+        /// </summary>
+        /// <param name="paramFileType"></param>
+        /// <returns>True if SEQUEST, otherwise false</returns>
+        private static bool IsSequestParamFile(IGenerateFile.ParamFileType paramFileType)
+        {
+            return paramFileType switch
+            {
+                IGenerateFile.ParamFileType.X_Tandem => false,
+                IGenerateFile.ParamFileType.Inspect => false,
+                IGenerateFile.ParamFileType.MODa => false,
+                IGenerateFile.ParamFileType.MSGFPlus => false,
+                IGenerateFile.ParamFileType.MSAlign => false,
+                IGenerateFile.ParamFileType.MSAlignHistone => false,
+                IGenerateFile.ParamFileType.MSPathFinder => false,
+                IGenerateFile.ParamFileType.MODPlus => false,
+                IGenerateFile.ParamFileType.TopPIC => false,
+                IGenerateFile.ParamFileType.MSFragger => false,
+                IGenerateFile.ParamFileType.MaxQuant => false,
+                IGenerateFile.ParamFileType.Invalid => false,
+                IGenerateFile.ParamFileType.BioWorks_20 => true,
+                IGenerateFile.ParamFileType.BioWorks_30 => true,
+                IGenerateFile.ParamFileType.BioWorks_31 => true,
+                IGenerateFile.ParamFileType.BioWorks_32 => true,
+                IGenerateFile.ParamFileType.BioWorks_Current => true,
+                _ => false
+            };
         }
 
         /// <summary>
