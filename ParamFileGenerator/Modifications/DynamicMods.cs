@@ -43,7 +43,10 @@ namespace ParamFileGenerator.Modifications
             ParseDynModString(dynamicModString);
         }
 
-        public DynamicMods() : base()
+        /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public DynamicMods()
         {
         }
 

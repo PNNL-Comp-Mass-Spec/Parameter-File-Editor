@@ -173,10 +173,6 @@ namespace ParamFileGenerator.Modifications
             set => ChangeAAMod(ResidueCode.W_Tryptophan, value);
         }
 
-        public StaticMods() : base()
-        {
-        }
-
         public string GetResidue(int index)
         {
             var m = this[index];

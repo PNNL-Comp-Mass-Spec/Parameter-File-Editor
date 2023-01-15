@@ -13,7 +13,7 @@ namespace ParamGenTest
     {
         // Ignore Spelling: SEQUEST
 
-        public Main() : base()
+        public Main()
         {
             // This call is required by the Windows Form Designer.
             InitializeComponent();

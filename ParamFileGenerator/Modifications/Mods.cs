@@ -58,7 +58,10 @@ namespace ParamFileGenerator.Modifications
             return base[index];
         }
 
-        public Mods() : base()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Mods()
         {
             LoadAAMappingColl();
         }

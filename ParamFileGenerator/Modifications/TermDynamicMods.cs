@@ -10,7 +10,11 @@ namespace ParamFileGenerator.Modifications
         public const string NTERM_SYMBOL = "<";
         public const string CTERM_SYMBOL = ">";
 
-        public TermDynamicMods(string termDynModString) : base()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="termDynModString"></param>
+        public TermDynamicMods(string termDynModString)
         {
             ParseDynModString(termDynModString);
         }
