@@ -185,7 +185,7 @@ namespace ParamFileGenerator
 
                     default:
                         paramFileType = IGenerateFile.ParamFileType.BioWorks_32;
-                        return MakeFileSQL(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoParentMass);
+                        return MakeSequestParamFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoParentMass);
                 }
             }
             catch (Exception ex)
@@ -195,9 +195,9 @@ namespace ParamFileGenerator
             }
         }
 
-        private bool GetMonoMassStatus(int DatasetID, string dmsConnectionString)
+        private bool GetMonoMassStatus(int datasetID, string dmsConnectionString)
         {
-            var typeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + DatasetID;
+            var typeCheckSQL = "SELECT use_mono_parent FROM V_Analysis_Job_Use_Mono_Mass WHERE dataset_id = " + datasetID;
             return GetMonoParentStatusWorker(typeCheckSQL, dmsConnectionString);
         }
 
@@ -264,9 +264,14 @@ namespace ParamFileGenerator
         /// <param name="outputFilePath"></param>
         /// <param name="dmsConnectionString"></param>
         /// <param name="forceMonoParentMass"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        private bool MakeFileSQL(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, bool forceMonoParentMass)
+        /// <returns>True if successful, false if an error</returns>
+        private bool MakeSequestParamFile(
+            string paramFileName,
+            IGenerateFile.ParamFileType paramFileType,
+            string fastaFilePath,
+            string outputFilePath,
+            string dmsConnectionString,
+            bool forceMonoParentMass)
         {
             if (mDbTools is null)
             {
