@@ -24,10 +24,10 @@ namespace ParamFileGenerator
     {
         private string mIniFilename;
         private XmlDocument mXmlDoc;
-        private List<string> sections = new List<string>();
-        private bool mCaseSensitive = false;
+        private List<string> sections = new();
+        private bool mCaseSensitive;
         private string mSaveFilename;
-        private bool mInitialized = false;
+        private bool mInitialized;
 
         public IniFileReader(string settingsFileName)
         {
