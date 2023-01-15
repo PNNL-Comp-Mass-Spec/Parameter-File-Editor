@@ -52,7 +52,7 @@ namespace ParamFileGenerator
 
             foreach (var resultRow in residuesTable)
             {
-                var residueSymbol = dbTools.GetColumnValue(resultRow, columnMap, "Residue_Symbol");
+                var residueSymbol = dbTools.GetColumnValue(resultRow, columnMap, "residue_symbol");
 
                 var atomCountsForResidue = new Dictionary<char, int>();
 
@@ -60,7 +60,7 @@ namespace ParamFileGenerator
                 // This for loop access columns Num_C, Num_H, Num_N, etc.
                 foreach (var elementSymbol in elementSymbols)
                 {
-                    var columnName = "Num_" + elementSymbol;
+                    var columnName = ("Num_" + elementSymbol).ToLower();
                     var elementCount = dbTools.GetColumnValue(resultRow, columnMap, columnName);
 
                     if (int.TryParse(elementCount, out var elementCountVal))
