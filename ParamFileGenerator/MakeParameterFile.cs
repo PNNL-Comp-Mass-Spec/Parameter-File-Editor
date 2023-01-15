@@ -34,13 +34,17 @@ namespace ParamFileGenerator
             MaxQuant = 15
         }
 
+        // ReSharper disable once UnusedMember.Global
         bool MakeFile(string paramFileName, ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString);
 
         bool MakeFile(string paramFileName, ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, int datasetID);
 
+        // ReSharper disable once UnusedMember.Global
         bool MakeFile(string paramFileName, ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, string datasetName);
 
 #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
+
+        // ReSharper disable once UnusedMember.Global
         List<string> GetAvailableParamSetNames(IDBTools dbTools);
 
         DataTable GetAvailableParamSetTable(IDBTools dbTools);
