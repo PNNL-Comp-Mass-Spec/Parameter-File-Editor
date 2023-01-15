@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ParamFileGenerator
+namespace ParamFileGenerator.Modifications
 {
     public class Mods : List<ModEntry>
     {

@@ -4,7 +4,7 @@ using System.Data;
 using System.IO;
 using System.Windows.Forms;
 using ParamFileGenerator;
-using ParamFileGenerator.MakeParams;
+using ParamFileGenerator.Parameters;
 using PRISMDatabaseUtils;
 
 namespace ParamGenTest

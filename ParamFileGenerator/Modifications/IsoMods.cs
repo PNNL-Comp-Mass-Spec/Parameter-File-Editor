@@ -1,4 +1,4 @@
-﻿namespace ParamFileGenerator
+﻿namespace ParamFileGenerator.Modifications
 {
     public class IsoMods : Mods
     {

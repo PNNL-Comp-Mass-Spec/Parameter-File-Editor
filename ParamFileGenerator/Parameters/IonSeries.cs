@@ -1,4 +1,4 @@
-﻿namespace ParamFileGenerator
+﻿namespace ParamFileGenerator.Parameters
 {
     public class IonSeries
     {

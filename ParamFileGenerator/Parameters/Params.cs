@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using ParamFileGenerator.Modifications;
 
-namespace ParamFileGenerator
+namespace ParamFileGenerator.Parameters
 {
     public class Params : IBasicParams, IAdvancedParams
     {

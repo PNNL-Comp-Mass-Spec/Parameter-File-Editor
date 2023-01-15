@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace ParamFileGenerator
+namespace ParamFileGenerator.Modifications
 {
     public class DynamicMods : Mods
     {

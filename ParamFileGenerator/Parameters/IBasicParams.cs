@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using ParamFileGenerator.Modifications;
 
-namespace ParamFileGenerator
+namespace ParamFileGenerator.Parameters
 {
     public interface IBasicParams
     {

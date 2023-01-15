@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using ParamFileGenerator.Modifications;
+using ParamFileGenerator.Parameters;
 using PRISMDatabaseUtils;
 
-namespace ParamFileGenerator.DownloadParams
+namespace ParamFileGenerator
 {
     public class ParamsFromDMS : DBTask
     {

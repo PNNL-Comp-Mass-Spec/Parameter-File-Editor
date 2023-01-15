@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ParamFileGenerator.MakeParams;
+using ParamFileGenerator.Parameters;
 
 namespace ParamFileGenerator
 {

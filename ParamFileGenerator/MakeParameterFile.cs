@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using ParamFileGenerator.DownloadParams;
+using ParamFileGenerator.Parameters;
 using PRISM;
 using PRISMDatabaseUtils;
 
-// ReSharper disable once CheckNamespace
-namespace ParamFileGenerator.MakeParams
+namespace ParamFileGenerator
 {
     public interface IGenerateFile
     {

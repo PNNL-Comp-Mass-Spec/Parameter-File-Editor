@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ParamFileGenerator.Modifications;
+using ParamFileGenerator.Parameters;
 using PRISMDatabaseUtils;
 
 namespace ParamFileGenerator

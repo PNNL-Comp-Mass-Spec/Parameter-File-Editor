@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace ParamFileGenerator
+namespace ParamFileGenerator.Modifications
 {
     public class StaticMods : Mods
     {

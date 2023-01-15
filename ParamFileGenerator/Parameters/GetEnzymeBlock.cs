@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ParamFileGenerator
+namespace ParamFileGenerator.Parameters
 {
     public class GetEnzymeBlockType
     {
