@@ -11,11 +11,17 @@ namespace ParamFileGenerator
         //private IAdvancedParams advTemplate;
 
         //private string mSettingsFileName = "ParamFileEditorSettings.xml";
+
         private static string mTemplateFileName;
+
         private static string mTemplateFilePath;
+
         //private UpdateModsTable mModsUpdate;
+
         //private MainProcess mMainProcess;
+
         private static Params mBaseLineParams;
+
         //private const string DEF_TEMPLATE_LABEL_TEXT = "Currently Loaded Template: ";
         private const string DEF_TEMPLATE_FILENAME = "sequest_N14_NE.params";
         private static readonly string DEF_TEMPLATE_FILEPATH = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -26,6 +32,9 @@ namespace ParamFileGenerator
 
         public static string TemplateFileName => Path.Combine(mTemplateFilePath, Path.GetFileName(mTemplateFileName));
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainProcess()
         {
             mTemplateFileName = Path.Combine(DEF_TEMPLATE_FILEPATH, DEF_TEMPLATE_FILENAME);
@@ -36,6 +45,10 @@ namespace ParamFileGenerator
             mBaseLineParams.LoadTemplate(mTemplateFileName);
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="templateFilePath"></param>
         public MainProcess(string templateFilePath)
         {
             mTemplateFileName = templateFilePath;

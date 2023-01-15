@@ -42,8 +42,11 @@ namespace ParamFileGenerator
 
 #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
         List<string> GetAvailableParamSetNames(IDBTools dbTools);
+
         DataTable GetAvailableParamSetTable(IDBTools dbTools);
+
         DataTable GetAvailableParamFileTypes(IDBTools dbTools);
+
 #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
 
         string LastError { get; }
@@ -58,26 +61,85 @@ namespace ParamFileGenerator
 
         private string LastErrorMsg { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Retrieve or create the specified parameter file
+        /// </summary>
+        /// <param name="paramFileName">Parameter file name</param>
+        /// <param name="paramFileType">Parameter file type</param>
+        /// <param name="fastaFilePath">FASTA file path</param>
+        /// <param name="outputFilePath">Output file path</param>
+        /// <param name="dmsConnectionString">DMS connection string</param>
+        /// <returns>True if successful, false if an error</returns>
         public bool MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString)
         {
             return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, false);
         }
 
-        public bool MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, string datasetName)
+        /// <summary>
+        /// Retrieve or create the specified parameter file
+        /// </summary>
+        /// <param name="paramFileName">Parameter file name</param>
+        /// <param name="paramFileType">Parameter file type</param>
+        /// <param name="fastaFilePath">FASTA file path</param>
+        /// <param name="outputFilePath">Output file path</param>
+        /// <param name="dmsConnectionString">DMS connection string</param>
+        /// <param name="datasetName">Dataset name</param>
+        /// <remarks>Uses the dataset name to lookup the value of use_mono_parent in view V_Analysis_Job_Use_Mono_Mass (SEQUEST only)</remarks>
+        /// <returns>True if successful, false if an error</returns>
+        public bool MakeFile(
+            string paramFileName,
+            IGenerateFile.ParamFileType paramFileType,
+            string fastaFilePath,
+            string outputFilePath,
+            string dmsConnectionString,
+            string datasetName)
         {
             var forceMonoStatus = GetMonoMassStatus(datasetName, dmsConnectionString);
 
             return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus);
         }
 
-        public bool MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, int datasetID)
+        /// <summary>
+        /// Retrieve or create the specified parameter file
+        /// </summary>
+        /// <param name="paramFileName">Parameter file name</param>
+        /// <param name="paramFileType">Parameter file type</param>
+        /// <param name="fastaFilePath">FASTA file path</param>
+        /// <param name="outputFilePath">Output file path</param>
+        /// <param name="dmsConnectionString">DMS connection string</param>
+        /// <param name="datasetID">Dataset ID</param>
+        /// <remarks>Uses the dataset ID to lookup the value of use_mono_parent in view V_Analysis_Job_Use_Mono_Mass (SEQUEST only)</remarks>
+        /// <returns>True if successful, false if an error</returns>
+        public bool MakeFile(
+            string paramFileName,
+            IGenerateFile.ParamFileType paramFileType,
+            string fastaFilePath,
+            string outputFilePath,
+            string dmsConnectionString,
+            int datasetID)
         {
             var forceMonoStatus = GetMonoMassStatus(datasetID, dmsConnectionString);
 
             return MakeFile(paramFileName, paramFileType, fastaFilePath, outputFilePath, dmsConnectionString, forceMonoStatus);
         }
 
-        private bool MakeFile(string paramFileName, IGenerateFile.ParamFileType paramFileType, string fastaFilePath, string outputFilePath, string dmsConnectionString, bool forceMonoParentMass)
+        /// <summary>
+        /// Retrieve or create the specified parameter file
+        /// </summary>
+        /// <param name="paramFileName">Parameter file name</param>
+        /// <param name="paramFileType">Parameter file type</param>
+        /// <param name="fastaFilePath">FASTA file path</param>
+        /// <param name="outputFilePath">Output file path</param>
+        /// <param name="dmsConnectionString">DMS connection string</param>
+        /// <param name="forceMonoParentMass">When true, set ?? to 1 (SEQUEST only)</param>
+        /// <returns>True if successful, false if an error</returns>
+        private bool MakeFile(
+            string paramFileName,
+            IGenerateFile.ParamFileType paramFileType,
+            string fastaFilePath,
+            string outputFilePath,
+            string dmsConnectionString,
+            bool forceMonoParentMass)
         {
             LastErrorMsg = string.Empty;
 

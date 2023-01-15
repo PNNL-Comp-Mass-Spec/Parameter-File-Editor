@@ -184,6 +184,11 @@ namespace ParamFileGenerator.Modifications
             ChangeAAMod(ModifiedAA, MassDifference, Additive);
         }
 
+        /// <summary>
+        /// Remove empty mods
+        /// </summary>
+        /// <remarks>Used by the GUI editor</remarks>
+        // ReSharper disable once UnusedMember.Global
         public void EradicateEmptyMods()
         {
             KillBlankMods();

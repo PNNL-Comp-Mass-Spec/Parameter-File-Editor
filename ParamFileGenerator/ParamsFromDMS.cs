@@ -181,11 +181,23 @@ namespace ParamFileGenerator
             }
         }
 
+        /// <summary>
+        /// Refresh parameter file names from DMS
+        /// </summary>
+        /// <remarks>Used by the GUI editor</remarks>
+        // ReSharper disable once UnusedMember.Global
         public void RefreshParamsFromDMS()
         {
             GetParamsFromDMS();
         }
 
+        /// <summary>
+        /// Retrieve parameter file details from DMS (SEQUEST only)
+        /// </summary>
+        /// <param name="paramSetName"></param>
+        /// <returns>SEQUEST parameters</returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="NotSupportedException"></exception>
         public Params ReadParamsFromDMS(string paramSetName)
         {
             // Retrieve ID number first, then use the same procedure as below
@@ -216,6 +228,15 @@ namespace ParamFileGenerator
             return mParams;
         }
 
+        /// <summary>
+        /// Retrieve parameter file details from DMS (SEQUEST only)
+        /// </summary>
+        /// <param name="paramSetID"></param>
+        /// <remarks>Used by the GUI editor</remarks>
+        /// <returns>SEQUEST parameters</returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        // ReSharper disable once UnusedMember.Global
         public Params ReadParamsFromDMS(int paramSetID)
         {
             mID = paramSetID;
@@ -251,11 +272,23 @@ namespace ParamFileGenerator
             return DoesParamSetNameExist(paramSetName);
         }
 
+        /// <summary>
+        /// Check whether the given parameter file exists (SEQUEST only)
+        /// </summary>
+        /// <param name="paramSetID"></param>
+        /// <remarks>Used by the GUI editor</remarks>
+        // ReSharper disable once UnusedMember.Global
         public bool ParamSetIDExists(int paramSetID)
         {
             return DoesParamSetIDExist(paramSetID);
         }
 
+        /// <summary>
+        /// Get parameter file ID from the parameter file name (SEQUEST only)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <remarks>Used by the GUI editor</remarks>
+        // ReSharper disable once UnusedMember.Global
         public int GetParamSetIDFromName(string name)
         {
             var eParamFileType = GetTypeWithName(name);
@@ -586,10 +619,9 @@ namespace ParamFileGenerator
         }
 
         /// <summary>
-        /// Finds parameter file info for SEQUEST, X!Tandem, MSGF+, MSPathFinder, MODPlus, TopPIC, MSFragger, or MaxQuant
+        /// Finds parameter file info for SEQUEST, X!Tandem, MS-GF+, MSPathFinder, MODPlus, TopPIC, MSFragger, or MaxQuant
         /// </summary>
-        /// <returns></returns>
-        /// <remarks></remarks>
+        /// <returns>Data table</returns>
         private DataTable GetAvailableParamSets()
         {
             var paramTableSQL =

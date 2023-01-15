@@ -38,8 +38,13 @@ namespace ParamFileGenerator.Modifications
         //    set => Dyn_Mod_n_AAList(3, value);
         //}
 
-        public DynamicMods(string dynamicModString) : base()
+        /// <summary>
+        /// Constructor that accepts a dynamic mod string
+        /// </summary>
+        /// <param name="dynamicModString"></param>
+        public DynamicMods(string dynamicModString)
         {
+            // Note: Virtual member call in constructor
             ParseDynModString(dynamicModString);
         }
 
@@ -78,6 +83,7 @@ namespace ParamFileGenerator.Modifications
         {
             ModEntry dm;
             var index = dynModNumber - 1;
+
             try
             {
                 dm = this[index];
@@ -92,6 +98,7 @@ namespace ParamFileGenerator.Modifications
         public void Dyn_Mod_n_MassDiff(int dynModNumber, double value)
         {
             var index = dynModNumber - 1;
+
             if (index < Count)
             {
                 var dm = this[index];
@@ -108,6 +115,7 @@ namespace ParamFileGenerator.Modifications
         {
             ModEntry dm;
             var index = dynModNumber - 1;
+
             try
             {
                 dm = this[index];
@@ -122,6 +130,7 @@ namespace ParamFileGenerator.Modifications
         public void Dyn_Mod_n_AAList(int dynModNumber, string value)
         {
             var index = dynModNumber - 1;
+
             if (index < Count)
             {
                 var dm = this[index];
@@ -138,6 +147,7 @@ namespace ParamFileGenerator.Modifications
         {
             ModEntry dm;
             var index = dynModNumber - 1;
+
             try
             {
                 dm = this[index];
@@ -152,6 +162,7 @@ namespace ParamFileGenerator.Modifications
         public void Dyn_Mod_n_Global_ModID(int dynModNumber, int value)
         {
             var index = dynModNumber - 1;
+
             if (index < Count)
             {
                 var dm = this[index];

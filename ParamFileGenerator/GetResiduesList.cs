@@ -9,7 +9,6 @@ namespace ParamFileGenerator
         /// Dictionary where keys are amino acid residue (one letter abbreviation)
         /// and values are a dictionary with atom counts (number of C, H, N, O, and S atoms)
         /// </summary>
-        /// <returns></returns>
         public Dictionary<char, Dictionary<char, int>> ResidueAtomCounts { get; }
 
 #pragma warning disable CS3001 // Argument type is not CLS-compliant
@@ -38,7 +37,7 @@ namespace ParamFileGenerator
                 "num_s"
             };
 
-            // ' This maps column name to column index
+            // This maps column name to column index
             var columnMap = dbTools.GetColumnMapping(columnNames);
 
             var elementSymbols = new List<char>()

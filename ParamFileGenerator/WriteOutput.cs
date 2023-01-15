@@ -80,14 +80,15 @@ namespace ParamFileGenerator
             }
 
             paramList.Add("num_description_lines = " + paramsIn.NumberOfDescriptionLines);
-            //if ((int)type == (int)Params.ParamFileTypes.BioWorks_30 || type == IGenerateFile.ParamFileType.BioWorks_31 || type == IGenerateFile.ParamFileType.BioWorks_32)
-            //{
-            //    paramList.add("show_fragment_ions = 0");
-            //}
-            //else
-            //{
+            // if ((int)type == (int)Params.ParamFileTypes.BioWorks_30 || type == IGenerateFile.ParamFileType.BioWorks_31 || type == IGenerateFile.ParamFileType.BioWorks_32)
+            // {
+            //     paramList.add("show_fragment_ions = 0");
+            // }
+            // else
+            // {
             paramList.Add("show_fragment_ions = " + ConvertBoolToInteger(paramsIn.ShowFragmentIons));
-            //}
+            // }
+
             paramList.Add("print_duplicate_references = " + ConvertBoolToInteger(paramsIn.PrintDuplicateReferences));
 
             if (type != IGenerateFile.ParamFileType.BioWorks_32)

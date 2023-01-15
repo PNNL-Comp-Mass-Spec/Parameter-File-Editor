@@ -93,6 +93,7 @@ namespace ParamFileGenerator.Modifications
         /// Or, if not an amino acid, one of: C_Term_Protein, C_Term_Peptide, N_Term_Protein, or N_Term_Peptide
         /// </summary>
         protected Dictionary<string, string> mAAMappingTable;
+
         protected void Add(string affectedEntity, double massDifference, ModEntry.ModificationTypes modType, int globalModID = 0)
         {
             var residueList = ConvertAffectedResStringToList(affectedEntity);
@@ -189,6 +190,7 @@ namespace ParamFileGenerator.Modifications
         {
             ModEntry modEntry;
             var modIndex = FindModIndex(modifiedEntity);
+
             if (modIndex == -1)
             {
                 modEntry = null;
@@ -200,7 +202,7 @@ namespace ParamFileGenerator.Modifications
 
             if (modEntry is null)
             {
-                var sc = new List<string>()
+                var sc = new List<string>
                 {
                     modifiedEntity
                 };

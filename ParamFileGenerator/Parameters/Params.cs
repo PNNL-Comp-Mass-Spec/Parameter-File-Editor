@@ -295,8 +295,11 @@ namespace ParamFileGenerator.Parameters
         private string GetDescription()
         {
             var fi = new FileInfo(mTemplateFilePath);
+
             TextReader tr = fi.OpenText();
+
             var s = tr.ReadLine();
+
             // Find the correct section block)
             while (s is not null)
             {
