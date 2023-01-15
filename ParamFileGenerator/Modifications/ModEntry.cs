@@ -88,7 +88,7 @@ namespace ParamFileGenerator.Modifications
 
         public override string ToString()
         {
-            return string.Format("{0} mod on {1}, {2} Da", ModificationType, string.Join(string.Empty, ResidueCollection), MassDifference);
+            return string.Format("{0} mod on {1}, {2} Da", ModificationType, string.Concat(ResidueCollection), MassDifference);
         }
     }
 }
