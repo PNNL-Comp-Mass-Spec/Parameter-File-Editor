@@ -588,6 +588,7 @@ namespace ParamFileGenerator
             return eParamFileTypeConstants.None;
         }
 
+        [Obsolete("Unused")]
         private string GetDescriptionWithID(int paramFileID)
         {
             if (!GetParamFileRowByID(paramFileID, out var matchingRow))
@@ -677,6 +678,11 @@ namespace ParamFileGenerator
             return GetTable(tableTypesSQL);
         }
 
+        /// <summary>
+        /// Distill features from the parameter set
+        /// </summary>
+        /// <param name="paramSet"></param>
+        /// <remarks>Used by the GUI editor</remarks>
         protected string DistillFeaturesFromParamSet(Params paramSet)
         {
             var templateColl = WriteDataCollectionFromParamSet(mBaseLineParamSet);
@@ -1051,6 +1057,12 @@ namespace ParamFileGenerator
             return GetParamFileRowByID(paramSetID, out _);
         }
 
+        /// <summary>
+        /// Compare param sets
+        /// </summary>
+        /// <param name="templateSet"></param>
+        /// <param name="checkSet"></param>
+        /// <remarks>Used by the GUI editor</remarks>
         protected string CompareParamSets(Params templateSet, Params checkSet)
         {
             var diffCollection = GetDiffColl(templateSet, checkSet);
