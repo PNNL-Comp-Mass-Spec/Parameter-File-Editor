@@ -383,11 +383,20 @@ namespace ParamFileGenerator.Parameters
             if (value == null) return false;
 
             var valueString = value.Trim();
-            if (string.IsNullOrEmpty(valueString)) return false;
 
-            if (bool.TryParse(valueString, out var valueBool))
+            if (string.IsNullOrEmpty(valueString))
+                return false;
+
+            if (bool.TryParse(valueString, out var boolValue))
             {
-                return valueBool;
+                return boolValue;
+            }
+
+            // Treat any non-zero integer as true
+            // This behavior emulates VB.NET's CBool() function
+            if (double.TryParse(valueString, out var doubleValue))
+            {
+                return doubleValue != 0;
             }
 
             return false;
