@@ -1,6 +1,6 @@
 Imports System.Collections.Generic
 Imports ParamFileGenerator
-Imports ParamFileGenerator.DownloadParams
+Imports ParamFileGenerator.Parameters
 Imports PRISMDatabaseUtils
 
 

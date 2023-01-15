@@ -1,5 +1,5 @@
-Imports ParamFileGenerator.DownloadParams
 Imports ParamFileEditor.ProgramSettings
+Imports ParamFileGenerator
 Imports PRISMDatabaseUtils
 
 Public Class clsDMSPickerHandler

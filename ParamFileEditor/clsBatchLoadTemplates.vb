@@ -1,5 +1,6 @@
 Imports System.Collections.Generic
 Imports ParamFileGenerator
+Imports ParamFileGenerator.Parameters
 Imports PRISMDatabaseUtils
 
 'Framework to handle the batch upload and download of templates/parameters to and from DMS

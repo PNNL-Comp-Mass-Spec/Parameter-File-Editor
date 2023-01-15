@@ -1,8 +1,10 @@
+Imports ParamFileGenerator.Modifications
+Imports ParamFileGenerator.Parameters
 Imports PRISMDatabaseUtils
 
 Public Interface IDeconvolveIsoMods
 
-    Function DeriveIsoMods(ParamsClass As ParamFileGenerator.Params) As ParamFileGenerator.Params
+    Function DeriveIsoMods(ParamsClass As Params) As Params
 
 End Interface
 
@@ -23,12 +25,12 @@ Public Class clsDeconvolveIsoMods
 
     End Sub
 
-    Friend Function DeriveIsoMods(ParamsClass As ParamFileGenerator.Params) As ParamFileGenerator.Params Implements IDeconvolveIsoMods.DeriveIsoMods
+    Friend Function DeriveIsoMods(ParamsClass As Params) As Params Implements IDeconvolveIsoMods.DeriveIsoMods
         'Get all members of the static mods list
         If ParamsClass.StaticModificationsList.Count = 0 Then Return ParamsClass
 
-        Dim modEntry As ParamFileGenerator.ModEntry
-        Dim sm As ParamFileGenerator.StaticMods = ParamsClass.StaticModificationsList
+        Dim modEntry As ModEntry
+        Dim sm As StaticMods = ParamsClass.StaticModificationsList
 
         Dim atomEnums() As String = System.Enum.GetNames(GetType(AvailableAtoms))
         Dim atom As String
@@ -79,7 +81,7 @@ Public Class clsDeconvolveIsoMods
             maxIsoMod = CSng(at.GetTweakedMass(maxIsoMod, maxIsoAtom.ToString()))
             maxMassCorrectionID = at.TweakedModID
 
-            Dim eIsotope As ParamFileGenerator.IsoMods.IsotopeList
+            Dim eIsotope As IsoMods.IsotopeList
             [Enum].TryParse(maxIsoAtom.ToString(), eIsotope)
 
             ParamsClass.IsotopicModificationsList.Add(eIsotope, maxIsoMod, maxMassCorrectionID)
@@ -126,11 +128,11 @@ Public Class clsDeconvolveIsoMods
     End Function
 
     Private Sub StripStaticIsoMod(
-        ByRef paramsClass As ParamFileGenerator.Params,
+        ByRef paramsClass As Params,
         modMassToRemove As Single,
         atom As AvailableAtoms)
 
-        Dim entry As ParamFileGenerator.ModEntry
+        Dim entry As ModEntry
 
         For Each entry In paramsClass.StaticModificationsList
             Dim AA = entry.ReturnResidueAffected(0).Chars(0)

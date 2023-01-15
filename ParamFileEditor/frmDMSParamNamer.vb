@@ -1,5 +1,5 @@
 Imports System.ComponentModel
-Imports ParamFileGenerator
+Imports ParamFileGenerator.Parameters
 Imports PRISMDatabaseUtils
 
 Public Class frmDMSParamNamer

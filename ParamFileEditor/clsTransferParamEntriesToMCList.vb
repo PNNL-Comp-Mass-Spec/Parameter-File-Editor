@@ -1,3 +1,4 @@
+Imports ParamFileGenerator.Parameters
 Imports PRISMDatabaseUtils
 
 Friend Class clsTransferParamEntriesToMassModList
@@ -47,7 +48,7 @@ Friend Class clsTransferParamEntriesToMassModList
     End Sub
 
     Private Sub SyncSingleJob(paramFileID As Integer)
-        Dim tmpParams As ParamFileGenerator.Params
+        Dim tmpParams As Params
 
 
         Debug.WriteLine("Working on: " & paramFileID)
