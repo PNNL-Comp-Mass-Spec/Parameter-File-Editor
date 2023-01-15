@@ -17,10 +17,10 @@ namespace ParamFileGenerator.Parameters
 
         private void ParseEnzymeString(string enzStr)
         {
-            var parts = enzStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var parts = enzStr.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             if (parts.Count < 5)
             {
-                parts.AddRange(Enumerable.Range(1, 5 - parts.Count).Select(x => ""));
+                parts.AddRange(Enumerable.Range(1, 5 - parts.Count).Select(_ => ""));
             }
 
             EnzymeID = Params.SafeCastInt(parts[0]);

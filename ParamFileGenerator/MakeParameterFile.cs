@@ -296,7 +296,7 @@ namespace ParamFileGenerator
             // Instantiate MainProcess so we can access its properties later
 
             // ReSharper disable once UnusedVariable.Compiler
-            var processor = new MainProcess(TemplateFilePath);
+            var _ = new MainProcess(TemplateFilePath);
 
             var dmsParams = new ParamsFromDMS(mDbTools);
             IReconstituteIsoMods modProcessor = new ReconstituteIsoMods(mDbTools);
