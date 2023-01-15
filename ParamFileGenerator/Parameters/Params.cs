@@ -321,15 +321,12 @@ namespace ParamFileGenerator.Parameters
 
             while (s is not null)
             {
-                ParamFileTypes type;
-                if (s.ToLower().Contains("num_results = "))
+                if (s.IndexOf("num_results = ", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    type = ParamFileTypes.BioWorks_31;
-                    return type;
+                    return ParamFileTypes.BioWorks_31;
                 }
 
-                type = ParamFileTypes.BioWorks_20;
-                return type;
+                return ParamFileTypes.BioWorks_20;
             }
 
             return default;
