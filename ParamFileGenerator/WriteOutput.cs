@@ -127,7 +127,7 @@ namespace ParamFileGenerator
             paramList.Add("mass_type_fragment = " + (int)paramsIn.FragmentMassType);
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
-                paramList.Add("normalize_xcorr = " + "0");
+                paramList.Add("normalize_xcorr = 0");
             }
 
             paramList.Add("remove_precursor_peak = " + ConvertBoolToInteger(paramsIn.RemovePrecursorPeak));
