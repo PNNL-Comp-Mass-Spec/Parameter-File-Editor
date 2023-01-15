@@ -221,41 +221,47 @@ namespace ParamFileGenerator.Modifications
                 Add(modifiedEntity, massDifference, foundMod.ModificationType);
                 return;
             }
-            else if (Math.Abs(foundMod.MassDifference) < float.Epsilon && Math.Abs(massDifference) < float.Epsilon)
+
+            if (Math.Abs(foundMod.MassDifference) < float.Epsilon && Math.Abs(massDifference) < float.Epsilon)
             {
                 return;
             }
-            else if (Math.Abs(foundMod.MassDifference) > float.Epsilon)          // Not an emptyMod
+
+            if (!(Math.Abs(foundMod.MassDifference) > float.Epsilon))
+                return;
+
+            // Not an emptyMod
+            var counter = default(int);
+
+            var residueList = ConvertAffectedResStringToList(modifiedEntity);
+            ModEntry changeMod;
+
+            if (additive)
             {
-                var counter = default(int);
+                changeMod = new ModEntry(residueList, massDifference + foundMod.MassDifference, foundMod.ModificationType);
+            }
+            else
+            {
+                changeMod = new ModEntry(residueList, massDifference, foundMod.ModificationType);
+            }
 
-                var residueList = ConvertAffectedResStringToList(modifiedEntity);
-                ModEntry changeMod;
-
-                if (additive)
+            foreach (var tempMod in this)
+            {
+                if (foundMod.Equals(tempMod) && Math.Abs(massDifference) > float.Epsilon)
                 {
-                    changeMod = new ModEntry(residueList, massDifference + foundMod.MassDifference, foundMod.ModificationType);
-                }
-                else
-                {
-                    changeMod = new ModEntry(residueList, massDifference, foundMod.ModificationType);
+                    Replace(counter, changeMod);
+                    return;
                 }
 
-                foreach (var tempMod in this)
+                if (foundMod.Equals(tempMod) && Math.Abs(massDifference) < float.Epsilon)
                 {
-                    if (foundMod.Equals(tempMod) && Math.Abs(massDifference) > float.Epsilon)
-                    {
-                        Replace(counter, changeMod);
-                        return;
-                    }
-                    else if (foundMod.Equals(tempMod) && Math.Abs(massDifference) < float.Epsilon)
-                    {
-                        RemoveAt(counter);
-                    }
-                    if (Count == 0)
-                        break;
-                    counter++;
+                    RemoveAt(counter);
                 }
+
+                if (Count == 0)
+                    break;
+
+                counter++;
             }
         }
     }

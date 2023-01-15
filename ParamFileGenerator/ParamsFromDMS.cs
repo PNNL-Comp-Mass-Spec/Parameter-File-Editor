@@ -531,19 +531,18 @@ namespace ParamFileGenerator
 
         private string GetDynModSpecifier(IReadOnlyCollection<DataRow> rowSet)
         {
-            var tmpSpec = "";
+            var affectedAminoAcids = new StringBuilder();
 
-            if (rowSet.Count > 0)               // We have dynamic mods
+            if (rowSet.Count == 0)
+                return null;
+
+            // We have dynamic mods
+            foreach (var foundRow in rowSet)
             {
-                foreach (var foundRow in rowSet)
-                {
-                    tmpSpec += foundRow["residue_symbol"].ToString();
-                }
-
-                return tmpSpec;
+                affectedAminoAcids.Append(foundRow["residue_symbol"]);
             }
 
-            return null;
+            return affectedAminoAcids.ToString();
         }
 
         private int GetIDWithName(string name, eParamFileTypeConstants eParamFileType)
