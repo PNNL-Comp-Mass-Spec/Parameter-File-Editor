@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using ParamFileGenerator.Modifications;
 using ParamFileGenerator.Parameters;
 using PRISMDatabaseUtils;
@@ -493,20 +494,20 @@ namespace ParamFileGenerator
 
             foreach (var staticMod in mMassMods.Select("mod_type_symbol = 'S' OR mod_type_symbol = 'P' or mod_type_symbol = 'T'"))
             {
-                foundRow = currentFoundRow;
+                var tmpSpec = staticMod["residue_symbol"].ToString();
 
-                var tmpSpec = foundRow["residue_symbol"].ToString() switch
+                var affectedAminoAcid = tmpSpec switch
                 {
                     "<" => "N_Term_Peptide",
                     ">" => "C_Term_Peptide",
                     "[" => "N_Term_Protein",
                     "]" => "C_Term_Protein",
-                    _ => string.Empty
+                    _ => tmpSpec
                 };
 
                 var param = new ParamsEntry(
-                    tmpSpec,
-                    foundRow["monoisotopic_mass"].ToString(),
+                    affectedAminoAcid,
+                    staticMod["monoisotopic_mass"].ToString(),
                     ParamTypes.StaticModification);
 
                 paramList.Add(param);
