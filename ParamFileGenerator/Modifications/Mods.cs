@@ -109,7 +109,7 @@ namespace ParamFileGenerator.Modifications
 
             foreach (var aa in aaEnums)
             {
-                if (aa == "C_Term_Protein" || aa == "C_Term_Peptide" || aa == "N_Term_Protein" || aa == "N_Term_Peptide")
+                if (aa is "C_Term_Protein" or "C_Term_Peptide" or "N_Term_Protein" or "N_Term_Peptide")
                 {
                     mAAMappingTable.Add(aa, aa);
                 }
