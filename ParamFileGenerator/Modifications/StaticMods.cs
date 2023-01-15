@@ -208,17 +208,19 @@ namespace ParamFileGenerator.Modifications
 
         private void KillBlankMods()
         {
-            var AAEnums = Enum.GetNames(typeof(ResidueCode)).ToList();
-
-            foreach (var AA in AAEnums)
+            foreach (var aminoAcid in Enum.GetNames(typeof(ResidueCode)).ToList())
             {
-                if (AA.Contains("Term"))
+                if (aminoAcid.Contains("Term"))
                 {
-                    var AASLC = AA.Substring(0, 1);
-                    var currIndex = FindModIndex(AASLC);
-                    if (currIndex != -1)
+                    // C or N terminal mod
+                    // The first letter of the enum name should be N or C
+                    var terminus = aminoAcid.Substring(0, 1);
+
+                    var currentIndex = FindModIndex(terminus);
+
+                    if (currentIndex != -1)
                     {
-                        var modEntry = GetModEntry(currIndex);
+                        var modEntry = GetModEntry(currentIndex);
                         if (Math.Abs(modEntry.MassDifference) < float.Epsilon)
                         {
                             Remove(modEntry);

@@ -237,7 +237,7 @@ namespace ParamFileGenerator.Parameters
             if (mType == ParamFileTypes.BioWorks_20)
             {
                 DefaultFASTAPath = mFullTemplate.GetParam("database_name");
-                DefaultFASTAPath2 = "";
+                DefaultFASTAPath2 = string.Empty;
                 NumberOfResultsToProcess = 500;
             }
             else if (mType == ParamFileTypes.BioWorks_30)
@@ -310,7 +310,7 @@ namespace ParamFileGenerator.Parameters
                 s = tr.ReadLine();
             }
 
-            return "";
+            return string.Empty;
         }
 
         private ParamFileTypes GetTemplateType()

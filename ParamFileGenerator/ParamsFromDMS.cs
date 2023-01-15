@@ -402,13 +402,10 @@ namespace ParamFileGenerator
             return storageClass;
         }
 
-        private IEnumerable<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants eParamFileType)
+        private IEnumerable<ParamsEntry> GetMassModsFromDMS(int paramSetID, eParamFileTypeConstants paramFileType)
         {
             const int MaxDynMods = 15;
             var paramList = new List<ParamsEntry>();
-
-            DataRow foundRow;
-            DataRow[] foundRows;
 
             var sql = "SELECT mod_type_symbol, residue_symbol, monoisotopic_mass, local_symbol_id, affected_atom " +
                       "FROM V_Param_File_Mass_Mod_Info " +
@@ -421,7 +418,7 @@ namespace ParamFileGenerator
             var lstLocalSymbolIDs = new List<int>();
 
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
-            switch (eParamFileType)
+            switch (paramFileType)
             {
                 case eParamFileTypeConstants.Sequest:
                     lstLocalSymbolIDs.Add(1);   // *
@@ -451,49 +448,50 @@ namespace ParamFileGenerator
                 }
             }
 
-            foreach (var intSymbolID in lstLocalSymbolIDs)
+            // Add the dynamic mods (but not N-terminal or C-terminal dynamic mods)
+            foreach (var symbolID in lstLocalSymbolIDs)
             {
-                foundRows = mMassMods.Select("mod_type_symbol = 'D' AND local_symbol_id = " + intSymbolID + " AND residue_symbol <> '<' AND residue_symbol <> '>'", "local_symbol_id");
+                var dynamicMods = mMassMods.Select("mod_type_symbol = 'D' AND local_symbol_id = " + symbolID + " AND residue_symbol <> '<' AND residue_symbol <> '>'", "local_symbol_id");
 
-                if (foundRows.Length == 0)
+                if (dynamicMods.Length == 0)
                     continue;
 
                 var param = new ParamsEntry(
-                    GetDynModSpecifier(foundRows),
-                    foundRows[0]["monoisotopic_mass"].ToString(),
+                    GetDynModSpecifier(dynamicMods),
+                    dynamicMods[0]["monoisotopic_mass"].ToString(),
                     ParamTypes.DynamicModification);
+
                 paramList.Add(param);
             }
 
             // Find N-Term Dynamic Mods
-            foundRows = mMassMods.Select("mod_type_symbol = 'D' AND residue_symbol = '<'");
+            var nTermDynamicMods = mMassMods.Select("mod_type_symbol = 'D' AND residue_symbol = '<'");
 
-            if (foundRows.Length > 0)
+            if (nTermDynamicMods.Length > 0)
             {
                 var param = new ParamsEntry(
-                    GetDynModSpecifier(foundRows),
-                    foundRows[0]["monoisotopic_mass"].ToString(),
+                    GetDynModSpecifier(nTermDynamicMods),
+                    nTermDynamicMods[0]["monoisotopic_mass"].ToString(),
                     ParamTypes.TermDynamicModification);
+
                 paramList.Add(param);
             }
 
             // Find C-Term Dynamic Mods
-            foundRows = mMassMods.Select("mod_type_symbol = 'D' AND residue_symbol = '>'");
+            var cTermDynamicMods = mMassMods.Select("mod_type_symbol = 'D' AND residue_symbol = '>'");
 
-            if (foundRows.Length > 0)
+            if (cTermDynamicMods.Length > 0)
             {
                 var param = new ParamsEntry(
-                    GetDynModSpecifier(foundRows),
-                    foundRows[0]["monoisotopic_mass"].ToString(),
+                    GetDynModSpecifier(cTermDynamicMods),
+                    cTermDynamicMods[0]["monoisotopic_mass"].ToString(),
                     ParamTypes.TermDynamicModification);
                 paramList.Add(param);
             }
 
-            // Look for Static and terminal mods
+            // Look for static and terminal mods
 
-            foundRows = mMassMods.Select("mod_type_symbol = 'S' OR mod_type_symbol = 'P' or mod_type_symbol = 'T'");
-
-            foreach (var currentFoundRow in foundRows)
+            foreach (var staticMod in mMassMods.Select("mod_type_symbol = 'S' OR mod_type_symbol = 'P' or mod_type_symbol = 'T'"))
             {
                 foundRow = currentFoundRow;
 
@@ -514,16 +512,15 @@ namespace ParamFileGenerator
                 paramList.Add(param);
             }
 
-            // TODO Still need code to handle import/export of isotopic mods
+            // Old To Do ... still need code to handle import/export of isotopic mods
 
-            foundRows = mMassMods.Select("mod_type_symbol = 'I'");
+            // Look for isotopic mods
 
-            foreach (var currentFoundRow1 in foundRows)
+            foreach (var isotopicMod in mMassMods.Select("mod_type_symbol = 'I'"))
             {
-                foundRow = currentFoundRow1;
                 var param = new ParamsEntry(
-                    foundRow["affected_atom"].ToString(),
-                    foundRow["monoisotopic_mass"].ToString(),
+                    isotopicMod["affected_atom"].ToString(),
+                    isotopicMod["monoisotopic_mass"].ToString(),
                     ParamTypes.IsotopicModification);
 
                 paramList.Add(param);

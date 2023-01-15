@@ -207,13 +207,11 @@ namespace ParamFileGenerator.Modifications
                     modifiedEntity
                 };
 
-                var emptyMod = new ModEntry(sc, 0.0d, ModEntry.ModificationTypes.Dynamic);
-                return emptyMod;
+                // Empty mod
+                return new ModEntry(sc, 0.0d, ModEntry.ModificationTypes.Dynamic);
             }
-            else
-            {
-                return modEntry;
-            }
+
+            return modEntry;
         }
 
         protected void ChangeMod(ModEntry foundMod, string modifiedEntity, double massDifference, bool additive = false)

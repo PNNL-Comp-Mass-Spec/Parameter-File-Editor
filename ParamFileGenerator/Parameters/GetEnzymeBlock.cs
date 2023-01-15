@@ -8,7 +8,6 @@ namespace ParamFileGenerator.Parameters
     {
         private readonly string mTemplateFilePath;
         private readonly string mSectionName;
-        private readonly List<string> mEnzymeBlockCollection;
 
         public List<EnzymeDetails> EnzymeList { get; set; }
 
@@ -17,8 +16,9 @@ namespace ParamFileGenerator.Parameters
             mTemplateFilePath = templateFilePath;
             mSectionName = sectionName;
 
-            mEnzymeBlockCollection = GetEnzymeBlock();
-            EnzymeList = InterpretEnzymeBlockCollection(mEnzymeBlockCollection);
+            var enzymeBlockCollection = GetEnzymeBlock();
+
+            EnzymeList = InterpretEnzymeBlockCollection(enzymeBlockCollection);
         }
 
         private List<string> GetEnzymeBlock()
@@ -64,7 +64,7 @@ namespace ParamFileGenerator.Parameters
 
         private List<string> LoadDefaultEnzymes()
         {
-            var defaultEnzymes = new List<string>()
+            return new List<string>
             {
                 "0.  No_Enzyme              0      -           -",
                 "1.  Trypsin                1      KR          -",
@@ -87,8 +87,6 @@ namespace ParamFileGenerator.Parameters
                 "18. Do_not_cleave          1      B           -",
                 "19. LysN                   0      K           -"
             };
-
-            return defaultEnzymes;
         }
 
         private List<EnzymeDetails> InterpretEnzymeBlockCollection(IEnumerable<string> enzymeBlock)

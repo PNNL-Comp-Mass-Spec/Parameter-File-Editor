@@ -492,6 +492,7 @@ namespace ParamFileGenerator
             var dmsParams = new ParamsFromDMS(dbTools);
 
             var retrievedParamSets = dmsParams.RetrieveAvailableParams();
+
             foreach (DataRow dr in retrievedParamSets.Rows)
             {
                 availableParamSets.Add(dr["FileName"].ToString());
@@ -505,9 +506,7 @@ namespace ParamFileGenerator
 #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
         {
             var paramGenerator = new ParamsFromDMS(dbTools);
-            var paramSetsAvailable = paramGenerator.RetrieveAvailableParams();
-
-            return paramSetsAvailable;
+            return paramGenerator.RetrieveAvailableParams();
         }
 
 #pragma warning disable CS3001 // Type of parameter is not CLS-compliant
@@ -515,8 +514,7 @@ namespace ParamFileGenerator
 #pragma warning restore CS3001 // Type of parameter is not CLS-compliant
         {
             var paramGenerator = new ParamsFromDMS(dbTools);
-            var paramTypesAvailable = paramGenerator.RetrieveParamFileTypes();
-            return paramTypesAvailable;
+            return paramGenerator.RetrieveParamFileTypes();
         }
 
         public string LastError => LastErrorMsg;

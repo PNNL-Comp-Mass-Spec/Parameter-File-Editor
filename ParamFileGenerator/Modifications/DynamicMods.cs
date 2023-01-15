@@ -206,9 +206,8 @@ namespace ParamFileGenerator.Modifications
         protected virtual void ParseDynModString(string dmString)
         {
             var splitRE = new Regex(@"(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)");
-            var matches = splitRE.Matches(dmString);
 
-            foreach (Match m in matches)
+            foreach (Match m in splitRE.Matches(dmString))
             {
                 var tmpMass = double.Parse(m.Groups["modmass"].Value);
                 var tmpResString = m.Groups["residues"].ToString();

@@ -35,14 +35,7 @@ namespace ParamFileGenerator.Modifications
         {
             var objModEntry = FindMod(strSymbol);
 
-            if (objModEntry is null)
-            {
-                return 0d;
-            }
-            else
-            {
-                return objModEntry.MassDifference;
-            }
+            return objModEntry?.MassDifference ?? 0d;
         }
 
         protected void UpdateTermDynMod(string strSymbol, double sngMass)
