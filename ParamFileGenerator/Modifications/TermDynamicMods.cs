@@ -66,7 +66,7 @@ namespace ParamFileGenerator.Modifications
             }
         }
 
-        protected override void ParseDynModString(string dmString)
+        protected sealed override void ParseDynModString(string dmString)
         {
             var splitRE = new Regex(@"(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)");
 
@@ -84,7 +84,7 @@ namespace ParamFileGenerator.Modifications
             }
         }
 
-        protected override string AssembleModString(int counter)
+        protected sealed override string AssembleModString(int counter)
         {
             var sb = new StringBuilder();
 
