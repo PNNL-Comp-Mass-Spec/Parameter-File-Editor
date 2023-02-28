@@ -175,7 +175,7 @@ Friend Class clsDMSParamUpload
         paramFileName As String,
         paramFileDescription As String) As Boolean
 
-        Const SP_NAME = "AddUpdateParamFile"
+        Const SP_NAME = "add_update_param_file"
 
         Try
 
@@ -226,7 +226,7 @@ Friend Class clsDMSParamUpload
         entrySpecifier As String,
         entryValue As String) As Boolean
 
-        Const SP_NAME = "AddUpdateParamFileEntry"
+        Const SP_NAME = "add_update_param_file_entry"
 
         Try
 
@@ -296,7 +296,7 @@ Friend Class clsDMSParamUpload
 
     Protected Function RunSP_DeleteParamEntries(paramFileID As Integer) As Boolean
 
-        Const SP_NAME = "DeleteParamEntriesForID"
+        Const SP_NAME = "delete_param_entries_for_id"
 
         Try
             Dim cmdDelete = mDBTools.CreateCommand(SP_NAME, CommandType.StoredProcedure)
@@ -333,7 +333,7 @@ Friend Class clsDMSParamUpload
 
     Protected Function RunSP_GetParamFileID(paramFileName As String) As Integer
 
-        Const SP_NAME = "GetParamFileID"
+        Const SP_NAME = "get_param_file_id"
 
         Try
             Dim lookupCmd = mDBTools.CreateCommand(SP_NAME, CommandType.StoredProcedure)

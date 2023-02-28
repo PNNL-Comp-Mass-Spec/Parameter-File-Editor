@@ -124,7 +124,7 @@ Public Class clsMassTweaker
     modMassChange As Double,
     Optional modAffectedAtom As String = "-") Implements IMassTweaker.AddMassCorrection
 
-        Dim cmdSave = mDBTools.CreateCommand("AddMassCorrectionEntry", CommandType.StoredProcedure)
+        Dim cmdSave = mDBTools.CreateCommand("add_mass_correction_entry", CommandType.StoredProcedure)
 
         ' Define the stored procedure return value
         mDBTools.AddParameter(cmdSave, "@Return", SqlType.BigInt, ParameterDirection.ReturnValue)
