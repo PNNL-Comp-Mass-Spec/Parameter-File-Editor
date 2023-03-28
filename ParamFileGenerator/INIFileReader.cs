@@ -406,12 +406,10 @@ namespace ParamFileGenerator
                         item.RemoveAttribute(attributeName);
                         return true;
                     }
-                    else
-                    {
-                        attributeName = SetNameCase(attributeName);
-                        item.SetAttribute(attributeName, attributeValue);
-                        return true;
-                    }
+
+                    attributeName = SetNameCase(attributeName);
+                    item.SetAttribute(attributeName, attributeValue);
+                    return true;
                 }
                 catch //(Exception e)
                 {
