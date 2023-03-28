@@ -384,9 +384,10 @@ namespace ParamFileGenerator
                 "Mass_Correction_Tag"
             };
 
-            const string mctSQL = "SELECT mass_correction_tag, monoisotopic_mass, affected_atom " +
-                         "FROM V_Mass_Correction_Factors " +
-                         "ORDER BY mass_correction_tag";
+            const string mctSQL =
+                "SELECT mass_correction_tag, monoisotopic_mass, affected_atom " +
+                "FROM V_Mass_Correction_Factors " +
+                "ORDER BY mass_correction_tag";
 
             var mdSQL = "SELECT " +
                         "local_symbol As modification_symbol, " +
@@ -394,8 +395,8 @@ namespace ParamFileGenerator
                         "residue_symbol As target_residues, " +
                         "mod_type_symbol As modification_type, " +
                         "mass_correction_tag, " +
-                        MAXQUANT_MOD_NAME_COLUMN.ToLowerInvariant() + ", " +
-                        UNIMOD_MOD_NAME_COLUMN.ToLowerInvariant() + " " +
+                        MAXQUANT_MOD_NAME_COLUMN.ToLower() + ", " +
+                        UNIMOD_MOD_NAME_COLUMN.ToLower() + " " +
                         "FROM V_Param_File_Mass_Mod_Info " +
                         "WHERE param_file_name = '" + paramFileName + "'";
 
