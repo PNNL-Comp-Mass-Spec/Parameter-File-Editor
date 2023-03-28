@@ -23,7 +23,7 @@ namespace ParamFileGenerator
 
             dbTools.GetQueryResults(sql, out var residuesTable);
 
-            var columnNames = new List<string>()
+            var columnNames = new List<string>
             {
                 "residue_id",
                 "residue_symbol",
@@ -40,7 +40,7 @@ namespace ParamFileGenerator
             // This maps column name to column index
             var columnMap = dbTools.GetColumnMapping(columnNames);
 
-            var elementSymbols = new List<char>()
+            var elementSymbols = new List<char>
             {
                 'C',
                 'H',

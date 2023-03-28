@@ -48,7 +48,7 @@ namespace ParamFileGenerator.Modifications
                 // Add it (assuming sngMass is non-zero)
                 if (Math.Abs(sngMass) > float.Epsilon)
                 {
-                    var resCollection = new List<string>() { strSymbol };
+                    var resCollection = new List<string> { strSymbol };
 
                     Add(new ModEntry(resCollection, sngMass, ModEntry.ModificationTypes.Dynamic));
                 }

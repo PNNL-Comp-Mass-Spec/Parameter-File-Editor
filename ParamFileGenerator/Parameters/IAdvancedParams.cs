@@ -2,7 +2,7 @@
 {
     public interface IAdvancedParams
     {
-        public enum FrameList : int
+        public enum FrameList
         {
             Protein = 0,
             Forward_1 = 1,
@@ -16,7 +16,7 @@
             All_Six = 9
         }
 
-        public enum MassUnitList : int
+        public enum MassUnitList
         {
             amu = 0,
             mmu = 1,

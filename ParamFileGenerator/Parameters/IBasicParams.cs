@@ -5,7 +5,7 @@ namespace ParamFileGenerator.Parameters
 {
     public interface IBasicParams
     {
-        public enum MassTypeList : int
+        public enum MassTypeList
         {
             Average = 0,
             Monoisotopic = 1

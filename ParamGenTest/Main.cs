@@ -176,7 +176,7 @@ namespace ParamGenTest
 
             if (TypeID > 1)
             {
-                foundRows = mAvailableParamFiles.Select("Type_ID = " + TypeID.ToString());
+                foundRows = mAvailableParamFiles.Select("Type_ID = " + TypeID);
             }
             else
             {

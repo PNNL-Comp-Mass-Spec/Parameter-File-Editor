@@ -361,7 +361,7 @@ namespace ParamFileGenerator
 
             mFileWriter ??= new WriteOutput();
 
-            var massCorrectionTagsHeaderNames = new List<string>()
+            var massCorrectionTagsHeaderNames = new List<string>
             {
                 "Mass_Correction_Tag",
                 "Monoisotopic_Mass",
@@ -369,7 +369,7 @@ namespace ParamFileGenerator
             };
 
             // Note that "MaxQuant_Mod_Name" will be added below if MaxQuant mods are defined
-            var modDefHeaderNames = new List<string>()
+            var modDefHeaderNames = new List<string>
             {
                 "Modification_Symbol",
                 "Monoisotopic_Mass",
