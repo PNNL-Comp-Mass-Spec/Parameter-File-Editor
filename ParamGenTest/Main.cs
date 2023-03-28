@@ -20,17 +20,18 @@ namespace ParamGenTest
 
             // Add any initialization after the InitializeComponent() call
 
-            mSupportedParamFileTypeIDs = new SortedSet<int>()
+            mSupportedParamFileTypeIDs = new SortedSet<int>
             {
-                1000,   // SEQUEST
-                1008,   // X_Tandem
-                1018,   // MSGFPlus
-                1019,   // MSAlign
-                1022,   // MSAlignHistone
-                1025,   // MSPathFinder
-                1032,   // TopPIC
-                1033,   // MSFragger
-                1034    // MaxQuant
+                1000, // SEQUEST
+                1008, // X_Tandem
+                1018, // MSGFPlus
+                1019, // MSAlign
+                1022, // MSAlignHistone
+                1025, // MSPathFinder
+                1032, // TopPIC
+                1033, // MSFragger
+                1034, // MaxQuant
+                1035  // DiaNN
             };
 
             mDMSConnectString = txtDMSConnectionString.Text;
@@ -146,6 +147,9 @@ namespace ParamGenTest
                     break;
                 case 1034:
                     mParamFileType = IGenerateFile.ParamFileType.MaxQuant;
+                    break;
+                case 1035:
+                    mParamFileType = IGenerateFile.ParamFileType.DiaNN;
                     break;
             }
 

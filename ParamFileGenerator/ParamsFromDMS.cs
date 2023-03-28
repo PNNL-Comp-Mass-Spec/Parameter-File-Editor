@@ -142,7 +142,8 @@ namespace ParamFileGenerator
             TopFD = 1031,
             TopPIC = 1032,
             MSFragger = 1033,
-            MaxQuant = 1034
+            MaxQuant = 1034,
+            DiaNN = 1035
         }
 
         private int mID;
@@ -617,7 +618,7 @@ namespace ParamFileGenerator
         }
 
         /// <summary>
-        /// Finds parameter file info for SEQUEST, X!Tandem, MS-GF+, MSPathFinder, MODPlus, TopPIC, MSFragger, or MaxQuant
+        /// Finds parameter file info for SEQUEST, X!Tandem, MS-GF+, MSPathFinder, MODPlus, TopPIC, MSFragger, MaxQuant, or DIA-NN
         /// </summary>
         /// <returns>Data table</returns>
         private DataTable GetAvailableParamSets()
@@ -636,7 +637,8 @@ namespace ParamFileGenerator
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.MODPlus +
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.TopPIC +
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.MSFragger +
-                "   or param_file_type_id = " + (int)eParamFileTypeConstants.MaxQuant;
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.MaxQuant +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.DiaNN;
 
             var tmpIDTable = GetTable(paramTableSQL);
 

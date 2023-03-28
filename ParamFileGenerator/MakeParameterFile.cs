@@ -31,7 +31,8 @@ namespace ParamFileGenerator
             MODPlus = 12,
             TopPIC = 13,
             MSFragger = 14,
-            MaxQuant = 15
+            MaxQuant = 15,
+            DiaNN = 16
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -184,6 +185,10 @@ namespace ParamFileGenerator
                     case IGenerateFile.ParamFileType.MaxQuant:
                         return RetrieveStaticPSMParameterFile("MaxQuant", paramFileName, outputFilePath, dmsConnectionString);
 
+                    case IGenerateFile.ParamFileType.DiaNN:
+                        return RetrieveStaticPSMParameterFile("DiaNN", paramFileName, outputFilePath, dmsConnectionString);
+
+
                     case IGenerateFile.ParamFileType.Invalid:
                         return default;
 
@@ -249,6 +254,7 @@ namespace ParamFileGenerator
                 IGenerateFile.ParamFileType.TopPIC => false,
                 IGenerateFile.ParamFileType.MSFragger => false,
                 IGenerateFile.ParamFileType.MaxQuant => false,
+                IGenerateFile.ParamFileType.DiaNN => false,
                 IGenerateFile.ParamFileType.Invalid => false,
                 IGenerateFile.ParamFileType.BioWorks_20 => true,
                 IGenerateFile.ParamFileType.BioWorks_30 => true,
