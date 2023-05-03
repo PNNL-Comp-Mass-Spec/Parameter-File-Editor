@@ -134,6 +134,7 @@ namespace ParamFileGenerator.Parameters
         public void AddLoadedParamName(string parameterName, string parameterValue)
         {
             LoadedParamNames ??= new Hashtable();
+
             if (!LoadedParamNames.ContainsKey(parameterName))
             {
                 LoadedParamNames.Add(parameterName, parameterValue);
@@ -234,6 +235,7 @@ namespace ParamFileGenerator.Parameters
 
             // Retrieve Advanced Parameters
             mFullTemplate.SetSection(sectionName);
+
             if (mType == ParamFileTypes.BioWorks_20)
             {
                 DefaultFASTAPath = mFullTemplate.GetParam("database_name");
@@ -247,6 +249,7 @@ namespace ParamFileGenerator.Parameters
                 NumberOfResultsToProcess = SafeCastInt(mFullTemplate.GetParam("num_results"));
             }
             PeptideMassTolerance = (float) SafeCastDouble(mFullTemplate.GetParam("peptide_mass_tolerance"));
+
             if (mFullTemplate.GetParam("create_output_files") is not null)
             {
                 CreateOutputFiles = SafeCastBool(mFullTemplate.GetParam("create_output_files"));
@@ -258,6 +261,7 @@ namespace ParamFileGenerator.Parameters
             mIonSeriesString = mFullTemplate.GetParam("ion_series");
             IonSeries = new IonSeries(mIonSeriesString);
             MaximumNumAAPerDynMod = SafeCastInt(mFullTemplate.GetParam("max_num_differential_AA_per_mod"));
+
             if (mType == ParamFileTypes.BioWorks_32)
             {
                 MaximumNumDifferentialPerPeptide = SafeCastInt(mFullTemplate.GetParam("max_num_differential_per_peptide"));
@@ -273,6 +277,7 @@ namespace ParamFileGenerator.Parameters
             mProtMassFilterString = mFullTemplate.GetParam("protein_mass_filter");
 
             var protMassFilterList = mProtMassFilterString.Split(' ');
+
             if (protMassFilterList.Length > 0)
             {
                 MinimumProteinMassToSearch = (float) SafeCastDouble(protMassFilterList[0]);
@@ -345,9 +350,11 @@ namespace ParamFileGenerator.Parameters
         public static int SafeCastInt(object value)
         {
             if (value is int valueInt) return valueInt;
+
             if (value == null) return 0;
 
             var valueString = value.ToString().Trim();
+
             if (string.IsNullOrEmpty(valueString)) return 0;
 
             if (int.TryParse(valueString, out valueInt)) return valueInt;
@@ -365,6 +372,7 @@ namespace ParamFileGenerator.Parameters
             if (value == null) return 0;
 
             var valueString = value.Trim();
+
             if (string.IsNullOrEmpty(valueString)) return 0;
 
             if (double.TryParse(valueString, out var valueDbl))

@@ -44,6 +44,7 @@ namespace ParamFileGenerator
             }
 
             paramList.Add(";DMS_Description = " + paramsIn.Description);
+
             if (type == (int)Params.ParamFileTypes.BioWorks_20)
             {
                 paramList.Add("database_name = " + paramsIn.DefaultFASTAPath);
@@ -55,6 +56,7 @@ namespace ParamFileGenerator
             }
 
             paramList.Add("peptide_mass_tolerance = " + paramsIn.PeptideMassTolerance.ToString("0.0000"));
+
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("peptide_mass_units = " + paramsIn.PeptideMassUnits);
@@ -62,6 +64,7 @@ namespace ParamFileGenerator
 
             paramList.Add("ion_series = " + paramsIn.IonSeries.ReturnIonString());
             paramList.Add("fragment_ion_tolerance = " + paramsIn.FragmentIonTolerance.ToString("0.0000"));
+
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
                 // MEM Note from February 2010
@@ -74,6 +77,7 @@ namespace ParamFileGenerator
             }
 
             paramList.Add("num_output_lines = " + paramsIn.NumberOfOutputLines);
+
             if ((int)type == (int)Params.ParamFileTypes.BioWorks_30 || type == IGenerateFile.ParamFileType.BioWorks_31 || type == IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("num_results = " + paramsIn.NumberOfResultsToProcess);
@@ -125,6 +129,7 @@ namespace ParamFileGenerator
             paramList.Add("nucleotide_reading_frame = " + (int)paramsIn.SelectedNucReadingFrame);
             paramList.Add("mass_type_parent = " + (int)paramsIn.ParentMassType);
             paramList.Add("mass_type_fragment = " + (int)paramsIn.FragmentMassType);
+
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("normalize_xcorr = 0");
@@ -171,6 +176,7 @@ namespace ParamFileGenerator
             paramList.Add("add_R_Arginine = " + paramsIn.StaticModificationsList.R_Arginine.ToString("0.0000"));
             paramList.Add("add_Y_Tyrosine = " + paramsIn.StaticModificationsList.Y_Tyrosine.ToString("0.0000"));
             paramList.Add("add_W_Tryptophan = " + paramsIn.StaticModificationsList.W_Tryptophan.ToString("0.0000"));
+
             if (type == IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("add_J_user_amino_acid = 0.0000");
@@ -182,6 +188,7 @@ namespace ParamFileGenerator
             if (type != IGenerateFile.ParamFileType.BioWorks_32)
             {
                 paramList.Add("[SEQUEST_ENZYME_INFO]");
+
                 foreach (var item in paramsIn.EnzymeList)
                 {
                     paramList.Add(item.ReturnEnzymeString());

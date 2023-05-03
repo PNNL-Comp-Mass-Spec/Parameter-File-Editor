@@ -18,6 +18,7 @@ namespace ParamFileGenerator.Parameters
         private void ParseEnzymeString(string enzStr)
         {
             var parts = enzStr.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
             if (parts.Count < 5)
             {
                 parts.AddRange(Enumerable.Range(1, 5 - parts.Count).Select(_ => ""));
@@ -58,6 +59,7 @@ namespace ParamFileGenerator.Parameters
             sb.Append(EnzymeName);
             sb.Append("(");
             sb.Append(EnzymeCleavePoints);
+
             if (EnzymeNoCleavePoints.Length > 0 && EnzymeNoCleavePoints != "-")
             {
                 sb.Append("/");

@@ -93,6 +93,7 @@ namespace ParamGenTest
             else
             {
                 txtResults.Text = "Error!";
+
                 if (!string.IsNullOrWhiteSpace(mDMS.LastError))
                 {
                     txtResults.Text += " " + mDMS.LastError;
@@ -124,30 +125,39 @@ namespace ParamGenTest
                 case 1000:
                     mParamFileType = IGenerateFile.ParamFileType.BioWorks_32;
                     break;
+
                 case 1008:
                     mParamFileType = IGenerateFile.ParamFileType.X_Tandem;
                     break;
+
                 case 1018:
                     mParamFileType = IGenerateFile.ParamFileType.MSGFPlus;
                     break;
+
                 case 1019:
                     mParamFileType = IGenerateFile.ParamFileType.MSAlign;
                     break;
+
                 case 1022:
                     mParamFileType = IGenerateFile.ParamFileType.MSAlignHistone;
                     break;
+
                 case 1025:
                     mParamFileType = IGenerateFile.ParamFileType.MSPathFinder;
                     break;
+
                 case 1032:
                     mParamFileType = IGenerateFile.ParamFileType.TopPIC;
                     break;
+
                 case 1033:
                     mParamFileType = IGenerateFile.ParamFileType.MSFragger;
                     break;
+
                 case 1034:
                     mParamFileType = IGenerateFile.ParamFileType.MaxQuant;
                     break;
+
                 case 1035:
                     mParamFileType = IGenerateFile.ParamFileType.DiaNN;
                     break;

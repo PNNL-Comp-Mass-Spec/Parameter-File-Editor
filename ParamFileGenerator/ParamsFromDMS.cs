@@ -177,6 +177,7 @@ namespace ParamFileGenerator
             mBaseLineParamSet = MainProcess.BaseLineParamSet;
 
             var success = GetParamsFromDMS();
+
             if (!success)
             {
                 throw new Exception("Unable to obtain data from " + Param_File_Table + " and/or " + Param_Entry_Table);
@@ -216,6 +217,7 @@ namespace ParamFileGenerator
             {
                 // This param file type is not supported for export from DMS
                 var paramFileTypeName = Enum.GetName(typeof(eParamFileTypeConstants), mParamFileType);
+
                 if (string.IsNullOrEmpty(paramFileTypeName))
                 {
                     paramFileTypeName = "Unknown";
@@ -736,6 +738,7 @@ namespace ParamFileGenerator
 
                     default:
                         var tmpValue = pProp.GetValue(paramSet, null).ToString();
+
                         if (mBasicParams.Contains(tmpName))
                         {
                             c.Add(new ParamsEntry(tmpName, tmpValue, ParamTypes.BasicParam));
@@ -774,6 +777,7 @@ namespace ParamFileGenerator
 
                 double valueDouble = 0;
                 var valueInteger = 0;
+
                 if (double.TryParse(tmpValue.Trim(), out var tmpValueDouble))
                 {
                     valueDouble = tmpValueDouble;
@@ -781,6 +785,7 @@ namespace ParamFileGenerator
                 }
 
                 var valueBool = false;
+
                 if (bool.TryParse(tmpValue.Trim(), out var tmpValueBool))
                 {
                     valueBool = tmpValueBool;
@@ -792,6 +797,7 @@ namespace ParamFileGenerator
                     foreach (var currentPField in pFields)
                     {
                         pField = currentPField;
+
                         if (pField.Name != (tmpSpec ?? ""))
                             continue;
 
@@ -837,6 +843,7 @@ namespace ParamFileGenerator
                     foreach (var currentPField1 in pFields)
                     {
                         pField = currentPField1;
+
                         if (pField.Name != (tmpSpec ?? ""))
                             continue;
 
@@ -1031,6 +1038,7 @@ namespace ParamFileGenerator
             {
                 // This param file type is not supported for export from DMS
                 var paramFileTypeName = Enum.GetName(typeof(eParamFileTypeConstants), eParamFileType);
+
                 if (string.IsNullOrEmpty(paramFileTypeName))
                 {
                     paramFileTypeName = "Unknown";
@@ -1195,6 +1203,7 @@ namespace ParamFileGenerator
             tmpString = MakeListOfMods(tmpString, tmpDynModsList, true);
 
             tmpString = MakeListOfMods(tmpString, tmpTermDynModsList, false);
+
             if (intDynModCount == 0 && intTermDynModCount > 0)
             {
                 tmpString = "Dynamic Mods: " + tmpString;
@@ -1215,6 +1224,7 @@ namespace ParamFileGenerator
         private string MakeListOfMods(string modDescriptionPrevious, Queue objModList, bool addTitlePrefix)
         {
             modDescriptionPrevious ??= "";
+
             if (objModList is null)
             {
                 return modDescriptionPrevious;
@@ -1228,9 +1238,11 @@ namespace ParamFileGenerator
 
             var tmpElement = "";
             var elementTitle = objModList.Dequeue().ToString();
+
             while (objModList.Count > 0)
             {
                 var subItem = objModList.Dequeue().ToString();
+
                 if (tmpElement.Length > 0)
                     tmpElement += ", ";
                 tmpElement += subItem;
@@ -1255,6 +1267,7 @@ namespace ParamFileGenerator
             foreach (var check in checkColl)
             {
                 var template = templateColl.FirstOrDefault(x => x.TypeSpecifierEquals(check));
+
                 if (template is not null)
                 {
                     if (!template.Value.Equals(check.Value))

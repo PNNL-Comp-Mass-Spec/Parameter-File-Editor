@@ -136,6 +136,7 @@ namespace ParamFileGenerator.Modifications
                 for (var counter = 0; counter < affectedResidueString.Length; counter++)
                 {
                     var tmpAA = affectedResidueString.Substring(counter, 1);
+
                     //if ("><[]".Contains(tmpAA))
                     //{
                     aaList.Add(tmpAA);
@@ -163,6 +164,7 @@ namespace ParamFileGenerator.Modifications
             foreach (var item in mAAMappingTable)
             {
                 var resString = item.Key;
+
                 if ((singleLetterAA ?? "") == resString.Substring(0, 1) && !resString.Contains("Term"))
                 {
                     return (ResidueCode)Enum.Parse(typeof(ResidueCode), resString);
@@ -177,6 +179,7 @@ namespace ParamFileGenerator.Modifications
             foreach (var statMod in this)
             {
                 var testCase = statMod.ReturnResidueAffected(0);
+
                 if ((testCase ?? "") == (modifiedEntity ?? ""))
                 {
                     return IndexOf(statMod);

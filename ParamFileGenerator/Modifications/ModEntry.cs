@@ -47,6 +47,7 @@ namespace ParamFileGenerator.Modifications
         private string ConvertListToAAString(IEnumerable<string> resCollection)
         {
             var returnString = "";
+
             foreach (var s in resCollection)
             {
                 var s1 = s.Substring(0, 1);

@@ -32,6 +32,7 @@ namespace ParamFileGenerator.Parameters
                 while (!reader.EndOfStream)
                 {
                     var dataLine = reader.ReadLine();
+
                     if (string.IsNullOrWhiteSpace(dataLine))
                     {
                         continue;
@@ -42,6 +43,7 @@ namespace ParamFileGenerator.Parameters
                         while (!reader.EndOfStream)
                         {
                             var enzymeLine = reader.ReadLine();
+
                             if (string.IsNullOrWhiteSpace(enzymeLine))
                             {
                                 continue;

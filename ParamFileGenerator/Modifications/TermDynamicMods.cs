@@ -98,6 +98,7 @@ namespace ParamFileGenerator.Modifications
             {
                 var tmpModMass = dynMod.MassDifference;
                 var tmpModString = dynMod.ReturnAllAffectedResiduesString;
+
                 if (tmpModString == ">")
                 {
                     ctModMass = tmpModMass;

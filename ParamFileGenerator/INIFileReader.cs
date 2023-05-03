@@ -65,10 +65,12 @@ namespace ParamFileGenerator
                 try
                 {
                     var fi = new FileInfo(settingsFileName);
+
                     if (fi.Exists)
                     {
                         tr = fi.OpenText();
                         var s = tr.ReadLine();
+
                         while (s is not null)
                         {
                             if (s.Contains(";"))
@@ -145,6 +147,7 @@ namespace ParamFileGenerator
             {
                 keyName = SetNameCase(keyName);
                 var section = GetSection(sectionName);
+
                 if (section is not null)
                 {
                     return (XmlElement)section.SelectSingleNode("item[@key='" + keyName + "']");
@@ -163,6 +166,7 @@ namespace ParamFileGenerator
             if (newSection is not null && !string.IsNullOrEmpty(newSection))
             {
                 var section = GetSection(oldSection);
+
                 if (section is not null)
                 {
                     section.SetAttribute("name", SetNameCase(newSection));
@@ -234,6 +238,7 @@ namespace ParamFileGenerator
         private bool DeleteSection(string sectionName)
         {
             var section = GetSection(sectionName);
+
             if (section is not null)
             {
                 section.ParentNode.RemoveChild(section);
@@ -319,6 +324,7 @@ namespace ParamFileGenerator
             }
 
             var nodes = section.SelectNodes("item");
+
             if (nodes.Count > 0)
             {
                 foreach (XmlNode currentNode in nodes)
@@ -328,9 +334,11 @@ namespace ParamFileGenerator
                         case IniItemTypeEnum.GetKeys:
                             items.Add(currentNode.Attributes.GetNamedItem("key").Value);
                             break;
+
                         case IniItemTypeEnum.GetValues:
                             items.Add(currentNode.Attributes.GetNamedItem("value").Value);
                             break;
+
                         case IniItemTypeEnum.GetKeysAndValues:
                             items.Add(currentNode.Attributes.GetNamedItem("key").Value + "=" +
                                       currentNode.Attributes.GetNamedItem("value").Value);
@@ -368,6 +376,7 @@ namespace ParamFileGenerator
         public string GetCustomIniAttribute(string sectionName, string keyName, string attributeName)
         {
             XmlElement N;
+
             if (!Initialized)
                 throw new IniFileReaderNotInitializedException();
 
@@ -560,6 +569,7 @@ namespace ParamFileGenerator
             if (OutputFilename is not null && mXmlDoc is not null)
             {
                 var fi = new FileInfo(OutputFilename);
+
                 if (!fi.Directory.Exists)
                 {
                     // MessageBox.Show("Invalid path.")

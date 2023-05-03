@@ -49,6 +49,7 @@ namespace ParamFileGenerator
         public string GetParam(string section, string item)
         {
             var s = mIniFileReader.GetIniValue(section, item);
+
             if (s is null)
                 throw new Exception("No ini value for parameter '" + item + "'");
 
@@ -58,6 +59,7 @@ namespace ParamFileGenerator
         public string GetParam(string section, string item, string attributeName)
         {
             var s = mIniFileReader.GetCustomIniAttribute(section, item, attributeName);
+
             if (s is null)
                 throw new Exception("No custom ini value for parameter '" + item + "'");
 
@@ -82,6 +84,7 @@ namespace ParamFileGenerator
         public List<string> GetAllKeysInSection(string section)
         {
             var keyNames = mIniFileReader.AllKeysInSection(section);
+
             if (keyNames is null)
                 throw new Exception("No Keys in section '" + section + "'");
 

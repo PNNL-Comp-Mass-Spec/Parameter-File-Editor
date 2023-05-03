@@ -188,7 +188,6 @@ namespace ParamFileGenerator
                     case IGenerateFile.ParamFileType.DiaNN:
                         return RetrieveStaticPSMParameterFile("DiaNN", paramFileName, outputFilePath, dmsConnectionString);
 
-
                     case IGenerateFile.ParamFileType.Invalid:
                         return default;
 
@@ -297,6 +296,7 @@ namespace ParamFileGenerator
             }
 
             var fi = new FileInfo(TemplateFilePath);
+
             if (!fi.Exists)
             {
                 ReportError("Default template file '" + TemplateFilePath + "' does not exist");
@@ -481,6 +481,7 @@ namespace ParamFileGenerator
             }
 
             var fiSource = new FileInfo(paramFilePath);
+
             if (!fiSource.Exists)
             {
                 ReportError("Parameter file not found: " + fiSource.FullName);

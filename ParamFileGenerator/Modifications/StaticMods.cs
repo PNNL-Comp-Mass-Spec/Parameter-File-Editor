@@ -221,6 +221,7 @@ namespace ParamFileGenerator.Modifications
                     if (currentIndex != -1)
                     {
                         var modEntry = GetModEntry(currentIndex);
+
                         if (Math.Abs(modEntry.MassDifference) < float.Epsilon)
                         {
                             Remove(modEntry);
