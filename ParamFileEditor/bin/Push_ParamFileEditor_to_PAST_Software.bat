@@ -1,3 +1,11 @@
+@echo off
+echo.
+echo The SEQUEST Param File Editor is obsolete; exiting
+echo.
+pause
+exit
+
+@echo on
 xcopy Release\ParamFileEditor.exe \\proto-2\PAST\Software\Sequest_Param_File_Editor\ /Y /D
 xcopy Release\ParamFileEditor.xml \\proto-2\PAST\Software\Sequest_Param_File_Editor\ /Y /D
 xcopy Release\ParamFileGenerator.dll \\proto-2\PAST\Software\Sequest_Param_File_Editor\ /Y /D
