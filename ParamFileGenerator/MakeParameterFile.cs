@@ -89,7 +89,7 @@ namespace ParamFileGenerator
         /// <param name="outputFilePath">Output file path</param>
         /// <param name="dmsConnectionString">DMS connection string</param>
         /// <param name="datasetName">Dataset name</param>
-        /// <remarks>Uses the dataset name to lookup the value of use_mono_parent in view V_Analysis_Job_Use_Mono_Mass (SEQUEST only)</remarks>
+        /// <remarks>Uses the dataset name to look up the value of use_mono_parent in view V_Analysis_Job_Use_Mono_Mass (SEQUEST only)</remarks>
         /// <returns>True if successful, false if an error</returns>
         public bool MakeFile(
             string paramFileName,
@@ -113,7 +113,7 @@ namespace ParamFileGenerator
         /// <param name="outputFilePath">Output file path</param>
         /// <param name="dmsConnectionString">DMS connection string</param>
         /// <param name="datasetID">Dataset ID</param>
-        /// <remarks>Uses the dataset ID to lookup the value of use_mono_parent in view V_Analysis_Job_Use_Mono_Mass (SEQUEST only)</remarks>
+        /// <remarks>Uses the dataset ID to look up the value of use_mono_parent in view V_Analysis_Job_Use_Mono_Mass (SEQUEST only)</remarks>
         /// <returns>True if successful, false if an error</returns>
         public bool MakeFile(
             string paramFileName,

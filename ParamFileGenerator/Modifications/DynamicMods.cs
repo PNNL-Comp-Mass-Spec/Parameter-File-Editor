@@ -90,6 +90,12 @@ namespace ParamFileGenerator.Modifications
             return dm.MassDifference;
         }
 
+        /// <summary>
+        /// Update the modification mass for the given dynamic mod
+        /// </summary>
+        /// <remarks>Used by UpdateDynamicModMass in frmMainGUI.vb</remarks>
+        /// <param name="dynModNumber"></param>
+        /// <param name="value"></param>
         public void Dyn_Mod_n_MassDiff(int dynModNumber, double value)
         {
             var index = dynModNumber - 1;
@@ -122,6 +128,12 @@ namespace ParamFileGenerator.Modifications
             return dm.ReturnAllAffectedResiduesString;
         }
 
+        /// <summary>
+        /// Update the affected residues for the given dynamic mod
+        /// </summary>
+        /// <remarks>Used by UpdateDynamicModMass in frmMainGUI.vb</remarks>
+        /// <param name="dynModNumber"></param>
+        /// <param name="value"></param>
         public void Dyn_Mod_n_AAList(int dynModNumber, string value)
         {
             var index = dynModNumber - 1;
@@ -138,6 +150,7 @@ namespace ParamFileGenerator.Modifications
             }
         }
 
+        [Obsolete("Unused")]
         public int Dyn_Mod_n_Global_ModID(int dynModNumber)
         {
             ModEntry dm;
@@ -154,6 +167,7 @@ namespace ParamFileGenerator.Modifications
             return dm.GlobalModID;
         }
 
+        [Obsolete("Unused")]
         public void Dyn_Mod_n_Global_ModID(int dynModNumber, int value)
         {
             var index = dynModNumber - 1;

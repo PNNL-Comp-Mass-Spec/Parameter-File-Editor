@@ -73,6 +73,15 @@ namespace ParamFileGenerator.Modifications
             };
         }
 
+        // ReSharper disable once ConvertToPrimaryConstructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="affectedResidueList"></param>
+        /// <param name="massDiff"></param>
+        /// <param name="modType"></param>
+        /// <param name="modID"></param>
         public ModEntry(List<string> affectedResidueList, double massDiff, ModificationTypes modType, int modID = 0)
         {
             ModificationType = modType;

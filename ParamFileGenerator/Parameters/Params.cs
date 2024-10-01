@@ -305,7 +305,7 @@ namespace ParamFileGenerator.Parameters
 
             var s = tr.ReadLine();
 
-            // Find the correct section block)
+            // Find the correct section block
             while (s is not null)
             {
                 if (s.Contains(";DMS_Description = "))
