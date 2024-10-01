@@ -68,7 +68,7 @@ namespace ParamGenTest
             this.txtDMSConnectionString.Name = "txtDMSConnectionString";
             this.txtDMSConnectionString.Size = new System.Drawing.Size(876, 20);
             this.txtDMSConnectionString.TabIndex = 2;
-            this.txtDMSConnectionString.Text = "Data Source=gigasax;Initial Catalog=DMS5;Integrated Security=SSPI;";
+            this.txtDMSConnectionString.Text = "Host=prismdb2.emsl.pnl.gov;Port=5432;Database=dms;UserId=svc-dms";
             this.txtDMSConnectionString.TextChanged += new System.EventHandler(this.txtDMSConnectionString_TextChanged);
             // 
             // cboFileTypes
