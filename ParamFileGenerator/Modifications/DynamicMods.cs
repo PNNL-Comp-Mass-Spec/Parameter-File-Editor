@@ -43,10 +43,9 @@ namespace ParamFileGenerator.Modifications
         /// <summary>
         /// Constructor that accepts a dynamic mod string
         /// </summary>
-        /// <param name="dynamicModString"></param>
+        /// <param name="dynamicModString">Dynamic mod string</param>
         public DynamicMods(string dynamicModString)
         {
-            // Note: Virtual member call in constructor
             ParseDynamicModString(dynamicModString);
         }
 
@@ -205,7 +204,7 @@ namespace ParamFileGenerator.Modifications
             return s.Trim();
         }
 
-        protected virtual void ParseDynamicModString(string dynamicModString)
+        private void ParseDynamicModString(string dynamicModString)
         {
             var splitRE = new Regex(@"(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)");
 

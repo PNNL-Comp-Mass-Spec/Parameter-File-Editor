@@ -68,7 +68,7 @@ namespace ParamFileGenerator.Modifications
             }
         }
 
-        protected sealed override void ParseTerminalDynamicModString(string dynamicModString)
+        private void ParseTerminalDynamicModString(string dynamicModString)
         {
             var splitRE = new Regex(@"(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)");
 
