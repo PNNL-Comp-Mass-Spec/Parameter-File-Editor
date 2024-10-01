@@ -296,6 +296,8 @@ namespace ParamFileGenerator.Parameters
             DMS_ID = -1;
         }
 
+        // ReSharper disable once UnusedMember.Local
+
         [Obsolete("Unused")]
         private string GetDescription()
         {

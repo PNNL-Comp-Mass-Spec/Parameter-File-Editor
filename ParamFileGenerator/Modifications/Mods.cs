@@ -66,6 +66,8 @@ namespace ParamFileGenerator.Modifications
             LoadAAMappingColl();
         }
 
+        // ReSharper disable once UnusedMember.Global
+
         public virtual void Add(ResidueCode affectedResidue, double massDifference, int globalModID = 0)
         {
             Add(ConvertResidueCodeToSLC(affectedResidue), massDifference, ModEntry.ModificationTypes.Static, globalModID);
@@ -159,7 +161,9 @@ namespace ParamFileGenerator.Modifications
             return string.Empty;
         }
 
-        protected ResidueCode ConvertSLCToResidueCode(string singleLetterAA)
+        // ReSharper disable once UnusedMember.Global
+
+        protected ResidueCode ConvertSingleLetterSymbolToResidueCode(string singleLetterAA)
         {
             foreach (var item in mAAMappingTable)
             {

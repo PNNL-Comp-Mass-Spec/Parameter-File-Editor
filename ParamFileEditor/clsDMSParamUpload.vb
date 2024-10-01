@@ -33,9 +33,13 @@ Friend Class clsDMSParamUpload
         Return success
     End Function
 
+    ' ReSharper disable once UnusedMember.Global
+
     Friend Function WriteParamsToLocalStructure(paramSet As Params) As Boolean
         Return SaveParams(paramSet, True)
     End Function
+
+    ' ReSharper disable once UnusedMember.Global
 
     Friend Function GetDiffsFromTemplate(paramSetID As Integer, eParamFileTypeID As eParamFileTypeConstants) As String
         Return DistillFeaturesFromParamSet(paramSetID, eParamFileTypeID)
@@ -48,6 +52,8 @@ Friend Class clsDMSParamUpload
     Friend Function GetDiffsBetweenSets(templateSet As Params, checkSet As Params) As String
         Return CompareParamSets(templateSet, checkSet)
     End Function
+
+    ' ReSharper disable once UnusedMember.Global
 
     Friend Sub AddParamFileMappingEntry(
         paramFileID As Integer,

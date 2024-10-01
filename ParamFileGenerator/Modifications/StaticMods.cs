@@ -29,6 +29,8 @@ namespace ParamFileGenerator.Modifications
             set => ChangeAAMod(ResidueCode.N_Term_Protein, value);
         }
 
+        // ReSharper disable InconsistentNaming
+
         public double G_Glycine
         {
             get => FindAAMod(ResidueCode.G_Glycine).MassDifference;
@@ -172,6 +174,8 @@ namespace ParamFileGenerator.Modifications
             get => FindAAMod(ResidueCode.W_Tryptophan).MassDifference;
             set => ChangeAAMod(ResidueCode.W_Tryptophan, value);
         }
+
+        // ReSharper restore InconsistentNaming
 
         public string GetResidue(int index)
         {
