@@ -6,6 +6,8 @@ namespace ParamFileGenerator.Modifications
 {
     public class DynamicMods : Mods
     {
+        // Ignore Spelling: Diff, Dyn
+
         //public double Dyn_Mod_1_MassDiff
         //{
         //    get => Dyn_Mod_n_MassDiff(1);

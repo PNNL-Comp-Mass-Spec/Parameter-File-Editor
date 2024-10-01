@@ -6,7 +6,7 @@ namespace ParamFileGenerator
 {
     public class DBTask
     {
-        // DB access
+        // Ignore Spelling: SQL
 
 #pragma warning disable CS3003 // Type of member is not CLS-compliant
         protected readonly IDBTools mDBTools;

@@ -5,6 +5,8 @@ namespace ParamFileGenerator
 {
     public class RetrieveParams
     {
+        // Ignore Spelling: ini
+
         private IniFileReader mIniFileReader;
 
         /// <summary>

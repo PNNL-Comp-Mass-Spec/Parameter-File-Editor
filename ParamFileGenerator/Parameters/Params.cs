@@ -8,7 +8,7 @@ namespace ParamFileGenerator.Parameters
 {
     public class Params : IBasicParams, IAdvancedParams
     {
-        // Ignore Spelling: Xcalibur
+        // Ignore Spelling: DMS, Phospho, Xcalibur
 
         public enum ParamFileTypes
         {

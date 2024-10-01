@@ -11,7 +11,7 @@ namespace ParamFileGenerator
 {
     public interface IGenerateFile
     {
-        // Ignore Spelling: Sequest
+        // Ignore Spelling: DMS, FASTA, Sequest
 
         public enum ParamFileType
         {

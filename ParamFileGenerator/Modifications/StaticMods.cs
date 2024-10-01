@@ -5,6 +5,9 @@ namespace ParamFileGenerator.Modifications
 {
     public class StaticMods : Mods
     {
+        // Ignore Spelling: CTerm, NTerm, Lor, Nand, Qand
+        // Ignore Spelling: Asparagine, Aspartic, Cysteine, Glutamic, Glutamine, Isoleucine, Leucine, Lysine, Ornithine, Proline, Serine, Threonine, Tryptophan, Valine
+
         public double CtermPeptide
         {
             get => FindAAMod(ResidueCode.C_Term_Peptide).MassDifference;

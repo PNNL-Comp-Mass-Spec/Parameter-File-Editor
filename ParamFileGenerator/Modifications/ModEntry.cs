@@ -4,6 +4,8 @@ namespace ParamFileGenerator.Modifications
 {
     public class ModEntry
     {
+        // Ignore Spelling: Diff
+
         public enum ModificationTypes
         {
             Dynamic,

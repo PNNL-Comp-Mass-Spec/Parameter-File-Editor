@@ -6,6 +6,8 @@ using System.Xml;
 
 namespace ParamFileGenerator
 {
+    // Ignore Spelling: INI
+
     enum IniItemTypeEnum
     {
         GetKeys = 0,

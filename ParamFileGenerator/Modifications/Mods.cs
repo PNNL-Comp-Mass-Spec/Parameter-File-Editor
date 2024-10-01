@@ -6,6 +6,8 @@ namespace ParamFileGenerator.Modifications
 {
     public class Mods : List<ModEntry>
     {
+        // Ignore Spelling: Diff
+
         public enum ResidueCode
         {
             C_Term_Protein,

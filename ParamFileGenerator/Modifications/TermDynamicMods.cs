@@ -7,6 +7,8 @@ namespace ParamFileGenerator.Modifications
 {
     public class TermDynamicMods : DynamicMods
     {
+        // Ignore Spelling: CTerm, NTerm
+
         public const string NTERM_SYMBOL = "<";
         public const string CTERM_SYMBOL = ">";
 
