@@ -32,7 +32,8 @@ namespace ParamFileGenerator
             TopPIC = 13,
             MSFragger = 14,
             MaxQuant = 15,
-            DiaNN = 16
+            DiaNN = 16,
+            FragPipe = 17
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -179,6 +180,9 @@ namespace ParamFileGenerator
                     case IGenerateFile.ParamFileType.TopPIC:
                         return RetrieveStaticPSMParameterFile("TopPIC", paramFileName, outputFilePath, dmsConnectionString);
 
+                    case IGenerateFile.ParamFileType.FragPipe:
+                        return RetrieveStaticPSMParameterFile("FragPipe", paramFileName, outputFilePath, dmsConnectionString);
+
                     case IGenerateFile.ParamFileType.MSFragger:
                         return RetrieveStaticPSMParameterFile("MSFragger", paramFileName, outputFilePath, dmsConnectionString);
 
@@ -251,6 +255,7 @@ namespace ParamFileGenerator
                 IGenerateFile.ParamFileType.MSPathFinder => false,
                 IGenerateFile.ParamFileType.MODPlus => false,
                 IGenerateFile.ParamFileType.TopPIC => false,
+                IGenerateFile.ParamFileType.FragPipe => false,
                 IGenerateFile.ParamFileType.MSFragger => false,
                 IGenerateFile.ParamFileType.MaxQuant => false,
                 IGenerateFile.ParamFileType.DiaNN => false,

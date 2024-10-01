@@ -31,7 +31,8 @@ namespace ParamGenTest
                 1032, // TopPIC
                 1033, // MSFragger
                 1034, // MaxQuant
-                1035  // DiaNN
+                1035, // DiaNN
+                1036  // FragPipe
             };
 
             mDMSConnectString = txtDMSConnectionString.Text;
@@ -160,6 +161,10 @@ namespace ParamGenTest
 
                 case 1035:
                     mParamFileType = IGenerateFile.ParamFileType.DiaNN;
+                    break;
+
+                case 1036:
+                    mParamFileType = IGenerateFile.ParamFileType.FragPipe;
                     break;
             }
 

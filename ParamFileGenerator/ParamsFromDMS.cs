@@ -143,7 +143,8 @@ namespace ParamFileGenerator
             TopPIC = 1032,
             MSFragger = 1033,
             MaxQuant = 1034,
-            DiaNN = 1035
+            DiaNN = 1035,
+            FragPipe = 1036
         }
 
         private int mID;
@@ -620,7 +621,7 @@ namespace ParamFileGenerator
         }
 
         /// <summary>
-        /// Finds parameter file info for SEQUEST, X!Tandem, MS-GF+, MSPathFinder, MODPlus, TopPIC, MSFragger, MaxQuant, or DIA-NN
+        /// Finds parameter file info for MS-GF+, MSPathFinder, TopPIC, FragPipe, MSFragger, MaxQuant, DIA-NN, etc.
         /// </summary>
         /// <returns>Data table</returns>
         private DataTable GetAvailableParamSets()
@@ -638,6 +639,7 @@ namespace ParamFileGenerator
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.MSPathFinder +
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.MODPlus +
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.TopPIC +
+                "   or param_file_type_id = " + (int)eParamFileTypeConstants.FragPipe +
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.MSFragger +
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.MaxQuant +
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.DiaNN;
