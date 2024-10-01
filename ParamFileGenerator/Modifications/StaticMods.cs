@@ -186,9 +186,9 @@ namespace ParamFileGenerator.Modifications
             return m.ReturnResidueAffected(0);
         }
 
-        public void ChangeAAModification(ResidueCode ModifiedAA, double MassDifference, bool Additive = false)
+        public void ChangeAAModification(ResidueCode modifiedAA, double massDifference, bool additive = false)
         {
-            ChangeAAMod(ModifiedAA, MassDifference, Additive);
+            ChangeAAMod(modifiedAA, massDifference, additive);
         }
 
         /// <summary>
@@ -201,16 +201,16 @@ namespace ParamFileGenerator.Modifications
             KillBlankMods();
         }
 
-        private ModEntry FindAAMod(ResidueCode ModifiedAA)
+        private ModEntry FindAAMod(ResidueCode modifiedAA)
         {
-            return FindMod(ConvertResidueCodeToSLC(ModifiedAA));
+            return FindMod(ConvertResidueCodeToSingleLetterSymbol(modifiedAA));
         }
 
-        private void ChangeAAMod(ResidueCode ModifiedAA, double MassDifference, bool Additive = false)
+        private void ChangeAAMod(ResidueCode modifiedAA, double massDifference, bool additive = false)
         {
-            var foundMod = FindAAMod(ModifiedAA);
-            var ModAAString = ConvertResidueCodeToSLC(ModifiedAA);
-            ChangeMod(foundMod, ModAAString, MassDifference, Additive);
+            var foundMod = FindAAMod(modifiedAA);
+            var modAAString = ConvertResidueCodeToSingleLetterSymbol(modifiedAA);
+            ChangeMod(foundMod, modAAString, massDifference, additive);
         }
 
         private void KillBlankMods()

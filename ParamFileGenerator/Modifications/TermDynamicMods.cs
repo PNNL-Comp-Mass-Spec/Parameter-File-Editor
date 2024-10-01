@@ -15,78 +15,78 @@ namespace ParamFileGenerator.Modifications
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="termDynModString"></param>
-        public TermDynamicMods(string termDynModString)
+        /// <param name="terminalDynamicModString"></param>
+        public TermDynamicMods(string terminalDynamicModString)
         {
-            ParseDynModString(termDynModString);
+            ParseTerminalDynamicModString(terminalDynamicModString);
         }
 
-        public double Dyn_Mod_NTerm
+        public double NTerminal_Dynamic_Mod
         {
-            get => GetTermDynMod(NTERM_SYMBOL);
-            set => UpdateTermDynMod(NTERM_SYMBOL, value);
+            get => GetTerminalDynamicMod(NTERM_SYMBOL);
+            set => UpdateTerminalDynamicMod(NTERM_SYMBOL, value);
         }
 
-        public double Dyn_Mod_CTerm
+        public double CTerminal_Dynamic_Mod
         {
-            get => GetTermDynMod(CTERM_SYMBOL);
-            set => UpdateTermDynMod(CTERM_SYMBOL, value);
+            get => GetTerminalDynamicMod(CTERM_SYMBOL);
+            set => UpdateTerminalDynamicMod(CTERM_SYMBOL, value);
         }
 
-        protected double GetTermDynMod(string strSymbol)
+        protected double GetTerminalDynamicMod(string strSymbol)
         {
             var objModEntry = FindMod(strSymbol);
 
             return objModEntry?.MassDifference ?? 0d;
         }
 
-        protected void UpdateTermDynMod(string strSymbol, double sngMass)
+        protected void UpdateTerminalDynamicMod(string strSymbol, double modMass)
         {
             var intIndex = FindModIndex(strSymbol);
 
             if (intIndex < 0)
             {
                 // Mod was not found
-                // Add it (assuming sngMass is non-zero)
-                if (Math.Abs(sngMass) > float.Epsilon)
+                // Add it (assuming modMass is non-zero)
+                if (Math.Abs(modMass) > float.Epsilon)
                 {
                     var resCollection = new List<string> { strSymbol };
 
-                    Add(new ModEntry(resCollection, sngMass, ModEntry.ModificationTypes.Dynamic));
+                    Add(new ModEntry(resCollection, modMass, ModEntry.ModificationTypes.Dynamic));
                 }
             }
             // Mod was found
-            // Update the mass (or remove it if sngMass is zero)
-            else if (Math.Abs(sngMass) < float.Epsilon)
+            // Update the mass (or remove it if modMass is zero)
+            else if (Math.Abs(modMass) < float.Epsilon)
             {
                 RemoveAt(intIndex);
             }
             else
             {
                 var objModEntry = GetModEntry(intIndex);
-                objModEntry.MassDifference = sngMass;
+                objModEntry.MassDifference = modMass;
             }
         }
 
-        protected sealed override void ParseDynModString(string dmString)
+        protected sealed override void ParseTerminalDynamicModString(string dynamicModString)
         {
             var splitRE = new Regex(@"(?<ctmodmass>\d+\.*\d*)\s+(?<ntmodmass>\d+\.*\d*)");
 
-            if (dmString is null)
+            if (dynamicModString is null)
             {
                 return;
             }
 
-            if (splitRE.IsMatch(dmString))
+            if (splitRE.IsMatch(dynamicModString))
             {
-                var m = splitRE.Match(dmString);
+                var m = splitRE.Match(dynamicModString);
 
-                Dyn_Mod_NTerm = double.Parse(m.Groups["ntmodmass"].Value);
-                Dyn_Mod_CTerm = double.Parse(m.Groups["ctmodmass"].Value);
+                NTerminal_Dynamic_Mod = double.Parse(m.Groups["ntmodmass"].Value);
+                CTerminal_Dynamic_Mod = double.Parse(m.Groups["ctmodmass"].Value);
             }
         }
 
-        protected sealed override string AssembleModString(int counter)
+        protected override string AssembleModString(int counter)
         {
             var sb = new StringBuilder();
 
@@ -98,18 +98,18 @@ namespace ParamFileGenerator.Modifications
 
             foreach (var dynMod in this)
             {
-                var tmpModMass = dynMod.MassDifference;
-                var tmpModString = dynMod.ReturnAllAffectedResiduesString;
+                var massDifference = dynMod.MassDifference;
+                var affectedResidues = dynMod.ReturnAllAffectedResiduesString;
 
-                if (tmpModString == ">")
+                if (affectedResidues == ">")
                 {
-                    ctModMass = tmpModMass;
-                    // ctRes = tmpModString;
+                    ctModMass = massDifference;
+                    // ctRes = modString;
                 }
-                else if (tmpModString == "<")
+                else if (affectedResidues == "<")
                 {
-                    ntModMass = tmpModMass;
-                    // ntRes = tmpModString;
+                    ntModMass = massDifference;
+                    // ntRes = modString;
                 }
             }
 

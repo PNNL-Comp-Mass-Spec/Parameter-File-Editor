@@ -47,7 +47,7 @@ namespace ParamFileGenerator.Modifications
         public DynamicMods(string dynamicModString)
         {
             // Note: Virtual member call in constructor
-            ParseDynModString(dynamicModString);
+            ParseDynamicModString(dynamicModString);
         }
 
         /// <summary>
@@ -205,24 +205,24 @@ namespace ParamFileGenerator.Modifications
             return s.Trim();
         }
 
-        protected virtual void ParseDynModString(string dmString)
+        protected virtual void ParseDynamicModString(string dynamicModString)
         {
             var splitRE = new Regex(@"(?<modmass>\d+\.\d+)\s+(?<residues>[A-Za-z]+)");
 
-            foreach (Match m in splitRE.Matches(dmString))
+            foreach (Match m in splitRE.Matches(dynamicModString))
             {
-                var tmpMass = double.Parse(m.Groups["modmass"].Value);
-                var tmpResString = m.Groups["residues"].ToString();
+                var modMass = double.Parse(m.Groups["modmass"].Value);
+                var affectedResidues = m.Groups["residues"].ToString();
 
-                if (Math.Abs(tmpMass) > float.Epsilon)
+                if (Math.Abs(modMass) > float.Epsilon)
                 {
                     var residueList = new List<string>();
-                    for (var resCounter = 0; resCounter < tmpResString.Length; resCounter++)
+                    for (var resCounter = 0; resCounter < affectedResidues.Length; resCounter++)
                     {
-                        var tmpRes = tmpResString.Substring(resCounter, 1);
-                        residueList.Add(tmpRes);
+                        var residue = affectedResidues.Substring(resCounter, 1);
+                        residueList.Add(residue);
                     }
-                    var modEntry = new ModEntry(residueList, tmpMass, ModEntry.ModificationTypes.Dynamic);
+                    var modEntry = new ModEntry(residueList, modMass, ModEntry.ModificationTypes.Dynamic);
                     Add(modEntry);
                 }
             }

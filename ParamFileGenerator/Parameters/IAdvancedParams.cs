@@ -28,7 +28,7 @@
         bool CreateOutputFiles { get; set; }
         IonSeries IonSeries { get; set; }
         int NumberOfResultsToProcess { get; set; }
-        int MaximumNumAAPerDynMod { get; set; }
+        int MaximumNumAAPerDynamicMod { get; set; }
         int MaximumNumDifferentialPerPeptide { get; set; }
         float PeptideMassTolerance { get; set; }
         float FragmentIonTolerance { get; set; }
@@ -36,8 +36,8 @@
         int NumberOfDescriptionLines { get; set; }
         bool ShowFragmentIons { get; set; }
         bool PrintDuplicateReferences { get; set; }
-        int SelectedNucReadingFrameIndex { get; set; }
-        FrameList SelectedNucReadingFrame { get; set; }
+        int SelectedNucleotideReadingFrameIndex { get; set; }
+        FrameList SelectedNucleotideReadingFrame { get; set; }
         bool RemovePrecursorPeak { get; set; }
         float IonCutoffPercentage { get; set; }
         float MinimumProteinMassToSearch { get; set; }

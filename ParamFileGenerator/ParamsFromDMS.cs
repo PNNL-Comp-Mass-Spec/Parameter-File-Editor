@@ -497,15 +497,15 @@ namespace ParamFileGenerator
 
             foreach (var staticMod in mMassMods.Select("mod_type_symbol = 'S' OR mod_type_symbol = 'P' or mod_type_symbol = 'T'"))
             {
-                var tmpSpec = staticMod["residue_symbol"].ToString();
+                var aminoAcidSymbol = staticMod["residue_symbol"].ToString();
 
-                var affectedAminoAcid = tmpSpec switch
+                var affectedAminoAcid = aminoAcidSymbol switch
                 {
                     "<" => "N_Term_Peptide",
                     ">" => "C_Term_Peptide",
                     "[" => "N_Term_Protein",
                     "]" => "C_Term_Protein",
-                    _ => tmpSpec
+                    _ => aminoAcidSymbol
                 };
 
                 var param = new ParamsEntry(
@@ -594,9 +594,9 @@ namespace ParamFileGenerator
             if (!GetParamFileRowByID(paramFileID, out var matchingRow))
                 return string.Empty;
 
-            var tmpString = matchingRow["param_file_description"].ToString();
+            var paramFileDescription = matchingRow["param_file_description"].ToString();
 
-            return string.IsNullOrWhiteSpace(tmpString) ? string.Empty : tmpString;
+            return string.IsNullOrWhiteSpace(paramFileDescription) ? string.Empty : paramFileDescription;
         }
 
         /// <summary>
@@ -642,33 +642,30 @@ namespace ParamFileGenerator
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.MaxQuant +
                 "   or param_file_type_id = " + (int)eParamFileTypeConstants.DiaNN;
 
-            var tmpIDTable = GetTable(paramTableSQL);
+            var resultSet = GetTable(paramTableSQL);
 
-            // Load tmpIDTable
-            foreach (DataRow dr in tmpIDTable.Rows)
+            // Load resultSet
+            foreach (DataRow dr in resultSet.Rows)
             {
-                var tmpType = (int)dr["type_id"];
+                var typeID = (int)dr["type_id"];
 
-                if (tmpType != (int)eParamFileTypeConstants.Sequest)
+                if (typeID != (int)eParamFileTypeConstants.Sequest)
                     continue;
 
-                var tmpID = (int)dr["id"];
-                var tmpDiffs = (string)dr["diffs"];
+                var paramSetID = (int)dr["id"];
 
-                if (tmpDiffs is not null)
+                if ((string)dr["diffs"] is not null)
                     continue;
 
-                var paramFileTypeID = (eParamFileTypeConstants)tmpType;
+                var paramFileTypeID = (eParamFileTypeConstants)typeID;
 
-                tmpDiffs = DistillFeaturesFromParamSet(tmpID, paramFileTypeID);
-
-                dr["diffs"] = tmpDiffs;
+                dr["diffs"] = DistillFeaturesFromParamSet(paramSetID, paramFileTypeID);
                 dr.AcceptChanges();
             }
 
-            return tmpIDTable;
+            return resultSet;
 
-            // Need filtering code for tmpIDTable here...
+            // Need filtering code for resultSet here...
         }
 
         private DataTable GetParamFileTypes()
@@ -708,13 +705,13 @@ namespace ParamFileGenerator
 
             foreach (var pProp in pType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                var tmpName = pProp.Name;
-                var tmpType = pProp.PropertyType;
+                var propertyName = pProp.Name;
+                var propertyType = pProp.PropertyType;
 
-                if (!mAcceptableParams.Contains(tmpName))
+                if (!mAcceptableParams.Contains(propertyName))
                     continue;
 
-                switch (tmpType.Name)
+                switch (propertyType.Name)
                 {
                     case "IonSeries":
                         c.AddRange(ExpandIonSeries(paramSet.IonSeries));
@@ -737,15 +734,15 @@ namespace ParamFileGenerator
                         break;
 
                     default:
-                        var tmpValue = pProp.GetValue(paramSet, null).ToString();
+                        var value = pProp.GetValue(paramSet, null).ToString();
 
-                        if (mBasicParams.Contains(tmpName))
+                        if (mBasicParams.Contains(propertyName))
                         {
-                            c.Add(new ParamsEntry(tmpName, tmpValue, ParamTypes.BasicParam));
+                            c.Add(new ParamsEntry(propertyName, value, ParamTypes.BasicParam));
                         }
-                        else if (mAdvancedParams.Contains(tmpName))
+                        else if (mAdvancedParams.Contains(propertyName))
                         {
-                            c.Add(new ParamsEntry(tmpName, tmpValue, ParamTypes.AdvancedParam));
+                            c.Add(new ParamsEntry(propertyName, value, ParamTypes.AdvancedParam));
                         }
 
                         break;
@@ -771,80 +768,34 @@ namespace ParamFileGenerator
 
             foreach (var paramEntry in dc)
             {
-                var tmpSpec = paramEntry.Specifier;
-                var tmpValue = paramEntry.Value;
-                var tmpType = paramEntry.Type;
+                var specifier = paramEntry.Specifier;
+                var value = paramEntry.Value;
+                var paramType = paramEntry.Type;
 
                 double valueDouble = 0;
                 var valueInteger = 0;
 
-                if (double.TryParse(tmpValue.Trim(), out var tmpValueDouble))
+                if (double.TryParse(value.Trim(), out var parsedDouble))
                 {
-                    valueDouble = tmpValueDouble;
+                    valueDouble = parsedDouble;
                     valueInteger = (int)Math.Round(valueDouble);
                 }
 
                 var valueBool = false;
 
-                if (bool.TryParse(tmpValue.Trim(), out var tmpValueBool))
+                if (bool.TryParse(value.Trim(), out var parsedBoolean))
                 {
-                    valueBool = tmpValueBool;
+                    valueBool = parsedBoolean;
                 }
 
-                if (tmpType == ParamTypes.BasicParam &&
-                    mBasicParams.Contains(tmpSpec))
+                if (paramType == ParamTypes.BasicParam &&
+                    mBasicParams.Contains(specifier))
                 {
                     foreach (var currentPField in pFields)
                     {
                         pField = currentPField;
 
-                        if (pField.Name != (tmpSpec ?? ""))
-                            continue;
-
-                        var tmpTypeName = pField.PropertyType.Name;
-
-                        switch (tmpTypeName)
-                        {
-                            case "Int32":
-                                pField.SetValue(p, valueInteger, null);
-                                break;
-
-                            case "Single":
-                                pField.SetValue(p, (float)valueDouble, null);
-                                break;
-
-                            case "String":
-                                pField.SetValue(p, tmpValue, null);
-                                break;
-
-                            case "Boolean":
-                                pField.SetValue(p, valueBool, null);
-                                break;
-
-                            case "MassTypeList":
-                                pField.SetValue(p, (IBasicParams.MassTypeList)Enum.Parse(typeof(IBasicParams.MassTypeList), tmpValue, true), null);
-                                break;
-
-                            case "MassUnitList":
-                                pField.SetValue(p, (IAdvancedParams.MassUnitList)Enum.Parse(typeof(IAdvancedParams.MassUnitList), tmpValue, true), null);
-                                break;
-
-                            default:
-                                Console.WriteLine(pField.PropertyType.Name);
-                                break;
-                        }
-
-                        break;
-                    }
-                }
-                else if (tmpType == ParamTypes.AdvancedParam &&
-                         mAdvancedParams.Contains(tmpSpec))
-                {
-                    foreach (var currentPField1 in pFields)
-                    {
-                        pField = currentPField1;
-
-                        if (pField.Name != (tmpSpec ?? ""))
+                        if (pField.Name != (specifier ?? ""))
                             continue;
 
                         switch (pField.PropertyType.Name)
@@ -858,7 +809,51 @@ namespace ParamFileGenerator
                                 break;
 
                             case "String":
-                                pField.SetValue(p, tmpValue, null);
+                                pField.SetValue(p, value, null);
+                                break;
+
+                            case "Boolean":
+                                pField.SetValue(p, valueBool, null);
+                                break;
+
+                            case "MassTypeList":
+                                pField.SetValue(p, (IBasicParams.MassTypeList)Enum.Parse(typeof(IBasicParams.MassTypeList), value, true), null);
+                                break;
+
+                            case "MassUnitList":
+                                pField.SetValue(p, (IAdvancedParams.MassUnitList)Enum.Parse(typeof(IAdvancedParams.MassUnitList), value, true), null);
+                                break;
+
+                            default:
+                                Console.WriteLine(pField.PropertyType.Name);
+                                break;
+                        }
+
+                        break;
+                    }
+                }
+                else if (paramType == ParamTypes.AdvancedParam &&
+                         mAdvancedParams.Contains(specifier))
+                {
+                    foreach (var currentPField1 in pFields)
+                    {
+                        pField = currentPField1;
+
+                        if (pField.Name != (specifier ?? ""))
+                            continue;
+
+                        switch (pField.PropertyType.Name)
+                        {
+                            case "Int32":
+                                pField.SetValue(p, valueInteger, null);
+                                break;
+
+                            case "Single":
+                                pField.SetValue(p, (float)valueDouble, null);
+                                break;
+
+                            case "String":
+                                pField.SetValue(p, value, null);
                                 break;
 
                             case "Boolean":
@@ -873,35 +868,35 @@ namespace ParamFileGenerator
                         break;
                     }
                 }
-                else if (tmpType == ParamTypes.AdvancedParam &&
-                         mIonSeriesParams.Contains(tmpSpec))
+                else if (paramType == ParamTypes.AdvancedParam &&
+                         mIonSeriesParams.Contains(specifier))
                 {
                     foreach (var ionField in ionFields)
                     {
-                        if (ionField.Name != (tmpSpec ?? ""))
+                        if (ionField.Name != (specifier ?? ""))
                             continue;
 
-                        var tmpTypeName = ionField.PropertyType.Name;
+                        var typeName = ionField.PropertyType.Name;
 
-                        if (tmpTypeName == "Int32")
+                        if (typeName == "Int32")
                         {
                             ionField.SetValue(p.IonSeries, valueInteger, null);
                             break;
                         }
 
-                        if (tmpTypeName == "Single")
+                        if (typeName == "Single")
                         {
                             ionField.SetValue(p.IonSeries, (float)valueDouble, null);
                             break;
                         }
 
-                        if (tmpTypeName == "String")
+                        if (typeName == "String")
                         {
-                            ionField.SetValue(p.IonSeries, tmpValue, null);
+                            ionField.SetValue(p.IonSeries, value, null);
                             break;
                         }
 
-                        if (tmpTypeName == "Boolean")
+                        if (typeName == "Boolean")
                         {
                             ionField.SetValue(p.IonSeries, valueBool, null);
                             break;
@@ -910,21 +905,21 @@ namespace ParamFileGenerator
                         Console.WriteLine(pField.PropertyType.Name);
                     }
                 }
-                else if (tmpType == ParamTypes.DynamicModification)
+                else if (paramType == ParamTypes.DynamicModification)
                 {
-                    p.DynamicMods.Add(tmpSpec, valueDouble);
+                    p.DynamicMods.Add(specifier, valueDouble);
                 }
-                else if (tmpType == ParamTypes.StaticModification)
+                else if (paramType == ParamTypes.StaticModification)
                 {
-                    p.StaticModificationsList.Add(tmpSpec, valueDouble);
+                    p.StaticModificationsList.Add(specifier, valueDouble);
                 }
-                else if (tmpType == ParamTypes.IsotopicModification)
+                else if (paramType == ParamTypes.IsotopicModification)
                 {
-                    p.IsotopicModificationsList.Add(tmpSpec, valueDouble);
+                    p.IsotopicModificationsList.Add(specifier, valueDouble);
                 }
-                else if (tmpType == ParamTypes.TermDynamicModification)
+                else if (paramType == ParamTypes.TermDynamicModification)
                 {
-                    p.TermDynamicMods.Add(tmpSpec, valueDouble);
+                    p.TermDynamicMods.Add(specifier, valueDouble);
                 }
             }
 
@@ -1048,9 +1043,9 @@ namespace ParamFileGenerator
                 return false;
             }
 
-            var tmpID = GetIDWithName(paramSetName, eParamFileType);
+            var paramFileID = GetIDWithName(paramSetName, eParamFileType);
 
-            if (tmpID < 0)
+            if (paramFileID < 0)
             {
                 Console.WriteLine("Parameter file " + paramSetName + " with type ID " + eParamFileType + " was not found in table " + Param_File_Table);
                 return false;
@@ -1072,11 +1067,11 @@ namespace ParamFileGenerator
         /// <remarks>Used by the GUI editor</remarks>
         protected string CompareParamSets(Params templateSet, Params checkSet)
         {
-            var diffCollection = GetDiffColl(templateSet, checkSet);
+            var diffCollection = GetModCollection(templateSet, checkSet);
             return SummarizeDiffColl(diffCollection);
         }
 
-        protected List<ParamsEntry> GetDiffColl(Params templateSet, Params checkSet)
+        protected List<ParamsEntry> GetModCollection(Params templateSet, Params checkSet)
         {
             var templateColl = WriteDataCollectionFromParamSet(templateSet);
             var checkColl = WriteDataCollectionFromParamSet(checkSet);
@@ -1088,137 +1083,137 @@ namespace ParamFileGenerator
         {
             int index;
 
-            var tmpIsoMods = "";
-            var tmpOtherParams = "";
+            var isoMods = "";
+            var otherParams = "";
 
-            Queue tmpDynModsList = null;
-            Queue tmpTermDynModsList = null;
-            Queue tmpStatModsList = null;
-            Queue tmpIsoModsList = null;
-            Queue tmpOtherParamsList = null;
+            Queue dynModsList = null;
+            Queue termDynModsList = null;
+            Queue statModsList = null;
+            Queue isoModsList = null;
+            Queue otherParamsList = null;
 
-            var intDynModCount = 0;
-            var intTermDynModCount = 0;
+            var dynModCount = 0;
+            var termDynModCount = 0;
 
             for (index = 0; index < diffColl.Count; index++)
             {
-                var tmpType = diffColl[index].Type;
-                var tmpSpec = diffColl[index].Specifier;
-                var tmpValue = diffColl[index].Value;
+                var modType = diffColl[index].Type;
+                var specifier = diffColl[index].Specifier;
+                var value = diffColl[index].Value;
 
-                string tmpValueFormatted;
-                string tmpSign;
+                string formattedValue;
+                string sign;
 
-                if (double.TryParse(tmpValue, out var dblValue))
+                if (double.TryParse(value, out var dblValue))
                 {
-                    tmpValueFormatted = dblValue.ToString("0.0000");
+                    formattedValue = dblValue.ToString("0.0000");
 
-                    tmpSign = dblValue > 0d ? "+" : string.Empty;
+                    sign = dblValue > 0d ? "+" : string.Empty;
                 }
                 else
                 {
-                    tmpValueFormatted = string.Copy(tmpValue);
-                    tmpSign = "";
+                    formattedValue = string.Copy(value);
+                    sign = "";
                 }
 
                 // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-                switch (tmpType)
+                switch (modType)
                 {
                     case ParamTypes.StaticModification:
-                        if (tmpStatModsList is null)
+                        if (statModsList is null)
                         {
-                            tmpStatModsList = new Queue();
-                            tmpStatModsList.Enqueue("Static Mods: ");
+                            statModsList = new Queue();
+                            statModsList.Enqueue("Static Mods: ");
                         }
 
-                        tmpStatModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                        statModsList.Enqueue(specifier + " (" + sign + formattedValue + ")");
                         break;
 
                     case ParamTypes.DynamicModification:
-                        if (tmpDynModsList is null)
+                        if (dynModsList is null)
                         {
-                            tmpDynModsList = new Queue();
-                            tmpDynModsList.Enqueue("Dynamic Mods: ");
+                            dynModsList = new Queue();
+                            dynModsList.Enqueue("Dynamic Mods: ");
                         }
 
-                        tmpDynModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                        dynModsList.Enqueue(specifier + " (" + sign + formattedValue + ")");
 
-                        intDynModCount++;
+                        dynModCount++;
                         break;
 
                     case ParamTypes.TermDynamicModification:
-                        var tmpSpecToUse = tmpSpec switch
+                        var specToUse = specifier switch
                         {
                             "<" => "N-Term Peptide",
                             ">" => "C-Term Peptide",
-                            _ => tmpSpec
+                            _ => specifier
                         };
 
-                        if (tmpTermDynModsList is null)
+                        if (termDynModsList is null)
                         {
-                            tmpTermDynModsList = new Queue();
-                            tmpTermDynModsList.Enqueue("PepTerm Dynamic Mods: ");
+                            termDynModsList = new Queue();
+                            termDynModsList.Enqueue("PepTerm Dynamic Mods: ");
                         }
 
-                        tmpTermDynModsList.Enqueue(tmpSpecToUse + " (" + tmpSign + tmpValueFormatted + ")");
+                        termDynModsList.Enqueue(specToUse + " (" + sign + formattedValue + ")");
 
-                        intTermDynModCount++;
+                        termDynModCount++;
                         break;
 
                     case ParamTypes.IsotopicModification:
-                        if (string.IsNullOrEmpty(tmpIsoMods))
+                        if (string.IsNullOrEmpty(isoMods))
                         {
-                            tmpIsoMods = "Isotopic Mods: ";
+                            isoMods = "Isotopic Mods: ";
                         }
 
-                        if (tmpIsoModsList is null)
+                        if (isoModsList is null)
                         {
-                            tmpIsoModsList = new Queue();
-                            tmpIsoModsList.Enqueue(tmpIsoMods);
+                            isoModsList = new Queue();
+                            isoModsList.Enqueue(isoMods);
                         }
 
-                        tmpIsoModsList.Enqueue(tmpSpec + " (" + tmpSign + tmpValueFormatted + ")");
+                        isoModsList.Enqueue(specifier + " (" + sign + formattedValue + ")");
                         break;
 
                     default:
-                        if (string.IsNullOrEmpty(tmpOtherParams))
+                        if (string.IsNullOrEmpty(otherParams))
                         {
-                            tmpOtherParams = "Other Parameters: ";
+                            otherParams = "Other Parameters: ";
                         }
 
-                        if (tmpOtherParamsList is null)
+                        if (otherParamsList is null)
                         {
-                            tmpOtherParamsList = new Queue();
-                            tmpOtherParamsList.Enqueue(tmpOtherParams);
+                            otherParamsList = new Queue();
+                            otherParamsList.Enqueue(otherParams);
                         }
 
-                        tmpOtherParamsList.Enqueue(tmpSpec + " = " + tmpValue);
+                        otherParamsList.Enqueue(specifier + " = " + value);
                         break;
                 }
             }
 
             // Build the string describing the mods
-            var tmpString = "";
+            var modDescription = "";
 
-            tmpString = MakeListOfMods(tmpString, tmpDynModsList, true);
+            modDescription = MakeListOfMods(modDescription, dynModsList, true);
 
-            tmpString = MakeListOfMods(tmpString, tmpTermDynModsList, false);
+            modDescription = MakeListOfMods(modDescription, termDynModsList, false);
 
-            if (intDynModCount == 0 && intTermDynModCount > 0)
+            if (dynModCount == 0 && termDynModCount > 0)
             {
-                tmpString = "Dynamic Mods: " + tmpString;
+                modDescription = "Dynamic Mods: " + modDescription;
             }
 
-            tmpString = MakeListOfMods(tmpString, tmpStatModsList, true);
-            tmpString = MakeListOfMods(tmpString, tmpIsoModsList, true);
-            tmpString = MakeListOfMods(tmpString, tmpOtherParamsList, true);
+            modDescription = MakeListOfMods(modDescription, statModsList, true);
+            modDescription = MakeListOfMods(modDescription, isoModsList, true);
+            modDescription = MakeListOfMods(modDescription, otherParamsList, true);
 
-            if (string.IsNullOrEmpty(tmpString) || tmpString.Length == 0)
+            if (string.IsNullOrEmpty(modDescription) || modDescription.Length == 0)
             {
-                tmpString = " --No Change-- ";
+                modDescription = " --No Change-- ";
             }
 
-            return tmpString;
+            return modDescription;
         }
 
         private string MakeListOfMods(string modDescriptionPrevious, Queue objModList, bool addTitlePrefix)
@@ -1236,25 +1231,25 @@ namespace ParamFileGenerator
             if (modDescriptionPrevious.Length > 0)
                 modDescriptionPrevious += ", ";
 
-            var tmpElement = "";
+            var element = "";
             var elementTitle = objModList.Dequeue().ToString();
 
             while (objModList.Count > 0)
             {
                 var subItem = objModList.Dequeue().ToString();
 
-                if (tmpElement.Length > 0)
-                    tmpElement += ", ";
-                tmpElement += subItem;
+                if (element.Length > 0)
+                    element += ", ";
+                element += subItem;
             }
 
             if (addTitlePrefix)
             {
-                modDescriptionPrevious += elementTitle + tmpElement;
+                modDescriptionPrevious += elementTitle + element;
             }
             else
             {
-                modDescriptionPrevious += tmpElement;
+                modDescriptionPrevious += element;
             }
 
             return modDescriptionPrevious;

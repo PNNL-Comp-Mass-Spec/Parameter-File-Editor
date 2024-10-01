@@ -65,7 +65,7 @@ namespace ParamFileGenerator.Parameters
         [Obsolete("Use IsotopicModificationsList instead.")]
         public IsoMods IsotopicMods => IsotopicModificationsList;
 
-        public int MaximumNumAAPerDynMod { get; set; }
+        public int MaximumNumAAPerDynamicMod { get; set; }
 
         public int MaximumNumDifferentialPerPeptide { get; set; }
 
@@ -87,12 +87,12 @@ namespace ParamFileGenerator.Parameters
 
         public int SelectedEnzymeCleavagePosition { get; set; }
 
-        public IAdvancedParams.FrameList SelectedNucReadingFrame { get; set; }
+        public IAdvancedParams.FrameList SelectedNucleotideReadingFrame { get; set; }
 
-        public int SelectedNucReadingFrameIndex
+        public int SelectedNucleotideReadingFrameIndex
         {
-            get => (int)SelectedNucReadingFrame;
-            set => SelectedNucReadingFrame = (IAdvancedParams.FrameList)value;
+            get => (int)SelectedNucleotideReadingFrame;
+            set => SelectedNucleotideReadingFrame = (IAdvancedParams.FrameList)value;
         }
 
         public IBasicParams.MassTypeList ParentMassType { get; set; }
@@ -260,7 +260,7 @@ namespace ParamFileGenerator.Parameters
             }
             mIonSeriesString = mFullTemplate.GetParam("ion_series");
             IonSeries = new IonSeries(mIonSeriesString);
-            MaximumNumAAPerDynMod = SafeCastInt(mFullTemplate.GetParam("max_num_differential_AA_per_mod"));
+            MaximumNumAAPerDynamicMod = SafeCastInt(mFullTemplate.GetParam("max_num_differential_AA_per_mod"));
 
             if (mType == ParamFileTypes.BioWorks_32)
             {
@@ -271,7 +271,7 @@ namespace ParamFileGenerator.Parameters
             NumberOfDescriptionLines = SafeCastInt(mFullTemplate.GetParam("num_description_lines"));
             ShowFragmentIons = SafeCastBool(mFullTemplate.GetParam("show_fragment_ions"));
             PrintDuplicateReferences = SafeCastBool(mFullTemplate.GetParam("print_duplicate_references"));
-            SelectedNucReadingFrame = (IAdvancedParams.FrameList)SafeCastInt(mFullTemplate.GetParam("enzyme_number"));
+            SelectedNucleotideReadingFrame = (IAdvancedParams.FrameList)SafeCastInt(mFullTemplate.GetParam("enzyme_number"));
             RemovePrecursorPeak = SafeCastBool(mFullTemplate.GetParam("remove_precursor_peak"));
             IonCutoffPercentage = (float) SafeCastDouble(mFullTemplate.GetParam("ion_cutoff_percentage"));
             mProtMassFilterString = mFullTemplate.GetParam("protein_mass_filter");

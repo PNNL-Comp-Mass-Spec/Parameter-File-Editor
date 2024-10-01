@@ -115,7 +115,7 @@ namespace ParamFileGenerator
             {
                 paramList.Add("max_num_differential_per_peptide = " + paramsIn.MaximumNumDifferentialPerPeptide);
             }
-            paramList.Add("max_num_differential_AA_per_mod = " + paramsIn.MaximumNumAAPerDynMod);
+            paramList.Add("max_num_differential_AA_per_mod = " + paramsIn.MaximumNumAAPerDynamicMod);
 
             paramList.Add("diff_search_options = " + paramsIn.DynamicMods.ReturnDynModString(maxDynMods));
 
@@ -126,7 +126,7 @@ namespace ParamFileGenerator
                 paramList.Add("use_phospho_fragmentation = " + paramsIn.UsePhosphoFragmentation);
             }
 
-            paramList.Add("nucleotide_reading_frame = " + (int)paramsIn.SelectedNucReadingFrame);
+            paramList.Add("nucleotide_reading_frame = " + (int)paramsIn.SelectedNucleotideReadingFrame);
             paramList.Add("mass_type_parent = " + (int)paramsIn.ParentMassType);
             paramList.Add("mass_type_fragment = " + (int)paramsIn.FragmentMassType);
 

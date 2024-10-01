@@ -4,7 +4,7 @@
     {
         public IonSeries(string ionSeriesString)
         {
-            ParseISS(ionSeriesString);
+            ParseIonSeries(ionSeriesString);
         }
 
         public IonSeries()
@@ -12,21 +12,22 @@
             Initialized = true;
         }
 
-        private void ParseISS(string ionString)
+        private void ParseIonSeries(string ionString)
         {
-            var tmpSplit = ionString.Split(' ');
-            Use_a_Ions = Params.SafeCastInt(tmpSplit[0]) != 0;
-            Use_b_Ions = Params.SafeCastInt(tmpSplit[1]) != 0;
-            Use_y_Ions = Params.SafeCastInt(tmpSplit[2]) != 0;
-            a_Ion_Weighting = float.Parse(tmpSplit[3]);
-            b_Ion_Weighting = float.Parse(tmpSplit[4]);
-            c_Ion_Weighting = float.Parse(tmpSplit[5]);
-            d_Ion_Weighting = float.Parse(tmpSplit[6]);
-            v_Ion_Weighting = float.Parse(tmpSplit[7]);
-            w_Ion_Weighting = float.Parse(tmpSplit[8]);
-            x_Ion_Weighting = float.Parse(tmpSplit[9]);
-            y_Ion_Weighting = float.Parse(tmpSplit[10]);
-            z_Ion_Weighting = float.Parse(tmpSplit[11]);
+            var ionSeries = ionString.Split(' ');
+
+            Use_a_Ions = Params.SafeCastInt(ionSeries[0]) != 0;
+            Use_b_Ions = Params.SafeCastInt(ionSeries[1]) != 0;
+            Use_y_Ions = Params.SafeCastInt(ionSeries[2]) != 0;
+            a_Ion_Weighting = float.Parse(ionSeries[3]);
+            b_Ion_Weighting = float.Parse(ionSeries[4]);
+            c_Ion_Weighting = float.Parse(ionSeries[5]);
+            d_Ion_Weighting = float.Parse(ionSeries[6]);
+            v_Ion_Weighting = float.Parse(ionSeries[7]);
+            w_Ion_Weighting = float.Parse(ionSeries[8]);
+            x_Ion_Weighting = float.Parse(ionSeries[9]);
+            y_Ion_Weighting = float.Parse(ionSeries[10]);
+            z_Ion_Weighting = float.Parse(ionSeries[11]);
         }
 
         public bool Initialized { get; set; }

@@ -101,7 +101,7 @@ Friend Class clsDMSParamUpload
             Return False
         End If
 
-        diffCollection = GetDiffColl(MainProcess.BaseLineParamSet, paramSet)
+        diffCollection = GetModCollection(MainProcess.BaseLineParamSet, paramSet)
 
         ' Lookup the param file ID for this param file
         Dim paramFileID = RunSP_GetParamFileID(paramSet.FileName)
@@ -158,7 +158,7 @@ Friend Class clsDMSParamUpload
         Dim counter As Integer
         Dim tmpMass As Double
 
-        diffCollection = GetDiffColl(MainProcess.BaseLineParamSet, paramSet)
+        diffCollection = GetModCollection(MainProcess.BaseLineParamSet, paramSet)
 
         Dim paramSetID As Integer = RunSP_GetParamFileID(paramSet.FileName)
 

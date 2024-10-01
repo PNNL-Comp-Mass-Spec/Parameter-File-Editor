@@ -2665,8 +2665,8 @@ Public Class frmMainGUI
                 frm.txtDynMod4MassDiff.Text = PRISM.StringUtilities.DblToString(.DynamicMods.Dyn_Mod_n_MassDiff(4), 5)
                 frm.txtDynMod5MassDiff.Text = PRISM.StringUtilities.DblToString(.DynamicMods.Dyn_Mod_n_MassDiff(5), 5)
 
-                frm.txtDynNTPep.Text = PRISM.StringUtilities.DblToString(.TermDynamicMods.Dyn_Mod_NTerm, 5)
-                frm.txtDynCTPep.Text = PRISM.StringUtilities.DblToString(.TermDynamicMods.Dyn_Mod_CTerm, 5)
+                frm.txtDynNTPep.Text = PRISM.StringUtilities.DblToString(.TermDynamicMods.NTerminal_Dynamic_Mod, 5)
+                frm.txtDynCTPep.Text = PRISM.StringUtilities.DblToString(.TermDynamicMods.CTerminal_Dynamic_Mod, 5)
 
                 'Static Mods
                 frm.txtCTPep.Text = PRISM.StringUtilities.DblToString(.StaticModificationsList.CtermPeptide, 5)
@@ -2832,7 +2832,7 @@ Public Class frmMainGUI
                 frm.txtIonCutoff.Text = PRISM.StringUtilities.DblToString(.IonCutoffPercentage, 5)
                 frm.txtMinProtMass.Text = PRISM.StringUtilities.DblToString(.MinimumProteinMassToSearch, 5)
                 frm.txtMaxProtMass.Text = PRISM.StringUtilities.DblToString(.MaximumProteinMassToSearch, 5)
-                frm.cboNucReadingFrame.SelectedIndex = .SelectedNucReadingFrame
+                frm.cboNucReadingFrame.SelectedIndex = .SelectedNucleotideReadingFrame
                 frm.txtNumResults.Text = CType(.NumberOfResultsToProcess, String)
 
 
@@ -2841,7 +2841,7 @@ Public Class frmMainGUI
                 frm.txtNumDescLines.Text = PRISM.StringUtilities.DblToString(.NumberOfDescriptionLines, 5)
                 frm.txtMatchPeakCount.Text = PRISM.StringUtilities.DblToString(.NumberOfDetectedPeaksToMatch, 5)
                 frm.txtMatchPeakCountErrors.Text = PRISM.StringUtilities.DblToString(.NumberOfAllowedDetectedPeakErrors, 5)
-                frm.txtMaxAAPerDynMod.Text = PRISM.StringUtilities.DblToString(.MaximumNumAAPerDynMod, 5)
+                frm.txtMaxAAPerDynMod.Text = PRISM.StringUtilities.DblToString(.MaximumNumAAPerDynamicMod, 5)
                 frm.txtMaxDiffPerPeptide.Text = .MaximumNumDifferentialPerPeptide.ToString()
 
                 'Setup Ion Weighting
@@ -3590,7 +3590,7 @@ Public Class frmMainGUI
 
     Private Sub txtDynCTPep_Validated(sender As Object, e As EventArgs)
         Try
-            newParams.TermDynamicMods.Dyn_Mod_CTerm = CDbl(txtDynCTPep.Text)
+            newParams.TermDynamicMods.CTerminal_Dynamic_Mod = CDbl(txtDynCTPep.Text)
         Catch
             txtDynCTPep.Text = "0.0"
         End Try
@@ -3599,7 +3599,7 @@ Public Class frmMainGUI
 
     Private Sub txtDynNTPep_Validated(sender As Object, e As EventArgs)
         Try
-            newParams.TermDynamicMods.Dyn_Mod_NTerm = CDbl(txtDynNTPep.Text)
+            newParams.TermDynamicMods.NTerminal_Dynamic_Mod = CDbl(txtDynNTPep.Text)
         Catch
             txtDynNTPep.Text = "0.0"
         End Try
@@ -3991,9 +3991,9 @@ Public Class frmMainGUI
 
     Private Sub txtMaxAAPerDynMod_Leave(sender As Object, e As EventArgs)
         Try
-            newParams.MaximumNumAAPerDynMod = CInt(txtMaxAAPerDynMod.Text)
+            newParams.MaximumNumAAPerDynamicMod = CInt(txtMaxAAPerDynMod.Text)
         Catch ex As Exception
-            txtMaxAAPerDynMod.Text = newParams.MaximumNumAAPerDynMod.ToString()
+            txtMaxAAPerDynMod.Text = newParams.MaximumNumAAPerDynamicMod.ToString()
         End Try
         UpdateDescription()
     End Sub
@@ -4008,9 +4008,9 @@ Public Class frmMainGUI
 
     Private Sub cboNucReadingFrame_SelectedIndexChanged(sender As Object, e As EventArgs)
         Try
-            newParams.SelectedNucReadingFrame = CType(cboNucReadingFrame.SelectedIndex, IAdvancedParams.FrameList)
+            newParams.SelectedNucleotideReadingFrame = CType(cboNucReadingFrame.SelectedIndex, IAdvancedParams.FrameList)
         Catch ex As Exception
-            cboNucReadingFrame.SelectedIndex = newParams.SelectedNucReadingFrame
+            cboNucReadingFrame.SelectedIndex = newParams.SelectedNucleotideReadingFrame
         End Try
         UpdateDescription()
     End Sub

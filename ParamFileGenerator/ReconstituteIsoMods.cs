@@ -66,20 +66,20 @@ namespace ParamFileGenerator
         {
             var AAEnums = Enum.GetNames(typeof(Mods.ResidueCode));
 
-            foreach (var im in isoMods)
+            foreach (var isotopicMod in isoMods)
             {
-                var tmpAtom = im.ReturnResidueAffected(0);
-                var tmpIsoMass = im.MassDifference;
+                var atom = isotopicMod.ReturnResidueAffected(0);
+                var massDifference = isotopicMod.MassDifference;
 
-                foreach (var tmpAA in AAEnums)
+                foreach (var aminoAcid in AAEnums)
                 {
-                    if (!tmpAA.StartsWith("Term"))
+                    if (!aminoAcid.StartsWith("Term"))
                     {
-                        var tmpAASLC = tmpAA[0];
-                        var tmpAtomCount = GetMultiplier(tmpAASLC, (AvailableAtoms)Enum.Parse(typeof(AvailableAtoms), tmpAtom));
+                        var atomCount = GetMultiplier(aminoAcid[0], (AvailableAtoms)Enum.Parse(typeof(AvailableAtoms), atom));
+
                         paramsClass.StaticModificationsList.ChangeAAModification(
-                            (Mods.ResidueCode)Enum.Parse(typeof(Mods.ResidueCode), tmpAA),
-                            tmpIsoMass * tmpAtomCount, true);
+                            (Mods.ResidueCode)Enum.Parse(typeof(Mods.ResidueCode), aminoAcid),
+                            massDifference * atomCount, true);
                     }
                 }
             }

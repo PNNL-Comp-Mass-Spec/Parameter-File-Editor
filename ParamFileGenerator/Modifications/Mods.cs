@@ -72,7 +72,7 @@ namespace ParamFileGenerator.Modifications
 
         public virtual void Add(ResidueCode affectedResidue, double massDifference, int globalModID = 0)
         {
-            Add(ConvertResidueCodeToSLC(affectedResidue), massDifference, ModEntry.ModificationTypes.Static, globalModID);
+            Add(ConvertResidueCodeToSingleLetterSymbol(affectedResidue), massDifference, ModEntry.ModificationTypes.Static, globalModID);
         }
 
         public void Add(string affectedResidueString, double massDifference)
@@ -139,11 +139,11 @@ namespace ParamFileGenerator.Modifications
             {
                 for (var counter = 0; counter < affectedResidueString.Length; counter++)
                 {
-                    var tmpAA = affectedResidueString.Substring(counter, 1);
+                    var aminoAcid = affectedResidueString.Substring(counter, 1);
 
-                    //if ("><[]".Contains(tmpAA))
+                    //if ("><[]".Contains(aminoAcid))
                     //{
-                    aaList.Add(tmpAA);
+                    aaList.Add(aminoAcid);
                     //}
                 }
             }
@@ -151,13 +151,11 @@ namespace ParamFileGenerator.Modifications
             return aaList;
         }
 
-        protected string ConvertResidueCodeToSLC(ResidueCode residue)
+        protected string ConvertResidueCodeToSingleLetterSymbol(ResidueCode residue)
         {
-            var tmpRes = residue.ToString();
-
-            if (mAAMappingTable.TryGetValue(tmpRes, out var tmpSLC))
+            if (mAAMappingTable.TryGetValue(residue.ToString(), out var singleLetterSymbol))
             {
-                return tmpSLC;
+                return singleLetterSymbol;
             }
 
             return string.Empty;
