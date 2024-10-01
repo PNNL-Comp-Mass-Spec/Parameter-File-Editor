@@ -455,6 +455,8 @@ namespace ParamFileGenerator
             return false;
         }
 
+        // ReSharper disable once UnusedMember.Local
+
         private bool CreateItem(string sectionName, string keyName, string newValue)
         {
             try
@@ -552,10 +554,10 @@ namespace ParamFileGenerator
 
                 var fi = new FileInfo(value);
 
-                if (!fi.Directory.Exists)
+                if (fi.Directory?.Exists == false)
                 {
+                    // MessageBox.Show("Invalid path.")
                 }
-                // MessageBox.Show("Invalid path.")
                 else
                 {
                     mSaveFilename = value;
@@ -572,7 +574,7 @@ namespace ParamFileGenerator
             {
                 var fi = new FileInfo(OutputFilename);
 
-                if (!fi.Directory.Exists)
+                if (fi.Directory?.Exists == false)
                 {
                     // MessageBox.Show("Invalid path.")
                     return;

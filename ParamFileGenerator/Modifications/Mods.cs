@@ -122,10 +122,7 @@ namespace ParamFileGenerator.Modifications
         {
             var aaList = new List<string>();
 
-            if (affectedResidueString == "C_Term_Protein" ||
-                affectedResidueString == "C_Term_Peptide" ||
-                affectedResidueString == "N_Term_Protein" ||
-                affectedResidueString == "N_Term_Peptide")
+            if (affectedResidueString is "C_Term_Protein" or "C_Term_Peptide" or "N_Term_Protein" or "N_Term_Peptide")
             {
                 aaList.Add(affectedResidueString);
             }
