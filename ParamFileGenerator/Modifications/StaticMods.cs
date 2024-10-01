@@ -217,23 +217,23 @@ namespace ParamFileGenerator.Modifications
         {
             foreach (var aminoAcid in Enum.GetNames(typeof(ResidueCode)).ToList())
             {
-                if (aminoAcid.Contains("Term"))
+                if (!aminoAcid.Contains("Term"))
+                    continue;
+
+                // C or N terminal mod
+                // The first letter of the enum name should be N or C
+                var terminus = aminoAcid.Substring(0, 1);
+
+                var currentIndex = FindModIndex(terminus);
+
+                if (currentIndex < 0)
+                    continue;
+
+                var modEntry = GetModEntry(currentIndex);
+
+                if (Math.Abs(modEntry.MassDifference) < float.Epsilon)
                 {
-                    // C or N terminal mod
-                    // The first letter of the enum name should be N or C
-                    var terminus = aminoAcid.Substring(0, 1);
-
-                    var currentIndex = FindModIndex(terminus);
-
-                    if (currentIndex != -1)
-                    {
-                        var modEntry = GetModEntry(currentIndex);
-
-                        if (Math.Abs(modEntry.MassDifference) < float.Epsilon)
-                        {
-                            Remove(modEntry);
-                        }
-                    }
+                    Remove(modEntry);
                 }
             }
         }
