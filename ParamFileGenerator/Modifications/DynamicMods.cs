@@ -68,13 +68,6 @@ namespace ParamFileGenerator.Modifications
             //}
         }
 
-        // TODO replace with real function for term dyn mods
-        // Just a placeholder for now
-        //public string ReturnDynTermModString()
-        //{
-        //    return "0.0000 0.0000";
-        //}
-
         public new void Add(string affectedResidueString, double massDifference)
         {
             Add(affectedResidueString, massDifference, ModEntry.ModificationTypes.Dynamic);

@@ -49,12 +49,6 @@ namespace ParamFileGenerator.Modifications
             S
         }
 
-        public int ModCount => Count;
-
-        public int NumMods => Count;
-
-        public bool Initialized => Count > 0;
-
         public ModEntry GetModEntry(int index)
         {
             return base[index];

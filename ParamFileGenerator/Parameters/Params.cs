@@ -18,8 +18,6 @@ namespace ParamFileGenerator.Parameters
             BioWorks_32 = 3 // BioWorks 3.2 ClusterF***
         }
 
-        private const string DEF_DB_NAME = @"C:\Xcalibur\database\nr.fasta";     // Not really used, just a placeholder
-
         private const string DEF_ENZ_SECTION_NAME = "SEQUEST_ENZYME_INFO";
 
         // Basic Parameters
