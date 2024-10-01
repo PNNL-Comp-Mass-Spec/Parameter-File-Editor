@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace ParamFileGenerator.Modifications
 {
@@ -48,14 +49,15 @@ namespace ParamFileGenerator.Modifications
 
         private string ConvertListToAAString(IEnumerable<string> resCollection)
         {
-            var returnString = "";
+            var aminoAcids = new StringBuilder();
 
             foreach (var s in resCollection)
             {
                 var s1 = s.Substring(0, 1);
-                returnString += s1;
+                aminoAcids.Append(s1);
             }
-            return returnString;
+
+            return aminoAcids.ToString();
         }
 
         private string GetModTypeSymbol()

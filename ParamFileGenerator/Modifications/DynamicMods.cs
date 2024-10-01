@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ParamFileGenerator.Modifications
@@ -171,14 +172,14 @@ namespace ParamFileGenerator.Modifications
 
         protected virtual string AssembleModString(int counter)
         {
-            var s = "";
+            var sb = new StringBuilder();
             int padCount;
 
             foreach (var dynMod in this)
             {
-                var tmpModMass = dynMod.MassDifference;
-                var tmpModString = dynMod.ReturnAllAffectedResiduesString;
-                s = s + tmpModMass.ToString("0.0000") + " " + tmpModString + " ";
+                var modMass = dynMod.MassDifference;
+                var affectedResidues = dynMod.ReturnAllAffectedResiduesString;
+                sb.Append(modMass.ToString("0.0000") + " " + affectedResidues + " ");
                 counter--;
             }
 
@@ -186,15 +187,15 @@ namespace ParamFileGenerator.Modifications
             {
                 if (padCount <= 2)
                 {
-                    s += "0.0000 C ";
+                    sb.Append("0.0000 C ");
                 }
                 else
                 {
-                    s += "0.0000 X ";
+                    sb.Append("0.0000 X ");
                 }
             }
 
-            return s.Trim();
+            return sb.ToString().Trim();
         }
 
         private void ParseDynamicModString(string dynamicModString)
