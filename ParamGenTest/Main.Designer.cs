@@ -55,7 +55,7 @@ namespace ParamGenTest
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtOutputPath.Location = new System.Drawing.Point(156, 20);
             this.txtOutputPath.Name = "txtOutputPath";
-            this.txtOutputPath.Size = new System.Drawing.Size(400, 20);
+            this.txtOutputPath.Size = new System.Drawing.Size(876, 20);
             this.txtOutputPath.TabIndex = 0;
             this.txtOutputPath.Text = "F:\\Temp\\";
             this.txtOutputPath.TextChanged += new System.EventHandler(this.txtOutputPath_TextChanged);
@@ -66,7 +66,7 @@ namespace ParamGenTest
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDMSConnectionString.Location = new System.Drawing.Point(156, 125);
             this.txtDMSConnectionString.Name = "txtDMSConnectionString";
-            this.txtDMSConnectionString.Size = new System.Drawing.Size(400, 20);
+            this.txtDMSConnectionString.Size = new System.Drawing.Size(876, 20);
             this.txtDMSConnectionString.TabIndex = 2;
             this.txtDMSConnectionString.Text = "Data Source=gigasax;Initial Catalog=DMS5;Integrated Security=SSPI;";
             this.txtDMSConnectionString.TextChanged += new System.EventHandler(this.txtDMSConnectionString_TextChanged);
@@ -78,7 +78,7 @@ namespace ParamGenTest
             this.cboFileTypes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboFileTypes.Location = new System.Drawing.Point(156, 165);
             this.cboFileTypes.Name = "cboFileTypes";
-            this.cboFileTypes.Size = new System.Drawing.Size(400, 21);
+            this.cboFileTypes.Size = new System.Drawing.Size(876, 21);
             this.cboFileTypes.TabIndex = 3;
             this.cboFileTypes.SelectedIndexChanged += new System.EventHandler(this.cboFileTypes_SelectedIndexChanged);
             // 
@@ -121,7 +121,7 @@ namespace ParamGenTest
             this.cboAvailableParams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboAvailableParams.Location = new System.Drawing.Point(156, 60);
             this.cboAvailableParams.Name = "cboAvailableParams";
-            this.cboAvailableParams.Size = new System.Drawing.Size(400, 21);
+            this.cboAvailableParams.Size = new System.Drawing.Size(876, 21);
             this.cboAvailableParams.Sorted = true;
             this.cboAvailableParams.TabIndex = 8;
             this.cboAvailableParams.SelectedIndexChanged += new System.EventHandler(this.cboAvailableParams_SelectedIndexChanged);
@@ -133,13 +133,13 @@ namespace ParamGenTest
             this.txtResults.Location = new System.Drawing.Point(24, 253);
             this.txtResults.Multiline = true;
             this.txtResults.Name = "txtResults";
-            this.txtResults.Size = new System.Drawing.Size(384, 84);
+            this.txtResults.Size = new System.Drawing.Size(860, 84);
             this.txtResults.TabIndex = 9;
             // 
             // cmdDoIt
             // 
             this.cmdDoIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdDoIt.Location = new System.Drawing.Point(436, 305);
+            this.cmdDoIt.Location = new System.Drawing.Point(912, 305);
             this.cmdDoIt.Name = "cmdDoIt";
             this.cmdDoIt.Size = new System.Drawing.Size(124, 32);
             this.cmdDoIt.TabIndex = 10;
@@ -152,7 +152,7 @@ namespace ParamGenTest
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFASTAPath.Location = new System.Drawing.Point(160, 209);
             this.txtFASTAPath.Name = "txtFASTAPath";
-            this.txtFASTAPath.Size = new System.Drawing.Size(396, 20);
+            this.txtFASTAPath.Size = new System.Drawing.Size(872, 20);
             this.txtFASTAPath.TabIndex = 11;
             this.txtFASTAPath.Text = "C:\\DMS_Temp_Org\\bsa.fasta";
             this.txtFASTAPath.TextChanged += new System.EventHandler(this.txtFASTAPath_TextChanged);
@@ -160,7 +160,7 @@ namespace ParamGenTest
             // txtDatasetID
             // 
             this.txtDatasetID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDatasetID.Location = new System.Drawing.Point(436, 279);
+            this.txtDatasetID.Location = new System.Drawing.Point(912, 279);
             this.txtDatasetID.Name = "txtDatasetID";
             this.txtDatasetID.Size = new System.Drawing.Size(120, 20);
             this.txtDatasetID.TabIndex = 12;
@@ -171,9 +171,9 @@ namespace ParamGenTest
             // 
             this.lblDatasetID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDatasetID.AutoSize = true;
-            this.lblDatasetID.Location = new System.Drawing.Point(436, 260);
+            this.lblDatasetID.Location = new System.Drawing.Point(912, 260);
             this.lblDatasetID.Name = "lblDatasetID";
-            this.lblDatasetID.Size = new System.Drawing.Size(106, 13);
+            this.lblDatasetID.Size = new System.Drawing.Size(121, 15);
             this.lblDatasetID.TabIndex = 13;
             this.lblDatasetID.Text = "(Optional) Dataset ID";
             // 
@@ -183,7 +183,7 @@ namespace ParamGenTest
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtParamFileName.Location = new System.Drawing.Point(156, 87);
             this.txtParamFileName.Name = "txtParamFileName";
-            this.txtParamFileName.Size = new System.Drawing.Size(400, 20);
+            this.txtParamFileName.Size = new System.Drawing.Size(876, 20);
             this.txtParamFileName.TabIndex = 14;
             // 
             // lblParamFileName
@@ -206,7 +206,7 @@ namespace ParamGenTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 346);
+            this.ClientSize = new System.Drawing.Size(1052, 357);
             this.Controls.Add(this.lblFASTAFilePath);
             this.Controls.Add(this.lblParamFileName);
             this.Controls.Add(this.txtParamFileName);
