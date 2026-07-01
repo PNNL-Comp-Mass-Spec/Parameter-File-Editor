@@ -2,11 +2,17 @@
 
 The parameter file generator DLL was historically used by the [Analysis Manager](https://github.com/PNNL-Comp-Mass-Spec/DMS-Analysis-Manager) 
 in DMS to generate SEQUEST parameter files using param file settings stored in the DMS database. 
-The current iteration of the DLL copies the parameter file for a given analysis job (for MS-GF+, FragPipe, etc.) 
-from the parameter file Windows file share to the local working directory.
+* The current iteration of the DLL copies the parameter file for a given analysis job from the parameter file Windows file share to the local working directory.
 
+# DMS Parameter File Generator
 
-## Contacts
+When the parameter file generator is compiled using Visual Studio, a program for manually creating or obtaining parameter files is created; 
+see `ParamGenTest.exe` in directory `ParamGenTest\bin`.
+* The DMS Param File Generator has a GUI interface for selecting the parameter file type (MS-GF+, MaxQuant, FragPipe, etc.), the parameter file to create or retrieve, and the output directory.
+
+![DMS Parameter File Generator](https://github.com/PNNL-Comp-Mass-Spec/Parameter-File-Editor/raw/master/docs/DMS_Param_File_Generator.png)
+
+# Contacts
 
 Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) \
 E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov \
